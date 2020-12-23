@@ -1,0 +1,85 @@
+<div>
+    <h2 id="page-heading">
+        <span>Specs</span>
+
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-spec" [routerLink]="['/spec/new']">
+            <fa-icon icon="plus"></fa-icon>
+            <span>
+            Create a new Spec
+            </span>
+        </button>
+    </h2>
+
+    <jhi-alert-error></jhi-alert-error>
+
+    <jhi-alert></jhi-alert>
+
+    <div class="alert alert-warning" id="no-result" *ngIf="specs?.length === 0">
+        <span>No specs found</span>
+    </div>
+
+    <div class="table-responsive" id="entities" *ngIf="specs && specs.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
+            <thead>
+                <tr>
+                    <th scope="col" ><span>ID</span></th>
+                    <th scope="col" ><span>Key</span></th>
+                    <th scope="col" ><span>Title</span></th>
+                    <th scope="col" ><span>Open Api Url</span></th>
+                    <th scope="col" ><span>Boat Doc Url</span></th>
+                    <th scope="col" ><span>Open Api</span></th>
+                    <th scope="col" ><span>Created On</span></th>
+                    <th scope="col" ><span>Created By</span></th>
+                    <th scope="col" ><span>Lint Report</span></th>
+                    <th scope="col" ><span>Service</span></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let spec of specs ;trackBy: trackId">
+                    <td><a [routerLink]="['/spec', spec.id, 'view']">{{ spec.id }}</a></td>
+                    <td>{{ spec.key }}</td>
+                    <td>{{ spec.title }}</td>
+                    <td>{{ spec.openApiUrl }}</td>
+                    <td>{{ spec.boatDocUrl }}</td>
+                    <td>{{ spec.openApi }}</td>
+                    <td>{{ spec.createdOn | date:'medium' }}</td>
+                    <td>{{ spec.createdBy }}</td>
+                    <td>
+                        <div *ngIf="spec.lintReport">
+                            <a [routerLink]="['/lint-report', spec.lintReport?.id, 'view']" >{{ spec.lintReport?.id }}</a>
+                        </div>
+                    </td>
+                    <td>
+                        <div *ngIf="spec.service">
+                            <a [routerLink]="['/service', spec.service?.id, 'view']" >{{ spec.service?.id }}</a>
+                        </div>
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group">
+                            <button type="submit"
+                                    [routerLink]="['/spec', spec.id, 'view']"
+                                    class="btn btn-info btn-sm">
+                                <fa-icon icon="eye"></fa-icon>
+                                <span class="d-none d-md-inline">View</span>
+                            </button>
+
+                            <button type="submit"
+                                    [routerLink]="['/spec', spec.id, 'edit']"
+                                    class="btn btn-primary btn-sm">
+                                <fa-icon icon="pencil-alt"></fa-icon>
+                                <span class="d-none d-md-inline">Edit</span>
+                            </button>
+
+                            <button type="submit" (click)="delete(spec)"
+                                    class="btn btn-danger btn-sm">
+                                <fa-icon icon="times"></fa-icon>
+                                <span class="d-none d-md-inline">Delete</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

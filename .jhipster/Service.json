@@ -1,0 +1,66 @@
+{
+  "name": "Service",
+  "fields": [
+    {
+      "fieldName": "key",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "title",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "subTitle",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "navTitle",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "content",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "createdOn",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "createdBy",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "spec",
+      "otherEntityRelationshipName": "service",
+      "relationshipName": "spec"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "capability",
+      "otherEntityRelationshipName": "service",
+      "relationshipName": "capability",
+      "otherEntityField": "id"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "portal",
+      "otherEntityRelationshipName": "service",
+      "relationshipName": "portal",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20201223102515",
+  "entityTableName": "service",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

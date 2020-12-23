@@ -1,0 +1,50 @@
+{
+  "name": "LintRule",
+  "fields": [
+    {
+      "fieldName": "title",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "summary",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "severity",
+      "fieldType": "Severity",
+      "fieldValues": "MUST,SHOULD,MAY,HINT"
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "externalUrl",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "enabled",
+      "fieldType": "Boolean"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "lintRuleViolation",
+      "otherEntityRelationshipName": "lintRule",
+      "relationshipName": "lintRuleViolation",
+      "ownerSide": false
+    }
+  ],
+  "changelogDate": "20201223102815",
+  "entityTableName": "lint_rule",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

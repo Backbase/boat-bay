@@ -1,0 +1,40 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="lintReport">
+            <h2><span>Lint Report</span> {{ lintReport.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span>Grade</span></dt>
+                <dd>
+                    <span>{{ lintReport.grade }}</span>
+                </dd>
+                <dt><span>Passed</span></dt>
+                <dd>
+                    <span>{{ lintReport.passed }}</span>
+                </dd>
+                <dt><span>Lint Rule Violation</span></dt>
+                <dd>
+                    <div *ngIf="lintReport.lintRuleViolation">
+                        <a [routerLink]="['/lint-rule-violation', lintReport.lintRuleViolation?.id, 'view']">{{ lintReport.lintRuleViolation?.id }}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/lint-report', lintReport.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

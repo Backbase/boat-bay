@@ -1,0 +1,40 @@
+{
+  "generator-jhipster": {
+    "promptValues": {
+      "packageName": "com.backbase.oss.boat.bay"
+    },
+    "jhipsterVersion": "6.10.5",
+    "applicationType": "monolith",
+    "baseName": "BoatBay",
+    "packageName": "com.backbase.oss.boat.bay",
+    "packageFolder": "com/backbase/oss/boat/bay",
+    "serverPort": "8080",
+    "authenticationType": "jwt",
+    "cacheProvider": "ehcache",
+    "enableHibernateCache": true,
+    "websocket": false,
+    "databaseType": "sql",
+    "devDatabaseType": "h2Disk",
+    "prodDatabaseType": "mysql",
+    "searchEngine": false,
+    "messageBroker": false,
+    "serviceDiscoveryType": false,
+    "buildTool": "maven",
+    "enableSwaggerCodegen": false,
+    "jwtSecretKey": "NjFiODg4OTBhNTQ5OGQxZGJmNzIzNjBjOWRjZGY1ZDcxNGU2NWE2MTEyZTg0OGQ5YmM1M2M1ZjI3MzRkYjBiYjk0OTkzOTI4MzBmMmExMzI1NDQ4MWYwMjg5M2I0OWVkMjBkZDMwOTkwZmU3Njc1ZWQxZGY1OGIyNzczMGFlZjA=",
+    "embeddableLaunchScript": false,
+    "useSass": true,
+    "clientPackageManager": "npm",
+    "clientFramework": "angularX",
+    "clientTheme": "none",
+    "clientThemeVariant": "",
+    "creationTimestamp": 1608718692171,
+    "testFrameworks": [],
+    "jhiPrefix": "jhi",
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": [],
+    "enableTranslation": false,
+    "blueprints": []
+  }
+}

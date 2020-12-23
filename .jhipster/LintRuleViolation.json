@@ -1,0 +1,64 @@
+{
+  "name": "LintRuleViolation",
+  "fields": [
+    {
+      "fieldName": "description",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "severity",
+      "fieldType": "Severity",
+      "fieldValues": "MUST,SHOULD,MAY,HINT"
+    },
+    {
+      "fieldName": "lineStart",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "lindEnd",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "columnStart",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "columnEnd",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "jsonPointer",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "lintRule",
+      "otherEntityRelationshipName": "lintRuleViolation",
+      "relationshipName": "lintRule",
+      "otherEntityField": "id",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "lintReport",
+      "otherEntityRelationshipName": "lintRuleViolation",
+      "relationshipName": "lintReport"
+    }
+  ],
+  "changelogDate": "20201223103115",
+  "entityTableName": "lint_rule_violation",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

@@ -1,0 +1,86 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+            <h2 id="jhi-lint-rule-violation-heading">Create or edit a Lint Rule Violation</h2>
+
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+
+                <div class="form-group" [hidden]="!editForm.get('id')!.value">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_description">Description</label>
+                    <input type="text" class="form-control" name="description" id="field_description"
+                           formControlName="description"/>
+                    <div *ngIf="editForm.get('description')!.invalid && (editForm.get('description')!.dirty || editForm.get('description')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('description')?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_severity">Severity</label>
+                    <select class="form-control" name="severity" formControlName="severity" id="field_severity">
+                        <option value="MUST">MUST</option>
+                        <option value="SHOULD">SHOULD</option>
+                        <option value="MAY">MAY</option>
+                        <option value="HINT">HINT</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_lineStart">Line Start</label>
+                    <input type="number" class="form-control" name="lineStart" id="field_lineStart"
+                           formControlName="lineStart"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_lindEnd">Lind End</label>
+                    <input type="number" class="form-control" name="lindEnd" id="field_lindEnd"
+                           formControlName="lindEnd"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_columnStart">Column Start</label>
+                    <input type="number" class="form-control" name="columnStart" id="field_columnStart"
+                           formControlName="columnStart"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_columnEnd">Column End</label>
+                    <input type="number" class="form-control" name="columnEnd" id="field_columnEnd"
+                           formControlName="columnEnd"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_jsonPointer">Json Pointer</label>
+                    <input type="text" class="form-control" name="jsonPointer" id="field_jsonPointer"
+                           formControlName="jsonPointer"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_lintRule">Lint Rule</label>
+                    <select class="form-control" id="field_lintRule" name="lintRule" formControlName="lintRule">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="lintRuleOption.id === editForm.get('lintRule')!.value?.id ? editForm.get('lintRule')!.value : lintRuleOption" *ngFor="let lintRuleOption of lintrules; trackBy: trackById">{{ lintRuleOption.id }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+                    <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
