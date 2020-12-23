@@ -1,0 +1,82 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+            <h2 id="jhi-upload-heading">Create or edit a Upload</h2>
+
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+
+                <div class="form-group" [hidden]="!editForm.get('id')!.value">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_createdOn">Created On</label>
+                    <div class="d-flex">
+                        <input id="field_createdOn" type="datetime-local" class="form-control" name="createdOn" formControlName="createdOn" placeholder="YYYY-MM-DD HH:mm"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_createdBy">Created By</label>
+                    <input type="text" class="form-control" name="createdBy" id="field_createdBy"
+                           formControlName="createdBy"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_file">File</label>
+                    <div>
+                        <div *ngIf="editForm.get('file')!.value" class="form-text text-danger clearfix">
+                            <a class="pull-left" (click)="openFile(editForm.get('fileContentType')!.value, editForm.get('file')!.value)">open</a><br>
+                            <span class="pull-left">{{ editForm.get('fileContentType')!.value }}, {{ byteSize(editForm.get('file')!.value) }}</span>
+                            <button type="button" (click)="editForm.patchValue({file: null});editForm.patchValue({fileContentType: null});"
+                                    class="btn btn-secondary btn-xs pull-right">
+                                <fa-icon icon="times"></fa-icon>
+                            </button>
+                        </div>
+                        <input type="file" id="file_file" (change)="setFileData($event, 'file', false)"/>
+                    </div>
+                    <input type="hidden" class="form-control" name="file" id="field_file"
+                           formControlName="file"/>
+                    <input type="hidden" class="form-control" name="fileContentType" id="field_fileContentType"
+                           formControlName="fileContentType" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_fileName">File Name</label>
+                    <input type="text" class="form-control" name="fileName" id="field_fileName"
+                           formControlName="fileName"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_processed">Processed</label>
+                    <input type="checkbox" class="form-control" name="processed" id="field_processed"
+                           formControlName="processed"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_action">Action</label>
+                    <input type="text" class="form-control" name="action" id="field_action"
+                           formControlName="action"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_error">Error</label>
+                    <input type="text" class="form-control" name="error" id="field_error"
+                           formControlName="error"/>
+                </div>
+            </div>
+
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+                    <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

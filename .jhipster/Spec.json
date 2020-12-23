@@ -1,0 +1,61 @@
+{
+  "name": "Spec",
+  "fields": [
+    {
+      "fieldName": "key",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "title",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "openApiUrl",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "boatDocUrl",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "openApi",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "createdOn",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "createdBy",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "lintReport",
+      "otherEntityRelationshipName": "spec",
+      "relationshipName": "lintReport",
+      "otherEntityField": "id",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "service",
+      "otherEntityRelationshipName": "spec",
+      "relationshipName": "service",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20201223102615",
+  "entityTableName": "spec",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

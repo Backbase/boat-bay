@@ -1,0 +1,114 @@
+entity Portal {
+	id String,
+	key String,
+    title String,
+    subTitle String,
+    navTitle String,
+    logoUrl String,
+    logoLink String,
+    content String,
+    createdOn Instant,
+    createdBy String
+}
+
+entity Capability {
+	id String,
+	key String,
+    title String,
+    subTitle String,
+    navTitle String,
+    content String,
+    version String
+    createdOn Instant,
+    createdBy String
+}
+
+entity Service {
+	id String,
+	key String,
+    title String,
+    subTitle String,
+    navTitle String,
+    content String,
+    createdOn Instant,
+    createdBy String
+}
+
+entity Spec {
+	id String,
+	key String,
+    title String,
+    openApiUrl String,
+    boatDocUrl String,
+    openApi String,
+    createdOn Instant,
+    createdBy String
+}
+
+entity Upload {
+	createdOn Instant,
+    createdBy String
+	file Blob,
+    fileName String,
+    processed Boolean,
+    action String
+    error String
+}
+
+entity LintRule {
+	id String,
+    title String,
+    summary String,
+    severity Severity
+    description String,
+    externalUrl String,
+    enabled Boolean
+}
+
+entity LintRuleSet {
+	id String required
+    name String required
+    description String
+}
+
+entity LintReport {
+	id String,
+    grade String,
+    passed Boolean
+}
+
+entity LintRuleViolation {
+	description String required
+	severity Severity
+    lineStart Integer
+    lindEnd Integer
+    columnStart Integer
+    columnEnd Integer
+    jsonPointer String
+}
+
+enum Severity {
+	MUST, SHOULD, MAY, HINT
+}
+
+enum TypeSeverity {
+	BUG, CODE_SMELL, VULNERABILITY, SECURITY_HOTSPOT
+}
+
+relationship OneToMany {
+	Portal to Capability
+	Capability to Service
+	Portal to Service
+	Capability to Service
+	Service to Spec
+	LintRuleViolation to LintReport
+}
+
+relationship OneToOne {
+	Spec to LintReport
+	LintRuleViolation  to LintRule
+}
+
+
+
+

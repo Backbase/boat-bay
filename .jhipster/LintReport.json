@@ -1,0 +1,40 @@
+{
+  "name": "LintReport",
+  "fields": [
+    {
+      "fieldName": "grade",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "passed",
+      "fieldType": "Boolean"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "spec",
+      "otherEntityRelationshipName": "lintReport",
+      "relationshipName": "spec",
+      "ownerSide": false
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "lintRuleViolation",
+      "otherEntityRelationshipName": "lintReport",
+      "relationshipName": "lintRuleViolation",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20201223103015",
+  "entityTableName": "lint_report",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

@@ -1,0 +1,66 @@
+{
+  "name": "Portal",
+  "fields": [
+    {
+      "fieldName": "key",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "title",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "subTitle",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "navTitle",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "logoUrl",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "logoLink",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "content",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "createdOn",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "createdBy",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "capability",
+      "otherEntityRelationshipName": "portal",
+      "relationshipName": "capability"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "service",
+      "otherEntityRelationshipName": "portal",
+      "relationshipName": "service"
+    }
+  ],
+  "changelogDate": "20201223102315",
+  "entityTableName": "portal",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

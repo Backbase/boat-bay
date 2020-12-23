@@ -1,0 +1,60 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="lintRuleViolation">
+            <h2><span>Lint Rule Violation</span> {{ lintRuleViolation.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span>Description</span></dt>
+                <dd>
+                    <span>{{ lintRuleViolation.description }}</span>
+                </dd>
+                <dt><span>Severity</span></dt>
+                <dd>
+                    <span>{{ lintRuleViolation.severity }}</span>
+                </dd>
+                <dt><span>Line Start</span></dt>
+                <dd>
+                    <span>{{ lintRuleViolation.lineStart }}</span>
+                </dd>
+                <dt><span>Lind End</span></dt>
+                <dd>
+                    <span>{{ lintRuleViolation.lindEnd }}</span>
+                </dd>
+                <dt><span>Column Start</span></dt>
+                <dd>
+                    <span>{{ lintRuleViolation.columnStart }}</span>
+                </dd>
+                <dt><span>Column End</span></dt>
+                <dd>
+                    <span>{{ lintRuleViolation.columnEnd }}</span>
+                </dd>
+                <dt><span>Json Pointer</span></dt>
+                <dd>
+                    <span>{{ lintRuleViolation.jsonPointer }}</span>
+                </dd>
+                <dt><span>Lint Rule</span></dt>
+                <dd>
+                    <div *ngIf="lintRuleViolation.lintRule">
+                        <a [routerLink]="['/lint-rule', lintRuleViolation.lintRule?.id, 'view']">{{ lintRuleViolation.lintRule?.id }}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/lint-rule-violation', lintRuleViolation.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <!--
+        Added the constraints for entity LintReport.
+    -->
+    <changeSet id="20201223103015-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="lint_rule_violation_id"
+                                 baseTableName="lint_report"
+                                 constraintName="fk_lint_report_lint_rule_violation_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="lint_rule_violation"/>
+
+    </changeSet>
+</databaseChangeLog>

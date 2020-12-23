@@ -1,0 +1,57 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="upload">
+            <h2><span>Upload</span> {{ upload.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span>Created On</span></dt>
+                <dd>
+                    <span>{{ upload.createdOn }}</span>
+                </dd>
+                <dt><span>Created By</span></dt>
+                <dd>
+                    <span>{{ upload.createdBy }}</span>
+                </dd>
+                <dt><span>File</span></dt>
+                <dd>
+                    <div *ngIf="upload.file">
+                        <a (click)="openFile(upload.fileContentType, upload.file)">open</a>
+                        {{ upload.fileContentType }}, {{ byteSize(upload.file) }}
+                    </div>
+                </dd>
+                <dt><span>File Name</span></dt>
+                <dd>
+                    <span>{{ upload.fileName }}</span>
+                </dd>
+                <dt><span>Processed</span></dt>
+                <dd>
+                    <span>{{ upload.processed }}</span>
+                </dd>
+                <dt><span>Action</span></dt>
+                <dd>
+                    <span>{{ upload.action }}</span>
+                </dd>
+                <dt><span>Error</span></dt>
+                <dd>
+                    <span>{{ upload.error }}</span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/upload', upload.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

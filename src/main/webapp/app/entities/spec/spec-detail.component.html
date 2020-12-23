@@ -1,0 +1,66 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="spec">
+            <h2><span>Spec</span> {{ spec.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span>Key</span></dt>
+                <dd>
+                    <span>{{ spec.key }}</span>
+                </dd>
+                <dt><span>Title</span></dt>
+                <dd>
+                    <span>{{ spec.title }}</span>
+                </dd>
+                <dt><span>Open Api Url</span></dt>
+                <dd>
+                    <span>{{ spec.openApiUrl }}</span>
+                </dd>
+                <dt><span>Boat Doc Url</span></dt>
+                <dd>
+                    <span>{{ spec.boatDocUrl }}</span>
+                </dd>
+                <dt><span>Open Api</span></dt>
+                <dd>
+                    <span>{{ spec.openApi }}</span>
+                </dd>
+                <dt><span>Created On</span></dt>
+                <dd>
+                    <span>{{ spec.createdOn }}</span>
+                </dd>
+                <dt><span>Created By</span></dt>
+                <dd>
+                    <span>{{ spec.createdBy }}</span>
+                </dd>
+                <dt><span>Lint Report</span></dt>
+                <dd>
+                    <div *ngIf="spec.lintReport">
+                        <a [routerLink]="['/lint-report', spec.lintReport?.id, 'view']">{{ spec.lintReport?.id }}</a>
+                    </div>
+                </dd>
+                <dt><span>Service</span></dt>
+                <dd>
+                    <div *ngIf="spec.service">
+                        <a [routerLink]="['/service', spec.service?.id, 'view']">{{ spec.service?.id }}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/spec', spec.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+            </button>
+        </div>
+    </div>
+</div>
