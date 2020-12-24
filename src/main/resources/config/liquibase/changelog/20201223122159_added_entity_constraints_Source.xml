@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <!--
+        Added the constraints for entity Source.
+    -->
+    <changeSet id="20201223122159-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="portal_id"
+                                 baseTableName="source"
+                                 constraintName="fk_source_portal_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="portal"/>
+
+        <addForeignKeyConstraint baseColumnNames="capability_id"
+                                 baseTableName="source"
+                                 constraintName="fk_source_capability_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="capability"/>
+
+        <addForeignKeyConstraint baseColumnNames="capability_service_definition_id"
+                                 baseTableName="source"
+                                 constraintName="fk_source_capability_service_definition_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="capability_service_definition"/>
+
+    </changeSet>
+</databaseChangeLog>

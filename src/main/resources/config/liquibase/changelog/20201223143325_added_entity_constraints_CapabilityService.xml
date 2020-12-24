@@ -4,15 +4,15 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
     <!--
-        Added the constraints for entity LintReport.
+        Added the constraints for entity CapabilityService.
     -->
-    <changeSet id="20201223103015-2" author="jhipster">
+    <changeSet id="20201223143325-2" author="jhipster">
         
-        <addForeignKeyConstraint baseColumnNames="link_rule_violation_id"
-                                 baseTableName="lint_report"
-                                 constraintName="fk_lint_report_link_rule_violation_id"
+        <addForeignKeyConstraint baseColumnNames="capability_id"
+                                 baseTableName="capability_service"
+                                 constraintName="fk_capability_service_capability_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="lint_rule_violation"/>
+                                 referencedTableName="capability"/>
 
     </changeSet>
 </databaseChangeLog>
