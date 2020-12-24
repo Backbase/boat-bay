@@ -14,11 +14,11 @@
                                  referencedColumnNames="id"
                                  referencedTableName="lint_report"/>
 
-        <addForeignKeyConstraint baseColumnNames="service_id"
+        <addForeignKeyConstraint baseColumnNames="capability_service_definition_id"
                                  baseTableName="spec"
-                                 constraintName="fk_spec_service_id"
+                                 constraintName="fk_spec_capability_service_definition_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="service"/>
+                                 referencedTableName="capability_service_definition"/>
 
     </changeSet>
 </databaseChangeLog>

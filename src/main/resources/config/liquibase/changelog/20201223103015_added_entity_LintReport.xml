@@ -22,7 +22,7 @@
             <column name="passed" type="boolean">
                 <constraints nullable="true" />
             </column>
-            <column name="lint_rule_violation_id" type="bigint">
+            <column name="link_rule_violation_id" type="bigint">
                 <constraints nullable="true" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
