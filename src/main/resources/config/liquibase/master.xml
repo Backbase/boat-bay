@@ -21,7 +21,6 @@
     <include file="config/liquibase/changelog/20201223102915_added_entity_LintRuleSet.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201223103015_added_entity_LintReport.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201223103115_added_entity_LintRuleViolation.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20201223155925_added_entity_CapabilityServiceDefinition.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201223122159_added_entity_Source.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201228104023_added_entity_ServiceDefinition.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
@@ -29,7 +28,6 @@
     <include file="config/liquibase/changelog/20201223102615_added_entity_constraints_Spec.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201223103015_added_entity_constraints_LintReport.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201223103115_added_entity_constraints_LintRuleViolation.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20201223155925_added_entity_constraints_CapabilityServiceDefinition.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201223122159_added_entity_constraints_Source.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201228104023_added_entity_constraints_ServiceDefinition.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
