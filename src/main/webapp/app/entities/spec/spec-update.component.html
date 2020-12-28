@@ -55,8 +55,8 @@
 
                 <div class="form-group">
                     <label class="form-control-label" for="field_openApi">Open Api</label>
-                    <input type="text" class="form-control" name="openApi" id="field_openApi"
-                           formControlName="openApi"/>
+                    <textarea class="form-control" name="openApi" id="field_openApi"
+                              formControlName="openApi"></textarea>
                     <div *ngIf="editForm.get('openApi')!.invalid && (editForm.get('openApi')!.dirty || editForm.get('openApi')!.touched)">
                         <small class="form-text text-danger"
                                *ngIf="editForm.get('openApi')?.errors?.required">

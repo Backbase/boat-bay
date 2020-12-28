@@ -28,7 +28,7 @@
             <column name="title" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-            <column name="open_api" type="varchar(255)">
+            <column name="open_api" type="${clobType}">
                 <constraints nullable="false" />
             </column>
             <column name="created_on" type="datetime">
@@ -109,7 +109,7 @@
             <column name="name" type="string"/>
             <column name="version" type="string"/>
             <column name="title" type="string"/>
-            <column name="open_api" type="string"/>
+            <column name="open_api" type="clob"/>
             <column name="created_on" type="datetime"/>
             <column name="created_by" type="string"/>
             <column name="checksum" type="string"/>

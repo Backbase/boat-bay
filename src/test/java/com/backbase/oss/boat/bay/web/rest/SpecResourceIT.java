@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Base64Utils;
 import javax.persistence.EntityManager;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -322,25 +323,6 @@ public class SpecResourceIT {
 
     @Test
     @Transactional
-    public void checkOpenApiIsRequired() throws Exception {
-        int databaseSizeBeforeTest = specRepository.findAll().size();
-        // set the field null
-        spec.setOpenApi(null);
-
-        // Create the Spec, which fails.
-
-
-        restSpecMockMvc.perform(post("/api/specs")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(spec)))
-            .andExpect(status().isBadRequest());
-
-        List<Spec> specList = specRepository.findAll();
-        assertThat(specList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void checkCreatedOnIsRequired() throws Exception {
         int databaseSizeBeforeTest = specRepository.findAll().size();
         // set the field null
@@ -430,7 +412,7 @@ public class SpecResourceIT {
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].version").value(hasItem(DEFAULT_VERSION)))
             .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE)))
-            .andExpect(jsonPath("$.[*].openApi").value(hasItem(DEFAULT_OPEN_API)))
+            .andExpect(jsonPath("$.[*].openApi").value(hasItem(DEFAULT_OPEN_API.toString())))
             .andExpect(jsonPath("$.[*].createdOn").value(hasItem(DEFAULT_CREATED_ON.toString())))
             .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
             .andExpect(jsonPath("$.[*].checksum").value(hasItem(DEFAULT_CHECKSUM)))
@@ -459,7 +441,7 @@ public class SpecResourceIT {
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.version").value(DEFAULT_VERSION))
             .andExpect(jsonPath("$.title").value(DEFAULT_TITLE))
-            .andExpect(jsonPath("$.openApi").value(DEFAULT_OPEN_API))
+            .andExpect(jsonPath("$.openApi").value(DEFAULT_OPEN_API.toString()))
             .andExpect(jsonPath("$.createdOn").value(DEFAULT_CREATED_ON.toString()))
             .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
             .andExpect(jsonPath("$.checksum").value(DEFAULT_CHECKSUM))

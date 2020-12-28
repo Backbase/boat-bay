@@ -31,7 +31,7 @@
             <column name="nav_title" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-            <column name="content" type="varchar(255)">
+            <column name="content" type="${clobType}">
                 <constraints nullable="true" />
             </column>
             <column name="created_on" type="datetime">
@@ -72,7 +72,7 @@
             <column name="title" type="string"/>
             <column name="sub_title" type="string"/>
             <column name="nav_title" type="string"/>
-            <column name="content" type="string"/>
+            <column name="content" type="clob"/>
             <column name="created_on" type="datetime"/>
             <column name="created_by" type="string"/>
             <column name="capability_id" type="numeric"/>

@@ -6,9 +6,11 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
+import { JhiDataUtils, JhiFileLoadError, JhiEventManager, JhiEventWithContent } from 'ng-jhipster';
 
 import { IServiceDefinition, ServiceDefinition } from 'app/shared/model/service-definition.model';
 import { ServiceDefinitionService } from './service-definition.service';
+import { AlertError } from 'app/shared/alert/alert-error.model';
 import { ICapability } from 'app/shared/model/capability.model';
 import { CapabilityService } from 'app/entities/capability/capability.service';
 
@@ -34,6 +36,8 @@ export class ServiceDefinitionUpdateComponent implements OnInit {
   });
 
   constructor(
+    protected dataUtils: JhiDataUtils,
+    protected eventManager: JhiEventManager,
     protected serviceDefinitionService: ServiceDefinitionService,
     protected capabilityService: CapabilityService,
     protected activatedRoute: ActivatedRoute,
@@ -65,6 +69,22 @@ export class ServiceDefinitionUpdateComponent implements OnInit {
       createdOn: serviceDefinition.createdOn ? serviceDefinition.createdOn.format(DATE_TIME_FORMAT) : null,
       createdBy: serviceDefinition.createdBy,
       capability: serviceDefinition.capability,
+    });
+  }
+
+  byteSize(base64String: string): string {
+    return this.dataUtils.byteSize(base64String);
+  }
+
+  openFile(contentType: string, base64String: string): void {
+    this.dataUtils.openFile(contentType, base64String);
+  }
+
+  setFileData(event: any, field: string, isImage: boolean): void {
+    this.dataUtils.loadFileToForm(event, this.editForm, field, isImage).subscribe(null, (err: JhiFileLoadError) => {
+      this.eventManager.broadcast(
+        new JhiEventWithContent<AlertError>('boatBayApp.error', { message: err.message })
+      );
     });
   }
 

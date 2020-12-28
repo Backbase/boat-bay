@@ -36,7 +36,6 @@ public class SpecSourceResolver {
     public void processSpecs(List<Spec> specs) {
 
         specs.forEach(spec -> {
-//            scanResult.getSourceSpec().getx
             Source source = spec.getSource();
 
             String md5 = spec.getChecksum();
@@ -48,30 +47,28 @@ public class SpecSourceResolver {
             if (existingSpec.isPresent()) {
                 log.info("Spec: {}  already exists for source: {}", existingSpec.get().getName(), source.getName());
             } else {
-                if (spec.getCapability() == null && source.getCapabilityKeySpEL() != null) {
-                    Optional<String> capabilityKey = parseName(source.getCapabilityKeySpEL(), spec);
-                    capabilityKey.ifPresent(key -> {
-                        Capability capability = capabilityRepository.findByPortalAndKey(spec.getPortal(), key)
-                            .orElseGet(() -> createCapabilityForSpecWithKey(spec, key));
-                        spec.setCapability(capability);
-                    });
+                if (spec.getCapability() == null) {
+                    String key = parseName(source.getCapabilityKeySpEL(), spec).orElse("unknown");
+                    Capability capability = capabilityRepository.findByPortalAndKey(spec.getPortal(), key)
+                        .orElseGet(() -> createCapabilityForSpecWithKey(spec, key));
+                    log.info("Assigning capability: {} to spec: {}", capability.getName(), spec.getName());
+                    spec.setCapability(capability);
                 }
-                if (spec.getServiceDefinition() == null
-                    && source.getServiceNameSpEL() != null
-                    && spec.getCapability() != null) {
-                    Optional<String> serviceKey = parseName(source.getServiceNameSpEL(), spec);
-                    serviceKey.ifPresent(key -> {
-                        ServiceDefinition serviceDefinition = boatServiceRepository.findByCapabilityAndKey(spec.getCapability(), key)
-                            .orElseGet(() -> createServiceDefinition(spec, key));
-                        spec.setServiceDefinition(serviceDefinition);
-                    });
+                if (spec.getServiceDefinition() == null) {
+                    String key = parseName(source.getServiceNameSpEL(), spec).orElse(spec.getFilename());
+                    ServiceDefinition serviceDefinition = boatServiceRepository.findByCapabilityAndKey(spec.getCapability(), key)
+                        .orElseGet(() -> createServiceDefinition(spec, key));
+                    log.info("Assigning service: {} to spec: {}", serviceDefinition.getName(), spec.getName());
+                    spec.setServiceDefinition(serviceDefinition);
                 }
+                log.info("Storing spec: {}", spec.getName());
                 specRepository.save(spec);
             }
         });
     }
 
     private ServiceDefinition createServiceDefinition(Spec spec, String key) {
+        log.info("Creating service: {} for spec: {}", key, spec.getName());
         Optional<String> serviceNameSpEL = Optional.ofNullable(spec.getSource().getServiceNameSpEL());
 
         ServiceDefinition serviceDefinition = new ServiceDefinition();
@@ -84,6 +81,7 @@ public class SpecSourceResolver {
     }
 
     private Capability createCapabilityForSpecWithKey(Spec spec, String key) {
+        log.info("Creating capability: {} for spec: {}", key, spec.getName());
         Optional<String> capabilityNameSpEL = Optional.ofNullable(spec.getSource().getCapabilityNameSpEL());
 
         Capability capability = new Capability();
@@ -97,19 +95,20 @@ public class SpecSourceResolver {
         return capabilityRepository.save(capability);
     }
 
-    private Optional<String> parseName(String spEL, Spec value) {
-        Expression exp = parser.parseExpression(spEL);
-
-        Object name = exp.getValue(value);
-        if (value != null) {
-            if (name instanceof String) {
-                return Optional.of((String) name);
-            } else {
-                log.info("Invalid expression: {}", spEL);
-                return Optional.empty();
-            }
+    private Optional<String> parseName(String spEL, Spec spec) {
+        if (spEL == null) {
+            return Optional.empty();
         }
-        return Optional.empty();
+        log.info("Parsing SpEL: {} from spec:{}", spEL, spec.getName());
+        Expression exp = parser.parseExpression(spEL);
+        Object name = exp.getValue(spec);
+        if (name instanceof String) {
+            log.info("Resolved: {}", name);
+            return Optional.of((String) name);
+        } else {
+            log.info("Invalid expression: {}", spEL);
+            return Optional.empty();
+        }
     }
 
 }

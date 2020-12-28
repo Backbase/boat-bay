@@ -29,7 +29,8 @@
     },
     {
       "fieldName": "content",
-      "fieldType": "String"
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text"
     },
     {
       "fieldName": "version",

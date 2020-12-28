@@ -37,7 +37,7 @@
             <column name="logo_link" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-            <column name="content" type="varchar(255)">
+            <column name="content" type="${clobType}">
                 <constraints nullable="true" />
             </column>
             <column name="created_on" type="datetime">
@@ -77,7 +77,7 @@
             <column name="nav_title" type="string"/>
             <column name="logo_url" type="string"/>
             <column name="logo_link" type="string"/>
-            <column name="content" type="string"/>
+            <column name="content" type="clob"/>
             <column name="created_on" type="datetime"/>
             <column name="created_by" type="string"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
