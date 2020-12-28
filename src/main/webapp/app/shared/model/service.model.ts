@@ -1,7 +1,6 @@
 import { Moment } from 'moment';
 import { ISpec } from 'app/shared/model/spec.model';
-import { ICapability } from 'app/shared/model/capability.model';
-import { IPortal } from 'app/shared/model/portal.model';
+import { ICapabilityService } from 'app/shared/model/capability-service.model';
 
 export interface IService {
   id?: number;
@@ -13,8 +12,7 @@ export interface IService {
   createdOn?: Moment;
   createdBy?: string;
   specs?: ISpec[];
-  capability?: ICapability;
-  portal?: IPortal;
+  capabilityService?: ICapabilityService;
 }
 
 export class Service implements IService {
@@ -28,7 +26,6 @@ export class Service implements IService {
     public createdOn?: Moment,
     public createdBy?: string,
     public specs?: ISpec[],
-    public capability?: ICapability,
-    public portal?: IPortal
+    public capabilityService?: ICapabilityService
   ) {}
 }

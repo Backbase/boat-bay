@@ -6,7 +6,7 @@ export interface ILintReport {
   grade?: string;
   passed?: boolean;
   spec?: ISpec;
-  lintRuleViolation?: ILintRuleViolation;
+  linkRuleViolation?: ILintRuleViolation;
 }
 
 export class LintReport implements ILintReport {
@@ -15,7 +15,7 @@ export class LintReport implements ILintReport {
     public grade?: string,
     public passed?: boolean,
     public spec?: ISpec,
-    public lintRuleViolation?: ILintRuleViolation
+    public linkRuleViolation?: ILintRuleViolation
   ) {
     this.passed = this.passed || false;
   }

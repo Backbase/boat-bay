@@ -35,7 +35,7 @@ public class LintReport implements Serializable {
 
     @ManyToOne
     @JsonIgnoreProperties(value = "lintReports", allowSetters = true)
-    private LintRuleViolation lintRuleViolation;
+    private LintRuleViolation linkRuleViolation;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -85,17 +85,17 @@ public class LintReport implements Serializable {
         this.spec = spec;
     }
 
-    public LintRuleViolation getLintRuleViolation() {
-        return lintRuleViolation;
+    public LintRuleViolation getLinkRuleViolation() {
+        return linkRuleViolation;
     }
 
-    public LintReport lintRuleViolation(LintRuleViolation lintRuleViolation) {
-        this.lintRuleViolation = lintRuleViolation;
+    public LintReport linkRuleViolation(LintRuleViolation lintRuleViolation) {
+        this.linkRuleViolation = lintRuleViolation;
         return this;
     }
 
-    public void setLintRuleViolation(LintRuleViolation lintRuleViolation) {
-        this.lintRuleViolation = lintRuleViolation;
+    public void setLinkRuleViolation(LintRuleViolation lintRuleViolation) {
+        this.linkRuleViolation = lintRuleViolation;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 

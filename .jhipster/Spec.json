@@ -3,30 +3,90 @@
   "fields": [
     {
       "fieldName": "key",
-      "fieldType": "String"
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "version",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
     },
     {
       "fieldName": "title",
       "fieldType": "String"
     },
     {
-      "fieldName": "openApiUrl",
-      "fieldType": "String"
-    },
-    {
-      "fieldName": "boatDocUrl",
-      "fieldType": "String"
-    },
-    {
       "fieldName": "openApi",
-      "fieldType": "String"
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
     },
     {
       "fieldName": "createdOn",
-      "fieldType": "Instant"
+      "fieldType": "Instant",
+      "fieldValidateRules": [
+        "required"
+      ]
     },
     {
       "fieldName": "createdBy",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "checksum",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "filename",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "sourcePath",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "sourceName",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "sourceUrl",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "sourceCreatedBy",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "sourceCreatedOn",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "sourceLastModifiedOn",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "sourceLastModifiedBy",
       "fieldType": "String"
     }
   ],
@@ -41,10 +101,34 @@
     },
     {
       "relationshipType": "many-to-one",
-      "otherEntityName": "service",
+      "otherEntityName": "portal",
       "otherEntityRelationshipName": "spec",
-      "relationshipName": "service",
-      "otherEntityField": "id"
+      "relationshipValidateRules": "required",
+      "relationshipName": "portal",
+      "otherEntityField": "name"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "capability",
+      "otherEntityRelationshipName": "spec",
+      "relationshipValidateRules": "required",
+      "relationshipName": "capability",
+      "otherEntityField": "name"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "capabilityServiceDefinition",
+      "otherEntityRelationshipName": "spec",
+      "relationshipValidateRules": "required",
+      "relationshipName": "capabilityServiceDefinition",
+      "otherEntityField": "name"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "source",
+      "otherEntityRelationshipName": "spec",
+      "relationshipName": "source",
+      "otherEntityField": "name"
     }
   ],
   "changelogDate": "20201223102615",

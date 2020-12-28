@@ -22,8 +22,8 @@
       "relationshipType": "many-to-one",
       "otherEntityName": "lintRuleViolation",
       "otherEntityRelationshipName": "lintReport",
-      "relationshipName": "lintRuleViolation",
-      "otherEntityField": "id"
+      "relationshipName": "linkRuleViolation",
+      "otherEntityField": "name"
     }
   ],
   "changelogDate": "20201223103015",

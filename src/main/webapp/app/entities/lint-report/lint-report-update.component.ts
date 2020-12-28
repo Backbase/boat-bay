@@ -22,7 +22,7 @@ export class LintReportUpdateComponent implements OnInit {
     id: [],
     grade: [],
     passed: [],
-    lintRuleViolation: [],
+    linkRuleViolation: [],
   });
 
   constructor(
@@ -47,7 +47,7 @@ export class LintReportUpdateComponent implements OnInit {
       id: lintReport.id,
       grade: lintReport.grade,
       passed: lintReport.passed,
-      lintRuleViolation: lintReport.lintRuleViolation,
+      linkRuleViolation: lintReport.linkRuleViolation,
     });
   }
 
@@ -71,7 +71,7 @@ export class LintReportUpdateComponent implements OnInit {
       id: this.editForm.get(['id'])!.value,
       grade: this.editForm.get(['grade'])!.value,
       passed: this.editForm.get(['passed'])!.value,
-      lintRuleViolation: this.editForm.get(['lintRuleViolation'])!.value,
+      linkRuleViolation: this.editForm.get(['linkRuleViolation'])!.value,
     };
   }
 

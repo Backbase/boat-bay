@@ -4,6 +4,7 @@ import { Severity } from 'app/shared/model/enumerations/severity.model';
 
 export interface ILintRuleViolation {
   id?: number;
+  name?: string;
   description?: string;
   severity?: Severity;
   lineStart?: number;
@@ -18,6 +19,7 @@ export interface ILintRuleViolation {
 export class LintRuleViolation implements ILintRuleViolation {
   constructor(
     public id?: number,
+    public name?: string,
     public description?: string,
     public severity?: Severity,
     public lineStart?: number,

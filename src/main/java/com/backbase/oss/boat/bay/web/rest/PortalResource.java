@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -47,7 +48,7 @@ public class PortalResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/portals")
-    public ResponseEntity<Portal> createPortal(@RequestBody Portal portal) throws URISyntaxException {
+    public ResponseEntity<Portal> createPortal(@Valid @RequestBody Portal portal) throws URISyntaxException {
         log.debug("REST request to save Portal : {}", portal);
         if (portal.getId() != null) {
             throw new BadRequestAlertException("A new portal cannot already have an ID", ENTITY_NAME, "idexists");
@@ -68,7 +69,7 @@ public class PortalResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/portals")
-    public ResponseEntity<Portal> updatePortal(@RequestBody Portal portal) throws URISyntaxException {
+    public ResponseEntity<Portal> updatePortal(@Valid @RequestBody Portal portal) throws URISyntaxException {
         log.debug("REST request to update Portal : {}", portal);
         if (portal.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");

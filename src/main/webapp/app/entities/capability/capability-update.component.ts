@@ -22,7 +22,8 @@ export class CapabilityUpdateComponent implements OnInit {
 
   editForm = this.fb.group({
     id: [],
-    key: [],
+    key: [null, [Validators.required]],
+    name: [null, [Validators.required]],
     title: [],
     subTitle: [],
     navTitle: [],
@@ -30,7 +31,7 @@ export class CapabilityUpdateComponent implements OnInit {
     version: [],
     createdOn: [],
     createdBy: [],
-    portal: [],
+    portal: [null, Validators.required],
   });
 
   constructor(
@@ -57,6 +58,7 @@ export class CapabilityUpdateComponent implements OnInit {
     this.editForm.patchValue({
       id: capability.id,
       key: capability.key,
+      name: capability.name,
       title: capability.title,
       subTitle: capability.subTitle,
       navTitle: capability.navTitle,
@@ -87,6 +89,7 @@ export class CapabilityUpdateComponent implements OnInit {
       ...new Capability(),
       id: this.editForm.get(['id'])!.value,
       key: this.editForm.get(['key'])!.value,
+      name: this.editForm.get(['name'])!.value,
       title: this.editForm.get(['title'])!.value,
       subTitle: this.editForm.get(['subTitle'])!.value,
       navTitle: this.editForm.get(['navTitle'])!.value,

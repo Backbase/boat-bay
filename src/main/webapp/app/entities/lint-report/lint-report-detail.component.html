@@ -16,10 +16,10 @@
                 <dd>
                     <span>{{ lintReport.passed }}</span>
                 </dd>
-                <dt><span>Lint Rule Violation</span></dt>
+                <dt><span>Link Rule Violation</span></dt>
                 <dd>
-                    <div *ngIf="lintReport.lintRuleViolation">
-                        <a [routerLink]="['/lint-rule-violation', lintReport.lintRuleViolation?.id, 'view']">{{ lintReport.lintRuleViolation?.id }}</a>
+                    <div *ngIf="lintReport.linkRuleViolation">
+                        <a [routerLink]="['/lint-rule-violation', lintReport.linkRuleViolation?.id, 'view']">{{ lintReport.linkRuleViolation?.name }}</a>
                     </div>
                 </dd>
             </dl>

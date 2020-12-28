@@ -4,6 +4,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.time.Instant;
@@ -24,8 +25,13 @@ public class Portal implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "jhi_key")
+    @NotNull
+    @Column(name = "jhi_key", nullable = false, unique = true)
     private String key;
+
+    @NotNull
+    @Column(name = "name", nullable = false)
+    private String name;
 
     @Column(name = "title")
     private String title;
@@ -55,10 +61,6 @@ public class Portal implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Capability> capabilities = new HashSet<>();
 
-    @OneToMany(mappedBy = "portal")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    private Set<Service> services = new HashSet<>();
-
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
         return id;
@@ -79,6 +81,19 @@ public class Portal implements Serializable {
 
     public void setKey(String key) {
         this.key = key;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Portal name(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getTitle() {
@@ -209,31 +224,6 @@ public class Portal implements Serializable {
     public void setCapabilities(Set<Capability> capabilities) {
         this.capabilities = capabilities;
     }
-
-    public Set<Service> getServices() {
-        return services;
-    }
-
-    public Portal services(Set<Service> services) {
-        this.services = services;
-        return this;
-    }
-
-    public Portal addService(Service service) {
-        this.services.add(service);
-        service.setPortal(this);
-        return this;
-    }
-
-    public Portal removeService(Service service) {
-        this.services.remove(service);
-        service.setPortal(null);
-        return this;
-    }
-
-    public void setServices(Set<Service> services) {
-        this.services = services;
-    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -258,6 +248,7 @@ public class Portal implements Serializable {
         return "Portal{" +
             "id=" + getId() +
             ", key='" + getKey() + "'" +
+            ", name='" + getName() + "'" +
             ", title='" + getTitle() + "'" +
             ", subTitle='" + getSubTitle() + "'" +
             ", navTitle='" + getNavTitle() + "'" +

@@ -21,7 +21,7 @@ describe('Service Tests', () => {
       service = injector.get(LintRuleViolationService);
       httpMock = injector.get(HttpTestingController);
 
-      elemDefault = new LintRuleViolation(0, 'AAAAAAA', Severity.MUST, 0, 0, 0, 0, 'AAAAAAA');
+      elemDefault = new LintRuleViolation(0, 'AAAAAAA', 'AAAAAAA', Severity.MUST, 0, 0, 0, 0, 'AAAAAAA');
     });
 
     describe('Service methods', () => {
@@ -55,6 +55,7 @@ describe('Service Tests', () => {
       it('should update a LintRuleViolation', () => {
         const returnedFromService = Object.assign(
           {
+            name: 'BBBBBB',
             description: 'BBBBBB',
             severity: 'BBBBBB',
             lineStart: 1,
@@ -78,6 +79,7 @@ describe('Service Tests', () => {
       it('should return a list of LintRuleViolation', () => {
         const returnedFromService = Object.assign(
           {
+            name: 'BBBBBB',
             description: 'BBBBBB',
             severity: 'BBBBBB',
             lineStart: 1,

@@ -24,6 +24,7 @@
                 <tr>
                     <th scope="col" ><span>ID</span></th>
                     <th scope="col" ><span>Key</span></th>
+                    <th scope="col" ><span>Name</span></th>
                     <th scope="col" ><span>Title</span></th>
                     <th scope="col" ><span>Sub Title</span></th>
                     <th scope="col" ><span>Nav Title</span></th>
@@ -39,6 +40,7 @@
                 <tr *ngFor="let capability of capabilities ;trackBy: trackId">
                     <td><a [routerLink]="['/capability', capability.id, 'view']">{{ capability.id }}</a></td>
                     <td>{{ capability.key }}</td>
+                    <td>{{ capability.name }}</td>
                     <td>{{ capability.title }}</td>
                     <td>{{ capability.subTitle }}</td>
                     <td>{{ capability.navTitle }}</td>
@@ -48,7 +50,7 @@
                     <td>{{ capability.createdBy }}</td>
                     <td>
                         <div *ngIf="capability.portal">
-                            <a [routerLink]="['/portal', capability.portal?.id, 'view']" >{{ capability.portal?.id }}</a>
+                            <a [routerLink]="['/portal', capability.portal?.id, 'view']" >{{ capability.portal?.name }}</a>
                         </div>
                     </td>
                     <td class="text-right">

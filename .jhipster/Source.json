@@ -1,0 +1,101 @@
+{
+  "name": "Source",
+  "fields": [
+    {
+      "fieldName": "baseUrl",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "type",
+      "fieldType": "SourceType",
+      "fieldValues": "GIT,JFROG,HTTP,FILE_SYSTEM,BOAT_MAVEN_PLUGIN",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "active",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "path",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "filter",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "username",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "password",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "cronExpression",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "capabilityNameSpEL",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "serviceNameSpEL",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "versionSpEL",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "portal",
+      "otherEntityRelationshipName": "source",
+      "relationshipValidateRules": "required",
+      "relationshipName": "portal",
+      "otherEntityField": "name",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "capability",
+      "otherEntityRelationshipName": "source",
+      "relationshipName": "capability",
+      "otherEntityField": "name",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "capabilityServiceDefinition",
+      "otherEntityRelationshipName": "source",
+      "relationshipName": "capabilityServiceDefinition",
+      "otherEntityField": "name",
+      "ownerSide": true
+    }
+  ],
+  "changelogDate": "20201223122159",
+  "entityTableName": "source",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

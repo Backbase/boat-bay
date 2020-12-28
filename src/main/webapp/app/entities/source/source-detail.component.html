@@ -1,0 +1,92 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="source">
+            <h2><span>Source</span> {{ source.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span>Base Url</span></dt>
+                <dd>
+                    <span>{{ source.baseUrl }}</span>
+                </dd>
+                <dt><span>Name</span></dt>
+                <dd>
+                    <span>{{ source.name }}</span>
+                </dd>
+                <dt><span>Type</span></dt>
+                <dd>
+                    <span>{{ source.type }}</span>
+                </dd>
+                <dt><span>Active</span></dt>
+                <dd>
+                    <span>{{ source.active }}</span>
+                </dd>
+                <dt><span>Path</span></dt>
+                <dd>
+                    <span>{{ source.path }}</span>
+                </dd>
+                <dt><span>Filter</span></dt>
+                <dd>
+                    <span>{{ source.filter }}</span>
+                </dd>
+                <dt><span>Username</span></dt>
+                <dd>
+                    <span>{{ source.username }}</span>
+                </dd>
+                <dt><span>Password</span></dt>
+                <dd>
+                    <span>{{ source.password }}</span>
+                </dd>
+                <dt><span>Cron Expression</span></dt>
+                <dd>
+                    <span>{{ source.cronExpression }}</span>
+                </dd>
+                <dt><span>Capability Name Sp EL</span></dt>
+                <dd>
+                    <span>{{ source.capabilityNameSpEL }}</span>
+                </dd>
+                <dt><span>Service Name Sp EL</span></dt>
+                <dd>
+                    <span>{{ source.serviceNameSpEL }}</span>
+                </dd>
+                <dt><span>Version Sp EL</span></dt>
+                <dd>
+                    <span>{{ source.versionSpEL }}</span>
+                </dd>
+                <dt><span>Portal</span></dt>
+                <dd>
+                    <div *ngIf="source.portal">
+                        <a [routerLink]="['/portal', source.portal?.id, 'view']">{{ source.portal?.name }}</a>
+                    </div>
+                </dd>
+                <dt><span>Capability</span></dt>
+                <dd>
+                    <div *ngIf="source.capability">
+                        <a [routerLink]="['/capability', source.capability?.id, 'view']">{{ source.capability?.name }}</a>
+                    </div>
+                </dd>
+                <dt><span>Capability Service Definition</span></dt>
+                <dd>
+                    <div *ngIf="source.capabilityServiceDefinition">
+                        <a [routerLink]="['/capability-service-definition', source.capabilityServiceDefinition?.id, 'view']">{{ source.capabilityServiceDefinition?.name }}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/source', source.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

@@ -24,14 +24,26 @@
                 <tr>
                     <th scope="col" ><span>ID</span></th>
                     <th scope="col" ><span>Key</span></th>
+                    <th scope="col" ><span>Name</span></th>
+                    <th scope="col" ><span>Version</span></th>
                     <th scope="col" ><span>Title</span></th>
-                    <th scope="col" ><span>Open Api Url</span></th>
-                    <th scope="col" ><span>Boat Doc Url</span></th>
                     <th scope="col" ><span>Open Api</span></th>
                     <th scope="col" ><span>Created On</span></th>
                     <th scope="col" ><span>Created By</span></th>
+                    <th scope="col" ><span>Checksum</span></th>
+                    <th scope="col" ><span>Filename</span></th>
+                    <th scope="col" ><span>Source Path</span></th>
+                    <th scope="col" ><span>Source Name</span></th>
+                    <th scope="col" ><span>Source Url</span></th>
+                    <th scope="col" ><span>Source Created By</span></th>
+                    <th scope="col" ><span>Source Created On</span></th>
+                    <th scope="col" ><span>Source Last Modified On</span></th>
+                    <th scope="col" ><span>Source Last Modified By</span></th>
                     <th scope="col" ><span>Lint Report</span></th>
-                    <th scope="col" ><span>Service</span></th>
+                    <th scope="col" ><span>Portal</span></th>
+                    <th scope="col" ><span>Capability</span></th>
+                    <th scope="col" ><span>Capability Service Definition</span></th>
+                    <th scope="col" ><span>Source</span></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -39,20 +51,44 @@
                 <tr *ngFor="let spec of specs ;trackBy: trackId">
                     <td><a [routerLink]="['/spec', spec.id, 'view']">{{ spec.id }}</a></td>
                     <td>{{ spec.key }}</td>
+                    <td>{{ spec.name }}</td>
+                    <td>{{ spec.version }}</td>
                     <td>{{ spec.title }}</td>
-                    <td>{{ spec.openApiUrl }}</td>
-                    <td>{{ spec.boatDocUrl }}</td>
                     <td>{{ spec.openApi }}</td>
                     <td>{{ spec.createdOn | date:'medium' }}</td>
                     <td>{{ spec.createdBy }}</td>
+                    <td>{{ spec.checksum }}</td>
+                    <td>{{ spec.filename }}</td>
+                    <td>{{ spec.sourcePath }}</td>
+                    <td>{{ spec.sourceName }}</td>
+                    <td>{{ spec.sourceUrl }}</td>
+                    <td>{{ spec.sourceCreatedBy }}</td>
+                    <td>{{ spec.sourceCreatedOn | date:'medium' }}</td>
+                    <td>{{ spec.sourceLastModifiedOn | date:'medium' }}</td>
+                    <td>{{ spec.sourceLastModifiedBy }}</td>
                     <td>
                         <div *ngIf="spec.lintReport">
                             <a [routerLink]="['/lint-report', spec.lintReport?.id, 'view']" >{{ spec.lintReport?.id }}</a>
                         </div>
                     </td>
                     <td>
-                        <div *ngIf="spec.service">
-                            <a [routerLink]="['/service', spec.service?.id, 'view']" >{{ spec.service?.id }}</a>
+                        <div *ngIf="spec.portal">
+                            <a [routerLink]="['/portal', spec.portal?.id, 'view']" >{{ spec.portal?.name }}</a>
+                        </div>
+                    </td>
+                    <td>
+                        <div *ngIf="spec.capability">
+                            <a [routerLink]="['/capability', spec.capability?.id, 'view']" >{{ spec.capability?.name }}</a>
+                        </div>
+                    </td>
+                    <td>
+                        <div *ngIf="spec.capabilityServiceDefinition">
+                            <a [routerLink]="['/capability-service-definition', spec.capabilityServiceDefinition?.id, 'view']" >{{ spec.capabilityServiceDefinition?.name }}</a>
+                        </div>
+                    </td>
+                    <td>
+                        <div *ngIf="spec.source">
+                            <a [routerLink]="['/source', spec.source?.id, 'view']" >{{ spec.source?.name }}</a>
                         </div>
                     </td>
                     <td class="text-right">

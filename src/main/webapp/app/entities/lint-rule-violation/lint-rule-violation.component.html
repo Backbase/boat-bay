@@ -23,6 +23,7 @@
             <thead>
                 <tr>
                     <th scope="col" ><span>ID</span></th>
+                    <th scope="col" ><span>Name</span></th>
                     <th scope="col" ><span>Description</span></th>
                     <th scope="col" ><span>Severity</span></th>
                     <th scope="col" ><span>Line Start</span></th>
@@ -37,6 +38,7 @@
             <tbody>
                 <tr *ngFor="let lintRuleViolation of lintRuleViolations ;trackBy: trackId">
                     <td><a [routerLink]="['/lint-rule-violation', lintRuleViolation.id, 'view']">{{ lintRuleViolation.id }}</a></td>
+                    <td>{{ lintRuleViolation.name }}</td>
                     <td>{{ lintRuleViolation.description }}</td>
                     <td>{{ lintRuleViolation.severity }}</td>
                     <td>{{ lintRuleViolation.lineStart }}</td>
