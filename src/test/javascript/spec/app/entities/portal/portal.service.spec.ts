@@ -24,7 +24,19 @@ describe('Service Tests', () => {
       httpMock = injector.get(HttpTestingController);
       currentDate = moment();
 
-      elemDefault = new Portal(0, 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', currentDate, 'AAAAAAA');
+      elemDefault = new Portal(
+        0,
+        'AAAAAAA',
+        'AAAAAAA',
+        'AAAAAAA',
+        'AAAAAAA',
+        'AAAAAAA',
+        'AAAAAAA',
+        'AAAAAAA',
+        'AAAAAAA',
+        currentDate,
+        'AAAAAAA'
+      );
     });
 
     describe('Service methods', () => {
@@ -70,6 +82,7 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             key: 'BBBBBB',
+            name: 'BBBBBB',
             title: 'BBBBBB',
             subTitle: 'BBBBBB',
             navTitle: 'BBBBBB',
@@ -100,6 +113,7 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             key: 'BBBBBB',
+            name: 'BBBBBB',
             title: 'BBBBBB',
             subTitle: 'BBBBBB',
             navTitle: 'BBBBBB',

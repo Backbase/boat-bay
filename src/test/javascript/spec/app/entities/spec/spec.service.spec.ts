@@ -24,7 +24,25 @@ describe('Service Tests', () => {
       httpMock = injector.get(HttpTestingController);
       currentDate = moment();
 
-      elemDefault = new Spec(0, 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', currentDate, 'AAAAAAA');
+      elemDefault = new Spec(
+        0,
+        'AAAAAAA',
+        'AAAAAAA',
+        'AAAAAAA',
+        'AAAAAAA',
+        'AAAAAAA',
+        currentDate,
+        'AAAAAAA',
+        'AAAAAAA',
+        'AAAAAAA',
+        'AAAAAAA',
+        'AAAAAAA',
+        'AAAAAAA',
+        'AAAAAAA',
+        currentDate,
+        currentDate,
+        'AAAAAAA'
+      );
     });
 
     describe('Service methods', () => {
@@ -32,6 +50,8 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             createdOn: currentDate.format(DATE_TIME_FORMAT),
+            sourceCreatedOn: currentDate.format(DATE_TIME_FORMAT),
+            sourceLastModifiedOn: currentDate.format(DATE_TIME_FORMAT),
           },
           elemDefault
         );
@@ -48,6 +68,8 @@ describe('Service Tests', () => {
           {
             id: 0,
             createdOn: currentDate.format(DATE_TIME_FORMAT),
+            sourceCreatedOn: currentDate.format(DATE_TIME_FORMAT),
+            sourceLastModifiedOn: currentDate.format(DATE_TIME_FORMAT),
           },
           elemDefault
         );
@@ -55,6 +77,8 @@ describe('Service Tests', () => {
         const expected = Object.assign(
           {
             createdOn: currentDate,
+            sourceCreatedOn: currentDate,
+            sourceLastModifiedOn: currentDate,
           },
           returnedFromService
         );
@@ -70,12 +94,21 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             key: 'BBBBBB',
+            name: 'BBBBBB',
+            version: 'BBBBBB',
             title: 'BBBBBB',
-            openApiUrl: 'BBBBBB',
-            boatDocUrl: 'BBBBBB',
             openApi: 'BBBBBB',
             createdOn: currentDate.format(DATE_TIME_FORMAT),
             createdBy: 'BBBBBB',
+            checksum: 'BBBBBB',
+            filename: 'BBBBBB',
+            sourcePath: 'BBBBBB',
+            sourceName: 'BBBBBB',
+            sourceUrl: 'BBBBBB',
+            sourceCreatedBy: 'BBBBBB',
+            sourceCreatedOn: currentDate.format(DATE_TIME_FORMAT),
+            sourceLastModifiedOn: currentDate.format(DATE_TIME_FORMAT),
+            sourceLastModifiedBy: 'BBBBBB',
           },
           elemDefault
         );
@@ -83,6 +116,8 @@ describe('Service Tests', () => {
         const expected = Object.assign(
           {
             createdOn: currentDate,
+            sourceCreatedOn: currentDate,
+            sourceLastModifiedOn: currentDate,
           },
           returnedFromService
         );
@@ -98,12 +133,21 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             key: 'BBBBBB',
+            name: 'BBBBBB',
+            version: 'BBBBBB',
             title: 'BBBBBB',
-            openApiUrl: 'BBBBBB',
-            boatDocUrl: 'BBBBBB',
             openApi: 'BBBBBB',
             createdOn: currentDate.format(DATE_TIME_FORMAT),
             createdBy: 'BBBBBB',
+            checksum: 'BBBBBB',
+            filename: 'BBBBBB',
+            sourcePath: 'BBBBBB',
+            sourceName: 'BBBBBB',
+            sourceUrl: 'BBBBBB',
+            sourceCreatedBy: 'BBBBBB',
+            sourceCreatedOn: currentDate.format(DATE_TIME_FORMAT),
+            sourceLastModifiedOn: currentDate.format(DATE_TIME_FORMAT),
+            sourceLastModifiedBy: 'BBBBBB',
           },
           elemDefault
         );
@@ -111,6 +155,8 @@ describe('Service Tests', () => {
         const expected = Object.assign(
           {
             createdOn: currentDate,
+            sourceCreatedOn: currentDate,
+            sourceLastModifiedOn: currentDate,
           },
           returnedFromService
         );

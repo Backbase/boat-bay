@@ -2,6 +2,7 @@ package com.backbase.oss.boat.bay.web.rest;
 
 import com.backbase.oss.boat.bay.BoatBayApp;
 import com.backbase.oss.boat.bay.domain.Capability;
+import com.backbase.oss.boat.bay.domain.Portal;
 import com.backbase.oss.boat.bay.repository.CapabilityRepository;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -33,6 +34,9 @@ public class CapabilityResourceIT {
 
     private static final String DEFAULT_KEY = "AAAAAAAAAA";
     private static final String UPDATED_KEY = "BBBBBBBBBB";
+
+    private static final String DEFAULT_NAME = "AAAAAAAAAA";
+    private static final String UPDATED_NAME = "BBBBBBBBBB";
 
     private static final String DEFAULT_TITLE = "AAAAAAAAAA";
     private static final String UPDATED_TITLE = "BBBBBBBBBB";
@@ -75,6 +79,7 @@ public class CapabilityResourceIT {
     public static Capability createEntity(EntityManager em) {
         Capability capability = new Capability()
             .key(DEFAULT_KEY)
+            .name(DEFAULT_NAME)
             .title(DEFAULT_TITLE)
             .subTitle(DEFAULT_SUB_TITLE)
             .navTitle(DEFAULT_NAV_TITLE)
@@ -82,6 +87,16 @@ public class CapabilityResourceIT {
             .version(DEFAULT_VERSION)
             .createdOn(DEFAULT_CREATED_ON)
             .createdBy(DEFAULT_CREATED_BY);
+        // Add required entity
+        Portal portal;
+        if (TestUtil.findAll(em, Portal.class).isEmpty()) {
+            portal = PortalResourceIT.createEntity(em);
+            em.persist(portal);
+            em.flush();
+        } else {
+            portal = TestUtil.findAll(em, Portal.class).get(0);
+        }
+        capability.setPortal(portal);
         return capability;
     }
     /**
@@ -93,6 +108,7 @@ public class CapabilityResourceIT {
     public static Capability createUpdatedEntity(EntityManager em) {
         Capability capability = new Capability()
             .key(UPDATED_KEY)
+            .name(UPDATED_NAME)
             .title(UPDATED_TITLE)
             .subTitle(UPDATED_SUB_TITLE)
             .navTitle(UPDATED_NAV_TITLE)
@@ -100,6 +116,16 @@ public class CapabilityResourceIT {
             .version(UPDATED_VERSION)
             .createdOn(UPDATED_CREATED_ON)
             .createdBy(UPDATED_CREATED_BY);
+        // Add required entity
+        Portal portal;
+        if (TestUtil.findAll(em, Portal.class).isEmpty()) {
+            portal = PortalResourceIT.createUpdatedEntity(em);
+            em.persist(portal);
+            em.flush();
+        } else {
+            portal = TestUtil.findAll(em, Portal.class).get(0);
+        }
+        capability.setPortal(portal);
         return capability;
     }
 
@@ -123,6 +149,7 @@ public class CapabilityResourceIT {
         assertThat(capabilityList).hasSize(databaseSizeBeforeCreate + 1);
         Capability testCapability = capabilityList.get(capabilityList.size() - 1);
         assertThat(testCapability.getKey()).isEqualTo(DEFAULT_KEY);
+        assertThat(testCapability.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testCapability.getTitle()).isEqualTo(DEFAULT_TITLE);
         assertThat(testCapability.getSubTitle()).isEqualTo(DEFAULT_SUB_TITLE);
         assertThat(testCapability.getNavTitle()).isEqualTo(DEFAULT_NAV_TITLE);
@@ -154,6 +181,44 @@ public class CapabilityResourceIT {
 
     @Test
     @Transactional
+    public void checkKeyIsRequired() throws Exception {
+        int databaseSizeBeforeTest = capabilityRepository.findAll().size();
+        // set the field null
+        capability.setKey(null);
+
+        // Create the Capability, which fails.
+
+
+        restCapabilityMockMvc.perform(post("/api/capabilities")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(capability)))
+            .andExpect(status().isBadRequest());
+
+        List<Capability> capabilityList = capabilityRepository.findAll();
+        assertThat(capabilityList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    public void checkNameIsRequired() throws Exception {
+        int databaseSizeBeforeTest = capabilityRepository.findAll().size();
+        // set the field null
+        capability.setName(null);
+
+        // Create the Capability, which fails.
+
+
+        restCapabilityMockMvc.perform(post("/api/capabilities")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(capability)))
+            .andExpect(status().isBadRequest());
+
+        List<Capability> capabilityList = capabilityRepository.findAll();
+        assertThat(capabilityList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void getAllCapabilities() throws Exception {
         // Initialize the database
         capabilityRepository.saveAndFlush(capability);
@@ -164,6 +229,7 @@ public class CapabilityResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(capability.getId().intValue())))
             .andExpect(jsonPath("$.[*].key").value(hasItem(DEFAULT_KEY)))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE)))
             .andExpect(jsonPath("$.[*].subTitle").value(hasItem(DEFAULT_SUB_TITLE)))
             .andExpect(jsonPath("$.[*].navTitle").value(hasItem(DEFAULT_NAV_TITLE)))
@@ -185,6 +251,7 @@ public class CapabilityResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(capability.getId().intValue()))
             .andExpect(jsonPath("$.key").value(DEFAULT_KEY))
+            .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.title").value(DEFAULT_TITLE))
             .andExpect(jsonPath("$.subTitle").value(DEFAULT_SUB_TITLE))
             .andExpect(jsonPath("$.navTitle").value(DEFAULT_NAV_TITLE))
@@ -215,6 +282,7 @@ public class CapabilityResourceIT {
         em.detach(updatedCapability);
         updatedCapability
             .key(UPDATED_KEY)
+            .name(UPDATED_NAME)
             .title(UPDATED_TITLE)
             .subTitle(UPDATED_SUB_TITLE)
             .navTitle(UPDATED_NAV_TITLE)
@@ -233,6 +301,7 @@ public class CapabilityResourceIT {
         assertThat(capabilityList).hasSize(databaseSizeBeforeUpdate);
         Capability testCapability = capabilityList.get(capabilityList.size() - 1);
         assertThat(testCapability.getKey()).isEqualTo(UPDATED_KEY);
+        assertThat(testCapability.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testCapability.getTitle()).isEqualTo(UPDATED_TITLE);
         assertThat(testCapability.getSubTitle()).isEqualTo(UPDATED_SUB_TITLE);
         assertThat(testCapability.getNavTitle()).isEqualTo(UPDATED_NAV_TITLE);

@@ -21,6 +21,7 @@ export class LintRuleViolationUpdateComponent implements OnInit {
 
   editForm = this.fb.group({
     id: [],
+    name: [null, [Validators.required]],
     description: [null, [Validators.required]],
     severity: [],
     lineStart: [],
@@ -69,6 +70,7 @@ export class LintRuleViolationUpdateComponent implements OnInit {
   updateForm(lintRuleViolation: ILintRuleViolation): void {
     this.editForm.patchValue({
       id: lintRuleViolation.id,
+      name: lintRuleViolation.name,
       description: lintRuleViolation.description,
       severity: lintRuleViolation.severity,
       lineStart: lintRuleViolation.lineStart,
@@ -98,6 +100,7 @@ export class LintRuleViolationUpdateComponent implements OnInit {
     return {
       ...new LintRuleViolation(),
       id: this.editForm.get(['id'])!.value,
+      name: this.editForm.get(['name'])!.value,
       description: this.editForm.get(['description'])!.value,
       severity: this.editForm.get(['severity'])!.value,
       lineStart: this.editForm.get(['lineStart'])!.value,

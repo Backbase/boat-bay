@@ -51,6 +51,9 @@ export class SpecService {
   protected convertDateFromClient(spec: ISpec): ISpec {
     const copy: ISpec = Object.assign({}, spec, {
       createdOn: spec.createdOn && spec.createdOn.isValid() ? spec.createdOn.toJSON() : undefined,
+      sourceCreatedOn: spec.sourceCreatedOn && spec.sourceCreatedOn.isValid() ? spec.sourceCreatedOn.toJSON() : undefined,
+      sourceLastModifiedOn:
+        spec.sourceLastModifiedOn && spec.sourceLastModifiedOn.isValid() ? spec.sourceLastModifiedOn.toJSON() : undefined,
     });
     return copy;
   }
@@ -58,6 +61,8 @@ export class SpecService {
   protected convertDateFromServer(res: EntityResponseType): EntityResponseType {
     if (res.body) {
       res.body.createdOn = res.body.createdOn ? moment(res.body.createdOn) : undefined;
+      res.body.sourceCreatedOn = res.body.sourceCreatedOn ? moment(res.body.sourceCreatedOn) : undefined;
+      res.body.sourceLastModifiedOn = res.body.sourceLastModifiedOn ? moment(res.body.sourceLastModifiedOn) : undefined;
     }
     return res;
   }
@@ -66,6 +71,8 @@ export class SpecService {
     if (res.body) {
       res.body.forEach((spec: ISpec) => {
         spec.createdOn = spec.createdOn ? moment(spec.createdOn) : undefined;
+        spec.sourceCreatedOn = spec.sourceCreatedOn ? moment(spec.sourceCreatedOn) : undefined;
+        spec.sourceLastModifiedOn = spec.sourceLastModifiedOn ? moment(spec.sourceLastModifiedOn) : undefined;
       });
     }
     return res;

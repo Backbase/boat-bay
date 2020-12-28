@@ -27,6 +27,10 @@ public class LintRuleViolation implements Serializable {
     private Long id;
 
     @NotNull
+    @Column(name = "name", nullable = false)
+    private String name;
+
+    @NotNull
     @Column(name = "description", nullable = false)
     private String description;
 
@@ -53,7 +57,7 @@ public class LintRuleViolation implements Serializable {
     @JoinColumn(unique = true)
     private LintRule lintRule;
 
-    @OneToMany(mappedBy = "lintRuleViolation")
+    @OneToMany(mappedBy = "linkRuleViolation")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<LintReport> lintReports = new HashSet<>();
 
@@ -64,6 +68,19 @@ public class LintRuleViolation implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public LintRuleViolation name(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
@@ -181,13 +198,13 @@ public class LintRuleViolation implements Serializable {
 
     public LintRuleViolation addLintReport(LintReport lintReport) {
         this.lintReports.add(lintReport);
-        lintReport.setLintRuleViolation(this);
+        lintReport.setLinkRuleViolation(this);
         return this;
     }
 
     public LintRuleViolation removeLintReport(LintReport lintReport) {
         this.lintReports.remove(lintReport);
-        lintReport.setLintRuleViolation(null);
+        lintReport.setLinkRuleViolation(null);
         return this;
     }
 
@@ -217,6 +234,7 @@ public class LintRuleViolation implements Serializable {
     public String toString() {
         return "LintRuleViolation{" +
             "id=" + getId() +
+            ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
             ", severity='" + getSeverity() + "'" +
             ", lineStart=" + getLineStart() +

@@ -25,7 +25,7 @@
                     <th scope="col" ><span>ID</span></th>
                     <th scope="col" ><span>Grade</span></th>
                     <th scope="col" ><span>Passed</span></th>
-                    <th scope="col" ><span>Lint Rule Violation</span></th>
+                    <th scope="col" ><span>Link Rule Violation</span></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -35,8 +35,8 @@
                     <td>{{ lintReport.grade }}</td>
                     <td>{{ lintReport.passed }}</td>
                     <td>
-                        <div *ngIf="lintReport.lintRuleViolation">
-                            <a [routerLink]="['/lint-rule-violation', lintReport.lintRuleViolation?.id, 'view']" >{{ lintReport.lintRuleViolation?.id }}</a>
+                        <div *ngIf="lintReport.linkRuleViolation">
+                            <a [routerLink]="['/lint-rule-violation', lintReport.linkRuleViolation?.id, 'view']" >{{ lintReport.linkRuleViolation?.name }}</a>
                         </div>
                     </td>
                     <td class="text-right">

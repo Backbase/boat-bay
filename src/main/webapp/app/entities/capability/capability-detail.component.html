@@ -12,6 +12,10 @@
                 <dd>
                     <span>{{ capability.key }}</span>
                 </dd>
+                <dt><span>Name</span></dt>
+                <dd>
+                    <span>{{ capability.name }}</span>
+                </dd>
                 <dt><span>Title</span></dt>
                 <dd>
                     <span>{{ capability.title }}</span>
@@ -43,7 +47,7 @@
                 <dt><span>Portal</span></dt>
                 <dd>
                     <div *ngIf="capability.portal">
-                        <a [routerLink]="['/portal', capability.portal?.id, 'view']">{{ capability.portal?.id }}</a>
+                        <a [routerLink]="['/portal', capability.portal?.id, 'view']">{{ capability.portal?.name }}</a>
                     </div>
                 </dd>
             </dl>

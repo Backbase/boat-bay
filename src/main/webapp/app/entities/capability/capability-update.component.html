@@ -15,6 +15,24 @@
                     <label class="form-control-label" for="field_key">Key</label>
                     <input type="text" class="form-control" name="key" id="field_key"
                            formControlName="key"/>
+                    <div *ngIf="editForm.get('key')!.invalid && (editForm.get('key')!.dirty || editForm.get('key')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('key')?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_name">Name</label>
+                    <input type="text" class="form-control" name="name" id="field_name"
+                           formControlName="name"/>
+                    <div *ngIf="editForm.get('name')!.invalid && (editForm.get('name')!.dirty || editForm.get('name')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('name')?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -63,9 +81,15 @@
                 <div class="form-group">
                     <label class="form-control-label" for="field_portal">Portal</label>
                     <select class="form-control" id="field_portal" name="portal" formControlName="portal">
-                        <option [ngValue]="null"></option>
-                        <option [ngValue]="portalOption.id === editForm.get('portal')!.value?.id ? editForm.get('portal')!.value : portalOption" *ngFor="let portalOption of portals; trackBy: trackById">{{ portalOption.id }}</option>
+                        <option *ngIf="!editForm.get('portal')!.value" [ngValue]="null" selected></option>
+                        <option [ngValue]="portalOption.id === editForm.get('portal')!.value?.id ? editForm.get('portal')!.value : portalOption" *ngFor="let portalOption of portals; trackBy: trackById">{{ portalOption.name }}</option>
                     </select>
+                </div>
+                <div *ngIf="editForm.get('portal')!.invalid && (editForm.get('portal')!.dirty || editForm.get('portal')!.touched)">
+                    <small class="form-text text-danger"
+                           *ngIf="editForm.get('portal')?.errors?.required">
+                        This field is required.
+                    </small>
                 </div>
             </div>
 

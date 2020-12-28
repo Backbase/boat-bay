@@ -2,6 +2,13 @@
   "name": "LintRuleViolation",
   "fields": [
     {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
       "fieldName": "description",
       "fieldType": "String",
       "fieldValidateRules": [
@@ -46,7 +53,7 @@
     {
       "relationshipType": "one-to-many",
       "otherEntityName": "lintReport",
-      "otherEntityRelationshipName": "lintRuleViolation",
+      "otherEntityRelationshipName": "linkRuleViolation",
       "relationshipName": "lintReport"
     }
   ],

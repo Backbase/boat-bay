@@ -3,7 +3,18 @@
   "fields": [
     {
       "fieldName": "key",
-      "fieldType": "String"
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required",
+        "unique"
+      ]
+    },
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
     },
     {
       "fieldName": "title",
@@ -44,12 +55,6 @@
       "otherEntityName": "capability",
       "otherEntityRelationshipName": "portal",
       "relationshipName": "capability"
-    },
-    {
-      "relationshipType": "one-to-many",
-      "otherEntityName": "service",
-      "otherEntityRelationshipName": "portal",
-      "relationshipName": "service"
     }
   ],
   "changelogDate": "20201223102315",

@@ -1,83 +1,100 @@
 entity Portal {
-	id String,
-	key String,
-    title String,
-    subTitle String,
-    navTitle String,
-    logoUrl String,
-    logoLink String,
-    content String,
-    createdOn Instant,
+	key String required unique
+	name String required
+    title String
+    subTitle String
+    navTitle String
+    logoUrl String
+    logoLink String
+    content String
+    createdOn Instant
     createdBy String
 }
 
 entity Capability {
-	id String,
-	key String,
-    title String,
-    subTitle String,
-    navTitle String,
-    content String,
+	key String required
+    name String required
+    title String
+    subTitle String
+    navTitle String
+    content String
     version String
-    createdOn Instant,
+    createdOn Instant
     createdBy String
 }
 
-entity Service {
-	id String,
-	key String,
-    title String,
-    subTitle String,
-    navTitle String,
-    content String,
-    createdOn Instant,
+entity CapabilityServiceDefinition {
+	key String required
+	name String required
+    title String
+    subTitle String
+    navTitle String
+    content String
+    createdOn Instant
     createdBy String
 }
 
 entity Spec {
-	id String,
-	key String,
-    title String,
-    openApiUrl String,
-    boatDocUrl String,
-    openApi String,
-    createdOn Instant,
-    createdBy String
+	key String required
+	name String required
+	version String required
+    title String
+    openApi String required
+    createdOn Instant required
+    createdBy String required
+    checksum String required
+    filename String required
+
+    sourcePath String
+    sourceName String
+    sourceUrl String
+    sourceCreatedBy String
+    sourceCreatedOn Instant
+    sourceLastModifiedOn Instant
+    sourceLastModifiedBy String
+
+
+
 }
 
-entity Upload {
-	createdOn Instant,
-    createdBy String
-	file Blob,
-    fileName String,
-    processed Boolean,
-    action String
-    error String
+entity Source {
+    baseUrl String required
+    name String required
+    type SourceType required
+    active Boolean
+    path String
+    filter String
+    username String
+    password String
+    cronExpression String
+
+    capabilityNameSpEL String
+    serviceNameSpEL String
+    versionSpEL String
 }
+
 
 entity LintRule {
-	id String,
-    title String,
-    summary String,
+    title String
+    summary String
     severity Severity
-    description String,
-    externalUrl String,
+    description String
+    externalUrl String
     enabled Boolean
 }
 
 entity LintRuleSet {
-	id String required
     name String required
     description String
 }
 
 entity LintReport {
-	id String,
-    grade String,
+    grade String
     passed Boolean
 }
 
 entity LintRuleViolation {
+    name String required
 	description String required
 	severity Severity
     lineStart Integer
@@ -88,25 +105,38 @@ entity LintRuleViolation {
 }
 
 enum Severity {
-	MUST, SHOULD, MAY, HINT
+	MUST SHOULD MAY HINT
 }
 
 enum TypeSeverity {
-	BUG, CODE_SMELL, VULNERABILITY, SECURITY_HOTSPOT
+	BUG CODE_SMELL VULNERABILITY SECURITY_HOTSPOT
+}
+
+enum SourceType {
+    GIT JFROG HTTP FILE_SYSTEM BOAT_MAVEN_PLUGIN
 }
 
 relationship OneToMany {
-	Portal to Capability
-	Capability to Service
-	Portal to Service
-	Capability to Service
-	Service to Spec
-	LintRuleViolation to LintReport
+	Portal to Capability{portal(name) required}
+	Capability to CapabilityServiceDefinition{capability(name) required}
+	LintRuleViolation to LintReport{linkRuleViolation(name)}
 }
+
+relationship ManyToOne {
+    Spec{portal(name) required} to Portal
+    Spec{capability(name) required} to Capability
+    Spec{capabilityServiceDefinition(name) required} to CapabilityServiceDefinition
+    Spec{source(name)} to Source
+}
+
+
 
 relationship OneToOne {
 	Spec to LintReport
 	LintRuleViolation  to LintRule
+	Source{portal(name) required} to Portal
+	Source{capability(name)} to Capability
+	Source{capabilityServiceDefinition(name)} to CapabilityServiceDefinition
 }
 
 

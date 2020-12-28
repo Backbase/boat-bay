@@ -19,7 +19,8 @@ export class PortalUpdateComponent implements OnInit {
 
   editForm = this.fb.group({
     id: [],
-    key: [],
+    key: [null, [Validators.required]],
+    name: [null, [Validators.required]],
     title: [],
     subTitle: [],
     navTitle: [],
@@ -47,6 +48,7 @@ export class PortalUpdateComponent implements OnInit {
     this.editForm.patchValue({
       id: portal.id,
       key: portal.key,
+      name: portal.name,
       title: portal.title,
       subTitle: portal.subTitle,
       navTitle: portal.navTitle,
@@ -77,6 +79,7 @@ export class PortalUpdateComponent implements OnInit {
       ...new Portal(),
       id: this.editForm.get(['id'])!.value,
       key: this.editForm.get(['key'])!.value,
+      name: this.editForm.get(['name'])!.value,
       title: this.editForm.get(['title'])!.value,
       subTitle: this.editForm.get(['subTitle'])!.value,
       navTitle: this.editForm.get(['navTitle'])!.value,

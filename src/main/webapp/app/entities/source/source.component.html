@@ -1,0 +1,101 @@
+<div>
+    <h2 id="page-heading">
+        <span>Sources</span>
+
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-source" [routerLink]="['/source/new']">
+            <fa-icon icon="plus"></fa-icon>
+            <span>
+            Create a new Source
+            </span>
+        </button>
+    </h2>
+
+    <jhi-alert-error></jhi-alert-error>
+
+    <jhi-alert></jhi-alert>
+
+    <div class="alert alert-warning" id="no-result" *ngIf="sources?.length === 0">
+        <span>No sources found</span>
+    </div>
+
+    <div class="table-responsive" id="entities" *ngIf="sources && sources.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
+            <thead>
+                <tr>
+                    <th scope="col" ><span>ID</span></th>
+                    <th scope="col" ><span>Base Url</span></th>
+                    <th scope="col" ><span>Name</span></th>
+                    <th scope="col" ><span>Type</span></th>
+                    <th scope="col" ><span>Active</span></th>
+                    <th scope="col" ><span>Path</span></th>
+                    <th scope="col" ><span>Filter</span></th>
+                    <th scope="col" ><span>Username</span></th>
+                    <th scope="col" ><span>Password</span></th>
+                    <th scope="col" ><span>Cron Expression</span></th>
+                    <th scope="col" ><span>Capability Name Sp EL</span></th>
+                    <th scope="col" ><span>Service Name Sp EL</span></th>
+                    <th scope="col" ><span>Version Sp EL</span></th>
+                    <th scope="col" ><span>Portal</span></th>
+                    <th scope="col" ><span>Capability</span></th>
+                    <th scope="col" ><span>Capability Service Definition</span></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let source of sources ;trackBy: trackId">
+                    <td><a [routerLink]="['/source', source.id, 'view']">{{ source.id }}</a></td>
+                    <td>{{ source.baseUrl }}</td>
+                    <td>{{ source.name }}</td>
+                    <td>{{ source.type }}</td>
+                    <td>{{ source.active }}</td>
+                    <td>{{ source.path }}</td>
+                    <td>{{ source.filter }}</td>
+                    <td>{{ source.username }}</td>
+                    <td>{{ source.password }}</td>
+                    <td>{{ source.cronExpression }}</td>
+                    <td>{{ source.capabilityNameSpEL }}</td>
+                    <td>{{ source.serviceNameSpEL }}</td>
+                    <td>{{ source.versionSpEL }}</td>
+                    <td>
+                        <div *ngIf="source.portal">
+                            <a [routerLink]="['/portal', source.portal?.id, 'view']" >{{ source.portal?.name }}</a>
+                        </div>
+                    </td>
+                    <td>
+                        <div *ngIf="source.capability">
+                            <a [routerLink]="['/capability', source.capability?.id, 'view']" >{{ source.capability?.name }}</a>
+                        </div>
+                    </td>
+                    <td>
+                        <div *ngIf="source.capabilityServiceDefinition">
+                            <a [routerLink]="['/capability-service-definition', source.capabilityServiceDefinition?.id, 'view']" >{{ source.capabilityServiceDefinition?.name }}</a>
+                        </div>
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group">
+                            <button type="submit"
+                                    [routerLink]="['/source', source.id, 'view']"
+                                    class="btn btn-info btn-sm">
+                                <fa-icon icon="eye"></fa-icon>
+                                <span class="d-none d-md-inline">View</span>
+                            </button>
+
+                            <button type="submit"
+                                    [routerLink]="['/source', source.id, 'edit']"
+                                    class="btn btn-primary btn-sm">
+                                <fa-icon icon="pencil-alt"></fa-icon>
+                                <span class="d-none d-md-inline">Edit</span>
+                            </button>
+
+                            <button type="submit" (click)="delete(source)"
+                                    class="btn btn-danger btn-sm">
+                                <fa-icon icon="times"></fa-icon>
+                                <span class="d-none d-md-inline">Delete</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

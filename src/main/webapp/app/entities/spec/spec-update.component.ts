@@ -12,10 +12,16 @@ import { ISpec, Spec } from 'app/shared/model/spec.model';
 import { SpecService } from './spec.service';
 import { ILintReport } from 'app/shared/model/lint-report.model';
 import { LintReportService } from 'app/entities/lint-report/lint-report.service';
-import { IService } from 'app/shared/model/service.model';
-import { ServiceService } from 'app/entities/service/service.service';
+import { IPortal } from 'app/shared/model/portal.model';
+import { PortalService } from 'app/entities/portal/portal.service';
+import { ICapability } from 'app/shared/model/capability.model';
+import { CapabilityService } from 'app/entities/capability/capability.service';
+import { ICapabilityServiceDefinition } from 'app/shared/model/capability-service-definition.model';
+import { CapabilityServiceDefinitionService } from 'app/entities/capability-service-definition/capability-service-definition.service';
+import { ISource } from 'app/shared/model/source.model';
+import { SourceService } from 'app/entities/source/source.service';
 
-type SelectableEntity = ILintReport | IService;
+type SelectableEntity = ILintReport | IPortal | ICapability | ICapabilityServiceDefinition | ISource;
 
 @Component({
   selector: 'jhi-spec-update',
@@ -24,25 +30,43 @@ type SelectableEntity = ILintReport | IService;
 export class SpecUpdateComponent implements OnInit {
   isSaving = false;
   lintreports: ILintReport[] = [];
-  services: IService[] = [];
+  portals: IPortal[] = [];
+  capabilities: ICapability[] = [];
+  capabilityservicedefinitions: ICapabilityServiceDefinition[] = [];
+  sources: ISource[] = [];
 
   editForm = this.fb.group({
     id: [],
-    key: [],
+    key: [null, [Validators.required]],
+    name: [null, [Validators.required]],
+    version: [null, [Validators.required]],
     title: [],
-    openApiUrl: [],
-    boatDocUrl: [],
-    openApi: [],
-    createdOn: [],
-    createdBy: [],
+    openApi: [null, [Validators.required]],
+    createdOn: [null, [Validators.required]],
+    createdBy: [null, [Validators.required]],
+    checksum: [null, [Validators.required]],
+    filename: [null, [Validators.required]],
+    sourcePath: [],
+    sourceName: [],
+    sourceUrl: [],
+    sourceCreatedBy: [],
+    sourceCreatedOn: [],
+    sourceLastModifiedOn: [],
+    sourceLastModifiedBy: [],
     lintReport: [],
-    service: [],
+    portal: [null, Validators.required],
+    capability: [null, Validators.required],
+    capabilityServiceDefinition: [null, Validators.required],
+    source: [],
   });
 
   constructor(
     protected specService: SpecService,
     protected lintReportService: LintReportService,
-    protected serviceService: ServiceService,
+    protected portalService: PortalService,
+    protected capabilityService: CapabilityService,
+    protected capabilityServiceDefinitionService: CapabilityServiceDefinitionService,
+    protected sourceService: SourceService,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
   ) {}
@@ -52,6 +76,8 @@ export class SpecUpdateComponent implements OnInit {
       if (!spec.id) {
         const today = moment().startOf('day');
         spec.createdOn = today;
+        spec.sourceCreatedOn = today;
+        spec.sourceLastModifiedOn = today;
       }
 
       this.updateForm(spec);
@@ -78,7 +104,15 @@ export class SpecUpdateComponent implements OnInit {
           }
         });
 
-      this.serviceService.query().subscribe((res: HttpResponse<IService[]>) => (this.services = res.body || []));
+      this.portalService.query().subscribe((res: HttpResponse<IPortal[]>) => (this.portals = res.body || []));
+
+      this.capabilityService.query().subscribe((res: HttpResponse<ICapability[]>) => (this.capabilities = res.body || []));
+
+      this.capabilityServiceDefinitionService
+        .query()
+        .subscribe((res: HttpResponse<ICapabilityServiceDefinition[]>) => (this.capabilityservicedefinitions = res.body || []));
+
+      this.sourceService.query().subscribe((res: HttpResponse<ISource[]>) => (this.sources = res.body || []));
     });
   }
 
@@ -86,14 +120,26 @@ export class SpecUpdateComponent implements OnInit {
     this.editForm.patchValue({
       id: spec.id,
       key: spec.key,
+      name: spec.name,
+      version: spec.version,
       title: spec.title,
-      openApiUrl: spec.openApiUrl,
-      boatDocUrl: spec.boatDocUrl,
       openApi: spec.openApi,
       createdOn: spec.createdOn ? spec.createdOn.format(DATE_TIME_FORMAT) : null,
       createdBy: spec.createdBy,
+      checksum: spec.checksum,
+      filename: spec.filename,
+      sourcePath: spec.sourcePath,
+      sourceName: spec.sourceName,
+      sourceUrl: spec.sourceUrl,
+      sourceCreatedBy: spec.sourceCreatedBy,
+      sourceCreatedOn: spec.sourceCreatedOn ? spec.sourceCreatedOn.format(DATE_TIME_FORMAT) : null,
+      sourceLastModifiedOn: spec.sourceLastModifiedOn ? spec.sourceLastModifiedOn.format(DATE_TIME_FORMAT) : null,
+      sourceLastModifiedBy: spec.sourceLastModifiedBy,
       lintReport: spec.lintReport,
-      service: spec.service,
+      portal: spec.portal,
+      capability: spec.capability,
+      capabilityServiceDefinition: spec.capabilityServiceDefinition,
+      source: spec.source,
     });
   }
 
@@ -116,14 +162,30 @@ export class SpecUpdateComponent implements OnInit {
       ...new Spec(),
       id: this.editForm.get(['id'])!.value,
       key: this.editForm.get(['key'])!.value,
+      name: this.editForm.get(['name'])!.value,
+      version: this.editForm.get(['version'])!.value,
       title: this.editForm.get(['title'])!.value,
-      openApiUrl: this.editForm.get(['openApiUrl'])!.value,
-      boatDocUrl: this.editForm.get(['boatDocUrl'])!.value,
       openApi: this.editForm.get(['openApi'])!.value,
       createdOn: this.editForm.get(['createdOn'])!.value ? moment(this.editForm.get(['createdOn'])!.value, DATE_TIME_FORMAT) : undefined,
       createdBy: this.editForm.get(['createdBy'])!.value,
+      checksum: this.editForm.get(['checksum'])!.value,
+      filename: this.editForm.get(['filename'])!.value,
+      sourcePath: this.editForm.get(['sourcePath'])!.value,
+      sourceName: this.editForm.get(['sourceName'])!.value,
+      sourceUrl: this.editForm.get(['sourceUrl'])!.value,
+      sourceCreatedBy: this.editForm.get(['sourceCreatedBy'])!.value,
+      sourceCreatedOn: this.editForm.get(['sourceCreatedOn'])!.value
+        ? moment(this.editForm.get(['sourceCreatedOn'])!.value, DATE_TIME_FORMAT)
+        : undefined,
+      sourceLastModifiedOn: this.editForm.get(['sourceLastModifiedOn'])!.value
+        ? moment(this.editForm.get(['sourceLastModifiedOn'])!.value, DATE_TIME_FORMAT)
+        : undefined,
+      sourceLastModifiedBy: this.editForm.get(['sourceLastModifiedBy'])!.value,
       lintReport: this.editForm.get(['lintReport'])!.value,
-      service: this.editForm.get(['service'])!.value,
+      portal: this.editForm.get(['portal'])!.value,
+      capability: this.editForm.get(['capability'])!.value,
+      capabilityServiceDefinition: this.editForm.get(['capabilityServiceDefinition'])!.value,
+      source: this.editForm.get(['source'])!.value,
     };
   }
 

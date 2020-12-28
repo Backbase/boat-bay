@@ -15,6 +15,36 @@
                     <label class="form-control-label" for="field_key">Key</label>
                     <input type="text" class="form-control" name="key" id="field_key"
                            formControlName="key"/>
+                    <div *ngIf="editForm.get('key')!.invalid && (editForm.get('key')!.dirty || editForm.get('key')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('key')?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_name">Name</label>
+                    <input type="text" class="form-control" name="name" id="field_name"
+                           formControlName="name"/>
+                    <div *ngIf="editForm.get('name')!.invalid && (editForm.get('name')!.dirty || editForm.get('name')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('name')?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_version">Version</label>
+                    <input type="text" class="form-control" name="version" id="field_version"
+                           formControlName="version"/>
+                    <div *ngIf="editForm.get('version')!.invalid && (editForm.get('version')!.dirty || editForm.get('version')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('version')?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -24,21 +54,15 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-control-label" for="field_openApiUrl">Open Api Url</label>
-                    <input type="text" class="form-control" name="openApiUrl" id="field_openApiUrl"
-                           formControlName="openApiUrl"/>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-control-label" for="field_boatDocUrl">Boat Doc Url</label>
-                    <input type="text" class="form-control" name="boatDocUrl" id="field_boatDocUrl"
-                           formControlName="boatDocUrl"/>
-                </div>
-
-                <div class="form-group">
                     <label class="form-control-label" for="field_openApi">Open Api</label>
                     <input type="text" class="form-control" name="openApi" id="field_openApi"
                            formControlName="openApi"/>
+                    <div *ngIf="editForm.get('openApi')!.invalid && (editForm.get('openApi')!.dirty || editForm.get('openApi')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('openApi')?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -46,12 +70,96 @@
                     <div class="d-flex">
                         <input id="field_createdOn" type="datetime-local" class="form-control" name="createdOn" formControlName="createdOn" placeholder="YYYY-MM-DD HH:mm"/>
                     </div>
+                    <div *ngIf="editForm.get('createdOn')!.invalid && (editForm.get('createdOn')!.dirty || editForm.get('createdOn')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('createdOn')?.errors?.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.get('createdOn')?.errors?.ZonedDateTimelocal">
+                            This field should be a date and time.
+                        </small>
+                    </div>
                 </div>
 
                 <div class="form-group">
                     <label class="form-control-label" for="field_createdBy">Created By</label>
                     <input type="text" class="form-control" name="createdBy" id="field_createdBy"
                            formControlName="createdBy"/>
+                    <div *ngIf="editForm.get('createdBy')!.invalid && (editForm.get('createdBy')!.dirty || editForm.get('createdBy')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('createdBy')?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_checksum">Checksum</label>
+                    <input type="text" class="form-control" name="checksum" id="field_checksum"
+                           formControlName="checksum"/>
+                    <div *ngIf="editForm.get('checksum')!.invalid && (editForm.get('checksum')!.dirty || editForm.get('checksum')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('checksum')?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_filename">Filename</label>
+                    <input type="text" class="form-control" name="filename" id="field_filename"
+                           formControlName="filename"/>
+                    <div *ngIf="editForm.get('filename')!.invalid && (editForm.get('filename')!.dirty || editForm.get('filename')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('filename')?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_sourcePath">Source Path</label>
+                    <input type="text" class="form-control" name="sourcePath" id="field_sourcePath"
+                           formControlName="sourcePath"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_sourceName">Source Name</label>
+                    <input type="text" class="form-control" name="sourceName" id="field_sourceName"
+                           formControlName="sourceName"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_sourceUrl">Source Url</label>
+                    <input type="text" class="form-control" name="sourceUrl" id="field_sourceUrl"
+                           formControlName="sourceUrl"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_sourceCreatedBy">Source Created By</label>
+                    <input type="text" class="form-control" name="sourceCreatedBy" id="field_sourceCreatedBy"
+                           formControlName="sourceCreatedBy"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_sourceCreatedOn">Source Created On</label>
+                    <div class="d-flex">
+                        <input id="field_sourceCreatedOn" type="datetime-local" class="form-control" name="sourceCreatedOn" formControlName="sourceCreatedOn" placeholder="YYYY-MM-DD HH:mm"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_sourceLastModifiedOn">Source Last Modified On</label>
+                    <div class="d-flex">
+                        <input id="field_sourceLastModifiedOn" type="datetime-local" class="form-control" name="sourceLastModifiedOn" formControlName="sourceLastModifiedOn" placeholder="YYYY-MM-DD HH:mm"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_sourceLastModifiedBy">Source Last Modified By</label>
+                    <input type="text" class="form-control" name="sourceLastModifiedBy" id="field_sourceLastModifiedBy"
+                           formControlName="sourceLastModifiedBy"/>
                 </div>
 
                 <div class="form-group">
@@ -63,10 +171,52 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-control-label" for="field_service">Service</label>
-                    <select class="form-control" id="field_service" name="service" formControlName="service">
+                    <label class="form-control-label" for="field_portal">Portal</label>
+                    <select class="form-control" id="field_portal" name="portal" formControlName="portal">
+                        <option *ngIf="!editForm.get('portal')!.value" [ngValue]="null" selected></option>
+                        <option [ngValue]="portalOption.id === editForm.get('portal')!.value?.id ? editForm.get('portal')!.value : portalOption" *ngFor="let portalOption of portals; trackBy: trackById">{{ portalOption.name }}</option>
+                    </select>
+                </div>
+                <div *ngIf="editForm.get('portal')!.invalid && (editForm.get('portal')!.dirty || editForm.get('portal')!.touched)">
+                    <small class="form-text text-danger"
+                           *ngIf="editForm.get('portal')?.errors?.required">
+                        This field is required.
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_capability">Capability</label>
+                    <select class="form-control" id="field_capability" name="capability" formControlName="capability">
+                        <option *ngIf="!editForm.get('capability')!.value" [ngValue]="null" selected></option>
+                        <option [ngValue]="capabilityOption.id === editForm.get('capability')!.value?.id ? editForm.get('capability')!.value : capabilityOption" *ngFor="let capabilityOption of capabilities; trackBy: trackById">{{ capabilityOption.name }}</option>
+                    </select>
+                </div>
+                <div *ngIf="editForm.get('capability')!.invalid && (editForm.get('capability')!.dirty || editForm.get('capability')!.touched)">
+                    <small class="form-text text-danger"
+                           *ngIf="editForm.get('capability')?.errors?.required">
+                        This field is required.
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_capabilityServiceDefinition">Capability Service Definition</label>
+                    <select class="form-control" id="field_capabilityServiceDefinition" name="capabilityServiceDefinition" formControlName="capabilityServiceDefinition">
+                        <option *ngIf="!editForm.get('capabilityServiceDefinition')!.value" [ngValue]="null" selected></option>
+                        <option [ngValue]="capabilityServiceDefinitionOption.id === editForm.get('capabilityServiceDefinition')!.value?.id ? editForm.get('capabilityServiceDefinition')!.value : capabilityServiceDefinitionOption" *ngFor="let capabilityServiceDefinitionOption of capabilityservicedefinitions; trackBy: trackById">{{ capabilityServiceDefinitionOption.name }}</option>
+                    </select>
+                </div>
+                <div *ngIf="editForm.get('capabilityServiceDefinition')!.invalid && (editForm.get('capabilityServiceDefinition')!.dirty || editForm.get('capabilityServiceDefinition')!.touched)">
+                    <small class="form-text text-danger"
+                           *ngIf="editForm.get('capabilityServiceDefinition')?.errors?.required">
+                        This field is required.
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_source">Source</label>
+                    <select class="form-control" id="field_source" name="source" formControlName="source">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="serviceOption.id === editForm.get('service')!.value?.id ? editForm.get('service')!.value : serviceOption" *ngFor="let serviceOption of services; trackBy: trackById">{{ serviceOption.id }}</option>
+                        <option [ngValue]="sourceOption.id === editForm.get('source')!.value?.id ? editForm.get('source')!.value : sourceOption" *ngFor="let sourceOption of sources; trackBy: trackById">{{ sourceOption.name }}</option>
                     </select>
                 </div>
             </div>

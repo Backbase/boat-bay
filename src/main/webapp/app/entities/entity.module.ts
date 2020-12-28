@@ -13,16 +13,8 @@ import { RouterModule } from '@angular/router';
         loadChildren: () => import('./capability/capability.module').then(m => m.BoatBayCapabilityModule),
       },
       {
-        path: 'service',
-        loadChildren: () => import('./service/service.module').then(m => m.BoatBayServiceModule),
-      },
-      {
         path: 'spec',
         loadChildren: () => import('./spec/spec.module').then(m => m.BoatBaySpecModule),
-      },
-      {
-        path: 'upload',
-        loadChildren: () => import('./upload/upload.module').then(m => m.BoatBayUploadModule),
       },
       {
         path: 'lint-rule',
@@ -39,6 +31,17 @@ import { RouterModule } from '@angular/router';
       {
         path: 'lint-rule-violation',
         loadChildren: () => import('./lint-rule-violation/lint-rule-violation.module').then(m => m.BoatBayLintRuleViolationModule),
+      },
+      {
+        path: 'source',
+        loadChildren: () => import('./source/source.module').then(m => m.BoatBaySourceModule),
+      },
+      {
+        path: 'capability-service-definition',
+        loadChildren: () =>
+          import('./capability-service-definition/capability-service-definition.module').then(
+            m => m.BoatBayCapabilityServiceDefinitionModule
+          ),
       },
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ]),

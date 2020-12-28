@@ -39,16 +39,9 @@
     },
     {
       "relationshipType": "many-to-one",
-      "otherEntityName": "capability",
+      "otherEntityName": "capabilityService",
       "otherEntityRelationshipName": "service",
-      "relationshipName": "capability",
-      "otherEntityField": "id"
-    },
-    {
-      "relationshipType": "many-to-one",
-      "otherEntityName": "portal",
-      "otherEntityRelationshipName": "service",
-      "relationshipName": "portal",
+      "relationshipName": "capabilityService",
       "otherEntityField": "id"
     }
   ],

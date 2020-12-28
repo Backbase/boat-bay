@@ -24,10 +24,10 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-control-label" for="field_lintRuleViolation">Lint Rule Violation</label>
-                    <select class="form-control" id="field_lintRuleViolation" name="lintRuleViolation" formControlName="lintRuleViolation">
+                    <label class="form-control-label" for="field_linkRuleViolation">Link Rule Violation</label>
+                    <select class="form-control" id="field_linkRuleViolation" name="linkRuleViolation" formControlName="linkRuleViolation">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="lintRuleViolationOption.id === editForm.get('lintRuleViolation')!.value?.id ? editForm.get('lintRuleViolation')!.value : lintRuleViolationOption" *ngFor="let lintRuleViolationOption of lintruleviolations; trackBy: trackById">{{ lintRuleViolationOption.id }}</option>
+                        <option [ngValue]="lintRuleViolationOption.id === editForm.get('linkRuleViolation')!.value?.id ? editForm.get('linkRuleViolation')!.value : lintRuleViolationOption" *ngFor="let lintRuleViolationOption of lintruleviolations; trackBy: trackById">{{ lintRuleViolationOption.name }}</option>
                     </select>
                 </div>
             </div>

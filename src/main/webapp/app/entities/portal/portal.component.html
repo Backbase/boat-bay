@@ -24,6 +24,7 @@
                 <tr>
                     <th scope="col" ><span>ID</span></th>
                     <th scope="col" ><span>Key</span></th>
+                    <th scope="col" ><span>Name</span></th>
                     <th scope="col" ><span>Title</span></th>
                     <th scope="col" ><span>Sub Title</span></th>
                     <th scope="col" ><span>Nav Title</span></th>
@@ -39,6 +40,7 @@
                 <tr *ngFor="let portal of portals ;trackBy: trackId">
                     <td><a [routerLink]="['/portal', portal.id, 'view']">{{ portal.id }}</a></td>
                     <td>{{ portal.key }}</td>
+                    <td>{{ portal.name }}</td>
                     <td>{{ portal.title }}</td>
                     <td>{{ portal.subTitle }}</td>
                     <td>{{ portal.navTitle }}</td>

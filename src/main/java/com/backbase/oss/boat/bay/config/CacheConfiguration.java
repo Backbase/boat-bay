@@ -1,22 +1,22 @@
 package com.backbase.oss.boat.bay.config;
 
-import java.time.Duration;
-
-import org.ehcache.config.builders.*;
-import org.ehcache.jsr107.Eh107Configuration;
-
-import org.hibernate.cache.jcache.ConfigSettings;
 import io.github.jhipster.config.JHipsterProperties;
-
+import io.github.jhipster.config.cache.PrefixedKeyGenerator;
+import java.time.Duration;
+import org.ehcache.config.builders.CacheConfigurationBuilder;
+import org.ehcache.config.builders.ExpiryPolicyBuilder;
+import org.ehcache.config.builders.ResourcePoolsBuilder;
+import org.ehcache.jsr107.Eh107Configuration;
+import org.hibernate.cache.jcache.ConfigSettings;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.cache.JCacheManagerCustomizer;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernatePropertiesCustomizer;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.boot.info.GitProperties;
-import org.springframework.cache.interceptor.KeyGenerator;
-import org.springframework.beans.factory.annotation.Autowired;
-import io.github.jhipster.config.cache.PrefixedKeyGenerator;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.context.annotation.*;
+import org.springframework.cache.interceptor.KeyGenerator;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableCaching
@@ -53,15 +53,20 @@ public class CacheConfiguration {
             createCache(cm, com.backbase.oss.boat.bay.domain.Portal.class.getName() + ".services");
             createCache(cm, com.backbase.oss.boat.bay.domain.Capability.class.getName());
             createCache(cm, com.backbase.oss.boat.bay.domain.Capability.class.getName() + ".services");
-            createCache(cm, com.backbase.oss.boat.bay.domain.Service.class.getName());
-            createCache(cm, com.backbase.oss.boat.bay.domain.Service.class.getName() + ".specs");
             createCache(cm, com.backbase.oss.boat.bay.domain.Spec.class.getName());
-            createCache(cm, com.backbase.oss.boat.bay.domain.Upload.class.getName());
             createCache(cm, com.backbase.oss.boat.bay.domain.LintRule.class.getName());
             createCache(cm, com.backbase.oss.boat.bay.domain.LintRuleSet.class.getName());
             createCache(cm, com.backbase.oss.boat.bay.domain.LintReport.class.getName());
             createCache(cm, com.backbase.oss.boat.bay.domain.LintRuleViolation.class.getName());
             createCache(cm, com.backbase.oss.boat.bay.domain.LintRuleViolation.class.getName() + ".lintReports");
+            createCache(cm, com.backbase.oss.boat.bay.domain.Source.class.getName());
+            createCache(cm, com.backbase.oss.boat.bay.domain.Source.class.getName() + ".sourceSpecs");
+            createCache(cm, com.backbase.oss.boat.bay.domain.Source.class.getName() + ".specs");
+            createCache(cm, com.backbase.oss.boat.bay.domain.Portal.class.getName() + ".capabilityServices");
+            createCache(cm, com.backbase.oss.boat.bay.domain.Capability.class.getName() + ".capabilityServices");
+            createCache(cm, com.backbase.oss.boat.bay.domain.Capability.class.getName() + ".capabilityServiceDefinitions");
+            createCache(cm, com.backbase.oss.boat.bay.domain.CapabilityServiceDefinition.class.getName());
+            createCache(cm, com.backbase.oss.boat.bay.domain.CapabilityServiceDefinition.class.getName() + ".specs");
             // jhipster-needle-ehcache-add-entry
         };
     }

@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -47,7 +48,7 @@ public class CapabilityResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("/capabilities")
-    public ResponseEntity<Capability> createCapability(@RequestBody Capability capability) throws URISyntaxException {
+    public ResponseEntity<Capability> createCapability(@Valid @RequestBody Capability capability) throws URISyntaxException {
         log.debug("REST request to save Capability : {}", capability);
         if (capability.getId() != null) {
             throw new BadRequestAlertException("A new capability cannot already have an ID", ENTITY_NAME, "idexists");
@@ -68,7 +69,7 @@ public class CapabilityResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/capabilities")
-    public ResponseEntity<Capability> updateCapability(@RequestBody Capability capability) throws URISyntaxException {
+    public ResponseEntity<Capability> updateCapability(@Valid @RequestBody Capability capability) throws URISyntaxException {
         log.debug("REST request to update Capability : {}", capability);
         if (capability.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");

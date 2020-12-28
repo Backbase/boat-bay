@@ -5,6 +5,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.time.Instant;
@@ -25,8 +26,13 @@ public class Capability implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "jhi_key")
+    @NotNull
+    @Column(name = "jhi_key", nullable = false)
     private String key;
+
+    @NotNull
+    @Column(name = "name", nullable = false)
+    private String name;
 
     @Column(name = "title")
     private String title;
@@ -51,9 +57,10 @@ public class Capability implements Serializable {
 
     @OneToMany(mappedBy = "capability")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    private Set<Service> services = new HashSet<>();
+    private Set<CapabilityServiceDefinition> capabilityServiceDefinitions = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @NotNull
     @JsonIgnoreProperties(value = "capabilities", allowSetters = true)
     private Portal portal;
 
@@ -77,6 +84,19 @@ public class Capability implements Serializable {
 
     public void setKey(String key) {
         this.key = key;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Capability name(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getTitle() {
@@ -170,29 +190,29 @@ public class Capability implements Serializable {
         this.createdBy = createdBy;
     }
 
-    public Set<Service> getServices() {
-        return services;
+    public Set<CapabilityServiceDefinition> getCapabilityServiceDefinitions() {
+        return capabilityServiceDefinitions;
     }
 
-    public Capability services(Set<Service> services) {
-        this.services = services;
+    public Capability capabilityServiceDefinitions(Set<CapabilityServiceDefinition> capabilityServiceDefinitions) {
+        this.capabilityServiceDefinitions = capabilityServiceDefinitions;
         return this;
     }
 
-    public Capability addService(Service service) {
-        this.services.add(service);
-        service.setCapability(this);
+    public Capability addCapabilityServiceDefinition(CapabilityServiceDefinition capabilityServiceDefinition) {
+        this.capabilityServiceDefinitions.add(capabilityServiceDefinition);
+        capabilityServiceDefinition.setCapability(this);
         return this;
     }
 
-    public Capability removeService(Service service) {
-        this.services.remove(service);
-        service.setCapability(null);
+    public Capability removeCapabilityServiceDefinition(CapabilityServiceDefinition capabilityServiceDefinition) {
+        this.capabilityServiceDefinitions.remove(capabilityServiceDefinition);
+        capabilityServiceDefinition.setCapability(null);
         return this;
     }
 
-    public void setServices(Set<Service> services) {
-        this.services = services;
+    public void setCapabilityServiceDefinitions(Set<CapabilityServiceDefinition> capabilityServiceDefinitions) {
+        this.capabilityServiceDefinitions = capabilityServiceDefinitions;
     }
 
     public Portal getPortal() {
@@ -231,6 +251,7 @@ public class Capability implements Serializable {
         return "Capability{" +
             "id=" + getId() +
             ", key='" + getKey() + "'" +
+            ", name='" + getName() + "'" +
             ", title='" + getTitle() + "'" +
             ", subTitle='" + getSubTitle() + "'" +
             ", navTitle='" + getNavTitle() + "'" +

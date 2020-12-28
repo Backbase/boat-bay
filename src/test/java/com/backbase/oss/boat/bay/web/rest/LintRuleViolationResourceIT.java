@@ -30,6 +30,9 @@ import com.backbase.oss.boat.bay.domain.enumeration.Severity;
 @WithMockUser
 public class LintRuleViolationResourceIT {
 
+    private static final String DEFAULT_NAME = "AAAAAAAAAA";
+    private static final String UPDATED_NAME = "BBBBBBBBBB";
+
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
@@ -70,6 +73,7 @@ public class LintRuleViolationResourceIT {
      */
     public static LintRuleViolation createEntity(EntityManager em) {
         LintRuleViolation lintRuleViolation = new LintRuleViolation()
+            .name(DEFAULT_NAME)
             .description(DEFAULT_DESCRIPTION)
             .severity(DEFAULT_SEVERITY)
             .lineStart(DEFAULT_LINE_START)
@@ -87,6 +91,7 @@ public class LintRuleViolationResourceIT {
      */
     public static LintRuleViolation createUpdatedEntity(EntityManager em) {
         LintRuleViolation lintRuleViolation = new LintRuleViolation()
+            .name(UPDATED_NAME)
             .description(UPDATED_DESCRIPTION)
             .severity(UPDATED_SEVERITY)
             .lineStart(UPDATED_LINE_START)
@@ -116,6 +121,7 @@ public class LintRuleViolationResourceIT {
         List<LintRuleViolation> lintRuleViolationList = lintRuleViolationRepository.findAll();
         assertThat(lintRuleViolationList).hasSize(databaseSizeBeforeCreate + 1);
         LintRuleViolation testLintRuleViolation = lintRuleViolationList.get(lintRuleViolationList.size() - 1);
+        assertThat(testLintRuleViolation.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testLintRuleViolation.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testLintRuleViolation.getSeverity()).isEqualTo(DEFAULT_SEVERITY);
         assertThat(testLintRuleViolation.getLineStart()).isEqualTo(DEFAULT_LINE_START);
@@ -147,6 +153,25 @@ public class LintRuleViolationResourceIT {
 
     @Test
     @Transactional
+    public void checkNameIsRequired() throws Exception {
+        int databaseSizeBeforeTest = lintRuleViolationRepository.findAll().size();
+        // set the field null
+        lintRuleViolation.setName(null);
+
+        // Create the LintRuleViolation, which fails.
+
+
+        restLintRuleViolationMockMvc.perform(post("/api/lint-rule-violations")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(lintRuleViolation)))
+            .andExpect(status().isBadRequest());
+
+        List<LintRuleViolation> lintRuleViolationList = lintRuleViolationRepository.findAll();
+        assertThat(lintRuleViolationList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void checkDescriptionIsRequired() throws Exception {
         int databaseSizeBeforeTest = lintRuleViolationRepository.findAll().size();
         // set the field null
@@ -175,6 +200,7 @@ public class LintRuleViolationResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(lintRuleViolation.getId().intValue())))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
             .andExpect(jsonPath("$.[*].severity").value(hasItem(DEFAULT_SEVERITY.toString())))
             .andExpect(jsonPath("$.[*].lineStart").value(hasItem(DEFAULT_LINE_START)))
@@ -195,6 +221,7 @@ public class LintRuleViolationResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(lintRuleViolation.getId().intValue()))
+            .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
             .andExpect(jsonPath("$.severity").value(DEFAULT_SEVERITY.toString()))
             .andExpect(jsonPath("$.lineStart").value(DEFAULT_LINE_START))
@@ -224,6 +251,7 @@ public class LintRuleViolationResourceIT {
         // Disconnect from session so that the updates on updatedLintRuleViolation are not directly saved in db
         em.detach(updatedLintRuleViolation);
         updatedLintRuleViolation
+            .name(UPDATED_NAME)
             .description(UPDATED_DESCRIPTION)
             .severity(UPDATED_SEVERITY)
             .lineStart(UPDATED_LINE_START)
@@ -241,6 +269,7 @@ public class LintRuleViolationResourceIT {
         List<LintRuleViolation> lintRuleViolationList = lintRuleViolationRepository.findAll();
         assertThat(lintRuleViolationList).hasSize(databaseSizeBeforeUpdate);
         LintRuleViolation testLintRuleViolation = lintRuleViolationList.get(lintRuleViolationList.size() - 1);
+        assertThat(testLintRuleViolation.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testLintRuleViolation.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testLintRuleViolation.getSeverity()).isEqualTo(UPDATED_SEVERITY);
         assertThat(testLintRuleViolation.getLineStart()).isEqualTo(UPDATED_LINE_START);
