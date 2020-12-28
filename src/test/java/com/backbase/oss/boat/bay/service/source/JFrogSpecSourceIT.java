@@ -4,9 +4,14 @@ import com.backbase.oss.boat.bay.BoatBayApp;
 import com.backbase.oss.boat.bay.domain.Portal;
 import com.backbase.oss.boat.bay.domain.Source;
 import com.backbase.oss.boat.bay.domain.Spec;
+import com.backbase.oss.boat.bay.domain.enumeration.SourceType;
+import com.backbase.oss.boat.bay.repository.PortalRepository;
+import com.backbase.oss.boat.bay.repository.SourceRepository;
 import com.backbase.oss.boat.bay.service.source.scanner.impl.JFrogSpecSourceScanner;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,18 +25,39 @@ class JFrogSpecSourceIT {
     @Autowired
     SpecSourceResolver specSourceResolver;
 
-    @Test
-    void testJFrog() {
-        JFrogSpecSourceScanner source = new JFrogSpecSourceScanner();
-        source.setSource(new Source()
+    @Autowired
+    SourceRepository sourceRepository;
+
+    @Autowired
+    PortalRepository portalRepository;
+
+    Source source;
+
+    @BeforeEach
+    void setup() {
+        Portal artifactory = new Portal()
+            .key("artifactory")
+            .name("Artifactory");
+        portalRepository.save(artifactory);
+
+        Source portal = new Source()
+            .name("Artifactory")
+            .type(SourceType.JFROG)
             .username(System.getenv("ARTIFACTORY_USERNAME"))
             .password(System.getenv("ARTIFACTORY_PASSWORD"))
             .baseUrl(System.getenv("ARTIFACTORY_URL"))
             .path("specs")
             .filter("*.yaml")
-            .portal(new Portal().key("artifactory")));
+            .portal(artifactory);
+        source = sourceRepository.save(portal);
+    }
+    @Test
+    void testJFrog() {
+        JFrogSpecSourceScanner scanner = new JFrogSpecSourceScanner();
 
-        List<Spec> scan = source.scan();
+        scanner.setSource(source);
+
+        List<Spec> scan = scanner.scan();
 
         specSourceResolver.processSpecs(scan);
 

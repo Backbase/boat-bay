@@ -7,9 +7,11 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
+import { JhiDataUtils, JhiFileLoadError, JhiEventManager, JhiEventWithContent } from 'ng-jhipster';
 
 import { ISpec, Spec } from 'app/shared/model/spec.model';
 import { SpecService } from './spec.service';
+import { AlertError } from 'app/shared/alert/alert-error.model';
 import { ILintReport } from 'app/shared/model/lint-report.model';
 import { LintReportService } from 'app/entities/lint-report/lint-report.service';
 import { IPortal } from 'app/shared/model/portal.model';
@@ -61,6 +63,8 @@ export class SpecUpdateComponent implements OnInit {
   });
 
   constructor(
+    protected dataUtils: JhiDataUtils,
+    protected eventManager: JhiEventManager,
     protected specService: SpecService,
     protected lintReportService: LintReportService,
     protected portalService: PortalService,
@@ -140,6 +144,22 @@ export class SpecUpdateComponent implements OnInit {
       capability: spec.capability,
       serviceDefinition: spec.serviceDefinition,
       source: spec.source,
+    });
+  }
+
+  byteSize(base64String: string): string {
+    return this.dataUtils.byteSize(base64String);
+  }
+
+  openFile(contentType: string, base64String: string): void {
+    this.dataUtils.openFile(contentType, base64String);
+  }
+
+  setFileData(event: any, field: string, isImage: boolean): void {
+    this.dataUtils.loadFileToForm(event, this.editForm, field, isImage).subscribe(null, (err: JhiFileLoadError) => {
+      this.eventManager.broadcast(
+        new JhiEventWithContent<AlertError>('boatBayApp.error', { message: err.message })
+      );
     });
   }
 

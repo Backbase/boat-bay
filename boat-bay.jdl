@@ -6,7 +6,7 @@ entity Portal {
     navTitle String
     logoUrl String
     logoLink String
-    content String
+    content TextBlob
     createdOn Instant
     createdBy String
 }
@@ -17,7 +17,7 @@ entity Capability {
     title String
     subTitle String
     navTitle String
-    content String
+    content TextBlob
     version String
     createdOn Instant
     createdBy String
@@ -29,7 +29,7 @@ entity ServiceDefinition {
     title String
     subTitle String
     navTitle String
-    content String
+    content TextBlob
     createdOn Instant
     createdBy String
 }
@@ -39,7 +39,7 @@ entity Spec {
 	name String required
 	version String required
     title String
-    openApi String required
+    openApi TextBlob required
     createdOn Instant required
     createdBy String required
     checksum String required

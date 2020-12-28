@@ -48,6 +48,7 @@ public class Portal implements Serializable {
     @Column(name = "logo_link")
     private String logoLink;
 
+    @Lob
     @Column(name = "content")
     private String content;
 

@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { Subscription } from 'rxjs';
-import { JhiEventManager } from 'ng-jhipster';
+import { JhiEventManager, JhiDataUtils } from 'ng-jhipster';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { ICapability } from 'app/shared/model/capability.model';
@@ -16,7 +16,12 @@ export class CapabilityComponent implements OnInit, OnDestroy {
   capabilities?: ICapability[];
   eventSubscriber?: Subscription;
 
-  constructor(protected capabilityService: CapabilityService, protected eventManager: JhiEventManager, protected modalService: NgbModal) {}
+  constructor(
+    protected capabilityService: CapabilityService,
+    protected dataUtils: JhiDataUtils,
+    protected eventManager: JhiEventManager,
+    protected modalService: NgbModal
+  ) {}
 
   loadAll(): void {
     this.capabilityService.query().subscribe((res: HttpResponse<ICapability[]>) => (this.capabilities = res.body || []));
@@ -36,6 +41,14 @@ export class CapabilityComponent implements OnInit, OnDestroy {
   trackId(index: number, item: ICapability): number {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     return item.id!;
+  }
+
+  byteSize(base64String: string): string {
+    return this.dataUtils.byteSize(base64String);
+  }
+
+  openFile(contentType = '', base64String: string): void {
+    return this.dataUtils.openFile(contentType, base64String);
   }
 
   registerChangeInCapabilities(): void {

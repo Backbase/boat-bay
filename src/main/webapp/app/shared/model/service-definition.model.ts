@@ -8,7 +8,7 @@ export interface IServiceDefinition {
   title?: string;
   subTitle?: string;
   navTitle?: string;
-  content?: string;
+  content?: any;
   createdOn?: Moment;
   createdBy?: string;
   capability?: ICapability;
@@ -22,7 +22,7 @@ export class ServiceDefinition implements IServiceDefinition {
     public title?: string,
     public subTitle?: string,
     public navTitle?: string,
-    public content?: string,
+    public content?: any,
     public createdOn?: Moment,
     public createdBy?: string,
     public capability?: ICapability

@@ -41,6 +41,7 @@ public class ServiceDefinition implements Serializable {
     @Column(name = "nav_title")
     private String navTitle;
 
+    @Lob
     @Column(name = "content")
     private String content;
 

@@ -6,9 +6,11 @@ import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
+import { JhiDataUtils, JhiFileLoadError, JhiEventManager, JhiEventWithContent } from 'ng-jhipster';
 
 import { ICapability, Capability } from 'app/shared/model/capability.model';
 import { CapabilityService } from './capability.service';
+import { AlertError } from 'app/shared/alert/alert-error.model';
 import { IPortal } from 'app/shared/model/portal.model';
 import { PortalService } from 'app/entities/portal/portal.service';
 
@@ -35,6 +37,8 @@ export class CapabilityUpdateComponent implements OnInit {
   });
 
   constructor(
+    protected dataUtils: JhiDataUtils,
+    protected eventManager: JhiEventManager,
     protected capabilityService: CapabilityService,
     protected portalService: PortalService,
     protected activatedRoute: ActivatedRoute,
@@ -67,6 +71,22 @@ export class CapabilityUpdateComponent implements OnInit {
       createdOn: capability.createdOn ? capability.createdOn.format(DATE_TIME_FORMAT) : null,
       createdBy: capability.createdBy,
       portal: capability.portal,
+    });
+  }
+
+  byteSize(base64String: string): string {
+    return this.dataUtils.byteSize(base64String);
+  }
+
+  openFile(contentType: string, base64String: string): void {
+    this.dataUtils.openFile(contentType, base64String);
+  }
+
+  setFileData(event: any, field: string, isImage: boolean): void {
+    this.dataUtils.loadFileToForm(event, this.editForm, field, isImage).subscribe(null, (err: JhiFileLoadError) => {
+      this.eventManager.broadcast(
+        new JhiEventWithContent<AlertError>('boatBayApp.error', { message: err.message })
+      );
     });
   }
 

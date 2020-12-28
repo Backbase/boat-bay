@@ -39,7 +39,8 @@ public class Spec implements Serializable {
     @Column(name = "title")
     private String title;
 
-    @NotNull
+    
+    @Lob
     @Column(name = "open_api", nullable = false)
     private String openApi;
 

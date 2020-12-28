@@ -11,7 +11,7 @@ export interface ISpec {
   name?: string;
   version?: string;
   title?: string;
-  openApi?: string;
+  openApi?: any;
   createdOn?: Moment;
   createdBy?: string;
   checksum?: string;
@@ -37,7 +37,7 @@ export class Spec implements ISpec {
     public name?: string,
     public version?: string,
     public title?: string,
-    public openApi?: string,
+    public openApi?: any,
     public createdOn?: Moment,
     public createdBy?: string,
     public checksum?: string,

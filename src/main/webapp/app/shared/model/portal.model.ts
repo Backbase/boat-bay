@@ -10,7 +10,7 @@ export interface IPortal {
   navTitle?: string;
   logoUrl?: string;
   logoLink?: string;
-  content?: string;
+  content?: any;
   createdOn?: Moment;
   createdBy?: string;
   capabilities?: ICapability[];
@@ -26,7 +26,7 @@ export class Portal implements IPortal {
     public navTitle?: string,
     public logoUrl?: string,
     public logoLink?: string,
-    public content?: string,
+    public content?: any,
     public createdOn?: Moment,
     public createdBy?: string,
     public capabilities?: ICapability[]
