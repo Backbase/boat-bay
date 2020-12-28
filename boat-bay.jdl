@@ -23,7 +23,7 @@ entity Capability {
     createdBy String
 }
 
-entity CapabilityServiceDefinition {
+entity ServiceDefinition {
 	key String required
 	name String required
     title String
@@ -67,10 +67,10 @@ entity Source {
     username String
     password String
     cronExpression String
-
+    capabilityKeySpEL String
     capabilityNameSpEL String
+    serviceKeySpEL String
     serviceNameSpEL String
-    versionSpEL String
 }
 
 
@@ -118,14 +118,14 @@ enum SourceType {
 
 relationship OneToMany {
 	Portal to Capability{portal(name) required}
-	Capability to CapabilityServiceDefinition{capability(name) required}
+	Capability to ServiceDefinition{capability(name) required}
 	LintRuleViolation to LintReport{linkRuleViolation(name)}
 }
 
 relationship ManyToOne {
     Spec{portal(name) required} to Portal
     Spec{capability(name) required} to Capability
-    Spec{capabilityServiceDefinition(name) required} to CapabilityServiceDefinition
+    Spec{serviceDefinition(name) required} to ServiceDefinition
     Spec{source(name)} to Source
 }
 
@@ -136,7 +136,7 @@ relationship OneToOne {
 	LintRuleViolation  to LintRule
 	Source{portal(name) required} to Portal
 	Source{capability(name)} to Capability
-	Source{capabilityServiceDefinition(name)} to CapabilityServiceDefinition
+	Source{serviceDefinition(name)} to ServiceDefinition
 }
 
 

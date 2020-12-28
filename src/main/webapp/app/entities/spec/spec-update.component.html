@@ -199,15 +199,15 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-control-label" for="field_capabilityServiceDefinition">Capability Service Definition</label>
-                    <select class="form-control" id="field_capabilityServiceDefinition" name="capabilityServiceDefinition" formControlName="capabilityServiceDefinition">
-                        <option *ngIf="!editForm.get('capabilityServiceDefinition')!.value" [ngValue]="null" selected></option>
-                        <option [ngValue]="capabilityServiceDefinitionOption.id === editForm.get('capabilityServiceDefinition')!.value?.id ? editForm.get('capabilityServiceDefinition')!.value : capabilityServiceDefinitionOption" *ngFor="let capabilityServiceDefinitionOption of capabilityservicedefinitions; trackBy: trackById">{{ capabilityServiceDefinitionOption.name }}</option>
+                    <label class="form-control-label" for="field_serviceDefinition">Service Definition</label>
+                    <select class="form-control" id="field_serviceDefinition" name="serviceDefinition" formControlName="serviceDefinition">
+                        <option *ngIf="!editForm.get('serviceDefinition')!.value" [ngValue]="null" selected></option>
+                        <option [ngValue]="serviceDefinitionOption.id === editForm.get('serviceDefinition')!.value?.id ? editForm.get('serviceDefinition')!.value : serviceDefinitionOption" *ngFor="let serviceDefinitionOption of servicedefinitions; trackBy: trackById">{{ serviceDefinitionOption.name }}</option>
                     </select>
                 </div>
-                <div *ngIf="editForm.get('capabilityServiceDefinition')!.invalid && (editForm.get('capabilityServiceDefinition')!.dirty || editForm.get('capabilityServiceDefinition')!.touched)">
+                <div *ngIf="editForm.get('serviceDefinition')!.invalid && (editForm.get('serviceDefinition')!.dirty || editForm.get('serviceDefinition')!.touched)">
                     <small class="form-text text-danger"
-                           *ngIf="editForm.get('capabilityServiceDefinition')?.errors?.required">
+                           *ngIf="editForm.get('serviceDefinition')?.errors?.required">
                         This field is required.
                     </small>
                 </div>

@@ -1,6 +1,6 @@
 import { IPortal } from 'app/shared/model/portal.model';
 import { ICapability } from 'app/shared/model/capability.model';
-import { ICapabilityServiceDefinition } from 'app/shared/model/capability-service-definition.model';
+import { IServiceDefinition } from 'app/shared/model/service-definition.model';
 import { SourceType } from 'app/shared/model/enumerations/source-type.model';
 
 export interface ISource {
@@ -14,12 +14,13 @@ export interface ISource {
   username?: string;
   password?: string;
   cronExpression?: string;
+  capabilityKeySpEL?: string;
   capabilityNameSpEL?: string;
+  serviceKeySpEL?: string;
   serviceNameSpEL?: string;
-  versionSpEL?: string;
   portal?: IPortal;
   capability?: ICapability;
-  capabilityServiceDefinition?: ICapabilityServiceDefinition;
+  serviceDefinition?: IServiceDefinition;
 }
 
 export class Source implements ISource {
@@ -34,12 +35,13 @@ export class Source implements ISource {
     public username?: string,
     public password?: string,
     public cronExpression?: string,
+    public capabilityKeySpEL?: string,
     public capabilityNameSpEL?: string,
+    public serviceKeySpEL?: string,
     public serviceNameSpEL?: string,
-    public versionSpEL?: string,
     public portal?: IPortal,
     public capability?: ICapability,
-    public capabilityServiceDefinition?: ICapabilityServiceDefinition
+    public serviceDefinition?: IServiceDefinition
   ) {
     this.active = this.active || false;
   }

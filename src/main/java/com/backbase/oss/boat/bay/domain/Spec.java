@@ -97,7 +97,7 @@ public class Spec implements Serializable {
     @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties(value = "specs", allowSetters = true)
-    private CapabilityServiceDefinition capabilityServiceDefinition;
+    private ServiceDefinition serviceDefinition;
 
     @ManyToOne
     @JsonIgnoreProperties(value = "specs", allowSetters = true)
@@ -359,17 +359,17 @@ public class Spec implements Serializable {
         this.capability = capability;
     }
 
-    public CapabilityServiceDefinition getCapabilityServiceDefinition() {
-        return capabilityServiceDefinition;
+    public ServiceDefinition getServiceDefinition() {
+        return serviceDefinition;
     }
 
-    public Spec capabilityServiceDefinition(CapabilityServiceDefinition capabilityServiceDefinition) {
-        this.capabilityServiceDefinition = capabilityServiceDefinition;
+    public Spec serviceDefinition(ServiceDefinition serviceDefinition) {
+        this.serviceDefinition = serviceDefinition;
         return this;
     }
 
-    public void setCapabilityServiceDefinition(CapabilityServiceDefinition capabilityServiceDefinition) {
-        this.capabilityServiceDefinition = capabilityServiceDefinition;
+    public void setServiceDefinition(ServiceDefinition serviceDefinition) {
+        this.serviceDefinition = serviceDefinition;
     }
 
     public Source getSource() {

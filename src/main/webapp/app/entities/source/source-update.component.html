@@ -89,21 +89,27 @@
                 </div>
 
                 <div class="form-group">
+                    <label class="form-control-label" for="field_capabilityKeySpEL">Capability Key Sp EL</label>
+                    <input type="text" class="form-control" name="capabilityKeySpEL" id="field_capabilityKeySpEL"
+                           formControlName="capabilityKeySpEL"/>
+                </div>
+
+                <div class="form-group">
                     <label class="form-control-label" for="field_capabilityNameSpEL">Capability Name Sp EL</label>
                     <input type="text" class="form-control" name="capabilityNameSpEL" id="field_capabilityNameSpEL"
                            formControlName="capabilityNameSpEL"/>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-control-label" for="field_serviceNameSpEL">Service Name Sp EL</label>
-                    <input type="text" class="form-control" name="serviceNameSpEL" id="field_serviceNameSpEL"
-                           formControlName="serviceNameSpEL"/>
+                    <label class="form-control-label" for="field_serviceKeySpEL">Service Key Sp EL</label>
+                    <input type="text" class="form-control" name="serviceKeySpEL" id="field_serviceKeySpEL"
+                           formControlName="serviceKeySpEL"/>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-control-label" for="field_versionSpEL">Version Sp EL</label>
-                    <input type="text" class="form-control" name="versionSpEL" id="field_versionSpEL"
-                           formControlName="versionSpEL"/>
+                    <label class="form-control-label" for="field_serviceNameSpEL">Service Name Sp EL</label>
+                    <input type="text" class="form-control" name="serviceNameSpEL" id="field_serviceNameSpEL"
+                           formControlName="serviceNameSpEL"/>
                 </div>
 
                 <div class="form-group">
@@ -129,10 +135,10 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-control-label" for="field_capabilityServiceDefinition">Capability Service Definition</label>
-                    <select class="form-control" id="field_capabilityServiceDefinition" name="capabilityServiceDefinition" formControlName="capabilityServiceDefinition">
+                    <label class="form-control-label" for="field_serviceDefinition">Service Definition</label>
+                    <select class="form-control" id="field_serviceDefinition" name="serviceDefinition" formControlName="serviceDefinition">
                         <option [ngValue]="null"></option>
-                        <option [ngValue]="capabilityServiceDefinitionOption.id === editForm.get('capabilityServiceDefinition')!.value?.id ? editForm.get('capabilityServiceDefinition')!.value : capabilityServiceDefinitionOption" *ngFor="let capabilityServiceDefinitionOption of capabilityservicedefinitions; trackBy: trackById">{{ capabilityServiceDefinitionOption.name }}</option>
+                        <option [ngValue]="serviceDefinitionOption.id === editForm.get('serviceDefinition')!.value?.id ? editForm.get('serviceDefinition')!.value : serviceDefinitionOption" *ngFor="let serviceDefinitionOption of servicedefinitions; trackBy: trackById">{{ serviceDefinitionOption.name }}</option>
                     </select>
                 </div>
             </div>

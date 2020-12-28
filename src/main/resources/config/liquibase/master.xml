@@ -16,7 +16,6 @@
     <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201223102315_added_entity_Portal.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201223102415_added_entity_Capability.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20201223155925_added_entity_CapabilityServiceDefinition.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201223102615_added_entity_Spec.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201223102815_added_entity_LintRule.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201223102915_added_entity_LintRuleSet.xml" relativeToChangelogFile="false"/>
@@ -24,14 +23,15 @@
     <include file="config/liquibase/changelog/20201223103115_added_entity_LintRuleViolation.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201223155925_added_entity_CapabilityServiceDefinition.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201223122159_added_entity_Source.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201228104023_added_entity_ServiceDefinition.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="config/liquibase/changelog/20201223102415_added_entity_constraints_Capability.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20201223155925_added_entity_constraints_CapabilityServiceDefinition.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201223102615_added_entity_constraints_Spec.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201223103015_added_entity_constraints_LintReport.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201223103115_added_entity_constraints_LintRuleViolation.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201223155925_added_entity_constraints_CapabilityServiceDefinition.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201223122159_added_entity_constraints_Source.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201228104023_added_entity_constraints_ServiceDefinition.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
 </databaseChangeLog>

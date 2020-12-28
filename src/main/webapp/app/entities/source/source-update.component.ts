@@ -12,10 +12,10 @@ import { IPortal } from 'app/shared/model/portal.model';
 import { PortalService } from 'app/entities/portal/portal.service';
 import { ICapability } from 'app/shared/model/capability.model';
 import { CapabilityService } from 'app/entities/capability/capability.service';
-import { ICapabilityServiceDefinition } from 'app/shared/model/capability-service-definition.model';
-import { CapabilityServiceDefinitionService } from 'app/entities/capability-service-definition/capability-service-definition.service';
+import { IServiceDefinition } from 'app/shared/model/service-definition.model';
+import { ServiceDefinitionService } from 'app/entities/service-definition/service-definition.service';
 
-type SelectableEntity = IPortal | ICapability | ICapabilityServiceDefinition;
+type SelectableEntity = IPortal | ICapability | IServiceDefinition;
 
 @Component({
   selector: 'jhi-source-update',
@@ -25,7 +25,7 @@ export class SourceUpdateComponent implements OnInit {
   isSaving = false;
   portals: IPortal[] = [];
   capabilities: ICapability[] = [];
-  capabilityservicedefinitions: ICapabilityServiceDefinition[] = [];
+  servicedefinitions: IServiceDefinition[] = [];
 
   editForm = this.fb.group({
     id: [],
@@ -38,19 +38,20 @@ export class SourceUpdateComponent implements OnInit {
     username: [],
     password: [],
     cronExpression: [],
+    capabilityKeySpEL: [],
     capabilityNameSpEL: [],
+    serviceKeySpEL: [],
     serviceNameSpEL: [],
-    versionSpEL: [],
     portal: [null, Validators.required],
     capability: [],
-    capabilityServiceDefinition: [],
+    serviceDefinition: [],
   });
 
   constructor(
     protected sourceService: SourceService,
     protected portalService: PortalService,
     protected capabilityService: CapabilityService,
-    protected capabilityServiceDefinitionService: CapabilityServiceDefinitionService,
+    protected serviceDefinitionService: ServiceDefinitionService,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
   ) {}
@@ -103,25 +104,25 @@ export class SourceUpdateComponent implements OnInit {
           }
         });
 
-      this.capabilityServiceDefinitionService
+      this.serviceDefinitionService
         .query({ filter: 'source-is-null' })
         .pipe(
-          map((res: HttpResponse<ICapabilityServiceDefinition[]>) => {
+          map((res: HttpResponse<IServiceDefinition[]>) => {
             return res.body || [];
           })
         )
-        .subscribe((resBody: ICapabilityServiceDefinition[]) => {
-          if (!source.capabilityServiceDefinition || !source.capabilityServiceDefinition.id) {
-            this.capabilityservicedefinitions = resBody;
+        .subscribe((resBody: IServiceDefinition[]) => {
+          if (!source.serviceDefinition || !source.serviceDefinition.id) {
+            this.servicedefinitions = resBody;
           } else {
-            this.capabilityServiceDefinitionService
-              .find(source.capabilityServiceDefinition.id)
+            this.serviceDefinitionService
+              .find(source.serviceDefinition.id)
               .pipe(
-                map((subRes: HttpResponse<ICapabilityServiceDefinition>) => {
+                map((subRes: HttpResponse<IServiceDefinition>) => {
                   return subRes.body ? [subRes.body].concat(resBody) : resBody;
                 })
               )
-              .subscribe((concatRes: ICapabilityServiceDefinition[]) => (this.capabilityservicedefinitions = concatRes));
+              .subscribe((concatRes: IServiceDefinition[]) => (this.servicedefinitions = concatRes));
           }
         });
     });
@@ -139,12 +140,13 @@ export class SourceUpdateComponent implements OnInit {
       username: source.username,
       password: source.password,
       cronExpression: source.cronExpression,
+      capabilityKeySpEL: source.capabilityKeySpEL,
       capabilityNameSpEL: source.capabilityNameSpEL,
+      serviceKeySpEL: source.serviceKeySpEL,
       serviceNameSpEL: source.serviceNameSpEL,
-      versionSpEL: source.versionSpEL,
       portal: source.portal,
       capability: source.capability,
-      capabilityServiceDefinition: source.capabilityServiceDefinition,
+      serviceDefinition: source.serviceDefinition,
     });
   }
 
@@ -175,12 +177,13 @@ export class SourceUpdateComponent implements OnInit {
       username: this.editForm.get(['username'])!.value,
       password: this.editForm.get(['password'])!.value,
       cronExpression: this.editForm.get(['cronExpression'])!.value,
+      capabilityKeySpEL: this.editForm.get(['capabilityKeySpEL'])!.value,
       capabilityNameSpEL: this.editForm.get(['capabilityNameSpEL'])!.value,
+      serviceKeySpEL: this.editForm.get(['serviceKeySpEL'])!.value,
       serviceNameSpEL: this.editForm.get(['serviceNameSpEL'])!.value,
-      versionSpEL: this.editForm.get(['versionSpEL'])!.value,
       portal: this.editForm.get(['portal'])!.value,
       capability: this.editForm.get(['capability'])!.value,
-      capabilityServiceDefinition: this.editForm.get(['capabilityServiceDefinition'])!.value,
+      serviceDefinition: this.editForm.get(['serviceDefinition'])!.value,
     };
   }
 

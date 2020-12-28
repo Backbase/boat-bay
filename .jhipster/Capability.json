@@ -47,9 +47,9 @@
   "relationships": [
     {
       "relationshipType": "one-to-many",
-      "otherEntityName": "capabilityServiceDefinition",
+      "otherEntityName": "serviceDefinition",
       "otherEntityRelationshipName": "capability",
-      "relationshipName": "capabilityServiceDefinition"
+      "relationshipName": "serviceDefinition"
     },
     {
       "relationshipType": "many-to-one",

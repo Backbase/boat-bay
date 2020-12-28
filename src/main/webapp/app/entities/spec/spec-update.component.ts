@@ -16,12 +16,12 @@ import { IPortal } from 'app/shared/model/portal.model';
 import { PortalService } from 'app/entities/portal/portal.service';
 import { ICapability } from 'app/shared/model/capability.model';
 import { CapabilityService } from 'app/entities/capability/capability.service';
-import { ICapabilityServiceDefinition } from 'app/shared/model/capability-service-definition.model';
-import { CapabilityServiceDefinitionService } from 'app/entities/capability-service-definition/capability-service-definition.service';
+import { IServiceDefinition } from 'app/shared/model/service-definition.model';
+import { ServiceDefinitionService } from 'app/entities/service-definition/service-definition.service';
 import { ISource } from 'app/shared/model/source.model';
 import { SourceService } from 'app/entities/source/source.service';
 
-type SelectableEntity = ILintReport | IPortal | ICapability | ICapabilityServiceDefinition | ISource;
+type SelectableEntity = ILintReport | IPortal | ICapability | IServiceDefinition | ISource;
 
 @Component({
   selector: 'jhi-spec-update',
@@ -32,7 +32,7 @@ export class SpecUpdateComponent implements OnInit {
   lintreports: ILintReport[] = [];
   portals: IPortal[] = [];
   capabilities: ICapability[] = [];
-  capabilityservicedefinitions: ICapabilityServiceDefinition[] = [];
+  servicedefinitions: IServiceDefinition[] = [];
   sources: ISource[] = [];
 
   editForm = this.fb.group({
@@ -56,7 +56,7 @@ export class SpecUpdateComponent implements OnInit {
     lintReport: [],
     portal: [null, Validators.required],
     capability: [null, Validators.required],
-    capabilityServiceDefinition: [null, Validators.required],
+    serviceDefinition: [null, Validators.required],
     source: [],
   });
 
@@ -65,7 +65,7 @@ export class SpecUpdateComponent implements OnInit {
     protected lintReportService: LintReportService,
     protected portalService: PortalService,
     protected capabilityService: CapabilityService,
-    protected capabilityServiceDefinitionService: CapabilityServiceDefinitionService,
+    protected serviceDefinitionService: ServiceDefinitionService,
     protected sourceService: SourceService,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
@@ -108,9 +108,9 @@ export class SpecUpdateComponent implements OnInit {
 
       this.capabilityService.query().subscribe((res: HttpResponse<ICapability[]>) => (this.capabilities = res.body || []));
 
-      this.capabilityServiceDefinitionService
+      this.serviceDefinitionService
         .query()
-        .subscribe((res: HttpResponse<ICapabilityServiceDefinition[]>) => (this.capabilityservicedefinitions = res.body || []));
+        .subscribe((res: HttpResponse<IServiceDefinition[]>) => (this.servicedefinitions = res.body || []));
 
       this.sourceService.query().subscribe((res: HttpResponse<ISource[]>) => (this.sources = res.body || []));
     });
@@ -138,7 +138,7 @@ export class SpecUpdateComponent implements OnInit {
       lintReport: spec.lintReport,
       portal: spec.portal,
       capability: spec.capability,
-      capabilityServiceDefinition: spec.capabilityServiceDefinition,
+      serviceDefinition: spec.serviceDefinition,
       source: spec.source,
     });
   }
@@ -184,7 +184,7 @@ export class SpecUpdateComponent implements OnInit {
       lintReport: this.editForm.get(['lintReport'])!.value,
       portal: this.editForm.get(['portal'])!.value,
       capability: this.editForm.get(['capability'])!.value,
-      capabilityServiceDefinition: this.editForm.get(['capabilityServiceDefinition'])!.value,
+      serviceDefinition: this.editForm.get(['serviceDefinition'])!.value,
       source: this.editForm.get(['source'])!.value,
     };
   }

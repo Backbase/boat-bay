@@ -55,14 +55,17 @@ public class Source implements Serializable {
     @Column(name = "cron_expression")
     private String cronExpression;
 
+    @Column(name = "capability_key_sp_el")
+    private String capabilityKeySpEL;
+
     @Column(name = "capability_name_sp_el")
     private String capabilityNameSpEL;
 
+    @Column(name = "service_key_sp_el")
+    private String serviceKeySpEL;
+
     @Column(name = "service_name_sp_el")
     private String serviceNameSpEL;
-
-    @Column(name = "version_sp_el")
-    private String versionSpEL;
 
     @OneToOne(optional = false)
     @NotNull
@@ -75,7 +78,7 @@ public class Source implements Serializable {
 
     @OneToOne
     @JoinColumn(unique = true)
-    private CapabilityServiceDefinition capabilityServiceDefinition;
+    private ServiceDefinition serviceDefinition;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -203,6 +206,19 @@ public class Source implements Serializable {
         this.cronExpression = cronExpression;
     }
 
+    public String getCapabilityKeySpEL() {
+        return capabilityKeySpEL;
+    }
+
+    public Source capabilityKeySpEL(String capabilityKeySpEL) {
+        this.capabilityKeySpEL = capabilityKeySpEL;
+        return this;
+    }
+
+    public void setCapabilityKeySpEL(String capabilityKeySpEL) {
+        this.capabilityKeySpEL = capabilityKeySpEL;
+    }
+
     public String getCapabilityNameSpEL() {
         return capabilityNameSpEL;
     }
@@ -216,6 +232,19 @@ public class Source implements Serializable {
         this.capabilityNameSpEL = capabilityNameSpEL;
     }
 
+    public String getServiceKeySpEL() {
+        return serviceKeySpEL;
+    }
+
+    public Source serviceKeySpEL(String serviceKeySpEL) {
+        this.serviceKeySpEL = serviceKeySpEL;
+        return this;
+    }
+
+    public void setServiceKeySpEL(String serviceKeySpEL) {
+        this.serviceKeySpEL = serviceKeySpEL;
+    }
+
     public String getServiceNameSpEL() {
         return serviceNameSpEL;
     }
@@ -227,19 +256,6 @@ public class Source implements Serializable {
 
     public void setServiceNameSpEL(String serviceNameSpEL) {
         this.serviceNameSpEL = serviceNameSpEL;
-    }
-
-    public String getVersionSpEL() {
-        return versionSpEL;
-    }
-
-    public Source versionSpEL(String versionSpEL) {
-        this.versionSpEL = versionSpEL;
-        return this;
-    }
-
-    public void setVersionSpEL(String versionSpEL) {
-        this.versionSpEL = versionSpEL;
     }
 
     public Portal getPortal() {
@@ -268,17 +284,17 @@ public class Source implements Serializable {
         this.capability = capability;
     }
 
-    public CapabilityServiceDefinition getCapabilityServiceDefinition() {
-        return capabilityServiceDefinition;
+    public ServiceDefinition getServiceDefinition() {
+        return serviceDefinition;
     }
 
-    public Source capabilityServiceDefinition(CapabilityServiceDefinition capabilityServiceDefinition) {
-        this.capabilityServiceDefinition = capabilityServiceDefinition;
+    public Source serviceDefinition(ServiceDefinition serviceDefinition) {
+        this.serviceDefinition = serviceDefinition;
         return this;
     }
 
-    public void setCapabilityServiceDefinition(CapabilityServiceDefinition capabilityServiceDefinition) {
-        this.capabilityServiceDefinition = capabilityServiceDefinition;
+    public void setServiceDefinition(ServiceDefinition serviceDefinition) {
+        this.serviceDefinition = serviceDefinition;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
@@ -312,9 +328,10 @@ public class Source implements Serializable {
             ", username='" + getUsername() + "'" +
             ", password='" + getPassword() + "'" +
             ", cronExpression='" + getCronExpression() + "'" +
+            ", capabilityKeySpEL='" + getCapabilityKeySpEL() + "'" +
             ", capabilityNameSpEL='" + getCapabilityNameSpEL() + "'" +
+            ", serviceKeySpEL='" + getServiceKeySpEL() + "'" +
             ", serviceNameSpEL='" + getServiceNameSpEL() + "'" +
-            ", versionSpEL='" + getVersionSpEL() + "'" +
             "}";
     }
 }
