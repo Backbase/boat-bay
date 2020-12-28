@@ -90,10 +90,10 @@
                         <a [routerLink]="['/capability', spec.capability?.id, 'view']">{{ spec.capability?.name }}</a>
                     </div>
                 </dd>
-                <dt><span>Capability Service Definition</span></dt>
+                <dt><span>Service Definition</span></dt>
                 <dd>
-                    <div *ngIf="spec.capabilityServiceDefinition">
-                        <a [routerLink]="['/capability-service-definition', spec.capabilityServiceDefinition?.id, 'view']">{{ spec.capabilityServiceDefinition?.name }}</a>
+                    <div *ngIf="spec.serviceDefinition">
+                        <a [routerLink]="['/service-definition', spec.serviceDefinition?.id, 'view']">{{ spec.serviceDefinition?.name }}</a>
                     </div>
                 </dd>
                 <dt><span>Source</span></dt>

@@ -117,10 +117,10 @@
     },
     {
       "relationshipType": "many-to-one",
-      "otherEntityName": "capabilityServiceDefinition",
+      "otherEntityName": "serviceDefinition",
       "otherEntityRelationshipName": "spec",
       "relationshipValidateRules": "required",
-      "relationshipName": "capabilityServiceDefinition",
+      "relationshipName": "serviceDefinition",
       "otherEntityField": "name"
     },
     {

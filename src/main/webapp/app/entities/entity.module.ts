@@ -37,11 +37,8 @@ import { RouterModule } from '@angular/router';
         loadChildren: () => import('./source/source.module').then(m => m.BoatBaySourceModule),
       },
       {
-        path: 'capability-service-definition',
-        loadChildren: () =>
-          import('./capability-service-definition/capability-service-definition.module').then(
-            m => m.BoatBayCapabilityServiceDefinitionModule
-          ),
+        path: 'service-definition',
+        loadChildren: () => import('./service-definition/service-definition.module').then(m => m.BoatBayServiceDefinitionModule),
       },
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ]),

@@ -1,7 +1,7 @@
 <div class="row justify-content-center">
     <div class="col-8">
-        <div *ngIf="capabilityServiceDefinition">
-            <h2><span>Capability Service Definition</span> {{ capabilityServiceDefinition.id }}</h2>
+        <div *ngIf="serviceDefinition">
+            <h2><span>Service Definition</span> {{ serviceDefinition.id }}</h2>
 
             <hr>
 
@@ -10,40 +10,40 @@
             <dl class="row-md jh-entity-details">
                 <dt><span>Key</span></dt>
                 <dd>
-                    <span>{{ capabilityServiceDefinition.key }}</span>
+                    <span>{{ serviceDefinition.key }}</span>
                 </dd>
                 <dt><span>Name</span></dt>
                 <dd>
-                    <span>{{ capabilityServiceDefinition.name }}</span>
+                    <span>{{ serviceDefinition.name }}</span>
                 </dd>
                 <dt><span>Title</span></dt>
                 <dd>
-                    <span>{{ capabilityServiceDefinition.title }}</span>
+                    <span>{{ serviceDefinition.title }}</span>
                 </dd>
                 <dt><span>Sub Title</span></dt>
                 <dd>
-                    <span>{{ capabilityServiceDefinition.subTitle }}</span>
+                    <span>{{ serviceDefinition.subTitle }}</span>
                 </dd>
                 <dt><span>Nav Title</span></dt>
                 <dd>
-                    <span>{{ capabilityServiceDefinition.navTitle }}</span>
+                    <span>{{ serviceDefinition.navTitle }}</span>
                 </dd>
                 <dt><span>Content</span></dt>
                 <dd>
-                    <span>{{ capabilityServiceDefinition.content }}</span>
+                    <span>{{ serviceDefinition.content }}</span>
                 </dd>
                 <dt><span>Created On</span></dt>
                 <dd>
-                    <span>{{ capabilityServiceDefinition.createdOn }}</span>
+                    <span>{{ serviceDefinition.createdOn }}</span>
                 </dd>
                 <dt><span>Created By</span></dt>
                 <dd>
-                    <span>{{ capabilityServiceDefinition.createdBy }}</span>
+                    <span>{{ serviceDefinition.createdBy }}</span>
                 </dd>
                 <dt><span>Capability</span></dt>
                 <dd>
-                    <div *ngIf="capabilityServiceDefinition.capability">
-                        <a [routerLink]="['/capability', capabilityServiceDefinition.capability?.id, 'view']">{{ capabilityServiceDefinition.capability?.name }}</a>
+                    <div *ngIf="serviceDefinition.capability">
+                        <a [routerLink]="['/capability', serviceDefinition.capability?.id, 'view']">{{ serviceDefinition.capability?.name }}</a>
                     </div>
                 </dd>
             </dl>
@@ -55,7 +55,7 @@
             </button>
 
             <button type="button"
-                    [routerLink]="['/capability-service-definition', capabilityServiceDefinition.id, 'edit']"
+                    [routerLink]="['/service-definition', serviceDefinition.id, 'edit']"
                     class="btn btn-primary">
                 <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
             </button>

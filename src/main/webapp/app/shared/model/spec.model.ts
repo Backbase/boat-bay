@@ -2,7 +2,7 @@ import { Moment } from 'moment';
 import { ILintReport } from 'app/shared/model/lint-report.model';
 import { IPortal } from 'app/shared/model/portal.model';
 import { ICapability } from 'app/shared/model/capability.model';
-import { ICapabilityServiceDefinition } from 'app/shared/model/capability-service-definition.model';
+import { IServiceDefinition } from 'app/shared/model/service-definition.model';
 import { ISource } from 'app/shared/model/source.model';
 
 export interface ISpec {
@@ -26,7 +26,7 @@ export interface ISpec {
   lintReport?: ILintReport;
   portal?: IPortal;
   capability?: ICapability;
-  capabilityServiceDefinition?: ICapabilityServiceDefinition;
+  serviceDefinition?: IServiceDefinition;
   source?: ISource;
 }
 
@@ -52,7 +52,7 @@ export class Spec implements ISpec {
     public lintReport?: ILintReport,
     public portal?: IPortal,
     public capability?: ICapability,
-    public capabilityServiceDefinition?: ICapabilityServiceDefinition,
+    public serviceDefinition?: IServiceDefinition,
     public source?: ISource
   ) {}
 }

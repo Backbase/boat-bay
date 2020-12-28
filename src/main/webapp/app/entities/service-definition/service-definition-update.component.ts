@@ -7,16 +7,16 @@ import { Observable } from 'rxjs';
 import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 
-import { ICapabilityServiceDefinition, CapabilityServiceDefinition } from 'app/shared/model/capability-service-definition.model';
-import { CapabilityServiceDefinitionService } from './capability-service-definition.service';
+import { IServiceDefinition, ServiceDefinition } from 'app/shared/model/service-definition.model';
+import { ServiceDefinitionService } from './service-definition.service';
 import { ICapability } from 'app/shared/model/capability.model';
 import { CapabilityService } from 'app/entities/capability/capability.service';
 
 @Component({
-  selector: 'jhi-capability-service-definition-update',
-  templateUrl: './capability-service-definition-update.component.html',
+  selector: 'jhi-service-definition-update',
+  templateUrl: './service-definition-update.component.html',
 })
-export class CapabilityServiceDefinitionUpdateComponent implements OnInit {
+export class ServiceDefinitionUpdateComponent implements OnInit {
   isSaving = false;
   capabilities: ICapability[] = [];
 
@@ -34,37 +34,37 @@ export class CapabilityServiceDefinitionUpdateComponent implements OnInit {
   });
 
   constructor(
-    protected capabilityServiceDefinitionService: CapabilityServiceDefinitionService,
+    protected serviceDefinitionService: ServiceDefinitionService,
     protected capabilityService: CapabilityService,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
   ) {}
 
   ngOnInit(): void {
-    this.activatedRoute.data.subscribe(({ capabilityServiceDefinition }) => {
-      if (!capabilityServiceDefinition.id) {
+    this.activatedRoute.data.subscribe(({ serviceDefinition }) => {
+      if (!serviceDefinition.id) {
         const today = moment().startOf('day');
-        capabilityServiceDefinition.createdOn = today;
+        serviceDefinition.createdOn = today;
       }
 
-      this.updateForm(capabilityServiceDefinition);
+      this.updateForm(serviceDefinition);
 
       this.capabilityService.query().subscribe((res: HttpResponse<ICapability[]>) => (this.capabilities = res.body || []));
     });
   }
 
-  updateForm(capabilityServiceDefinition: ICapabilityServiceDefinition): void {
+  updateForm(serviceDefinition: IServiceDefinition): void {
     this.editForm.patchValue({
-      id: capabilityServiceDefinition.id,
-      key: capabilityServiceDefinition.key,
-      name: capabilityServiceDefinition.name,
-      title: capabilityServiceDefinition.title,
-      subTitle: capabilityServiceDefinition.subTitle,
-      navTitle: capabilityServiceDefinition.navTitle,
-      content: capabilityServiceDefinition.content,
-      createdOn: capabilityServiceDefinition.createdOn ? capabilityServiceDefinition.createdOn.format(DATE_TIME_FORMAT) : null,
-      createdBy: capabilityServiceDefinition.createdBy,
-      capability: capabilityServiceDefinition.capability,
+      id: serviceDefinition.id,
+      key: serviceDefinition.key,
+      name: serviceDefinition.name,
+      title: serviceDefinition.title,
+      subTitle: serviceDefinition.subTitle,
+      navTitle: serviceDefinition.navTitle,
+      content: serviceDefinition.content,
+      createdOn: serviceDefinition.createdOn ? serviceDefinition.createdOn.format(DATE_TIME_FORMAT) : null,
+      createdBy: serviceDefinition.createdBy,
+      capability: serviceDefinition.capability,
     });
   }
 
@@ -74,17 +74,17 @@ export class CapabilityServiceDefinitionUpdateComponent implements OnInit {
 
   save(): void {
     this.isSaving = true;
-    const capabilityServiceDefinition = this.createFromForm();
-    if (capabilityServiceDefinition.id !== undefined) {
-      this.subscribeToSaveResponse(this.capabilityServiceDefinitionService.update(capabilityServiceDefinition));
+    const serviceDefinition = this.createFromForm();
+    if (serviceDefinition.id !== undefined) {
+      this.subscribeToSaveResponse(this.serviceDefinitionService.update(serviceDefinition));
     } else {
-      this.subscribeToSaveResponse(this.capabilityServiceDefinitionService.create(capabilityServiceDefinition));
+      this.subscribeToSaveResponse(this.serviceDefinitionService.create(serviceDefinition));
     }
   }
 
-  private createFromForm(): ICapabilityServiceDefinition {
+  private createFromForm(): IServiceDefinition {
     return {
-      ...new CapabilityServiceDefinition(),
+      ...new ServiceDefinition(),
       id: this.editForm.get(['id'])!.value,
       key: this.editForm.get(['key'])!.value,
       name: this.editForm.get(['name'])!.value,
@@ -98,7 +98,7 @@ export class CapabilityServiceDefinitionUpdateComponent implements OnInit {
     };
   }
 
-  protected subscribeToSaveResponse(result: Observable<HttpResponse<ICapabilityServiceDefinition>>): void {
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<IServiceDefinition>>): void {
     result.subscribe(
       () => this.onSaveSuccess(),
       () => this.onSaveError()

@@ -1,11 +1,11 @@
 <div>
     <h2 id="page-heading">
-        <span>Capability Service Definitions</span>
+        <span>Service Definitions</span>
 
-        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-capability-service-definition" [routerLink]="['/capability-service-definition/new']">
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-service-definition" [routerLink]="['/service-definition/new']">
             <fa-icon icon="plus"></fa-icon>
             <span>
-            Create a new Capability Service Definition
+            Create a new Service Definition
             </span>
         </button>
     </h2>
@@ -14,11 +14,11 @@
 
     <jhi-alert></jhi-alert>
 
-    <div class="alert alert-warning" id="no-result" *ngIf="capabilityServiceDefinitions?.length === 0">
-        <span>No capabilityServiceDefinitions found</span>
+    <div class="alert alert-warning" id="no-result" *ngIf="serviceDefinitions?.length === 0">
+        <span>No serviceDefinitions found</span>
     </div>
 
-    <div class="table-responsive" id="entities" *ngIf="capabilityServiceDefinitions && capabilityServiceDefinitions.length > 0">
+    <div class="table-responsive" id="entities" *ngIf="serviceDefinitions && serviceDefinitions.length > 0">
         <table class="table table-striped" aria-describedby="page-heading">
             <thead>
                 <tr>
@@ -36,38 +36,38 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let capabilityServiceDefinition of capabilityServiceDefinitions ;trackBy: trackId">
-                    <td><a [routerLink]="['/capability-service-definition', capabilityServiceDefinition.id, 'view']">{{ capabilityServiceDefinition.id }}</a></td>
-                    <td>{{ capabilityServiceDefinition.key }}</td>
-                    <td>{{ capabilityServiceDefinition.name }}</td>
-                    <td>{{ capabilityServiceDefinition.title }}</td>
-                    <td>{{ capabilityServiceDefinition.subTitle }}</td>
-                    <td>{{ capabilityServiceDefinition.navTitle }}</td>
-                    <td>{{ capabilityServiceDefinition.content }}</td>
-                    <td>{{ capabilityServiceDefinition.createdOn | date:'medium' }}</td>
-                    <td>{{ capabilityServiceDefinition.createdBy }}</td>
+                <tr *ngFor="let serviceDefinition of serviceDefinitions ;trackBy: trackId">
+                    <td><a [routerLink]="['/service-definition', serviceDefinition.id, 'view']">{{ serviceDefinition.id }}</a></td>
+                    <td>{{ serviceDefinition.key }}</td>
+                    <td>{{ serviceDefinition.name }}</td>
+                    <td>{{ serviceDefinition.title }}</td>
+                    <td>{{ serviceDefinition.subTitle }}</td>
+                    <td>{{ serviceDefinition.navTitle }}</td>
+                    <td>{{ serviceDefinition.content }}</td>
+                    <td>{{ serviceDefinition.createdOn | date:'medium' }}</td>
+                    <td>{{ serviceDefinition.createdBy }}</td>
                     <td>
-                        <div *ngIf="capabilityServiceDefinition.capability">
-                            <a [routerLink]="['/capability', capabilityServiceDefinition.capability?.id, 'view']" >{{ capabilityServiceDefinition.capability?.name }}</a>
+                        <div *ngIf="serviceDefinition.capability">
+                            <a [routerLink]="['/capability', serviceDefinition.capability?.id, 'view']" >{{ serviceDefinition.capability?.name }}</a>
                         </div>
                     </td>
                     <td class="text-right">
                         <div class="btn-group">
                             <button type="submit"
-                                    [routerLink]="['/capability-service-definition', capabilityServiceDefinition.id, 'view']"
+                                    [routerLink]="['/service-definition', serviceDefinition.id, 'view']"
                                     class="btn btn-info btn-sm">
                                 <fa-icon icon="eye"></fa-icon>
                                 <span class="d-none d-md-inline">View</span>
                             </button>
 
                             <button type="submit"
-                                    [routerLink]="['/capability-service-definition', capabilityServiceDefinition.id, 'edit']"
+                                    [routerLink]="['/service-definition', serviceDefinition.id, 'edit']"
                                     class="btn btn-primary btn-sm">
                                 <fa-icon icon="pencil-alt"></fa-icon>
                                 <span class="d-none d-md-inline">Edit</span>
                             </button>
 
-                            <button type="submit" (click)="delete(capabilityServiceDefinition)"
+                            <button type="submit" (click)="delete(serviceDefinition)"
                                     class="btn btn-danger btn-sm">
                                 <fa-icon icon="times"></fa-icon>
                                 <span class="d-none d-md-inline">Delete</span>

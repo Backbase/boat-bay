@@ -4,7 +4,7 @@ import com.backbase.oss.boat.bay.BoatBayApp;
 import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.domain.Portal;
 import com.backbase.oss.boat.bay.domain.Capability;
-import com.backbase.oss.boat.bay.domain.CapabilityServiceDefinition;
+import com.backbase.oss.boat.bay.domain.ServiceDefinition;
 import com.backbase.oss.boat.bay.repository.SpecRepository;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -138,15 +138,15 @@ public class SpecResourceIT {
         }
         spec.setCapability(capability);
         // Add required entity
-        CapabilityServiceDefinition capabilityServiceDefinition;
-        if (TestUtil.findAll(em, CapabilityServiceDefinition.class).isEmpty()) {
-            capabilityServiceDefinition = CapabilityServiceDefinitionResourceIT.createEntity(em);
-            em.persist(capabilityServiceDefinition);
+        ServiceDefinition serviceDefinition;
+        if (TestUtil.findAll(em, ServiceDefinition.class).isEmpty()) {
+            serviceDefinition = ServiceDefinitionResourceIT.createEntity(em);
+            em.persist(serviceDefinition);
             em.flush();
         } else {
-            capabilityServiceDefinition = TestUtil.findAll(em, CapabilityServiceDefinition.class).get(0);
+            serviceDefinition = TestUtil.findAll(em, ServiceDefinition.class).get(0);
         }
-        spec.setCapabilityServiceDefinition(capabilityServiceDefinition);
+        spec.setServiceDefinition(serviceDefinition);
         return spec;
     }
     /**
@@ -194,15 +194,15 @@ public class SpecResourceIT {
         }
         spec.setCapability(capability);
         // Add required entity
-        CapabilityServiceDefinition capabilityServiceDefinition;
-        if (TestUtil.findAll(em, CapabilityServiceDefinition.class).isEmpty()) {
-            capabilityServiceDefinition = CapabilityServiceDefinitionResourceIT.createUpdatedEntity(em);
-            em.persist(capabilityServiceDefinition);
+        ServiceDefinition serviceDefinition;
+        if (TestUtil.findAll(em, ServiceDefinition.class).isEmpty()) {
+            serviceDefinition = ServiceDefinitionResourceIT.createUpdatedEntity(em);
+            em.persist(serviceDefinition);
             em.flush();
         } else {
-            capabilityServiceDefinition = TestUtil.findAll(em, CapabilityServiceDefinition.class).get(0);
+            serviceDefinition = TestUtil.findAll(em, ServiceDefinition.class).get(0);
         }
-        spec.setCapabilityServiceDefinition(capabilityServiceDefinition);
+        spec.setServiceDefinition(serviceDefinition);
         return spec;
     }
 

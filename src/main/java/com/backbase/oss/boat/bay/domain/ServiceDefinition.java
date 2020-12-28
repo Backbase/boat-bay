@@ -11,12 +11,12 @@ import java.io.Serializable;
 import java.time.Instant;
 
 /**
- * A CapabilityServiceDefinition.
+ * A ServiceDefinition.
  */
 @Entity
-@Table(name = "capability_service_definition")
+@Table(name = "service_definition")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class CapabilityServiceDefinition implements Serializable {
+public class ServiceDefinition implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -52,7 +52,7 @@ public class CapabilityServiceDefinition implements Serializable {
 
     @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties(value = "capabilityServiceDefinitions", allowSetters = true)
+    @JsonIgnoreProperties(value = "serviceDefinitions", allowSetters = true)
     private Capability capability;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -68,7 +68,7 @@ public class CapabilityServiceDefinition implements Serializable {
         return key;
     }
 
-    public CapabilityServiceDefinition key(String key) {
+    public ServiceDefinition key(String key) {
         this.key = key;
         return this;
     }
@@ -81,7 +81,7 @@ public class CapabilityServiceDefinition implements Serializable {
         return name;
     }
 
-    public CapabilityServiceDefinition name(String name) {
+    public ServiceDefinition name(String name) {
         this.name = name;
         return this;
     }
@@ -94,7 +94,7 @@ public class CapabilityServiceDefinition implements Serializable {
         return title;
     }
 
-    public CapabilityServiceDefinition title(String title) {
+    public ServiceDefinition title(String title) {
         this.title = title;
         return this;
     }
@@ -107,7 +107,7 @@ public class CapabilityServiceDefinition implements Serializable {
         return subTitle;
     }
 
-    public CapabilityServiceDefinition subTitle(String subTitle) {
+    public ServiceDefinition subTitle(String subTitle) {
         this.subTitle = subTitle;
         return this;
     }
@@ -120,7 +120,7 @@ public class CapabilityServiceDefinition implements Serializable {
         return navTitle;
     }
 
-    public CapabilityServiceDefinition navTitle(String navTitle) {
+    public ServiceDefinition navTitle(String navTitle) {
         this.navTitle = navTitle;
         return this;
     }
@@ -133,7 +133,7 @@ public class CapabilityServiceDefinition implements Serializable {
         return content;
     }
 
-    public CapabilityServiceDefinition content(String content) {
+    public ServiceDefinition content(String content) {
         this.content = content;
         return this;
     }
@@ -146,7 +146,7 @@ public class CapabilityServiceDefinition implements Serializable {
         return createdOn;
     }
 
-    public CapabilityServiceDefinition createdOn(Instant createdOn) {
+    public ServiceDefinition createdOn(Instant createdOn) {
         this.createdOn = createdOn;
         return this;
     }
@@ -159,7 +159,7 @@ public class CapabilityServiceDefinition implements Serializable {
         return createdBy;
     }
 
-    public CapabilityServiceDefinition createdBy(String createdBy) {
+    public ServiceDefinition createdBy(String createdBy) {
         this.createdBy = createdBy;
         return this;
     }
@@ -172,7 +172,7 @@ public class CapabilityServiceDefinition implements Serializable {
         return capability;
     }
 
-    public CapabilityServiceDefinition capability(Capability capability) {
+    public ServiceDefinition capability(Capability capability) {
         this.capability = capability;
         return this;
     }
@@ -187,10 +187,10 @@ public class CapabilityServiceDefinition implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof CapabilityServiceDefinition)) {
+        if (!(o instanceof ServiceDefinition)) {
             return false;
         }
-        return id != null && id.equals(((CapabilityServiceDefinition) o).id);
+        return id != null && id.equals(((ServiceDefinition) o).id);
     }
 
     @Override
@@ -201,7 +201,7 @@ public class CapabilityServiceDefinition implements Serializable {
     // prettier-ignore
     @Override
     public String toString() {
-        return "CapabilityServiceDefinition{" +
+        return "ServiceDefinition{" +
             "id=" + getId() +
             ", key='" + getKey() + "'" +
             ", name='" + getName() + "'" +

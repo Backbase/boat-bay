@@ -32,12 +32,13 @@
                     <th scope="col" ><span>Username</span></th>
                     <th scope="col" ><span>Password</span></th>
                     <th scope="col" ><span>Cron Expression</span></th>
+                    <th scope="col" ><span>Capability Key Sp EL</span></th>
                     <th scope="col" ><span>Capability Name Sp EL</span></th>
+                    <th scope="col" ><span>Service Key Sp EL</span></th>
                     <th scope="col" ><span>Service Name Sp EL</span></th>
-                    <th scope="col" ><span>Version Sp EL</span></th>
                     <th scope="col" ><span>Portal</span></th>
                     <th scope="col" ><span>Capability</span></th>
-                    <th scope="col" ><span>Capability Service Definition</span></th>
+                    <th scope="col" ><span>Service Definition</span></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -53,9 +54,10 @@
                     <td>{{ source.username }}</td>
                     <td>{{ source.password }}</td>
                     <td>{{ source.cronExpression }}</td>
+                    <td>{{ source.capabilityKeySpEL }}</td>
                     <td>{{ source.capabilityNameSpEL }}</td>
+                    <td>{{ source.serviceKeySpEL }}</td>
                     <td>{{ source.serviceNameSpEL }}</td>
-                    <td>{{ source.versionSpEL }}</td>
                     <td>
                         <div *ngIf="source.portal">
                             <a [routerLink]="['/portal', source.portal?.id, 'view']" >{{ source.portal?.name }}</a>
@@ -67,8 +69,8 @@
                         </div>
                     </td>
                     <td>
-                        <div *ngIf="source.capabilityServiceDefinition">
-                            <a [routerLink]="['/capability-service-definition', source.capabilityServiceDefinition?.id, 'view']" >{{ source.capabilityServiceDefinition?.name }}</a>
+                        <div *ngIf="source.serviceDefinition">
+                            <a [routerLink]="['/service-definition', source.serviceDefinition?.id, 'view']" >{{ source.serviceDefinition?.name }}</a>
                         </div>
                     </td>
                     <td class="text-right">

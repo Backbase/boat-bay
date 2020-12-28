@@ -58,14 +58,17 @@ public class SourceResourceIT {
     private static final String DEFAULT_CRON_EXPRESSION = "AAAAAAAAAA";
     private static final String UPDATED_CRON_EXPRESSION = "BBBBBBBBBB";
 
+    private static final String DEFAULT_CAPABILITY_KEY_SP_EL = "AAAAAAAAAA";
+    private static final String UPDATED_CAPABILITY_KEY_SP_EL = "BBBBBBBBBB";
+
     private static final String DEFAULT_CAPABILITY_NAME_SP_EL = "AAAAAAAAAA";
     private static final String UPDATED_CAPABILITY_NAME_SP_EL = "BBBBBBBBBB";
 
+    private static final String DEFAULT_SERVICE_KEY_SP_EL = "AAAAAAAAAA";
+    private static final String UPDATED_SERVICE_KEY_SP_EL = "BBBBBBBBBB";
+
     private static final String DEFAULT_SERVICE_NAME_SP_EL = "AAAAAAAAAA";
     private static final String UPDATED_SERVICE_NAME_SP_EL = "BBBBBBBBBB";
-
-    private static final String DEFAULT_VERSION_SP_EL = "AAAAAAAAAA";
-    private static final String UPDATED_VERSION_SP_EL = "BBBBBBBBBB";
 
     @Autowired
     private SourceRepository sourceRepository;
@@ -95,9 +98,10 @@ public class SourceResourceIT {
             .username(DEFAULT_USERNAME)
             .password(DEFAULT_PASSWORD)
             .cronExpression(DEFAULT_CRON_EXPRESSION)
+            .capabilityKeySpEL(DEFAULT_CAPABILITY_KEY_SP_EL)
             .capabilityNameSpEL(DEFAULT_CAPABILITY_NAME_SP_EL)
-            .serviceNameSpEL(DEFAULT_SERVICE_NAME_SP_EL)
-            .versionSpEL(DEFAULT_VERSION_SP_EL);
+            .serviceKeySpEL(DEFAULT_SERVICE_KEY_SP_EL)
+            .serviceNameSpEL(DEFAULT_SERVICE_NAME_SP_EL);
         // Add required entity
         Portal portal;
         if (TestUtil.findAll(em, Portal.class).isEmpty()) {
@@ -127,9 +131,10 @@ public class SourceResourceIT {
             .username(UPDATED_USERNAME)
             .password(UPDATED_PASSWORD)
             .cronExpression(UPDATED_CRON_EXPRESSION)
+            .capabilityKeySpEL(UPDATED_CAPABILITY_KEY_SP_EL)
             .capabilityNameSpEL(UPDATED_CAPABILITY_NAME_SP_EL)
-            .serviceNameSpEL(UPDATED_SERVICE_NAME_SP_EL)
-            .versionSpEL(UPDATED_VERSION_SP_EL);
+            .serviceKeySpEL(UPDATED_SERVICE_KEY_SP_EL)
+            .serviceNameSpEL(UPDATED_SERVICE_NAME_SP_EL);
         // Add required entity
         Portal portal;
         if (TestUtil.findAll(em, Portal.class).isEmpty()) {
@@ -171,9 +176,10 @@ public class SourceResourceIT {
         assertThat(testSource.getUsername()).isEqualTo(DEFAULT_USERNAME);
         assertThat(testSource.getPassword()).isEqualTo(DEFAULT_PASSWORD);
         assertThat(testSource.getCronExpression()).isEqualTo(DEFAULT_CRON_EXPRESSION);
+        assertThat(testSource.getCapabilityKeySpEL()).isEqualTo(DEFAULT_CAPABILITY_KEY_SP_EL);
         assertThat(testSource.getCapabilityNameSpEL()).isEqualTo(DEFAULT_CAPABILITY_NAME_SP_EL);
+        assertThat(testSource.getServiceKeySpEL()).isEqualTo(DEFAULT_SERVICE_KEY_SP_EL);
         assertThat(testSource.getServiceNameSpEL()).isEqualTo(DEFAULT_SERVICE_NAME_SP_EL);
-        assertThat(testSource.getVersionSpEL()).isEqualTo(DEFAULT_VERSION_SP_EL);
     }
 
     @Test
@@ -273,9 +279,10 @@ public class SourceResourceIT {
             .andExpect(jsonPath("$.[*].username").value(hasItem(DEFAULT_USERNAME)))
             .andExpect(jsonPath("$.[*].password").value(hasItem(DEFAULT_PASSWORD)))
             .andExpect(jsonPath("$.[*].cronExpression").value(hasItem(DEFAULT_CRON_EXPRESSION)))
+            .andExpect(jsonPath("$.[*].capabilityKeySpEL").value(hasItem(DEFAULT_CAPABILITY_KEY_SP_EL)))
             .andExpect(jsonPath("$.[*].capabilityNameSpEL").value(hasItem(DEFAULT_CAPABILITY_NAME_SP_EL)))
-            .andExpect(jsonPath("$.[*].serviceNameSpEL").value(hasItem(DEFAULT_SERVICE_NAME_SP_EL)))
-            .andExpect(jsonPath("$.[*].versionSpEL").value(hasItem(DEFAULT_VERSION_SP_EL)));
+            .andExpect(jsonPath("$.[*].serviceKeySpEL").value(hasItem(DEFAULT_SERVICE_KEY_SP_EL)))
+            .andExpect(jsonPath("$.[*].serviceNameSpEL").value(hasItem(DEFAULT_SERVICE_NAME_SP_EL)));
     }
     
     @Test
@@ -298,9 +305,10 @@ public class SourceResourceIT {
             .andExpect(jsonPath("$.username").value(DEFAULT_USERNAME))
             .andExpect(jsonPath("$.password").value(DEFAULT_PASSWORD))
             .andExpect(jsonPath("$.cronExpression").value(DEFAULT_CRON_EXPRESSION))
+            .andExpect(jsonPath("$.capabilityKeySpEL").value(DEFAULT_CAPABILITY_KEY_SP_EL))
             .andExpect(jsonPath("$.capabilityNameSpEL").value(DEFAULT_CAPABILITY_NAME_SP_EL))
-            .andExpect(jsonPath("$.serviceNameSpEL").value(DEFAULT_SERVICE_NAME_SP_EL))
-            .andExpect(jsonPath("$.versionSpEL").value(DEFAULT_VERSION_SP_EL));
+            .andExpect(jsonPath("$.serviceKeySpEL").value(DEFAULT_SERVICE_KEY_SP_EL))
+            .andExpect(jsonPath("$.serviceNameSpEL").value(DEFAULT_SERVICE_NAME_SP_EL));
     }
     @Test
     @Transactional
@@ -332,9 +340,10 @@ public class SourceResourceIT {
             .username(UPDATED_USERNAME)
             .password(UPDATED_PASSWORD)
             .cronExpression(UPDATED_CRON_EXPRESSION)
+            .capabilityKeySpEL(UPDATED_CAPABILITY_KEY_SP_EL)
             .capabilityNameSpEL(UPDATED_CAPABILITY_NAME_SP_EL)
-            .serviceNameSpEL(UPDATED_SERVICE_NAME_SP_EL)
-            .versionSpEL(UPDATED_VERSION_SP_EL);
+            .serviceKeySpEL(UPDATED_SERVICE_KEY_SP_EL)
+            .serviceNameSpEL(UPDATED_SERVICE_NAME_SP_EL);
 
         restSourceMockMvc.perform(put("/api/sources")
             .contentType(MediaType.APPLICATION_JSON)
@@ -354,9 +363,10 @@ public class SourceResourceIT {
         assertThat(testSource.getUsername()).isEqualTo(UPDATED_USERNAME);
         assertThat(testSource.getPassword()).isEqualTo(UPDATED_PASSWORD);
         assertThat(testSource.getCronExpression()).isEqualTo(UPDATED_CRON_EXPRESSION);
+        assertThat(testSource.getCapabilityKeySpEL()).isEqualTo(UPDATED_CAPABILITY_KEY_SP_EL);
         assertThat(testSource.getCapabilityNameSpEL()).isEqualTo(UPDATED_CAPABILITY_NAME_SP_EL);
+        assertThat(testSource.getServiceKeySpEL()).isEqualTo(UPDATED_SERVICE_KEY_SP_EL);
         assertThat(testSource.getServiceNameSpEL()).isEqualTo(UPDATED_SERVICE_NAME_SP_EL);
-        assertThat(testSource.getVersionSpEL()).isEqualTo(UPDATED_VERSION_SP_EL);
     }
 
     @Test

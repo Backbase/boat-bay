@@ -57,7 +57,7 @@ public class Capability implements Serializable {
 
     @OneToMany(mappedBy = "capability")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    private Set<CapabilityServiceDefinition> capabilityServiceDefinitions = new HashSet<>();
+    private Set<ServiceDefinition> serviceDefinitions = new HashSet<>();
 
     @ManyToOne(optional = false)
     @NotNull
@@ -190,29 +190,29 @@ public class Capability implements Serializable {
         this.createdBy = createdBy;
     }
 
-    public Set<CapabilityServiceDefinition> getCapabilityServiceDefinitions() {
-        return capabilityServiceDefinitions;
+    public Set<ServiceDefinition> getServiceDefinitions() {
+        return serviceDefinitions;
     }
 
-    public Capability capabilityServiceDefinitions(Set<CapabilityServiceDefinition> capabilityServiceDefinitions) {
-        this.capabilityServiceDefinitions = capabilityServiceDefinitions;
+    public Capability serviceDefinitions(Set<ServiceDefinition> serviceDefinitions) {
+        this.serviceDefinitions = serviceDefinitions;
         return this;
     }
 
-    public Capability addCapabilityServiceDefinition(CapabilityServiceDefinition capabilityServiceDefinition) {
-        this.capabilityServiceDefinitions.add(capabilityServiceDefinition);
-        capabilityServiceDefinition.setCapability(this);
+    public Capability addServiceDefinition(ServiceDefinition serviceDefinition) {
+        this.serviceDefinitions.add(serviceDefinition);
+        serviceDefinition.setCapability(this);
         return this;
     }
 
-    public Capability removeCapabilityServiceDefinition(CapabilityServiceDefinition capabilityServiceDefinition) {
-        this.capabilityServiceDefinitions.remove(capabilityServiceDefinition);
-        capabilityServiceDefinition.setCapability(null);
+    public Capability removeServiceDefinition(ServiceDefinition serviceDefinition) {
+        this.serviceDefinitions.remove(serviceDefinition);
+        serviceDefinition.setCapability(null);
         return this;
     }
 
-    public void setCapabilityServiceDefinitions(Set<CapabilityServiceDefinition> capabilityServiceDefinitions) {
-        this.capabilityServiceDefinitions = capabilityServiceDefinitions;
+    public void setServiceDefinitions(Set<ServiceDefinition> serviceDefinitions) {
+        this.serviceDefinitions = serviceDefinitions;
     }
 
     public Portal getPortal() {

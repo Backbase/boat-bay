@@ -44,17 +44,21 @@
                 <dd>
                     <span>{{ source.cronExpression }}</span>
                 </dd>
+                <dt><span>Capability Key Sp EL</span></dt>
+                <dd>
+                    <span>{{ source.capabilityKeySpEL }}</span>
+                </dd>
                 <dt><span>Capability Name Sp EL</span></dt>
                 <dd>
                     <span>{{ source.capabilityNameSpEL }}</span>
                 </dd>
+                <dt><span>Service Key Sp EL</span></dt>
+                <dd>
+                    <span>{{ source.serviceKeySpEL }}</span>
+                </dd>
                 <dt><span>Service Name Sp EL</span></dt>
                 <dd>
                     <span>{{ source.serviceNameSpEL }}</span>
-                </dd>
-                <dt><span>Version Sp EL</span></dt>
-                <dd>
-                    <span>{{ source.versionSpEL }}</span>
                 </dd>
                 <dt><span>Portal</span></dt>
                 <dd>
@@ -68,10 +72,10 @@
                         <a [routerLink]="['/capability', source.capability?.id, 'view']">{{ source.capability?.name }}</a>
                     </div>
                 </dd>
-                <dt><span>Capability Service Definition</span></dt>
+                <dt><span>Service Definition</span></dt>
                 <dd>
-                    <div *ngIf="source.capabilityServiceDefinition">
-                        <a [routerLink]="['/capability-service-definition', source.capabilityServiceDefinition?.id, 'view']">{{ source.capabilityServiceDefinition?.name }}</a>
+                    <div *ngIf="source.serviceDefinition">
+                        <a [routerLink]="['/service-definition', source.serviceDefinition?.id, 'view']">{{ source.serviceDefinition?.name }}</a>
                     </div>
                 </dd>
             </dl>

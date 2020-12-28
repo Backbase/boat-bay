@@ -42,7 +42,7 @@
                     <th scope="col" ><span>Lint Report</span></th>
                     <th scope="col" ><span>Portal</span></th>
                     <th scope="col" ><span>Capability</span></th>
-                    <th scope="col" ><span>Capability Service Definition</span></th>
+                    <th scope="col" ><span>Service Definition</span></th>
                     <th scope="col" ><span>Source</span></th>
                     <th scope="col"></th>
                 </tr>
@@ -82,8 +82,8 @@
                         </div>
                     </td>
                     <td>
-                        <div *ngIf="spec.capabilityServiceDefinition">
-                            <a [routerLink]="['/capability-service-definition', spec.capabilityServiceDefinition?.id, 'view']" >{{ spec.capabilityServiceDefinition?.name }}</a>
+                        <div *ngIf="spec.serviceDefinition">
+                            <a [routerLink]="['/service-definition', spec.serviceDefinition?.id, 'view']" >{{ spec.serviceDefinition?.name }}</a>
                         </div>
                     </td>
                     <td>

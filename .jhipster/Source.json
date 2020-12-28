@@ -48,15 +48,19 @@
       "fieldType": "String"
     },
     {
+      "fieldName": "capabilityKeySpEL",
+      "fieldType": "String"
+    },
+    {
       "fieldName": "capabilityNameSpEL",
       "fieldType": "String"
     },
     {
-      "fieldName": "serviceNameSpEL",
+      "fieldName": "serviceKeySpEL",
       "fieldType": "String"
     },
     {
-      "fieldName": "versionSpEL",
+      "fieldName": "serviceNameSpEL",
       "fieldType": "String"
     }
   ],
@@ -80,9 +84,9 @@
     },
     {
       "relationshipType": "one-to-one",
-      "otherEntityName": "capabilityServiceDefinition",
+      "otherEntityName": "serviceDefinition",
       "otherEntityRelationshipName": "source",
-      "relationshipName": "capabilityServiceDefinition",
+      "relationshipName": "serviceDefinition",
       "otherEntityField": "name",
       "ownerSide": true
     }
