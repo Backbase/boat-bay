@@ -84,7 +84,7 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
             spec.setKey(source.getPath());
             spec.setPortal(source.getPortal());
             spec.setCapability(source.getCapability());
-            spec.setCapabilityServiceDefinition(source.getCapabilityServiceDefinition());
+            spec.setServiceDefinition(source.getServiceDefinition());
 
             spec.setName(openApiInfo.getTitle());
             spec.setVersion(openApiInfo.getVersion());
