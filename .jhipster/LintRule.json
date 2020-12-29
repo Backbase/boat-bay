@@ -18,10 +18,7 @@
     },
     {
       "fieldName": "summary",
-      "fieldType": "String",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldType": "String"
     },
     {
       "fieldName": "severity",
@@ -33,10 +30,7 @@
     },
     {
       "fieldName": "description",
-      "fieldType": "String",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldType": "String"
     },
     {
       "fieldName": "externalUrl",

@@ -2,8 +2,10 @@ package com.backbase.oss.boat.bay.config;
 
 import io.github.jhipster.config.JHipsterConstants;
 import io.github.jhipster.config.h2.H2ConfigurationHelper;
+import jdk.jfr.Enabled;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;

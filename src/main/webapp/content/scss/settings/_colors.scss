@@ -1,0 +1,54 @@
+/** COLORS */
+
+$color-white: #ffffff;
+$color-nearwhite: #eeeeee;
+$color-lightest: #e0e0e0;
+$color-lighter: #a2a2a2;
+$color-light: #545454;
+$color-darker: #404040;
+$color-darkest: #303030;
+$color-darkest-active: #1c1c1c;
+$color-backbase-red: #c22327;
+$color-accent: #0079c9;
+
+/** COMPONENT SPECIFIC COLORS */
+
+$error-bg-color: #d32f2f;
+$menu-background-color: #101010;
+$bb-background-color: #fafafa;
+$apps-container-header-color: rgba(0, 0, 0, 0.87);
+$category-title-color: #616161;
+$hr-color: #dedede;
+
+/** LEGACY */
+
+$bb-color: #b22727;
+$bb-color-lighter: #d43a3a;
+$bb-color-darker: #8a1e1e;
+$color-bg: #000000;
+$color-text: #ffffff;
+
+$main-color: #bbb;
+$main-color-white: #fff;
+$main-color-light: #ddd;
+$main-color-lighter: #aaa;
+$main-color-dark-lighter: #555;
+$main-color-dark: #333;
+$main-color-darker: #222;
+$main-color-darker-2: #222;
+$main-color-darkest: #111;
+$main-color-error: #be2b00;
+
+$main-bg-color: #444;
+$main-bg-color-darker: $main-color-dark;
+$main-bg-color-lighter: #646464;
+$main-bg-color-light: $main-color-light;
+$main-bg-color-light-darker: #ccc;
+
+// IDE colors
+$ide-color-orange: #fb7f80; // pink-orange
+$ide-color-green: #c6e582; // green
+$ide-color-green-2: #c8df26; // gree l
+$ide-color-blue: #85bfe4; // blue
+$ide-color-gray: #1e1e1e; // gray
+$ide-color-yellow: #e5c320; // orange yellow

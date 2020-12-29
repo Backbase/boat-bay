@@ -34,8 +34,7 @@ public class LintRule implements Serializable {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @NotNull
-    @Column(name = "summary", nullable = false)
+    @Column(name = "summary")
     private String summary;
 
     @NotNull
@@ -43,8 +42,7 @@ public class LintRule implements Serializable {
     @Column(name = "severity", nullable = false)
     private Severity severity;
 
-    @NotNull
-    @Column(name = "description", nullable = false)
+    @Column(name = "description")
     private String description;
 
     @Column(name = "external_url")
