@@ -43,6 +43,12 @@
             <column name="filename" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
+            <column name="valid" type="boolean">
+                <constraints nullable="false" />
+            </column>
+            <column name="parse_error" type="${clobType}">
+                <constraints nullable="true" />
+            </column>
             <column name="source_path" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
@@ -114,6 +120,8 @@
             <column name="created_by" type="string"/>
             <column name="checksum" type="string"/>
             <column name="filename" type="string"/>
+            <column name="valid" type="boolean"/>
+            <column name="parse_error" type="clob"/>
             <column name="source_path" type="string"/>
             <column name="source_name" type="string"/>
             <column name="source_url" type="string"/>

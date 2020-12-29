@@ -1,0 +1,44 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="portalLintRuleConfig">
+            <h2><span>Portal Lint Rule Config</span> {{ portalLintRuleConfig.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span>Path</span></dt>
+                <dd>
+                    <span>{{ portalLintRuleConfig.path }}</span>
+                </dd>
+                <dt><span>Type</span></dt>
+                <dd>
+                    <span>{{ portalLintRuleConfig.type }}</span>
+                </dd>
+                <dt><span>Value</span></dt>
+                <dd>
+                    <span>{{ portalLintRuleConfig.value }}</span>
+                </dd>
+                <dt><span>Portal Lint Rule</span></dt>
+                <dd>
+                    <div *ngIf="portalLintRuleConfig.portalLintRule">
+                        <a [routerLink]="['/portal-lint-rule', portalLintRuleConfig.portalLintRule?.id, 'view']">{{ portalLintRuleConfig.portalLintRule?.id }}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/portal-lint-rule-config', portalLintRuleConfig.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

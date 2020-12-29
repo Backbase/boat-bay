@@ -1,0 +1,71 @@
+<div>
+    <h2 id="page-heading">
+        <span>Portal Lint Rule Configs</span>
+
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-portal-lint-rule-config" [routerLink]="['/portal-lint-rule-config/new']">
+            <fa-icon icon="plus"></fa-icon>
+            <span>
+            Create a new Portal Lint Rule Config
+            </span>
+        </button>
+    </h2>
+
+    <jhi-alert-error></jhi-alert-error>
+
+    <jhi-alert></jhi-alert>
+
+    <div class="alert alert-warning" id="no-result" *ngIf="portalLintRuleConfigs?.length === 0">
+        <span>No portalLintRuleConfigs found</span>
+    </div>
+
+    <div class="table-responsive" id="entities" *ngIf="portalLintRuleConfigs && portalLintRuleConfigs.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
+            <thead>
+                <tr>
+                    <th scope="col" ><span>ID</span></th>
+                    <th scope="col" ><span>Path</span></th>
+                    <th scope="col" ><span>Type</span></th>
+                    <th scope="col" ><span>Value</span></th>
+                    <th scope="col" ><span>Portal Lint Rule</span></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let portalLintRuleConfig of portalLintRuleConfigs ;trackBy: trackId">
+                    <td><a [routerLink]="['/portal-lint-rule-config', portalLintRuleConfig.id, 'view']">{{ portalLintRuleConfig.id }}</a></td>
+                    <td>{{ portalLintRuleConfig.path }}</td>
+                    <td>{{ portalLintRuleConfig.type }}</td>
+                    <td>{{ portalLintRuleConfig.value }}</td>
+                    <td>
+                        <div *ngIf="portalLintRuleConfig.portalLintRule">
+                            <a [routerLink]="['/portal-lint-rule', portalLintRuleConfig.portalLintRule?.id, 'view']" >{{ portalLintRuleConfig.portalLintRule?.id }}</a>
+                        </div>
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group">
+                            <button type="submit"
+                                    [routerLink]="['/portal-lint-rule-config', portalLintRuleConfig.id, 'view']"
+                                    class="btn btn-info btn-sm">
+                                <fa-icon icon="eye"></fa-icon>
+                                <span class="d-none d-md-inline">View</span>
+                            </button>
+
+                            <button type="submit"
+                                    [routerLink]="['/portal-lint-rule-config', portalLintRuleConfig.id, 'edit']"
+                                    class="btn btn-primary btn-sm">
+                                <fa-icon icon="pencil-alt"></fa-icon>
+                                <span class="d-none d-md-inline">Edit</span>
+                            </button>
+
+                            <button type="submit" (click)="delete(portalLintRuleConfig)"
+                                    class="btn btn-danger btn-sm">
+                                <fa-icon icon="times"></fa-icon>
+                                <span class="d-none d-md-inline">Delete</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

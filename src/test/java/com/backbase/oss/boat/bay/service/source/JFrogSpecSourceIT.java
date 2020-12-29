@@ -40,7 +40,7 @@ class JFrogSpecSourceIT {
             .name("Artifactory");
         portalRepository.save(artifactory);
 
-        Source portal = new Source()
+        Source source = new Source()
             .name("Artifactory")
             .type(SourceType.JFROG)
             .username(System.getenv("ARTIFACTORY_USERNAME"))
@@ -49,7 +49,7 @@ class JFrogSpecSourceIT {
             .path("specs")
             .filter("*.yaml")
             .portal(artifactory);
-        source = sourceRepository.save(portal);
+        this.source = sourceRepository.save(source);
     }
     @Test
     void testJFrog() {

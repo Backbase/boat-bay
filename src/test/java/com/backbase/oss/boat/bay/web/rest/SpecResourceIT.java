@@ -62,6 +62,12 @@ public class SpecResourceIT {
     private static final String DEFAULT_FILENAME = "AAAAAAAAAA";
     private static final String UPDATED_FILENAME = "BBBBBBBBBB";
 
+    private static final Boolean DEFAULT_VALID = false;
+    private static final Boolean UPDATED_VALID = true;
+
+    private static final String DEFAULT_PARSE_ERROR = "AAAAAAAAAA";
+    private static final String UPDATED_PARSE_ERROR = "BBBBBBBBBB";
+
     private static final String DEFAULT_SOURCE_PATH = "AAAAAAAAAA";
     private static final String UPDATED_SOURCE_PATH = "BBBBBBBBBB";
 
@@ -111,6 +117,8 @@ public class SpecResourceIT {
             .createdBy(DEFAULT_CREATED_BY)
             .checksum(DEFAULT_CHECKSUM)
             .filename(DEFAULT_FILENAME)
+            .valid(DEFAULT_VALID)
+            .parseError(DEFAULT_PARSE_ERROR)
             .sourcePath(DEFAULT_SOURCE_PATH)
             .sourceName(DEFAULT_SOURCE_NAME)
             .sourceUrl(DEFAULT_SOURCE_URL)
@@ -167,6 +175,8 @@ public class SpecResourceIT {
             .createdBy(UPDATED_CREATED_BY)
             .checksum(UPDATED_CHECKSUM)
             .filename(UPDATED_FILENAME)
+            .valid(UPDATED_VALID)
+            .parseError(UPDATED_PARSE_ERROR)
             .sourcePath(UPDATED_SOURCE_PATH)
             .sourceName(UPDATED_SOURCE_NAME)
             .sourceUrl(UPDATED_SOURCE_URL)
@@ -235,6 +245,8 @@ public class SpecResourceIT {
         assertThat(testSpec.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
         assertThat(testSpec.getChecksum()).isEqualTo(DEFAULT_CHECKSUM);
         assertThat(testSpec.getFilename()).isEqualTo(DEFAULT_FILENAME);
+        assertThat(testSpec.isValid()).isEqualTo(DEFAULT_VALID);
+        assertThat(testSpec.getParseError()).isEqualTo(DEFAULT_PARSE_ERROR);
         assertThat(testSpec.getSourcePath()).isEqualTo(DEFAULT_SOURCE_PATH);
         assertThat(testSpec.getSourceName()).isEqualTo(DEFAULT_SOURCE_NAME);
         assertThat(testSpec.getSourceUrl()).isEqualTo(DEFAULT_SOURCE_URL);
@@ -399,6 +411,25 @@ public class SpecResourceIT {
 
     @Test
     @Transactional
+    public void checkValidIsRequired() throws Exception {
+        int databaseSizeBeforeTest = specRepository.findAll().size();
+        // set the field null
+        spec.setValid(null);
+
+        // Create the Spec, which fails.
+
+
+        restSpecMockMvc.perform(post("/api/specs")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(spec)))
+            .andExpect(status().isBadRequest());
+
+        List<Spec> specList = specRepository.findAll();
+        assertThat(specList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void getAllSpecs() throws Exception {
         // Initialize the database
         specRepository.saveAndFlush(spec);
@@ -417,6 +448,8 @@ public class SpecResourceIT {
             .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
             .andExpect(jsonPath("$.[*].checksum").value(hasItem(DEFAULT_CHECKSUM)))
             .andExpect(jsonPath("$.[*].filename").value(hasItem(DEFAULT_FILENAME)))
+            .andExpect(jsonPath("$.[*].valid").value(hasItem(DEFAULT_VALID.booleanValue())))
+            .andExpect(jsonPath("$.[*].parseError").value(hasItem(DEFAULT_PARSE_ERROR.toString())))
             .andExpect(jsonPath("$.[*].sourcePath").value(hasItem(DEFAULT_SOURCE_PATH)))
             .andExpect(jsonPath("$.[*].sourceName").value(hasItem(DEFAULT_SOURCE_NAME)))
             .andExpect(jsonPath("$.[*].sourceUrl").value(hasItem(DEFAULT_SOURCE_URL)))
@@ -446,6 +479,8 @@ public class SpecResourceIT {
             .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
             .andExpect(jsonPath("$.checksum").value(DEFAULT_CHECKSUM))
             .andExpect(jsonPath("$.filename").value(DEFAULT_FILENAME))
+            .andExpect(jsonPath("$.valid").value(DEFAULT_VALID.booleanValue()))
+            .andExpect(jsonPath("$.parseError").value(DEFAULT_PARSE_ERROR.toString()))
             .andExpect(jsonPath("$.sourcePath").value(DEFAULT_SOURCE_PATH))
             .andExpect(jsonPath("$.sourceName").value(DEFAULT_SOURCE_NAME))
             .andExpect(jsonPath("$.sourceUrl").value(DEFAULT_SOURCE_URL))
@@ -484,6 +519,8 @@ public class SpecResourceIT {
             .createdBy(UPDATED_CREATED_BY)
             .checksum(UPDATED_CHECKSUM)
             .filename(UPDATED_FILENAME)
+            .valid(UPDATED_VALID)
+            .parseError(UPDATED_PARSE_ERROR)
             .sourcePath(UPDATED_SOURCE_PATH)
             .sourceName(UPDATED_SOURCE_NAME)
             .sourceUrl(UPDATED_SOURCE_URL)
@@ -510,6 +547,8 @@ public class SpecResourceIT {
         assertThat(testSpec.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
         assertThat(testSpec.getChecksum()).isEqualTo(UPDATED_CHECKSUM);
         assertThat(testSpec.getFilename()).isEqualTo(UPDATED_FILENAME);
+        assertThat(testSpec.isValid()).isEqualTo(UPDATED_VALID);
+        assertThat(testSpec.getParseError()).isEqualTo(UPDATED_PARSE_ERROR);
         assertThat(testSpec.getSourcePath()).isEqualTo(UPDATED_SOURCE_PATH);
         assertThat(testSpec.getSourceName()).isEqualTo(UPDATED_SOURCE_NAME);
         assertThat(testSpec.getSourceUrl()).isEqualTo(UPDATED_SOURCE_URL);

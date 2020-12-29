@@ -2,21 +2,41 @@
   "name": "LintRule",
   "fields": [
     {
+      "fieldName": "ruleId",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required",
+        "unique"
+      ]
+    },
+    {
       "fieldName": "title",
-      "fieldType": "String"
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
     },
     {
       "fieldName": "summary",
-      "fieldType": "String"
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
     },
     {
       "fieldName": "severity",
       "fieldType": "Severity",
-      "fieldValues": "MUST,SHOULD,MAY,HINT"
+      "fieldValues": "MUST,SHOULD,MAY,HINT",
+      "fieldValidateRules": [
+        "required"
+      ]
     },
     {
       "fieldName": "description",
-      "fieldType": "String"
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
     },
     {
       "fieldName": "externalUrl",
@@ -24,7 +44,10 @@
     },
     {
       "fieldName": "enabled",
-      "fieldType": "Boolean"
+      "fieldType": "Boolean",
+      "fieldValidateRules": [
+        "required"
+      ]
     }
   ],
   "relationships": [
@@ -34,6 +57,14 @@
       "otherEntityRelationshipName": "lintRule",
       "relationshipName": "lintRuleViolation",
       "ownerSide": false
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "lintRuleSet",
+      "otherEntityRelationshipName": "lintRule",
+      "relationshipValidateRules": "required",
+      "relationshipName": "ruleSet",
+      "otherEntityField": "name"
     }
   ],
   "changelogDate": "20201223102815",
@@ -43,7 +74,7 @@
   "service": "no",
   "jpaMetamodelFiltering": false,
   "fluentMethods": true,
-  "readOnly": false,
+  "readOnly": true,
   "embedded": false,
   "clientRootFolder": "",
   "applications": "*"

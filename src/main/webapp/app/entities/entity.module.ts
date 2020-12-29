@@ -40,6 +40,19 @@ import { RouterModule } from '@angular/router';
         path: 'service-definition',
         loadChildren: () => import('./service-definition/service-definition.module').then(m => m.BoatBayServiceDefinitionModule),
       },
+      {
+        path: 'portal-lint-rule-set',
+        loadChildren: () => import('./portal-lint-rule-set/portal-lint-rule-set.module').then(m => m.BoatBayPortalLintRuleSetModule),
+      },
+      {
+        path: 'portal-lint-rule',
+        loadChildren: () => import('./portal-lint-rule/portal-lint-rule.module').then(m => m.BoatBayPortalLintRuleModule),
+      },
+      {
+        path: 'portal-lint-rule-config',
+        loadChildren: () =>
+          import('./portal-lint-rule-config/portal-lint-rule-config.module').then(m => m.BoatBayPortalLintRuleConfigModule),
+      },
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ]),
   ],

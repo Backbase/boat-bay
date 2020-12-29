@@ -2,6 +2,7 @@ package com.backbase.oss.boat.bay.aop.logging;
 
 import io.github.jhipster.config.JHipsterConstants;
 
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterThrowing;
@@ -97,7 +98,7 @@ public class LoggingAspect {
     public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
         Logger log = logger(joinPoint);
         if (log.isDebugEnabled()) {
-            log.debug("Enter: {}() with argument[s] = {}", joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs()));
+            log.debug("Enter: {}() with argument[s] = {}", joinPoint.getSignature().getName(), StringUtils.truncate(Arrays.toString(joinPoint.getArgs()),100));
         }
         try {
             Object result = joinPoint.proceed();

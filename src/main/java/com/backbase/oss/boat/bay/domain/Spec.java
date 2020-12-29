@@ -60,6 +60,14 @@ public class Spec implements Serializable {
     @Column(name = "filename", nullable = false)
     private String filename;
 
+    @NotNull
+    @Column(name = "valid", nullable = false)
+    private Boolean valid;
+
+    @Lob
+    @Column(name = "parse_error")
+    private String parseError;
+
     @Column(name = "source_path")
     private String sourcePath;
 
@@ -228,6 +236,32 @@ public class Spec implements Serializable {
 
     public void setFilename(String filename) {
         this.filename = filename;
+    }
+
+    public Boolean isValid() {
+        return valid;
+    }
+
+    public Spec valid(Boolean valid) {
+        this.valid = valid;
+        return this;
+    }
+
+    public void setValid(Boolean valid) {
+        this.valid = valid;
+    }
+
+    public String getParseError() {
+        return parseError;
+    }
+
+    public Spec parseError(String parseError) {
+        this.parseError = parseError;
+        return this;
+    }
+
+    public void setParseError(String parseError) {
+        this.parseError = parseError;
     }
 
     public String getSourcePath() {
@@ -417,6 +451,8 @@ public class Spec implements Serializable {
             ", createdBy='" + getCreatedBy() + "'" +
             ", checksum='" + getChecksum() + "'" +
             ", filename='" + getFilename() + "'" +
+            ", valid='" + isValid() + "'" +
+            ", parseError='" + getParseError() + "'" +
             ", sourcePath='" + getSourcePath() + "'" +
             ", sourceName='" + getSourceName() + "'" +
             ", sourceUrl='" + getSourceUrl() + "'" +

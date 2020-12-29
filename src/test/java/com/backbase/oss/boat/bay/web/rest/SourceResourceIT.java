@@ -31,14 +31,14 @@ import com.backbase.oss.boat.bay.domain.enumeration.SourceType;
 @WithMockUser
 public class SourceResourceIT {
 
-    private static final String DEFAULT_BASE_URL = "AAAAAAAAAA";
-    private static final String UPDATED_BASE_URL = "BBBBBBBBBB";
-
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 
     private static final SourceType DEFAULT_TYPE = SourceType.GIT;
     private static final SourceType UPDATED_TYPE = SourceType.JFROG;
+
+    private static final String DEFAULT_BASE_URL = "AAAAAAAAAA";
+    private static final String UPDATED_BASE_URL = "BBBBBBBBBB";
 
     private static final Boolean DEFAULT_ACTIVE = false;
     private static final Boolean UPDATED_ACTIVE = true;
@@ -70,6 +70,12 @@ public class SourceResourceIT {
     private static final String DEFAULT_SERVICE_NAME_SP_EL = "AAAAAAAAAA";
     private static final String UPDATED_SERVICE_NAME_SP_EL = "BBBBBBBBBB";
 
+    private static final String DEFAULT_VERSION_SP_EL = "AAAAAAAAAA";
+    private static final String UPDATED_VERSION_SP_EL = "BBBBBBBBBB";
+
+    private static final Boolean DEFAULT_OVERWRITE_CHANGES = false;
+    private static final Boolean UPDATED_OVERWRITE_CHANGES = true;
+
     @Autowired
     private SourceRepository sourceRepository;
 
@@ -89,9 +95,9 @@ public class SourceResourceIT {
      */
     public static Source createEntity(EntityManager em) {
         Source source = new Source()
-            .baseUrl(DEFAULT_BASE_URL)
             .name(DEFAULT_NAME)
             .type(DEFAULT_TYPE)
+            .baseUrl(DEFAULT_BASE_URL)
             .active(DEFAULT_ACTIVE)
             .path(DEFAULT_PATH)
             .filter(DEFAULT_FILTER)
@@ -101,7 +107,9 @@ public class SourceResourceIT {
             .capabilityKeySpEL(DEFAULT_CAPABILITY_KEY_SP_EL)
             .capabilityNameSpEL(DEFAULT_CAPABILITY_NAME_SP_EL)
             .serviceKeySpEL(DEFAULT_SERVICE_KEY_SP_EL)
-            .serviceNameSpEL(DEFAULT_SERVICE_NAME_SP_EL);
+            .serviceNameSpEL(DEFAULT_SERVICE_NAME_SP_EL)
+            .versionSpEL(DEFAULT_VERSION_SP_EL)
+            .overwriteChanges(DEFAULT_OVERWRITE_CHANGES);
         // Add required entity
         Portal portal;
         if (TestUtil.findAll(em, Portal.class).isEmpty()) {
@@ -122,9 +130,9 @@ public class SourceResourceIT {
      */
     public static Source createUpdatedEntity(EntityManager em) {
         Source source = new Source()
-            .baseUrl(UPDATED_BASE_URL)
             .name(UPDATED_NAME)
             .type(UPDATED_TYPE)
+            .baseUrl(UPDATED_BASE_URL)
             .active(UPDATED_ACTIVE)
             .path(UPDATED_PATH)
             .filter(UPDATED_FILTER)
@@ -134,7 +142,9 @@ public class SourceResourceIT {
             .capabilityKeySpEL(UPDATED_CAPABILITY_KEY_SP_EL)
             .capabilityNameSpEL(UPDATED_CAPABILITY_NAME_SP_EL)
             .serviceKeySpEL(UPDATED_SERVICE_KEY_SP_EL)
-            .serviceNameSpEL(UPDATED_SERVICE_NAME_SP_EL);
+            .serviceNameSpEL(UPDATED_SERVICE_NAME_SP_EL)
+            .versionSpEL(UPDATED_VERSION_SP_EL)
+            .overwriteChanges(UPDATED_OVERWRITE_CHANGES);
         // Add required entity
         Portal portal;
         if (TestUtil.findAll(em, Portal.class).isEmpty()) {
@@ -167,9 +177,9 @@ public class SourceResourceIT {
         List<Source> sourceList = sourceRepository.findAll();
         assertThat(sourceList).hasSize(databaseSizeBeforeCreate + 1);
         Source testSource = sourceList.get(sourceList.size() - 1);
-        assertThat(testSource.getBaseUrl()).isEqualTo(DEFAULT_BASE_URL);
         assertThat(testSource.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testSource.getType()).isEqualTo(DEFAULT_TYPE);
+        assertThat(testSource.getBaseUrl()).isEqualTo(DEFAULT_BASE_URL);
         assertThat(testSource.isActive()).isEqualTo(DEFAULT_ACTIVE);
         assertThat(testSource.getPath()).isEqualTo(DEFAULT_PATH);
         assertThat(testSource.getFilter()).isEqualTo(DEFAULT_FILTER);
@@ -180,6 +190,8 @@ public class SourceResourceIT {
         assertThat(testSource.getCapabilityNameSpEL()).isEqualTo(DEFAULT_CAPABILITY_NAME_SP_EL);
         assertThat(testSource.getServiceKeySpEL()).isEqualTo(DEFAULT_SERVICE_KEY_SP_EL);
         assertThat(testSource.getServiceNameSpEL()).isEqualTo(DEFAULT_SERVICE_NAME_SP_EL);
+        assertThat(testSource.getVersionSpEL()).isEqualTo(DEFAULT_VERSION_SP_EL);
+        assertThat(testSource.isOverwriteChanges()).isEqualTo(DEFAULT_OVERWRITE_CHANGES);
     }
 
     @Test
@@ -201,25 +213,6 @@ public class SourceResourceIT {
         assertThat(sourceList).hasSize(databaseSizeBeforeCreate);
     }
 
-
-    @Test
-    @Transactional
-    public void checkBaseUrlIsRequired() throws Exception {
-        int databaseSizeBeforeTest = sourceRepository.findAll().size();
-        // set the field null
-        source.setBaseUrl(null);
-
-        // Create the Source, which fails.
-
-
-        restSourceMockMvc.perform(post("/api/sources")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(source)))
-            .andExpect(status().isBadRequest());
-
-        List<Source> sourceList = sourceRepository.findAll();
-        assertThat(sourceList).hasSize(databaseSizeBeforeTest);
-    }
 
     @Test
     @Transactional
@@ -261,6 +254,25 @@ public class SourceResourceIT {
 
     @Test
     @Transactional
+    public void checkBaseUrlIsRequired() throws Exception {
+        int databaseSizeBeforeTest = sourceRepository.findAll().size();
+        // set the field null
+        source.setBaseUrl(null);
+
+        // Create the Source, which fails.
+
+
+        restSourceMockMvc.perform(post("/api/sources")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(source)))
+            .andExpect(status().isBadRequest());
+
+        List<Source> sourceList = sourceRepository.findAll();
+        assertThat(sourceList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void getAllSources() throws Exception {
         // Initialize the database
         sourceRepository.saveAndFlush(source);
@@ -270,9 +282,9 @@ public class SourceResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(source.getId().intValue())))
-            .andExpect(jsonPath("$.[*].baseUrl").value(hasItem(DEFAULT_BASE_URL)))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())))
+            .andExpect(jsonPath("$.[*].baseUrl").value(hasItem(DEFAULT_BASE_URL)))
             .andExpect(jsonPath("$.[*].active").value(hasItem(DEFAULT_ACTIVE.booleanValue())))
             .andExpect(jsonPath("$.[*].path").value(hasItem(DEFAULT_PATH)))
             .andExpect(jsonPath("$.[*].filter").value(hasItem(DEFAULT_FILTER)))
@@ -282,7 +294,9 @@ public class SourceResourceIT {
             .andExpect(jsonPath("$.[*].capabilityKeySpEL").value(hasItem(DEFAULT_CAPABILITY_KEY_SP_EL)))
             .andExpect(jsonPath("$.[*].capabilityNameSpEL").value(hasItem(DEFAULT_CAPABILITY_NAME_SP_EL)))
             .andExpect(jsonPath("$.[*].serviceKeySpEL").value(hasItem(DEFAULT_SERVICE_KEY_SP_EL)))
-            .andExpect(jsonPath("$.[*].serviceNameSpEL").value(hasItem(DEFAULT_SERVICE_NAME_SP_EL)));
+            .andExpect(jsonPath("$.[*].serviceNameSpEL").value(hasItem(DEFAULT_SERVICE_NAME_SP_EL)))
+            .andExpect(jsonPath("$.[*].versionSpEL").value(hasItem(DEFAULT_VERSION_SP_EL)))
+            .andExpect(jsonPath("$.[*].overwriteChanges").value(hasItem(DEFAULT_OVERWRITE_CHANGES.booleanValue())));
     }
     
     @Test
@@ -296,9 +310,9 @@ public class SourceResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(source.getId().intValue()))
-            .andExpect(jsonPath("$.baseUrl").value(DEFAULT_BASE_URL))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.type").value(DEFAULT_TYPE.toString()))
+            .andExpect(jsonPath("$.baseUrl").value(DEFAULT_BASE_URL))
             .andExpect(jsonPath("$.active").value(DEFAULT_ACTIVE.booleanValue()))
             .andExpect(jsonPath("$.path").value(DEFAULT_PATH))
             .andExpect(jsonPath("$.filter").value(DEFAULT_FILTER))
@@ -308,7 +322,9 @@ public class SourceResourceIT {
             .andExpect(jsonPath("$.capabilityKeySpEL").value(DEFAULT_CAPABILITY_KEY_SP_EL))
             .andExpect(jsonPath("$.capabilityNameSpEL").value(DEFAULT_CAPABILITY_NAME_SP_EL))
             .andExpect(jsonPath("$.serviceKeySpEL").value(DEFAULT_SERVICE_KEY_SP_EL))
-            .andExpect(jsonPath("$.serviceNameSpEL").value(DEFAULT_SERVICE_NAME_SP_EL));
+            .andExpect(jsonPath("$.serviceNameSpEL").value(DEFAULT_SERVICE_NAME_SP_EL))
+            .andExpect(jsonPath("$.versionSpEL").value(DEFAULT_VERSION_SP_EL))
+            .andExpect(jsonPath("$.overwriteChanges").value(DEFAULT_OVERWRITE_CHANGES.booleanValue()));
     }
     @Test
     @Transactional
@@ -331,9 +347,9 @@ public class SourceResourceIT {
         // Disconnect from session so that the updates on updatedSource are not directly saved in db
         em.detach(updatedSource);
         updatedSource
-            .baseUrl(UPDATED_BASE_URL)
             .name(UPDATED_NAME)
             .type(UPDATED_TYPE)
+            .baseUrl(UPDATED_BASE_URL)
             .active(UPDATED_ACTIVE)
             .path(UPDATED_PATH)
             .filter(UPDATED_FILTER)
@@ -343,7 +359,9 @@ public class SourceResourceIT {
             .capabilityKeySpEL(UPDATED_CAPABILITY_KEY_SP_EL)
             .capabilityNameSpEL(UPDATED_CAPABILITY_NAME_SP_EL)
             .serviceKeySpEL(UPDATED_SERVICE_KEY_SP_EL)
-            .serviceNameSpEL(UPDATED_SERVICE_NAME_SP_EL);
+            .serviceNameSpEL(UPDATED_SERVICE_NAME_SP_EL)
+            .versionSpEL(UPDATED_VERSION_SP_EL)
+            .overwriteChanges(UPDATED_OVERWRITE_CHANGES);
 
         restSourceMockMvc.perform(put("/api/sources")
             .contentType(MediaType.APPLICATION_JSON)
@@ -354,9 +372,9 @@ public class SourceResourceIT {
         List<Source> sourceList = sourceRepository.findAll();
         assertThat(sourceList).hasSize(databaseSizeBeforeUpdate);
         Source testSource = sourceList.get(sourceList.size() - 1);
-        assertThat(testSource.getBaseUrl()).isEqualTo(UPDATED_BASE_URL);
         assertThat(testSource.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testSource.getType()).isEqualTo(UPDATED_TYPE);
+        assertThat(testSource.getBaseUrl()).isEqualTo(UPDATED_BASE_URL);
         assertThat(testSource.isActive()).isEqualTo(UPDATED_ACTIVE);
         assertThat(testSource.getPath()).isEqualTo(UPDATED_PATH);
         assertThat(testSource.getFilter()).isEqualTo(UPDATED_FILTER);
@@ -367,6 +385,8 @@ public class SourceResourceIT {
         assertThat(testSource.getCapabilityNameSpEL()).isEqualTo(UPDATED_CAPABILITY_NAME_SP_EL);
         assertThat(testSource.getServiceKeySpEL()).isEqualTo(UPDATED_SERVICE_KEY_SP_EL);
         assertThat(testSource.getServiceNameSpEL()).isEqualTo(UPDATED_SERVICE_NAME_SP_EL);
+        assertThat(testSource.getVersionSpEL()).isEqualTo(UPDATED_VERSION_SP_EL);
+        assertThat(testSource.isOverwriteChanges()).isEqualTo(UPDATED_OVERWRITE_CHANGES);
     }
 
     @Test

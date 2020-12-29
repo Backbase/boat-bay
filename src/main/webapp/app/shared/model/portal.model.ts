@@ -1,5 +1,6 @@
 import { Moment } from 'moment';
 import { ICapability } from 'app/shared/model/capability.model';
+import { IPortalLintRuleSet } from 'app/shared/model/portal-lint-rule-set.model';
 
 export interface IPortal {
   id?: number;
@@ -14,6 +15,7 @@ export interface IPortal {
   createdOn?: Moment;
   createdBy?: string;
   capabilities?: ICapability[];
+  portalRuleSet?: IPortalLintRuleSet;
 }
 
 export class Portal implements IPortal {
@@ -29,6 +31,7 @@ export class Portal implements IPortal {
     public content?: any,
     public createdOn?: Moment,
     public createdBy?: string,
-    public capabilities?: ICapability[]
+    public capabilities?: ICapability[],
+    public portalRuleSet?: IPortalLintRuleSet
   ) {}
 }

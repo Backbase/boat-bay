@@ -25,10 +25,6 @@ public class Source implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "base_url", nullable = false)
-    private String baseUrl;
-
-    @NotNull
     @Column(name = "name", nullable = false)
     private String name;
 
@@ -36,6 +32,10 @@ public class Source implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
     private SourceType type;
+
+    @NotNull
+    @Column(name = "base_url", nullable = false)
+    private String baseUrl;
 
     @Column(name = "active")
     private Boolean active;
@@ -67,6 +67,12 @@ public class Source implements Serializable {
     @Column(name = "service_name_sp_el")
     private String serviceNameSpEL;
 
+    @Column(name = "version_sp_el")
+    private String versionSpEL;
+
+    @Column(name = "overwrite_changes")
+    private Boolean overwriteChanges;
+
     @OneToOne(optional = false)
     @NotNull
     @JoinColumn(unique = true)
@@ -87,19 +93,6 @@ public class Source implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getBaseUrl() {
-        return baseUrl;
-    }
-
-    public Source baseUrl(String baseUrl) {
-        this.baseUrl = baseUrl;
-        return this;
-    }
-
-    public void setBaseUrl(String baseUrl) {
-        this.baseUrl = baseUrl;
     }
 
     public String getName() {
@@ -126,6 +119,19 @@ public class Source implements Serializable {
 
     public void setType(SourceType type) {
         this.type = type;
+    }
+
+    public String getBaseUrl() {
+        return baseUrl;
+    }
+
+    public Source baseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
+        return this;
+    }
+
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
     }
 
     public Boolean isActive() {
@@ -258,6 +264,32 @@ public class Source implements Serializable {
         this.serviceNameSpEL = serviceNameSpEL;
     }
 
+    public String getVersionSpEL() {
+        return versionSpEL;
+    }
+
+    public Source versionSpEL(String versionSpEL) {
+        this.versionSpEL = versionSpEL;
+        return this;
+    }
+
+    public void setVersionSpEL(String versionSpEL) {
+        this.versionSpEL = versionSpEL;
+    }
+
+    public Boolean isOverwriteChanges() {
+        return overwriteChanges;
+    }
+
+    public Source overwriteChanges(Boolean overwriteChanges) {
+        this.overwriteChanges = overwriteChanges;
+        return this;
+    }
+
+    public void setOverwriteChanges(Boolean overwriteChanges) {
+        this.overwriteChanges = overwriteChanges;
+    }
+
     public Portal getPortal() {
         return portal;
     }
@@ -319,9 +351,9 @@ public class Source implements Serializable {
     public String toString() {
         return "Source{" +
             "id=" + getId() +
-            ", baseUrl='" + getBaseUrl() + "'" +
             ", name='" + getName() + "'" +
             ", type='" + getType() + "'" +
+            ", baseUrl='" + getBaseUrl() + "'" +
             ", active='" + isActive() + "'" +
             ", path='" + getPath() + "'" +
             ", filter='" + getFilter() + "'" +
@@ -332,6 +364,8 @@ public class Source implements Serializable {
             ", capabilityNameSpEL='" + getCapabilityNameSpEL() + "'" +
             ", serviceKeySpEL='" + getServiceKeySpEL() + "'" +
             ", serviceNameSpEL='" + getServiceNameSpEL() + "'" +
+            ", versionSpEL='" + getVersionSpEL() + "'" +
+            ", overwriteChanges='" + isOverwriteChanges() + "'" +
             "}";
     }
 }

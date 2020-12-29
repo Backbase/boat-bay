@@ -8,6 +8,10 @@
             <jhi-alert-error></jhi-alert-error>
 
             <dl class="row-md jh-entity-details">
+                <dt><span>Rule Set Id</span></dt>
+                <dd>
+                    <span>{{ lintRuleSet.ruleSetId }}</span>
+                </dd>
                 <dt><span>Name</span></dt>
                 <dd>
                     <span>{{ lintRuleSet.name }}</span>
@@ -16,18 +20,16 @@
                 <dd>
                     <span>{{ lintRuleSet.description }}</span>
                 </dd>
+                <dt><span>External Url</span></dt>
+                <dd>
+                    <span>{{ lintRuleSet.externalUrl }}</span>
+                </dd>
             </dl>
 
             <button type="submit"
                     (click)="previousState()"
                     class="btn btn-info">
                 <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
-            </button>
-
-            <button type="button"
-                    [routerLink]="['/lint-rule-set', lintRuleSet.id, 'edit']"
-                    class="btn btn-primary">
-                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
             </button>
         </div>
     </div>

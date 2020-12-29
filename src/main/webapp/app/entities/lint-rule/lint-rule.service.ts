@@ -15,14 +15,6 @@ export class LintRuleService {
 
   constructor(protected http: HttpClient) {}
 
-  create(lintRule: ILintRule): Observable<EntityResponseType> {
-    return this.http.post<ILintRule>(this.resourceUrl, lintRule, { observe: 'response' });
-  }
-
-  update(lintRule: ILintRule): Observable<EntityResponseType> {
-    return this.http.put<ILintRule>(this.resourceUrl, lintRule, { observe: 'response' });
-  }
-
   find(id: number): Observable<EntityResponseType> {
     return this.http.get<ILintRule>(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
@@ -30,9 +22,5 @@ export class LintRuleService {
   query(req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
     return this.http.get<ILintRule[]>(this.resourceUrl, { params: options, observe: 'response' });
-  }
-
-  delete(id: number): Observable<HttpResponse<{}>> {
-    return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }
 }

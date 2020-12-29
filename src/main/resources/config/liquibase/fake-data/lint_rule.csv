@@ -1,11 +1,11 @@
-id;title;summary;severity;description;external_url;enabled
-1;action-items Frozen;Configuration;MAY;calculating;Investment Account turn-key Eritrea;false
-2;Borders;Falkland Islands (Malvinas) payment cutting-edge;MUST;Awesome Soft Ball;Won;false
-3;Group;Checking Account;MUST;Village Reactive;Optimization Intelligent calculate;true
-4;input online Loop;compress connect;MUST;Wooden;Interactions bypass;true
-5;Panama programming Persevering;synthesize Manager;MUST;Missouri Bedfordshire program;Incredible Frozen Fish brand;false
-6;Functionality calculating recontextualize;Cambodia;SHOULD;silver Refined Virginia;deposit calculating non-volatile;false
-7;Global Wooden real-time;1080p;HINT;invoice Unions navigate;feed compelling;false
-8;Robust impactful;Moldovan Leu Credit Card Account;HINT;Borders process improvement;Saint Lucia Small Cotton Bacon;false
-9;transitional;Bolivar Fuerte;MUST;Kuwaiti Dinar fuchsia Refined Frozen Keyboard;impactful back up;false
-10;Savings Account payment Keyboard;Liaison relationships;SHOULD;Illinois invoice quantify;Armenian Dram niches;true
+id;rule_id;title;summary;severity;description;external_url;enabled;rule_set_id
+1;action-items Frozen;Configuration;parse payment;MAY;turn-key Eritrea;Object-based South Carolina;true;1
+2;payment;RSS Sports;Future;MUST;technologies Unbranded infrastructures;Electronics Supervisor;false;2
+3;Village Reactive;Optimization Intelligent calculate;1080p transmit Lodge;SHOULD;Slovakia (Slovak Republic) open-source XML;benchmark;false;3
+4;Interactions bypass;Global Tanzanian Shilling Dynamic;Credit Card Account Rand Loti;HINT;Sausages Decentralized;Missouri Bedfordshire program;true;4
+5;rich;brand Triple-buffered Functionality;interface Executive Cambodia;SHOULD;silver Refined Virginia;deposit calculating non-volatile;false;5
+6;Global Wooden real-time;1080p;Security Stravenue;SHOULD;feed compelling;withdrawal;true;6
+7;bluetooth Moldovan Leu;withdrawal XSS;clear-thinking;SHOULD;process improvement architectures;Small Cotton Bacon Bedfordshire transitional;false;7
+8;JSON Berkshire Associate;Avon feed;fuchsia Refined Frozen Keyboard;MUST;Savings Account payment Keyboard;Liaison relationships;false;8
+9;hacking eco-centric Customer;invoice;Investment Account Armenian Dram niches;HINT;Practical Wooden Mouse Gorgeous Configuration;application Fresh;true;9
+10;Peso Uruguayo Uruguay Peso en Unidades Indexadas Program;infrastructures Pakistan Rupee withdrawal;Unbranded Steel Bacon Auto Loan Account;SHOULD;Representative;Puerto Rico Berkshire;false;10

@@ -56,6 +56,13 @@
       "otherEntityName": "capability",
       "otherEntityRelationshipName": "portal",
       "relationshipName": "capability"
+    },
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "portalLintRuleSet",
+      "otherEntityRelationshipName": "portal",
+      "relationshipName": "portalRuleSet",
+      "ownerSide": false
     }
   ],
   "changelogDate": "20201223102315",

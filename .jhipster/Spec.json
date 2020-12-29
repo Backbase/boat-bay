@@ -63,6 +63,18 @@
       ]
     },
     {
+      "fieldName": "valid",
+      "fieldType": "Boolean",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "parseError",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text"
+    },
+    {
       "fieldName": "sourcePath",
       "fieldType": "String"
     },

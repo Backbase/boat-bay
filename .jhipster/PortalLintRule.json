@@ -1,0 +1,40 @@
+{
+  "name": "PortalLintRule",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "portalLintRuleConfig",
+      "otherEntityRelationshipName": "portalLintRule",
+      "relationshipName": "portalLintRuleConfig",
+      "ownerSide": false
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "portalLintRuleSet",
+      "otherEntityRelationshipName": "portalLintRule",
+      "relationshipValidateRules": "required",
+      "relationshipName": "portalRuleSet",
+      "otherEntityField": "name"
+    }
+  ],
+  "changelogDate": "20201229100459",
+  "entityTableName": "portal_lint_rule",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

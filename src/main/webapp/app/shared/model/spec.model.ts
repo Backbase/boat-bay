@@ -16,6 +16,8 @@ export interface ISpec {
   createdBy?: string;
   checksum?: string;
   filename?: string;
+  valid?: boolean;
+  parseError?: any;
   sourcePath?: string;
   sourceName?: string;
   sourceUrl?: string;
@@ -42,6 +44,8 @@ export class Spec implements ISpec {
     public createdBy?: string,
     public checksum?: string,
     public filename?: string,
+    public valid?: boolean,
+    public parseError?: any,
     public sourcePath?: string,
     public sourceName?: string,
     public sourceUrl?: string,
@@ -54,5 +58,7 @@ export class Spec implements ISpec {
     public capability?: ICapability,
     public serviceDefinition?: IServiceDefinition,
     public source?: ISource
-  ) {}
+  ) {
+    this.valid = this.valid || false;
+  }
 }

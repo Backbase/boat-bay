@@ -17,8 +17,10 @@ export class LintRuleSetUpdateComponent implements OnInit {
 
   editForm = this.fb.group({
     id: [],
+    ruleSetId: [null, [Validators.required]],
     name: [null, [Validators.required]],
     description: [],
+    externalUrl: [],
   });
 
   constructor(protected lintRuleSetService: LintRuleSetService, protected activatedRoute: ActivatedRoute, private fb: FormBuilder) {}
@@ -32,8 +34,10 @@ export class LintRuleSetUpdateComponent implements OnInit {
   updateForm(lintRuleSet: ILintRuleSet): void {
     this.editForm.patchValue({
       id: lintRuleSet.id,
+      ruleSetId: lintRuleSet.ruleSetId,
       name: lintRuleSet.name,
       description: lintRuleSet.description,
+      externalUrl: lintRuleSet.externalUrl,
     });
   }
 
@@ -55,8 +59,10 @@ export class LintRuleSetUpdateComponent implements OnInit {
     return {
       ...new LintRuleSet(),
       id: this.editForm.get(['id'])!.value,
+      ruleSetId: this.editForm.get(['ruleSetId'])!.value,
       name: this.editForm.get(['name'])!.value,
       description: this.editForm.get(['description'])!.value,
+      externalUrl: this.editForm.get(['externalUrl'])!.value,
     };
   }
 
