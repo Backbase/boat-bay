@@ -13,6 +13,7 @@ import { NavbarComponent } from './layouts/navbar/navbar.component';
 import { FooterComponent } from './layouts/footer/footer.component';
 import { PageRibbonComponent } from './layouts/profiles/page-ribbon.component';
 import { ErrorComponent } from './layouts/error/error.component';
+import { AngularMaterialModule } from 'app/angular-material.module';
 
 @NgModule({
   imports: [
@@ -20,6 +21,7 @@ import { ErrorComponent } from './layouts/error/error.component';
     BoatBaySharedModule,
     BoatBayCoreModule,
     BoatBayHomeModule,
+    AngularMaterialModule,
     // jhipster-needle-angular-add-module JHipster will add new module here
     BoatBayEntityModule,
     BoatBayAppRoutingModule,

@@ -1,0 +1,13 @@
+@import '~@angular/material/theming';
+@import '../colors';
+
+$mat-blue-accent: map_merge(
+  $mat-blue,
+  (
+    500: $color-accent,
+  )
+);
+
+$primary: mat-palette($mat-grey);
+$accent: mat-palette($mat-blue-accent);
+$warn: mat-palette($mat-red);

@@ -1,6 +1,11 @@
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/variables';
 
+@import 'settings/spacing';
+@import 'settings/theme';
+@import 'settings/typography';
+@import 'settings/colors';
+
 /* ==========================================================================
 Navbar
 ========================================================================== */

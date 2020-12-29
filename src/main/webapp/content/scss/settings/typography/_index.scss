@@ -1,0 +1,25 @@
+$main-font-type: 'Inter';
+$main-font-family: $main-font-type, Helvetica, sans-serif;
+
+$typography-base: 16;
+
+$custom-typography: mat-typography-config(
+  $font-family: $main-font-family,
+  $display-4: mat-typography-level(96 / $typography-base + rem, 116/96, 700, $letter-spacing: -1.5px),
+  $display-3: mat-typography-level(60 / $typography-base + rem, 72/60, 700, $letter-spacing: -0.5px),
+  $display-2: mat-typography-level(48 / $typography-base + rem, 60/48, 700, $letter-spacing: 0),
+  $display-1: mat-typography-level(34 / $typography-base + rem, 40/34, 700, $letter-spacing: 0.25px),
+  $headline: mat-typography-level(24 / $typography-base + rem, 30/24, 700, $letter-spacing: 0px),
+  $title: mat-typography-level(20 / $typography-base + rem, 24/20, 700, $letter-spacing: 0.25px),
+  $subheading-2: mat-typography-level(14 / $typography-base + rem, 24/14, 700, $letter-spacing: 0.1px),
+  $subheading-1: mat-typography-level(16 / $typography-base + rem, 24/16, 400, $letter-spacing: 0.15px),
+  $body-1: mat-typography-level(16 / $typography-base + rem, 28/16, 400, $letter-spacing: 0.5px),
+  $body-2: mat-typography-level(14 / $typography-base + rem, 24/14, 400, $letter-spacing: 0.25px),
+  $caption: mat-typography-level(12 / $typography-base + rem, 16/12, 400, $letter-spacing: 0.4px),
+  $button: mat-typography-level(14 / $typography-base + rem, 1, 600, $letter-spacing: 1.25px),
+  $input: mat-typography-level(16 / $typography-base + rem, 1, 700, $letter-spacing: 0.25px),
+);
+
+.fixed-top {
+  z-index: 1;
+}

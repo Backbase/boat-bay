@@ -26,7 +26,13 @@
         }
       },
       "prefix": "jhi",
-      "architect": {}
+      "architect": {
+        "build": {
+          "options": {
+            "assets": ["src/main/webapp/assets"]
+          }
+        }
+      }
     }
   },
   "defaultProject": "boat-bay",
