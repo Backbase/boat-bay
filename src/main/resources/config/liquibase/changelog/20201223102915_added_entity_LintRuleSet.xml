@@ -16,10 +16,16 @@
             <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
+            <column name="rule_set_id" type="varchar(255)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="ux_lint_rule_set_rule_set_id" />
+            </column>
             <column name="name" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
             <column name="description" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="external_url" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
@@ -45,8 +51,10 @@
                   separator=";"
                   tableName="lint_rule_set">
             <column name="id" type="numeric"/>
+            <column name="rule_set_id" type="string"/>
             <column name="name" type="string"/>
             <column name="description" type="string"/>
+            <column name="external_url" type="string"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

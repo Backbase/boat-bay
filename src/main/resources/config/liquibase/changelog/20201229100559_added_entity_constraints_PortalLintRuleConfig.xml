@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <!--
+        Added the constraints for entity PortalLintRuleConfig.
+    -->
+    <changeSet id="20201229100559-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="portal_lint_rule_id"
+                                 baseTableName="portal_lint_rule_config"
+                                 constraintName="fk_portal_lint_rule_config_portal_lint_rule_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="portal_lint_rule"/>
+
+    </changeSet>
+</databaseChangeLog>

@@ -119,6 +119,24 @@
                 </div>
 
                 <div class="form-group">
+                    <label class="form-control-label" for="field_valid">Valid</label>
+                    <input type="checkbox" class="form-control" name="valid" id="field_valid"
+                           formControlName="valid"/>
+                    <div *ngIf="editForm.get('valid')!.invalid && (editForm.get('valid')!.dirty || editForm.get('valid')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('valid')?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_parseError">Parse Error</label>
+                    <textarea class="form-control" name="parseError" id="field_parseError"
+                              formControlName="parseError"></textarea>
+                </div>
+
+                <div class="form-group">
                     <label class="form-control-label" for="field_sourcePath">Source Path</label>
                     <input type="text" class="form-control" name="sourcePath" id="field_sourcePath"
                            formControlName="sourcePath"/>

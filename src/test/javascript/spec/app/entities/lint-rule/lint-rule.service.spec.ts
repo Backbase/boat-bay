@@ -21,7 +21,7 @@ describe('Service Tests', () => {
       service = injector.get(LintRuleService);
       httpMock = injector.get(HttpTestingController);
 
-      elemDefault = new LintRule(0, 'AAAAAAA', 'AAAAAAA', Severity.MUST, 'AAAAAAA', 'AAAAAAA', false);
+      elemDefault = new LintRule(0, 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', Severity.MUST, 'AAAAAAA', 'AAAAAAA', false);
     });
 
     describe('Service methods', () => {
@@ -35,48 +35,10 @@ describe('Service Tests', () => {
         expect(expectedResult).toMatchObject(elemDefault);
       });
 
-      it('should create a LintRule', () => {
-        const returnedFromService = Object.assign(
-          {
-            id: 0,
-          },
-          elemDefault
-        );
-
-        const expected = Object.assign({}, returnedFromService);
-
-        service.create(new LintRule()).subscribe(resp => (expectedResult = resp.body));
-
-        const req = httpMock.expectOne({ method: 'POST' });
-        req.flush(returnedFromService);
-        expect(expectedResult).toMatchObject(expected);
-      });
-
-      it('should update a LintRule', () => {
-        const returnedFromService = Object.assign(
-          {
-            title: 'BBBBBB',
-            summary: 'BBBBBB',
-            severity: 'BBBBBB',
-            description: 'BBBBBB',
-            externalUrl: 'BBBBBB',
-            enabled: true,
-          },
-          elemDefault
-        );
-
-        const expected = Object.assign({}, returnedFromService);
-
-        service.update(expected).subscribe(resp => (expectedResult = resp.body));
-
-        const req = httpMock.expectOne({ method: 'PUT' });
-        req.flush(returnedFromService);
-        expect(expectedResult).toMatchObject(expected);
-      });
-
       it('should return a list of LintRule', () => {
         const returnedFromService = Object.assign(
           {
+            ruleId: 'BBBBBB',
             title: 'BBBBBB',
             summary: 'BBBBBB',
             severity: 'BBBBBB',
@@ -95,14 +57,6 @@ describe('Service Tests', () => {
         req.flush([returnedFromService]);
         httpMock.verify();
         expect(expectedResult).toContainEqual(expected);
-      });
-
-      it('should delete a LintRule', () => {
-        service.delete(123).subscribe(resp => (expectedResult = resp.ok));
-
-        const req = httpMock.expectOne({ method: 'DELETE' });
-        req.flush({ status: 200 });
-        expect(expectedResult);
       });
     });
 

@@ -2,6 +2,14 @@
   "name": "LintRuleSet",
   "fields": [
     {
+      "fieldName": "ruleSetId",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required",
+        "unique"
+      ]
+    },
+    {
       "fieldName": "name",
       "fieldType": "String",
       "fieldValidateRules": [
@@ -11,9 +19,20 @@
     {
       "fieldName": "description",
       "fieldType": "String"
+    },
+    {
+      "fieldName": "externalUrl",
+      "fieldType": "String"
     }
   ],
-  "relationships": [],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "lintRule",
+      "otherEntityRelationshipName": "ruleSet",
+      "relationshipName": "lintRule"
+    }
+  ],
   "changelogDate": "20201223102915",
   "entityTableName": "lint_rule_set",
   "dto": "no",
@@ -21,7 +40,7 @@
   "service": "no",
   "jpaMetamodelFiltering": false,
   "fluentMethods": true,
-  "readOnly": false,
+  "readOnly": true,
   "embedded": false,
   "clientRootFolder": "",
   "applications": "*"

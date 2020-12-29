@@ -12,18 +12,6 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-control-label" for="field_baseUrl">Base Url</label>
-                    <input type="text" class="form-control" name="baseUrl" id="field_baseUrl"
-                           formControlName="baseUrl"/>
-                    <div *ngIf="editForm.get('baseUrl')!.invalid && (editForm.get('baseUrl')!.dirty || editForm.get('baseUrl')!.touched)">
-                        <small class="form-text text-danger"
-                               *ngIf="editForm.get('baseUrl')?.errors?.required">
-                        This field is required.
-                        </small>
-                    </div>
-                </div>
-
-                <div class="form-group">
                     <label class="form-control-label" for="field_name">Name</label>
                     <input type="text" class="form-control" name="name" id="field_name"
                            formControlName="name"/>
@@ -47,6 +35,18 @@
                     <div *ngIf="editForm.get('type')!.invalid && (editForm.get('type')!.dirty || editForm.get('type')!.touched)">
                         <small class="form-text text-danger"
                                *ngIf="editForm.get('type')?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_baseUrl">Base Url</label>
+                    <input type="text" class="form-control" name="baseUrl" id="field_baseUrl"
+                           formControlName="baseUrl"/>
+                    <div *ngIf="editForm.get('baseUrl')!.invalid && (editForm.get('baseUrl')!.dirty || editForm.get('baseUrl')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('baseUrl')?.errors?.required">
                         This field is required.
                         </small>
                     </div>
@@ -110,6 +110,18 @@
                     <label class="form-control-label" for="field_serviceNameSpEL">Service Name Sp EL</label>
                     <input type="text" class="form-control" name="serviceNameSpEL" id="field_serviceNameSpEL"
                            formControlName="serviceNameSpEL"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_versionSpEL">Version Sp EL</label>
+                    <input type="text" class="form-control" name="versionSpEL" id="field_versionSpEL"
+                           formControlName="versionSpEL"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_overwriteChanges">Overwrite Changes</label>
+                    <input type="checkbox" class="form-control" name="overwriteChanges" id="field_overwriteChanges"
+                           formControlName="overwriteChanges"/>
                 </div>
 
                 <div class="form-group">

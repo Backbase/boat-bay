@@ -12,6 +12,18 @@
                 </div>
 
                 <div class="form-group">
+                    <label class="form-control-label" for="field_ruleSetId">Rule Set Id</label>
+                    <input type="text" class="form-control" name="ruleSetId" id="field_ruleSetId"
+                           formControlName="ruleSetId"/>
+                    <div *ngIf="editForm.get('ruleSetId')!.invalid && (editForm.get('ruleSetId')!.dirty || editForm.get('ruleSetId')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('ruleSetId')?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
                     <label class="form-control-label" for="field_name">Name</label>
                     <input type="text" class="form-control" name="name" id="field_name"
                            formControlName="name"/>
@@ -27,6 +39,12 @@
                     <label class="form-control-label" for="field_description">Description</label>
                     <input type="text" class="form-control" name="description" id="field_description"
                            formControlName="description"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_externalUrl">External Url</label>
+                    <input type="text" class="form-control" name="externalUrl" id="field_externalUrl"
+                           formControlName="externalUrl"/>
                 </div>
             </div>
 

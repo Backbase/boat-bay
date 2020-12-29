@@ -24,8 +24,8 @@ describe('Service Tests', () => {
       elemDefault = new Source(
         0,
         'AAAAAAA',
-        'AAAAAAA',
         SourceType.GIT,
+        'AAAAAAA',
         false,
         'AAAAAAA',
         'AAAAAAA',
@@ -35,7 +35,9 @@ describe('Service Tests', () => {
         'AAAAAAA',
         'AAAAAAA',
         'AAAAAAA',
-        'AAAAAAA'
+        'AAAAAAA',
+        'AAAAAAA',
+        false
       );
     });
 
@@ -70,9 +72,9 @@ describe('Service Tests', () => {
       it('should update a Source', () => {
         const returnedFromService = Object.assign(
           {
-            baseUrl: 'BBBBBB',
             name: 'BBBBBB',
             type: 'BBBBBB',
+            baseUrl: 'BBBBBB',
             active: true,
             path: 'BBBBBB',
             filter: 'BBBBBB',
@@ -83,6 +85,8 @@ describe('Service Tests', () => {
             capabilityNameSpEL: 'BBBBBB',
             serviceKeySpEL: 'BBBBBB',
             serviceNameSpEL: 'BBBBBB',
+            versionSpEL: 'BBBBBB',
+            overwriteChanges: true,
           },
           elemDefault
         );
@@ -99,9 +103,9 @@ describe('Service Tests', () => {
       it('should return a list of Source', () => {
         const returnedFromService = Object.assign(
           {
-            baseUrl: 'BBBBBB',
             name: 'BBBBBB',
             type: 'BBBBBB',
+            baseUrl: 'BBBBBB',
             active: true,
             path: 'BBBBBB',
             filter: 'BBBBBB',
@@ -112,6 +116,8 @@ describe('Service Tests', () => {
             capabilityNameSpEL: 'BBBBBB',
             serviceKeySpEL: 'BBBBBB',
             serviceNameSpEL: 'BBBBBB',
+            versionSpEL: 'BBBBBB',
+            overwriteChanges: true,
           },
           elemDefault
         );

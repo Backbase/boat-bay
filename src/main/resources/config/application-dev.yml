@@ -15,7 +15,7 @@
 
 logging:
   level:
-    ROOT: DEBUG
+    ROOT: info
     io.github.jhipster: DEBUG
     com.backbase.oss.boat.bay: DEBUG
 

@@ -44,6 +44,9 @@ entity Spec {
     createdBy String required
     checksum String required
     filename String required
+    valid Boolean required
+
+    parseError TextBlob
 
     sourcePath String
     sourceName String
@@ -58,9 +61,9 @@ entity Spec {
 }
 
 entity Source {
-    baseUrl String required
     name String required
     type SourceType required
+    baseUrl String required
     active Boolean
     path String
     filter String
@@ -71,21 +74,42 @@ entity Source {
     capabilityNameSpEL String
     serviceKeySpEL String
     serviceNameSpEL String
+    versionSpEL String
+    overwriteChanges Boolean
 }
 
-
+@readOnly(true)
 entity LintRule {
-    title String
+    ruleId String required unique
+    title String required
     summary String
-    severity Severity
+    severity Severity required
     description String
     externalUrl String
-    enabled Boolean
+    enabled Boolean required
 }
 
+@readOnly(true)
 entity LintRuleSet {
+    ruleSetId String required unique
     name String required
     description String
+    externalUrl String
+}
+
+
+entity PortalLintRuleSet {
+    name String required
+}
+
+entity PortalLintRule {
+    name String required
+}
+
+entity PortalLintRuleConfig {
+    path String required
+    type String required
+    value TextBlob required
 }
 
 entity LintReport {
@@ -120,6 +144,8 @@ relationship OneToMany {
 	Portal to Capability{portal(name) required}
 	Capability to ServiceDefinition{capability(name) required}
 	LintRuleViolation to LintReport{linkRuleViolation(name)}
+	LintRuleSet to LintRule{ruleSet(name) required}
+	PortalLintRuleSet to PortalLintRule{portalRuleSet(name) required}
 }
 
 relationship ManyToOne {
@@ -129,15 +155,19 @@ relationship ManyToOne {
     Spec{source(name)} to Source
 }
 
-
-
 relationship OneToOne {
 	Spec to LintReport
 	LintRuleViolation  to LintRule
 	Source{portal(name) required} to Portal
 	Source{capability(name)} to Capability
 	Source{serviceDefinition(name)} to ServiceDefinition
+
+    PortalLintRuleSet{portal(name) required} to Portal{portalRuleSet(name)}
+    PortalLintRuleConfig to PortalLintRule
+
 }
+
+
 
 
 

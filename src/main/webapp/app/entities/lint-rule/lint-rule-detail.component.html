@@ -8,6 +8,10 @@
             <jhi-alert-error></jhi-alert-error>
 
             <dl class="row-md jh-entity-details">
+                <dt><span>Rule Id</span></dt>
+                <dd>
+                    <span>{{ lintRule.ruleId }}</span>
+                </dd>
                 <dt><span>Title</span></dt>
                 <dd>
                     <span>{{ lintRule.title }}</span>
@@ -32,18 +36,18 @@
                 <dd>
                     <span>{{ lintRule.enabled }}</span>
                 </dd>
+                <dt><span>Rule Set</span></dt>
+                <dd>
+                    <div *ngIf="lintRule.ruleSet">
+                        <a [routerLink]="['/lint-rule-set', lintRule.ruleSet?.id, 'view']">{{ lintRule.ruleSet?.name }}</a>
+                    </div>
+                </dd>
             </dl>
 
             <button type="submit"
                     (click)="previousState()"
                     class="btn btn-info">
                 <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
-            </button>
-
-            <button type="button"
-                    [routerLink]="['/lint-rule', lintRule.id, 'edit']"
-                    class="btn btn-primary">
-                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
             </button>
         </div>
     </div>

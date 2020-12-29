@@ -5,11 +5,11 @@ import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
 
 @Getter
-public class SpecCreatedEvent extends ApplicationEvent {
+public class SpecUpdatedEvent extends ApplicationEvent {
 
     private final Spec spec;
 
-    public SpecCreatedEvent(Object source, Spec spec) {
+    public SpecUpdatedEvent(Object source, Spec spec) {
         super(source);
         this.spec = spec;
     }

@@ -5,9 +5,9 @@ import { SourceType } from 'app/shared/model/enumerations/source-type.model';
 
 export interface ISource {
   id?: number;
-  baseUrl?: string;
   name?: string;
   type?: SourceType;
+  baseUrl?: string;
   active?: boolean;
   path?: string;
   filter?: string;
@@ -18,6 +18,8 @@ export interface ISource {
   capabilityNameSpEL?: string;
   serviceKeySpEL?: string;
   serviceNameSpEL?: string;
+  versionSpEL?: string;
+  overwriteChanges?: boolean;
   portal?: IPortal;
   capability?: ICapability;
   serviceDefinition?: IServiceDefinition;
@@ -26,9 +28,9 @@ export interface ISource {
 export class Source implements ISource {
   constructor(
     public id?: number,
-    public baseUrl?: string,
     public name?: string,
     public type?: SourceType,
+    public baseUrl?: string,
     public active?: boolean,
     public path?: string,
     public filter?: string,
@@ -39,10 +41,13 @@ export class Source implements ISource {
     public capabilityNameSpEL?: string,
     public serviceKeySpEL?: string,
     public serviceNameSpEL?: string,
+    public versionSpEL?: string,
+    public overwriteChanges?: boolean,
     public portal?: IPortal,
     public capability?: ICapability,
     public serviceDefinition?: IServiceDefinition
   ) {
     this.active = this.active || false;
+    this.overwriteChanges = this.overwriteChanges || false;
   }
 }

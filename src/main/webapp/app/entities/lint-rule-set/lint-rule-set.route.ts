@@ -10,7 +10,6 @@ import { ILintRuleSet, LintRuleSet } from 'app/shared/model/lint-rule-set.model'
 import { LintRuleSetService } from './lint-rule-set.service';
 import { LintRuleSetComponent } from './lint-rule-set.component';
 import { LintRuleSetDetailComponent } from './lint-rule-set-detail.component';
-import { LintRuleSetUpdateComponent } from './lint-rule-set-update.component';
 
 @Injectable({ providedIn: 'root' })
 export class LintRuleSetResolve implements Resolve<ILintRuleSet> {
@@ -47,30 +46,6 @@ export const lintRuleSetRoute: Routes = [
   {
     path: ':id/view',
     component: LintRuleSetDetailComponent,
-    resolve: {
-      lintRuleSet: LintRuleSetResolve,
-    },
-    data: {
-      authorities: [Authority.USER],
-      pageTitle: 'LintRuleSets',
-    },
-    canActivate: [UserRouteAccessService],
-  },
-  {
-    path: 'new',
-    component: LintRuleSetUpdateComponent,
-    resolve: {
-      lintRuleSet: LintRuleSetResolve,
-    },
-    data: {
-      authorities: [Authority.USER],
-      pageTitle: 'LintRuleSets',
-    },
-    canActivate: [UserRouteAccessService],
-  },
-  {
-    path: ':id/edit',
-    component: LintRuleSetUpdateComponent,
     resolve: {
       lintRuleSet: LintRuleSetResolve,
     },

@@ -1,10 +1,12 @@
 package com.backbase.oss.boat.bay.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 
 import java.io.Serializable;
 
@@ -24,28 +26,42 @@ public class LintRule implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "title")
+    @NotNull
+    @Column(name = "rule_id", nullable = false, unique = true)
+    private String ruleId;
+
+    @NotNull
+    @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "summary")
+    @NotNull
+    @Column(name = "summary", nullable = false)
     private String summary;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
-    @Column(name = "severity")
+    @Column(name = "severity", nullable = false)
     private Severity severity;
 
-    @Column(name = "description")
+    @NotNull
+    @Column(name = "description", nullable = false)
     private String description;
 
     @Column(name = "external_url")
     private String externalUrl;
 
-    @Column(name = "enabled")
+    @NotNull
+    @Column(name = "enabled", nullable = false)
     private Boolean enabled;
 
     @OneToOne(mappedBy = "lintRule")
     @JsonIgnore
     private LintRuleViolation lintRuleViolation;
+
+    @ManyToOne(optional = false)
+    @NotNull
+    @JsonIgnoreProperties(value = "lintRules", allowSetters = true)
+    private LintRuleSet ruleSet;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -54,6 +70,19 @@ public class LintRule implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getRuleId() {
+        return ruleId;
+    }
+
+    public LintRule ruleId(String ruleId) {
+        this.ruleId = ruleId;
+        return this;
+    }
+
+    public void setRuleId(String ruleId) {
+        this.ruleId = ruleId;
     }
 
     public String getTitle() {
@@ -146,6 +175,19 @@ public class LintRule implements Serializable {
     public void setLintRuleViolation(LintRuleViolation lintRuleViolation) {
         this.lintRuleViolation = lintRuleViolation;
     }
+
+    public LintRuleSet getRuleSet() {
+        return ruleSet;
+    }
+
+    public LintRule ruleSet(LintRuleSet lintRuleSet) {
+        this.ruleSet = lintRuleSet;
+        return this;
+    }
+
+    public void setRuleSet(LintRuleSet lintRuleSet) {
+        this.ruleSet = lintRuleSet;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -169,6 +211,7 @@ public class LintRule implements Serializable {
     public String toString() {
         return "LintRule{" +
             "id=" + getId() +
+            ", ruleId='" + getRuleId() + "'" +
             ", title='" + getTitle() + "'" +
             ", summary='" + getSummary() + "'" +
             ", severity='" + getSeverity() + "'" +

@@ -1,0 +1,36 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="portalLintRuleSet">
+            <h2><span>Portal Lint Rule Set</span> {{ portalLintRuleSet.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span>Name</span></dt>
+                <dd>
+                    <span>{{ portalLintRuleSet.name }}</span>
+                </dd>
+                <dt><span>Portal</span></dt>
+                <dd>
+                    <div *ngIf="portalLintRuleSet.portal">
+                        <a [routerLink]="['/portal', portalLintRuleSet.portal?.id, 'view']">{{ portalLintRuleSet.portal?.name }}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/portal-lint-rule-set', portalLintRuleSet.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+            </button>
+        </div>
+    </div>
+</div>
