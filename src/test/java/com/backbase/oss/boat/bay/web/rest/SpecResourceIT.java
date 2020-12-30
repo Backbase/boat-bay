@@ -4,6 +4,7 @@ import com.backbase.oss.boat.bay.BoatBayApp;
 import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.domain.Portal;
 import com.backbase.oss.boat.bay.domain.Capability;
+import com.backbase.oss.boat.bay.domain.Product;
 import com.backbase.oss.boat.bay.domain.ServiceDefinition;
 import com.backbase.oss.boat.bay.repository.SpecRepository;
 
@@ -147,6 +148,16 @@ public class SpecResourceIT {
         }
         spec.setCapability(capability);
         // Add required entity
+        Product product;
+        if (TestUtil.findAll(em, Product.class).isEmpty()) {
+            product = ProductResourceIT.createEntity(em);
+            em.persist(product);
+            em.flush();
+        } else {
+            product = TestUtil.findAll(em, Product.class).get(0);
+        }
+        spec.setProduct(product);
+        // Add required entity
         ServiceDefinition serviceDefinition;
         if (TestUtil.findAll(em, ServiceDefinition.class).isEmpty()) {
             serviceDefinition = ServiceDefinitionResourceIT.createEntity(em);
@@ -204,6 +215,16 @@ public class SpecResourceIT {
             capability = TestUtil.findAll(em, Capability.class).get(0);
         }
         spec.setCapability(capability);
+        // Add required entity
+        Product product;
+        if (TestUtil.findAll(em, Product.class).isEmpty()) {
+            product = ProductResourceIT.createUpdatedEntity(em);
+            em.persist(product);
+            em.flush();
+        } else {
+            product = TestUtil.findAll(em, Product.class).get(0);
+        }
+        spec.setProduct(product);
         // Add required entity
         ServiceDefinition serviceDefinition;
         if (TestUtil.findAll(em, ServiceDefinition.class).isEmpty()) {

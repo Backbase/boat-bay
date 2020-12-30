@@ -6,46 +6,6 @@
 @import '../../../content/scss/settings/typography';
 @import '../../../content/scss/settings/colors';
 
-/* ==========================================================================
-Navbar
-========================================================================== */
-
-.navbar-version {
-  font-size: 0.65em;
-  color: $navbar-dark-color;
-}
-
-.profile-image {
-  height: 1.75em;
-  width: 1.75em;
-}
-
-.navbar {
-  padding: 0.2rem 1rem;
-
-  ul.navbar-nav {
-    .nav-item {
-      margin-left: 0.5em;
-    }
-  }
-
-  a.nav-link {
-    font-weight: 400;
-  }
-}
-
-/* ==========================================================================
-Logo styles
-========================================================================== */
-.logo-img {
-  height: 45px;
-  width: 45px;
-  display: inline-block;
-  vertical-align: middle;
-  background: url('../../../content/images/logo-jhipster.png') no-repeat center center;
-  background-size: contain;
-}
-
 mat-toolbar {
   padding: 0;
   box-sizing: border-box;
@@ -146,4 +106,8 @@ a {
   &:hover {
     opacity: 0.7;
   }
+}
+
+.example-spacer {
+  flex: 1 1 auto;
 }

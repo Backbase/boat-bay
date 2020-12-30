@@ -32,7 +32,7 @@
                     <th scope="col" ><span>Version</span></th>
                     <th scope="col" ><span>Created On</span></th>
                     <th scope="col" ><span>Created By</span></th>
-                    <th scope="col" ><span>Portal</span></th>
+                    <th scope="col" ><span>Product</span></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -49,8 +49,8 @@
                     <td>{{ capability.createdOn | date:'medium' }}</td>
                     <td>{{ capability.createdBy }}</td>
                     <td>
-                        <div *ngIf="capability.portal">
-                            <a [routerLink]="['/portal', capability.portal?.id, 'view']" >{{ capability.portal?.name }}</a>
+                        <div *ngIf="capability.product">
+                            <a [routerLink]="['/product', capability.product?.id, 'view']" >{{ capability.product?.name }}</a>
                         </div>
                     </td>
                     <td class="text-right">

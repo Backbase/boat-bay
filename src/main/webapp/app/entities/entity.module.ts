@@ -53,6 +53,10 @@ import { RouterModule } from '@angular/router';
         loadChildren: () =>
           import('./portal-lint-rule-config/portal-lint-rule-config.module').then(m => m.BoatBayPortalLintRuleConfigModule),
       },
+      {
+        path: 'product',
+        loadChildren: () => import('./product/product.module').then(m => m.BoatBayProductModule),
+      },
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ]),
   ],

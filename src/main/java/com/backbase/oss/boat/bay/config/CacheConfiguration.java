@@ -72,6 +72,9 @@ public class CacheConfiguration {
             createCache(cm, com.backbase.oss.boat.bay.domain.PortalLintRuleSet.class.getName() + ".portalLintRules");
             createCache(cm, com.backbase.oss.boat.bay.domain.PortalLintRule.class.getName());
             createCache(cm, com.backbase.oss.boat.bay.domain.PortalLintRuleConfig.class.getName());
+            createCache(cm, com.backbase.oss.boat.bay.domain.Portal.class.getName() + ".products");
+            createCache(cm, com.backbase.oss.boat.bay.domain.Product.class.getName());
+            createCache(cm, com.backbase.oss.boat.bay.domain.Product.class.getName() + ".capabilities");
             // jhipster-needle-ehcache-add-entry
         };
     }

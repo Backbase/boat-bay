@@ -63,7 +63,7 @@ public class Capability implements Serializable {
     @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties(value = "capabilities", allowSetters = true)
-    private Portal portal;
+    private Product product;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -216,17 +216,17 @@ public class Capability implements Serializable {
         this.serviceDefinitions = serviceDefinitions;
     }
 
-    public Portal getPortal() {
-        return portal;
+    public Product getProduct() {
+        return product;
     }
 
-    public Capability portal(Portal portal) {
-        this.portal = portal;
+    public Capability product(Product product) {
+        this.product = product;
         return this;
     }
 
-    public void setPortal(Portal portal) {
-        this.portal = portal;
+    public void setProduct(Product product) {
+        this.product = product;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 

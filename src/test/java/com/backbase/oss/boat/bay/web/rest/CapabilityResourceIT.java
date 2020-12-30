@@ -2,7 +2,7 @@ package com.backbase.oss.boat.bay.web.rest;
 
 import com.backbase.oss.boat.bay.BoatBayApp;
 import com.backbase.oss.boat.bay.domain.Capability;
-import com.backbase.oss.boat.bay.domain.Portal;
+import com.backbase.oss.boat.bay.domain.Product;
 import com.backbase.oss.boat.bay.repository.CapabilityRepository;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -89,15 +89,15 @@ public class CapabilityResourceIT {
             .createdOn(DEFAULT_CREATED_ON)
             .createdBy(DEFAULT_CREATED_BY);
         // Add required entity
-        Portal portal;
-        if (TestUtil.findAll(em, Portal.class).isEmpty()) {
-            portal = PortalResourceIT.createEntity(em);
-            em.persist(portal);
+        Product product;
+        if (TestUtil.findAll(em, Product.class).isEmpty()) {
+            product = ProductResourceIT.createEntity(em);
+            em.persist(product);
             em.flush();
         } else {
-            portal = TestUtil.findAll(em, Portal.class).get(0);
+            product = TestUtil.findAll(em, Product.class).get(0);
         }
-        capability.setPortal(portal);
+        capability.setProduct(product);
         return capability;
     }
     /**
@@ -118,15 +118,15 @@ public class CapabilityResourceIT {
             .createdOn(UPDATED_CREATED_ON)
             .createdBy(UPDATED_CREATED_BY);
         // Add required entity
-        Portal portal;
-        if (TestUtil.findAll(em, Portal.class).isEmpty()) {
-            portal = PortalResourceIT.createUpdatedEntity(em);
-            em.persist(portal);
+        Product product;
+        if (TestUtil.findAll(em, Product.class).isEmpty()) {
+            product = ProductResourceIT.createUpdatedEntity(em);
+            em.persist(product);
             em.flush();
         } else {
-            portal = TestUtil.findAll(em, Portal.class).get(0);
+            product = TestUtil.findAll(em, Product.class).get(0);
         }
-        capability.setPortal(portal);
+        capability.setProduct(product);
         return capability;
     }
 

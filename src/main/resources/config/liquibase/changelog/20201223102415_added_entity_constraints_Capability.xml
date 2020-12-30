@@ -8,11 +8,11 @@
     -->
     <changeSet id="20201223102415-2" author="jhipster">
         
-        <addForeignKeyConstraint baseColumnNames="portal_id"
+        <addForeignKeyConstraint baseColumnNames="product_id"
                                  baseTableName="capability"
-                                 constraintName="fk_capability_portal_id"
+                                 constraintName="fk_capability_product_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="portal"/>
+                                 referencedTableName="product"/>
 
     </changeSet>
 </databaseChangeLog>

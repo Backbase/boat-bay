@@ -44,6 +44,7 @@
                     <th scope="col" ><span>Lint Report</span></th>
                     <th scope="col" ><span>Portal</span></th>
                     <th scope="col" ><span>Capability</span></th>
+                    <th scope="col" ><span>Product</span></th>
                     <th scope="col" ><span>Service Definition</span></th>
                     <th scope="col" ><span>Source</span></th>
                     <th scope="col"></th>
@@ -83,6 +84,11 @@
                     <td>
                         <div *ngIf="spec.capability">
                             <a [routerLink]="['/capability', spec.capability?.id, 'view']" >{{ spec.capability?.name }}</a>
+                        </div>
+                    </td>
+                    <td>
+                        <div *ngIf="spec.product">
+                            <a [routerLink]="['/product', spec.product?.id, 'view']" >{{ spec.product?.name }}</a>
                         </div>
                     </td>
                     <td>

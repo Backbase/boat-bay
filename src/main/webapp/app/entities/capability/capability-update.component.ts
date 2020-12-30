@@ -11,8 +11,8 @@ import { JhiDataUtils, JhiFileLoadError, JhiEventManager, JhiEventWithContent } 
 import { ICapability, Capability } from 'app/shared/model/capability.model';
 import { CapabilityService } from './capability.service';
 import { AlertError } from 'app/shared/alert/alert-error.model';
-import { IPortal } from 'app/shared/model/portal.model';
-import { PortalService } from 'app/entities/portal/portal.service';
+import { IProduct } from 'app/shared/model/product.model';
+import { ProductService } from 'app/entities/product/product.service';
 
 @Component({
   selector: 'jhi-capability-update',
@@ -20,7 +20,7 @@ import { PortalService } from 'app/entities/portal/portal.service';
 })
 export class CapabilityUpdateComponent implements OnInit {
   isSaving = false;
-  portals: IPortal[] = [];
+  products: IProduct[] = [];
 
   editForm = this.fb.group({
     id: [],
@@ -33,14 +33,14 @@ export class CapabilityUpdateComponent implements OnInit {
     version: [],
     createdOn: [],
     createdBy: [],
-    portal: [null, Validators.required],
+    product: [null, Validators.required],
   });
 
   constructor(
     protected dataUtils: JhiDataUtils,
     protected eventManager: JhiEventManager,
     protected capabilityService: CapabilityService,
-    protected portalService: PortalService,
+    protected productService: ProductService,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
   ) {}
@@ -54,7 +54,7 @@ export class CapabilityUpdateComponent implements OnInit {
 
       this.updateForm(capability);
 
-      this.portalService.query().subscribe((res: HttpResponse<IPortal[]>) => (this.portals = res.body || []));
+      this.productService.query().subscribe((res: HttpResponse<IProduct[]>) => (this.products = res.body || []));
     });
   }
 
@@ -70,7 +70,7 @@ export class CapabilityUpdateComponent implements OnInit {
       version: capability.version,
       createdOn: capability.createdOn ? capability.createdOn.format(DATE_TIME_FORMAT) : null,
       createdBy: capability.createdBy,
-      portal: capability.portal,
+      product: capability.product,
     });
   }
 
@@ -117,7 +117,7 @@ export class CapabilityUpdateComponent implements OnInit {
       version: this.editForm.get(['version'])!.value,
       createdOn: this.editForm.get(['createdOn'])!.value ? moment(this.editForm.get(['createdOn'])!.value, DATE_TIME_FORMAT) : undefined,
       createdBy: this.editForm.get(['createdBy'])!.value,
-      portal: this.editForm.get(['portal'])!.value,
+      product: this.editForm.get(['product'])!.value,
     };
   }
 
@@ -137,7 +137,7 @@ export class CapabilityUpdateComponent implements OnInit {
     this.isSaving = false;
   }
 
-  trackById(index: number, item: IPortal): any {
+  trackById(index: number, item: IProduct): any {
     return item.id;
   }
 }

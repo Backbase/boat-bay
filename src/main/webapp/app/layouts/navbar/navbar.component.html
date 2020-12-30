@@ -4,6 +4,26 @@
     (window:scroll)="onWindowScroll($event)"
     data-role="top-navigation-container"
 >
+    <button mat-button [mat-menu-trigger-for]="menu"><mat-icon>menu</mat-icon></button>
+    <mat-menu #menu>
+        <button mat-menu-item [mat-menu-trigger-for]="entities">Entities</button>
+        <button mat-menu-item [mat-menu-trigger-for]="administration">Administration</button>
+
+    </mat-menu>
+    <mat-menu #entities>
+        <a routerLink="portal" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Portal</a>
+        <a routerLink="capability" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Capability</a>
+        <a routerLink="service-definition" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>ServiceDefinition</a>
+        <a routerLink="spec" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Spec</a>
+        <a routerLink="source" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Source</a>
+    </mat-menu>
+    <mat-menu #administration>
+        <a routerLink="admin/user-management" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>User management</a>
+        <a routerLink="admin/metrics" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Metrics</a>
+        <a routerLink="admin/configuration" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Configuration</a>
+        <a routerLink="admin/audits" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Audits</a>
+        <a routerLink="admin/logs" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Logs</a>
+    </mat-menu>
     <header>
         <div class="header-row">
             <div class="bb-brand">
@@ -21,226 +41,314 @@
                 <span class="bb-brand-text">BOAT 🚢 BAY 🏝</span>
             </div>
 
+
             <div class="bb-brand-community">
+
+
+
+
                 <a
                     class="bb-brand-community-link"
                     href="https://community.backbase.com/"
                     target="_blank"
                 >Community</a
                 >
+
+
             </div>
         </div>
     </header>
 </mat-toolbar>
-
-<!--<nav class="navbar navbar-dark navbar-expand-md bg-dark">-->
-<!--    <a class="navbar-brand logo" routerLink="/" (click)="collapseNavbar()">-->
-<!--        <span class="logo-img"></span>-->
-<!--        <span class="navbar-title">BoatBay</span> <span class="navbar-version">{{ version }}</span>-->
-<!--    </a>-->
-<!--    <a class="navbar-toggler d-lg-none" href="javascript:void(0);" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation" (click)="toggleNavbar()">-->
-<!--        <fa-icon icon="bars"></fa-icon>-->
-<!--    </a>-->
-<!--    <div class="navbar-collapse collapse" id="navbarResponsive" [ngbCollapse]="isNavbarCollapsed" [ngSwitch]="isAuthenticated()">-->
-<!--        <ul class="navbar-nav ml-auto">-->
-<!--            <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">-->
-<!--                <a class="nav-link" routerLink="/" (click)="collapseNavbar()">-->
-<!--                    <span>-->
-<!--                        <fa-icon icon="home"></fa-icon>-->
-<!--                        <span>Home</span>-->
-<!--                    </span>-->
-<!--                </a>-->
-<!--            </li>-->
-<!--            &lt;!&ndash; jhipster-needle-add-element-to-menu - JHipster will add new menu items here &ndash;&gt;-->
-<!--            <li *ngSwitchCase="true" ngbDropdown class="nav-item dropdown pointer" display="dynamic" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">-->
-<!--                <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="entity-menu">-->
-<!--                    <span>-->
-<!--                        <fa-icon icon="th-list"></fa-icon>-->
-<!--                        <span>-->
-<!--                            Entities-->
-<!--                        </span>-->
-<!--                    </span>-->
-<!--                </a>-->
-<!--                <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="entity-menu">-->
-<!--                    <li>-->
-<!--                        <a class="dropdown-item" routerLink="portal" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">-->
-<!--                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>-->
-<!--                            <span>Portal</span>-->
-<!--                        </a>-->
-<!--                    </li>-->
-<!--                    <li>-->
-<!--                        <a class="dropdown-item" routerLink="capability" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">-->
-<!--                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>-->
-<!--                            <span>Capability</span>-->
-<!--                        </a>-->
-<!--                    </li>-->
-<!--                    <li>-->
-<!--                        <a class="dropdown-item" routerLink="spec" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">-->
-<!--                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>-->
-<!--                            <span>Spec</span>-->
-<!--                        </a>-->
-<!--                    </li>-->
-<!--                    <li>-->
-<!--                        <a class="dropdown-item" routerLink="lint-rule" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">-->
-<!--                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>-->
-<!--                            <span>Lint Rule</span>-->
-<!--                        </a>-->
-<!--                    </li>-->
-<!--                    <li>-->
-<!--                        <a class="dropdown-item" routerLink="lint-rule-set" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">-->
-<!--                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>-->
-<!--                            <span>Lint Rule Set</span>-->
-<!--                        </a>-->
-<!--                    </li>-->
-<!--                    <li>-->
-<!--                        <a class="dropdown-item" routerLink="lint-report" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">-->
-<!--                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>-->
-<!--                            <span>Lint Report</span>-->
-<!--                        </a>-->
-<!--                    </li>-->
-<!--                    <li>-->
-<!--                        <a class="dropdown-item" routerLink="lint-rule-violation" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">-->
-<!--                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>-->
-<!--                            <span>Lint Rule Violation</span>-->
-<!--                        </a>-->
-<!--                    </li>-->
-<!--                    <li>-->
-<!--                        <a class="dropdown-item" routerLink="source" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">-->
-<!--                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>-->
-<!--                            <span>Source</span>-->
-<!--                        </a>-->
-<!--                    </li>-->
-<!--                    <li>-->
-<!--                        <a class="dropdown-item" routerLink="service-definition" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">-->
-<!--                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>-->
-<!--                            <span>Service Definition</span>-->
-<!--                        </a>-->
-<!--                    </li>-->
-<!--                    <li>-->
-<!--                        <a class="dropdown-item" routerLink="portal-lint-rule-set" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">-->
-<!--                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>-->
-<!--                            <span>Portal Lint Rule Set</span>-->
-<!--                        </a>-->
-<!--                    </li>-->
-<!--                    <li>-->
-<!--                        <a class="dropdown-item" routerLink="portal-lint-rule" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">-->
-<!--                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>-->
-<!--                            <span>Portal Lint Rule</span>-->
-<!--                        </a>-->
-<!--                    </li>-->
-<!--                    <li>-->
-<!--                        <a class="dropdown-item" routerLink="portal-lint-rule-config" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">-->
-<!--                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>-->
-<!--                            <span>Portal Lint Rule Config</span>-->
-<!--                        </a>-->
-<!--                    </li>-->
-<!--                    &lt;!&ndash; jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here &ndash;&gt;-->
-<!--                </ul>-->
-<!--            </li>-->
-<!--            <li *jhiHasAnyAuthority="'ROLE_ADMIN'" ngbDropdown class="nav-item dropdown pointer" display="dynamic" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">-->
-<!--                <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="admin-menu">-->
-<!--                    <span>-->
-<!--                        <fa-icon icon="user-plus"></fa-icon>-->
-<!--                        <span>Administration</span>-->
-<!--                    </span>-->
-<!--                </a>-->
-<!--                <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="admin-menu">-->
-<!--                    <li>-->
-<!--                        <a class="dropdown-item" routerLink="admin/user-management" routerLinkActive="active" (click)="collapseNavbar()">-->
-<!--                            <fa-icon icon="user" [fixedWidth]="true"></fa-icon>-->
-<!--                            <span>User management</span>-->
-<!--                        </a>-->
-<!--                    </li>-->
-<!--                    <li>-->
-<!--                        <a class="dropdown-item" routerLink="admin/metrics" routerLinkActive="active" (click)="collapseNavbar()">-->
-<!--                            <fa-icon icon="tachometer-alt" [fixedWidth]="true"></fa-icon>-->
-<!--                            <span>Metrics</span>-->
-<!--                        </a>-->
-<!--                    </li>-->
-<!--                    <li>-->
-<!--                        <a class="dropdown-item" routerLink="admin/health" routerLinkActive="active" (click)="collapseNavbar()">-->
-<!--                            <fa-icon icon="heart" [fixedWidth]="true"></fa-icon>-->
-<!--                            <span>Health</span>-->
-<!--                        </a>-->
-<!--                    </li>-->
-<!--                    <li>-->
-<!--                        <a class="dropdown-item" routerLink="admin/configuration" routerLinkActive="active" (click)="collapseNavbar()">-->
-<!--                            <fa-icon icon="list" [fixedWidth]="true"></fa-icon>-->
-<!--                            <span>Configuration</span>-->
-<!--                        </a>-->
-<!--                    </li>-->
-<!--                    <li>-->
-<!--                        <a class="dropdown-item" routerLink="admin/audits" routerLinkActive="active" (click)="collapseNavbar()">-->
-<!--                            <fa-icon icon="bell" [fixedWidth]="true"></fa-icon>-->
-<!--                            <span>Audits</span>-->
-<!--                        </a>-->
-<!--                    </li>-->
-<!--                    <li>-->
-<!--                        <a class="dropdown-item" routerLink="admin/logs" routerLinkActive="active" (click)="collapseNavbar()">-->
-<!--                            <fa-icon icon="tasks" [fixedWidth]="true"></fa-icon>-->
-<!--                            <span>Logs</span>-->
-<!--                        </a>-->
-<!--                    </li>-->
-<!--                    <li *ngIf="swaggerEnabled">-->
-<!--                        <a class="dropdown-item" routerLink="admin/docs" routerLinkActive="active" (click)="collapseNavbar()">-->
-<!--                            <fa-icon icon="book" [fixedWidth]="true"></fa-icon>-->
-<!--                            <span>API</span>-->
-<!--                        </a>-->
-<!--                    </li>-->
-<!--                    &lt;!&ndash; jhipster-needle-add-element-to-admin-menu - JHipster will add entities to the admin menu here &ndash;&gt;-->
-<!--                    <li *ngIf="!inProduction">-->
-<!--                        <a class="dropdown-item" href='./h2-console' target="_tab" (click)="collapseNavbar()">-->
-<!--                            <fa-icon icon="hdd" [fixedWidth]="true"></fa-icon>-->
-<!--                            <span>Database</span>-->
-<!--                        </a>-->
-<!--                    </li>-->
-<!--                </ul>-->
-<!--            </li>-->
-<!--            <li ngbDropdown class="nav-item dropdown pointer" display="dynamic" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">-->
-<!--                <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="account-menu">-->
-<!--                    <span *ngIf="!getImageUrl()">-->
-<!--                        <fa-icon icon="user"></fa-icon>-->
-<!--                        <span>-->
-<!--                            Account-->
-<!--                        </span>-->
-<!--                    </span>-->
-<!--                    <span *ngIf="getImageUrl()">-->
-<!--                        <img [src]="getImageUrl()" class="profile-image rounded-circle" alt="Avatar">-->
-<!--                    </span>-->
-<!--                </a>-->
-<!--                <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="account-menu">-->
-<!--                    <li *ngSwitchCase="true">-->
-<!--                        <a class="dropdown-item" routerLink="account/settings" routerLinkActive="active" (click)="collapseNavbar()">-->
-<!--                            <fa-icon icon="wrench" [fixedWidth]="true"></fa-icon>-->
-<!--                            <span>Settings</span>-->
-<!--                        </a>-->
-<!--                    </li>-->
-<!--                    <li *ngSwitchCase="true">-->
-<!--                        <a class="dropdown-item" routerLink="account/password" routerLinkActive="active" (click)="collapseNavbar()">-->
-<!--                            <fa-icon icon="lock" [fixedWidth]="true"></fa-icon>-->
-<!--                            <span>Password</span>-->
-<!--                        </a>-->
-<!--                    </li>-->
-<!--                    <li *ngSwitchCase="true">-->
-<!--                        <a class="dropdown-item" (click)="logout()" id="logout">-->
-<!--                            <fa-icon icon="sign-out-alt" [fixedWidth]="true"></fa-icon>-->
-<!--                            <span>Sign out</span>-->
-<!--                        </a>-->
-<!--                    </li>-->
-<!--                    <li *ngSwitchCase="false">-->
-<!--                        <a class="dropdown-item" (click)="login()" id="login">-->
-<!--                            <fa-icon icon="sign-in-alt" [fixedWidth]="true"></fa-icon>-->
-<!--                            <span>Sign in</span>-->
-<!--                        </a>-->
-<!--                    </li>-->
-<!--                    <li *ngSwitchCase="false">-->
-<!--                        <a class="dropdown-item" routerLink="account/register" routerLinkActive="active" (click)="collapseNavbar()">-->
-<!--                            <fa-icon icon="user-plus" [fixedWidth]="true"></fa-icon>-->
-<!--                            <span>Register</span>-->
-<!--                        </a>-->
-<!--                    </li>-->
-<!--                </ul>-->
-<!--            </li>-->
-<!--        </ul>-->
-<!--    </div>-->
-<!--</nav>-->
+<!--
+<nav class="navbar navbar-dark navbar-expand-md bg-dark">
+    <a class="navbar-brand logo" routerLink="/" (click)="collapseNavbar()">
+        <span class="logo-img"></span>
+        <span class="navbar-title">BoatBay</span> <span class="navbar-version">{{ version }}</span>
+    </a>
+    <a class="navbar-toggler d-lg-none" href="javascript:void(0);" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation" (click)="toggleNavbar()">
+        <fa-icon icon="bars"></fa-icon>
+    </a>
+    <div class="navbar-collapse collapse" id="navbarResponsive" [ngbCollapse]="isNavbarCollapsed" [ngSwitch]="isAuthenticated()">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+                <a class="nav-link" routerLink="/" (click)="collapseNavbar()">
+                    <span>
+                        <fa-icon icon="home"></fa-icon>
+                        <span>Home</span>
+                    </span>
+                </a>
+            </li>-->
+            <!-- jhipster-needle-add-element-to-menu - JHipster will add new menu items here -->
+<!--
+            <li *ngSwitchCase="true" ngbDropdown class="nav-item dropdown pointer" display="dynamic" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+                <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="entity-menu">
+                    <span>
+                        <fa-icon icon="th-list"></fa-icon>
+                        <span>
+                            Entities
+                        </span>
+                    </span>
+                </a>
+                <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="entity-menu">
+                    <li>
+                        <a class="dropdown-item" routerLink="portal" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Portal</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="capability" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Capability</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="spec" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Spec</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="lint-rule" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Lint Rule</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="lint-rule-set" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Lint Rule Set</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="lint-report" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Lint Report</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="lint-rule-violation" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Lint Rule Violation</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="source" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Source</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="service-definition" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Service Definition</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="portal-lint-rule-set" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Portal Lint Rule Set</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="portal-lint-rule" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Portal Lint Rule</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="portal-lint-rule-config" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Portal Lint Rule Config</span>
+                        </a>
+                    </li>
+<li>
+                        <a class="dropdown-item" routerLink="portal" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Portal</span>
+                        </a>
+                    </li>
+<li>
+                        <a class="dropdown-item" routerLink="product" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Product</span>
+                        </a>
+                    </li>
+<li>
+                        <a class="dropdown-item" routerLink="capability" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Capability</span>
+                        </a>
+                    </li>
+<li>
+                        <a class="dropdown-item" routerLink="service-definition" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Service Definition</span>
+                        </a>
+                    </li>
+<li>
+                        <a class="dropdown-item" routerLink="spec" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Spec</span>
+                        </a>
+                    </li>
+<li>
+                        <a class="dropdown-item" routerLink="source" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Source</span>
+                        </a>
+                    </li>
+<li>
+                        <a class="dropdown-item" routerLink="lint-rule" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Lint Rule</span>
+                        </a>
+                    </li>
+<li>
+                        <a class="dropdown-item" routerLink="lint-rule-set" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Lint Rule Set</span>
+                        </a>
+                    </li>
+<li>
+                        <a class="dropdown-item" routerLink="portal-lint-rule-set" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Portal Lint Rule Set</span>
+                        </a>
+                    </li>
+<li>
+                        <a class="dropdown-item" routerLink="portal-lint-rule" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Portal Lint Rule</span>
+                        </a>
+                    </li>
+<li>
+                        <a class="dropdown-item" routerLink="portal-lint-rule-config" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Portal Lint Rule Config</span>
+                        </a>
+                    </li>
+<li>
+                        <a class="dropdown-item" routerLink="lint-report" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Lint Report</span>
+                        </a>
+                    </li>
+<li>
+                        <a class="dropdown-item" routerLink="lint-rule-violation" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Lint Rule Violation</span>
+                        </a>
+                    </li>-->
+                    <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
+<!--
+</ul>
+            </li>
+            <li *jhiHasAnyAuthority="'ROLE_ADMIN'" ngbDropdown class="nav-item dropdown pointer" display="dynamic" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+                <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="admin-menu">
+                    <span>
+                        <fa-icon icon="user-plus"></fa-icon>
+                        <span>Administration</span>
+                    </span>
+                </a>
+                <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="admin-menu">
+                    <li>
+                        <a class="dropdown-item" routerLink="admin/user-management" routerLinkActive="active" (click)="collapseNavbar()">
+                            <fa-icon icon="user" [fixedWidth]="true"></fa-icon>
+                            <span>User management</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="admin/metrics" routerLinkActive="active" (click)="collapseNavbar()">
+                            <fa-icon icon="tachometer-alt" [fixedWidth]="true"></fa-icon>
+                            <span>Metrics</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="admin/health" routerLinkActive="active" (click)="collapseNavbar()">
+                            <fa-icon icon="heart" [fixedWidth]="true"></fa-icon>
+                            <span>Health</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="admin/configuration" routerLinkActive="active" (click)="collapseNavbar()">
+                            <fa-icon icon="list" [fixedWidth]="true"></fa-icon>
+                            <span>Configuration</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="admin/audits" routerLinkActive="active" (click)="collapseNavbar()">
+                            <fa-icon icon="bell" [fixedWidth]="true"></fa-icon>
+                            <span>Audits</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="admin/logs" routerLinkActive="active" (click)="collapseNavbar()">
+                            <fa-icon icon="tasks" [fixedWidth]="true"></fa-icon>
+                            <span>Logs</span>
+                        </a>
+                    </li>
+                    <li *ngIf="swaggerEnabled">
+                        <a class="dropdown-item" routerLink="admin/docs" routerLinkActive="active" (click)="collapseNavbar()">
+                            <fa-icon icon="book" [fixedWidth]="true"></fa-icon>
+                            <span>API</span>
+                        </a>
+                    </li>
+                     jhipster-needle-add-element-to-admin-menu - JHipster will add entities to the admin menu here
+                    <li *ngIf="!inProduction">
+                        <a class="dropdown-item" href='./h2-console' target="_tab" (click)="collapseNavbar()">
+                            <fa-icon icon="hdd" [fixedWidth]="true"></fa-icon>
+                            <span>Database</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li ngbDropdown class="nav-item dropdown pointer" display="dynamic" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+                <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="account-menu">
+                    <span *ngIf="!getImageUrl()">
+                        <fa-icon icon="user"></fa-icon>
+                        <span>
+                            Account
+                        </span>
+                    </span>
+                    <span *ngIf="getImageUrl()">
+                        <img [src]="getImageUrl()" class="profile-image rounded-circle" alt="Avatar">
+                    </span>
+                </a>
+                <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="account-menu">
+                    <li *ngSwitchCase="true">
+                        <a class="dropdown-item" routerLink="account/settings" routerLinkActive="active" (click)="collapseNavbar()">
+                            <fa-icon icon="wrench" [fixedWidth]="true"></fa-icon>
+                            <span>Settings</span>
+                        </a>
+                    </li>
+                    <li *ngSwitchCase="true">
+                        <a class="dropdown-item" routerLink="account/password" routerLinkActive="active" (click)="collapseNavbar()">
+                            <fa-icon icon="lock" [fixedWidth]="true"></fa-icon>
+                            <span>Password</span>
+                        </a>
+                    </li>
+                    <li *ngSwitchCase="true">
+                        <a class="dropdown-item" (click)="logout()" id="logout">
+                            <fa-icon icon="sign-out-alt" [fixedWidth]="true"></fa-icon>
+                            <span>Sign out</span>
+                        </a>
+                    </li>
+                    <li *ngSwitchCase="false">
+                        <a class="dropdown-item" (click)="login()" id="login">
+                            <fa-icon icon="sign-in-alt" [fixedWidth]="true"></fa-icon>
+                            <span>Sign in</span>
+                        </a>
+                    </li>
+                    <li *ngSwitchCase="false">
+                        <a class="dropdown-item" routerLink="account/register" routerLinkActive="active" (click)="collapseNavbar()">
+                            <fa-icon icon="user-plus" [fixedWidth]="true"></fa-icon>
+                            <span>Register</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</nav>
+-->

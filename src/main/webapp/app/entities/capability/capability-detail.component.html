@@ -44,10 +44,10 @@
                 <dd>
                     <span>{{ capability.createdBy }}</span>
                 </dd>
-                <dt><span>Portal</span></dt>
+                <dt><span>Product</span></dt>
                 <dd>
-                    <div *ngIf="capability.portal">
-                        <a [routerLink]="['/portal', capability.portal?.id, 'view']">{{ capability.portal?.name }}</a>
+                    <div *ngIf="capability.product">
+                        <a [routerLink]="['/product', capability.product?.id, 'view']">{{ capability.product?.name }}</a>
                     </div>
                 </dd>
             </dl>

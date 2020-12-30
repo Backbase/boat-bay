@@ -1,11 +1,13 @@
 package com.backbase.oss.boat.bay.service.source;
 
 import com.backbase.oss.boat.bay.domain.Capability;
+import com.backbase.oss.boat.bay.domain.Product;
 import com.backbase.oss.boat.bay.domain.ServiceDefinition;
 import com.backbase.oss.boat.bay.domain.Source;
 import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.repository.SpecRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatCapabilityRepository;
+import com.backbase.oss.boat.bay.repository.extended.BoatProductRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatServiceRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatSpecRepository;
 import java.nio.charset.StandardCharsets;
@@ -29,6 +31,7 @@ public class SpecSourceResolver {
     private static final ExpressionParser parser = new SpelExpressionParser();
 
     private final SpecRepository specRepository;
+    private final BoatProductRepository boatProductRepository;
     private final BoatCapabilityRepository capabilityRepository;
     private final BoatServiceRepository boatServiceRepository;
 
@@ -60,6 +63,7 @@ public class SpecSourceResolver {
         if (!spec.isValid()) {
             spec.version("");
         }
+        setProduct(spec, source);
         setCapability(spec, source);
         setServiceDefinition(spec, source);
         log.info("Storing spec: {}", spec.getName());
@@ -79,10 +83,20 @@ public class SpecSourceResolver {
     private void setCapability(Spec spec, Source source) {
         if (spec.getCapability() == null || source.isOverwriteChanges()) {
             String key = parseName(source.getCapabilityKeySpEL(), spec, "unknown");
-            Capability capability = capabilityRepository.findByPortalAndKey(spec.getPortal(), key)
+            Capability capability = capabilityRepository.findByProductAndKey(spec.getProduct(), key)
                 .orElseGet(() -> createCapabilityForSpecWithKey(spec, key));
             log.info("Assigning capability: {} to spec: {}", capability.getName(), spec.getName());
             spec.setCapability(capability);
+        }
+    }
+
+    private void setProduct(Spec spec, Source source) {
+        if (spec.getProduct() == null || source.isOverwriteChanges()) {
+            String key = parseName(source.getProductKeySpEL(), spec, "unknown");
+            Product product = boatProductRepository.findByPortalAndKey(spec.getPortal(), key)
+                .orElseGet(() -> createProductWithKey(spec, key));
+            log.info("Assigning product: {} to spec: {}", product.getName(), spec.getName());
+            spec.setProduct(product);
         }
     }
 
@@ -99,12 +113,28 @@ public class SpecSourceResolver {
         return boatServiceRepository.save(serviceDefinition);
     }
 
+    private Product createProductWithKey(Spec spec, String key) {
+        log.info("Creating product: {} with spec: {}", key, spec.getName());
+
+        Optional<String> productNameSpEL = Optional.of(spec.getSource().getProductNameSpEL());
+        Product product = new Product();
+        product.setKey(key);
+        product.setPortal(spec.getPortal());
+        product.setCreatedBy(spec.getCreatedBy());
+        product.setCreatedOn(Instant.now());
+        product.setName(productNameSpEL.map(exp -> parseName(exp, spec, key)).orElse(key));
+
+        return boatProductRepository.save(product);
+
+    }
+
     private Capability createCapabilityForSpecWithKey(Spec spec, String key) {
         log.info("Creating capability: {} for spec: {}", key, spec.getName());
         Optional<String> capabilityNameSpEL = Optional.ofNullable(spec.getSource().getCapabilityNameSpEL());
 
         Capability capability = new Capability();
-        capability.setPortal(spec.getPortal());
+
+        capability.setProduct(spec.getProduct());
         capability.setKey(key);
         capability.setCreatedBy(spec.getSource().getName());
         capability.setCreatedOn(Instant.now());

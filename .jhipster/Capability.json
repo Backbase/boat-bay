@@ -54,10 +54,10 @@
     },
     {
       "relationshipType": "many-to-one",
-      "otherEntityName": "portal",
+      "otherEntityName": "product",
       "otherEntityRelationshipName": "capability",
       "relationshipValidateRules": "required",
-      "relationshipName": "portal",
+      "relationshipName": "product",
       "otherEntityField": "name"
     }
   ],

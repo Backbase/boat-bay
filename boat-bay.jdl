@@ -11,6 +11,15 @@ entity Portal {
     createdBy String
 }
 
+entity Product {
+    key String required
+	name String required
+    title String
+    content TextBlob
+    createdOn Instant
+    createdBy String
+}
+
 entity Capability {
 	key String required
     name String required
@@ -70,10 +79,14 @@ entity Source {
     username String
     password String
     cronExpression String
+
+    productKeySpEL String
+    productNameSpEL String
     capabilityKeySpEL String
     capabilityNameSpEL String
     serviceKeySpEL String
     serviceNameSpEL String
+
     versionSpEL String
     overwriteChanges Boolean
 }
@@ -141,7 +154,8 @@ enum SourceType {
 }
 
 relationship OneToMany {
-	Portal to Capability{portal(name) required}
+	Portal to Product{portal(name) required}
+	Product to Capability{product(name) required}
 	Capability to ServiceDefinition{capability(name) required}
 	LintRuleViolation to LintReport{linkRuleViolation(name)}
 	LintRuleSet to LintRule{ruleSet(name) required}
@@ -151,6 +165,7 @@ relationship OneToMany {
 relationship ManyToOne {
     Spec{portal(name) required} to Portal
     Spec{capability(name) required} to Capability
+    Spec{product(name) required} to Product
     Spec{serviceDefinition(name) required} to ServiceDefinition
     Spec{source(name)} to Source
 }

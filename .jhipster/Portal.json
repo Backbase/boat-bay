@@ -53,9 +53,9 @@
   "relationships": [
     {
       "relationshipType": "one-to-many",
-      "otherEntityName": "capability",
+      "otherEntityName": "product",
       "otherEntityRelationshipName": "portal",
-      "relationshipName": "capability"
+      "relationshipName": "product"
     },
     {
       "relationshipType": "one-to-one",
