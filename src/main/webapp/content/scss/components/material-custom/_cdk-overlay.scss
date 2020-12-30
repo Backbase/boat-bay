@@ -1,0 +1,8 @@
+@mixin ckd-overlay-overrides($theme) {
+  .cdk-overlay-container {
+    .cdk-overlay-backdrop {
+      background: black;
+      opacity: 0.3;
+    }
+  }
+}
