@@ -12,17 +12,15 @@ import com.backbase.oss.boat.bay.repository.extended.BoatCapabilityRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatProductRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatServiceRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatSpecRepository;
+import com.backbase.oss.boat.bay.util.SpringExpressionUtils;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Example;
-import org.springframework.expression.EvaluationException;
-import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.stereotype.Service;
@@ -33,7 +31,6 @@ import org.springframework.util.DigestUtils;
 @Slf4j
 public class SpecSourceResolver {
 
-    private static final ExpressionParser parser = new SpelExpressionParser();
 
     private final SpecRepository specRepository;
     private final BoatProductRepository boatProductRepository;
@@ -51,6 +48,11 @@ public class SpecSourceResolver {
     @SuppressWarnings("java:S5411")
     private void processSpec(Spec spec) {
         Source source = spec.getSource();
+
+        if (source.getSpecFilterSpEL() != null && SpringExpressionUtils.match(source.getSpecFilterSpEL(), spec)) {
+            log.info("Spec: {} is ignored because it matches the spec filter expression: {}", spec.getName(), source.getSpecFilterSpEL());
+            return;
+        }
 
         String md5 = spec.getChecksum();
         if (md5 == null) {
@@ -80,7 +82,7 @@ public class SpecSourceResolver {
 
     private void setSpecType(Spec spec) {
         SpecType specType = specTypeRepository.findAll().stream()
-            .filter(st -> match(st.getMatchSpEL(), spec))
+            .filter(st -> SpringExpressionUtils.match(st.getMatchSpEL(), spec))
             .findFirst()
             .orElseGet(this::genericSpecType);
         log.info("Assigning specType: {} to spec: {}", specType.getName(), spec.getName());
@@ -103,7 +105,7 @@ public class SpecSourceResolver {
 
     private void setServiceDefinition(Spec spec, Source source) {
         if (spec.getServiceDefinition() == null || source.isOverwriteChanges()) {
-            String key = parseName(source.getServiceNameSpEL(), spec, spec.getFilename().substring(0, spec.getFilename().lastIndexOf(".")));
+            String key = SpringExpressionUtils.parseName(source.getServiceNameSpEL(), spec, spec.getFilename().substring(0, spec.getFilename().lastIndexOf(".")));
             ServiceDefinition serviceDefinition = boatServiceRepository.findByCapabilityAndKey(spec.getCapability(), key)
                 .orElseGet(() -> createServiceDefinition(spec, key));
             log.info("Assigning service: {} to spec: {}", serviceDefinition.getName(), spec.getName());
@@ -113,7 +115,7 @@ public class SpecSourceResolver {
 
     private void setCapability(Spec spec, Source source) {
         if (spec.getCapability() == null || source.isOverwriteChanges()) {
-            String key = parseName(source.getCapabilityKeySpEL(), spec, "unknown");
+            String key = SpringExpressionUtils.parseName(source.getCapabilityKeySpEL(), spec, "unknown");
             Capability capability = capabilityRepository.findByProductAndKey(spec.getProduct(), key)
                 .orElseGet(() -> createCapabilityForSpecWithKey(spec, key));
             log.info("Assigning capability: {} to spec: {}", capability.getName(), spec.getName());
@@ -123,7 +125,7 @@ public class SpecSourceResolver {
 
     private void setProduct(Spec spec, Source source) {
         if (spec.getProduct() == null || source.isOverwriteChanges()) {
-            String key = parseName(source.getProductKeySpEL(), spec, "unknown");
+            String key = SpringExpressionUtils.parseName(source.getProductKeySpEL(), spec, "unknown");
             Product product = boatProductRepository.findByPortalAndKey(spec.getPortal(), key)
                 .orElseGet(() -> createProductWithKey(spec, key));
             log.info("Assigning product: {} to spec: {}", product.getName(), spec.getName());
@@ -140,7 +142,7 @@ public class SpecSourceResolver {
         serviceDefinition.setKey(key);
         serviceDefinition.setCreatedBy(spec.getCreatedBy());
         serviceDefinition.setCreatedOn(Instant.now());
-        serviceDefinition.setName(serviceNameSpEL.map(exp -> parseName(exp, spec, key)).orElse(key));
+        serviceDefinition.setName(serviceNameSpEL.map(exp -> SpringExpressionUtils.parseName(exp, spec, key)).orElse(key));
         return boatServiceRepository.save(serviceDefinition);
     }
 
@@ -153,7 +155,7 @@ public class SpecSourceResolver {
         product.setPortal(spec.getPortal());
         product.setCreatedBy(spec.getCreatedBy());
         product.setCreatedOn(Instant.now());
-        product.setName(productNameSpEL.map(exp -> parseName(exp, spec, key)).orElse(key));
+        product.setName(productNameSpEL.map(exp -> SpringExpressionUtils.parseName(exp, spec, key)).orElse(key));
 
         return boatProductRepository.save(product);
 
@@ -170,41 +172,9 @@ public class SpecSourceResolver {
         capability.setCreatedBy(spec.getSource().getName());
         capability.setCreatedOn(Instant.now());
 
-        capability.setName(capabilityNameSpEL.map(exp -> parseName(exp, spec, key)).orElse(key));
+        capability.setName(capabilityNameSpEL.map(exp -> SpringExpressionUtils.parseName(exp, spec, key)).orElse(key));
         capability.setTitle(key);
         return capabilityRepository.save(capability);
-    }
-
-    public static boolean match(String spEL, Spec spec) {
-        if (spEL == null) {
-            return false;
-        }
-        Expression exp = parser.parseExpression(spEL);
-        Boolean match;
-        try {
-            match = exp.getValue(spec, Boolean.class);
-            return Objects.requireNonNullElse(match, false);
-        } catch (EvaluationException | StringIndexOutOfBoundsException e) {
-            log.warn("Expression: {} failed on: {}", spEL, spec);
-            return false;
-        }
-    }
-
-    public static String parseName(String spEL, Spec spec, String fallback) {
-        if (spEL == null) {
-            return fallback;
-        }
-        log.debug("Parsing SpEL: {} from spec:{}", spEL, spec.getName());
-        Expression exp = parser.parseExpression(spEL);
-        String name;
-        try {
-            name = exp.getValue(spec, String.class);
-        } catch (EvaluationException | StringIndexOutOfBoundsException e) {
-            log.warn("Expression: {} failed on: {}", spEL, spec.getName(), e);
-            return fallback;
-        }
-        log.debug("Resolved: {}", name);
-        return name;
     }
 
 }

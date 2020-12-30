@@ -4,26 +4,7 @@
     (window:scroll)="onWindowScroll($event)"
     data-role="top-navigation-container"
 >
-    <button mat-button [mat-menu-trigger-for]="menu"><mat-icon>menu</mat-icon></button>
-    <mat-menu #menu>
-        <button mat-menu-item [mat-menu-trigger-for]="entities">Entities</button>
-        <button mat-menu-item [mat-menu-trigger-for]="administration">Administration</button>
 
-    </mat-menu>
-    <mat-menu #entities>
-        <a routerLink="portal" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Portal</a>
-        <a routerLink="capability" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Capability</a>
-        <a routerLink="service-definition" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>ServiceDefinition</a>
-        <a routerLink="spec" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Spec</a>
-        <a routerLink="source" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Source</a>
-    </mat-menu>
-    <mat-menu #administration>
-        <a routerLink="admin/user-management" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>User management</a>
-        <a routerLink="admin/metrics" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Metrics</a>
-        <a routerLink="admin/configuration" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Configuration</a>
-        <a routerLink="admin/audits" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Audits</a>
-        <a routerLink="admin/logs" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Logs</a>
-    </mat-menu>
     <header>
         <div class="header-row">
             <div class="bb-brand">
@@ -41,11 +22,25 @@
                 <span class="bb-brand-text">BOAT 🚢 BAY 🏝</span>
             </div>
 
-
             <div class="bb-brand-community">
 
+                <button mat-menu-item [mat-menu-trigger-for]="entities">Entities</button>
+                <button mat-menu-item [mat-menu-trigger-for]="administration">Administration</button>
 
-
+                <mat-menu #entities>
+                    <a routerLink="portal" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Portal</a>
+                    <a routerLink="capability" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Capability</a>
+                    <a routerLink="service-definition" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>ServiceDefinition</a>
+                    <a routerLink="spec" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Spec</a>
+                    <a routerLink="source" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Source</a>
+                </mat-menu>
+                <mat-menu #administration>
+                    <a routerLink="admin/user-management" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>User management</a>
+                    <a routerLink="admin/metrics" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Metrics</a>
+                    <a routerLink="admin/configuration" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Configuration</a>
+                    <a routerLink="admin/audits" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Audits</a>
+                    <a routerLink="admin/logs" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Logs</a>
+                </mat-menu>
 
                 <a
                     class="bb-brand-community-link"
@@ -239,7 +234,7 @@
                             <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
                             <span>Lint Rule Violation</span>
                         </a>
-                    </li>-->
+                    </li>
                     <li>
                         <a class="dropdown-item" routerLink="dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
@@ -251,7 +246,7 @@
                             <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
                             <span>Spec Type</span>
                         </a>
-                    </li>
+                    </li>-->
                     <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
 <!--
 </ul>
