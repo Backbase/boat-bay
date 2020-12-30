@@ -106,6 +106,11 @@ public class Spec implements Serializable {
     @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties(value = "specs", allowSetters = true)
+    private Product product;
+
+    @ManyToOne(optional = false)
+    @NotNull
+    @JsonIgnoreProperties(value = "specs", allowSetters = true)
     private ServiceDefinition serviceDefinition;
 
     @ManyToOne
@@ -392,6 +397,19 @@ public class Spec implements Serializable {
 
     public void setCapability(Capability capability) {
         this.capability = capability;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public Spec product(Product product) {
+        this.product = product;
+        return this;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public ServiceDefinition getServiceDefinition() {

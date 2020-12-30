@@ -26,6 +26,12 @@
                                  referencedColumnNames="id"
                                  referencedTableName="capability"/>
 
+        <addForeignKeyConstraint baseColumnNames="product_id"
+                                 baseTableName="spec"
+                                 constraintName="fk_spec_product_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="product"/>
+
         <addForeignKeyConstraint baseColumnNames="service_definition_id"
                                  baseTableName="spec"
                                  constraintName="fk_spec_service_definition_id"

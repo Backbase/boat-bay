@@ -48,6 +48,14 @@
       "fieldType": "String"
     },
     {
+      "fieldName": "productKeySpEL",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "productNameSpEL",
+      "fieldType": "String"
+    },
+    {
       "fieldName": "capabilityKeySpEL",
       "fieldType": "String"
     },

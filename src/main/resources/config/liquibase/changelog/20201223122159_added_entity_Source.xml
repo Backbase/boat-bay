@@ -43,6 +43,12 @@
             <column name="cron_expression" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
+            <column name="product_key_sp_el" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="product_name_sp_el" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
             <column name="capability_key_sp_el" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
@@ -102,6 +108,8 @@
             <column name="username" type="string"/>
             <column name="password" type="string"/>
             <column name="cron_expression" type="string"/>
+            <column name="product_key_sp_el" type="string"/>
+            <column name="product_name_sp_el" type="string"/>
             <column name="capability_key_sp_el" type="string"/>
             <column name="capability_name_sp_el" type="string"/>
             <column name="service_key_sp_el" type="string"/>

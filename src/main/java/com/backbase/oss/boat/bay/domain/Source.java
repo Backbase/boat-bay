@@ -55,6 +55,12 @@ public class Source implements Serializable {
     @Column(name = "cron_expression")
     private String cronExpression;
 
+    @Column(name = "product_key_sp_el")
+    private String productKeySpEL;
+
+    @Column(name = "product_name_sp_el")
+    private String productNameSpEL;
+
     @Column(name = "capability_key_sp_el")
     private String capabilityKeySpEL;
 
@@ -212,6 +218,32 @@ public class Source implements Serializable {
         this.cronExpression = cronExpression;
     }
 
+    public String getProductKeySpEL() {
+        return productKeySpEL;
+    }
+
+    public Source productKeySpEL(String productKeySpEL) {
+        this.productKeySpEL = productKeySpEL;
+        return this;
+    }
+
+    public void setProductKeySpEL(String productKeySpEL) {
+        this.productKeySpEL = productKeySpEL;
+    }
+
+    public String getProductNameSpEL() {
+        return productNameSpEL;
+    }
+
+    public Source productNameSpEL(String productNameSpEL) {
+        this.productNameSpEL = productNameSpEL;
+        return this;
+    }
+
+    public void setProductNameSpEL(String productNameSpEL) {
+        this.productNameSpEL = productNameSpEL;
+    }
+
     public String getCapabilityKeySpEL() {
         return capabilityKeySpEL;
     }
@@ -360,6 +392,8 @@ public class Source implements Serializable {
             ", username='" + getUsername() + "'" +
             ", password='" + getPassword() + "'" +
             ", cronExpression='" + getCronExpression() + "'" +
+            ", productKeySpEL='" + getProductKeySpEL() + "'" +
+            ", productNameSpEL='" + getProductNameSpEL() + "'" +
             ", capabilityKeySpEL='" + getCapabilityKeySpEL() + "'" +
             ", capabilityNameSpEL='" + getCapabilityNameSpEL() + "'" +
             ", serviceKeySpEL='" + getServiceKeySpEL() + "'" +

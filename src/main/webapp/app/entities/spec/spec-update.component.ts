@@ -18,12 +18,14 @@ import { IPortal } from 'app/shared/model/portal.model';
 import { PortalService } from 'app/entities/portal/portal.service';
 import { ICapability } from 'app/shared/model/capability.model';
 import { CapabilityService } from 'app/entities/capability/capability.service';
+import { IProduct } from 'app/shared/model/product.model';
+import { ProductService } from 'app/entities/product/product.service';
 import { IServiceDefinition } from 'app/shared/model/service-definition.model';
 import { ServiceDefinitionService } from 'app/entities/service-definition/service-definition.service';
 import { ISource } from 'app/shared/model/source.model';
 import { SourceService } from 'app/entities/source/source.service';
 
-type SelectableEntity = ILintReport | IPortal | ICapability | IServiceDefinition | ISource;
+type SelectableEntity = ILintReport | IPortal | ICapability | IProduct | IServiceDefinition | ISource;
 
 @Component({
   selector: 'jhi-spec-update',
@@ -34,6 +36,7 @@ export class SpecUpdateComponent implements OnInit {
   lintreports: ILintReport[] = [];
   portals: IPortal[] = [];
   capabilities: ICapability[] = [];
+  products: IProduct[] = [];
   servicedefinitions: IServiceDefinition[] = [];
   sources: ISource[] = [];
 
@@ -60,6 +63,7 @@ export class SpecUpdateComponent implements OnInit {
     lintReport: [],
     portal: [null, Validators.required],
     capability: [null, Validators.required],
+    product: [null, Validators.required],
     serviceDefinition: [null, Validators.required],
     source: [],
   });
@@ -71,6 +75,7 @@ export class SpecUpdateComponent implements OnInit {
     protected lintReportService: LintReportService,
     protected portalService: PortalService,
     protected capabilityService: CapabilityService,
+    protected productService: ProductService,
     protected serviceDefinitionService: ServiceDefinitionService,
     protected sourceService: SourceService,
     protected activatedRoute: ActivatedRoute,
@@ -114,6 +119,8 @@ export class SpecUpdateComponent implements OnInit {
 
       this.capabilityService.query().subscribe((res: HttpResponse<ICapability[]>) => (this.capabilities = res.body || []));
 
+      this.productService.query().subscribe((res: HttpResponse<IProduct[]>) => (this.products = res.body || []));
+
       this.serviceDefinitionService
         .query()
         .subscribe((res: HttpResponse<IServiceDefinition[]>) => (this.servicedefinitions = res.body || []));
@@ -146,6 +153,7 @@ export class SpecUpdateComponent implements OnInit {
       lintReport: spec.lintReport,
       portal: spec.portal,
       capability: spec.capability,
+      product: spec.product,
       serviceDefinition: spec.serviceDefinition,
       source: spec.source,
     });
@@ -210,6 +218,7 @@ export class SpecUpdateComponent implements OnInit {
       lintReport: this.editForm.get(['lintReport'])!.value,
       portal: this.editForm.get(['portal'])!.value,
       capability: this.editForm.get(['capability'])!.value,
+      product: this.editForm.get(['product'])!.value,
       serviceDefinition: this.editForm.get(['serviceDefinition'])!.value,
       source: this.editForm.get(['source'])!.value,
     };

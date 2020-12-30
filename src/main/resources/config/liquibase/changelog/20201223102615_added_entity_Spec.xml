@@ -79,6 +79,9 @@
             <column name="capability_id" type="bigint">
                 <constraints nullable="false" />
             </column>
+            <column name="product_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
             <column name="service_definition_id" type="bigint">
                 <constraints nullable="false" />
             </column>
@@ -131,6 +134,7 @@
             <column name="source_last_modified_by" type="string"/>
             <column name="portal_id" type="numeric"/>
             <column name="capability_id" type="numeric"/>
+            <column name="product_id" type="numeric"/>
             <column name="service_definition_id" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>

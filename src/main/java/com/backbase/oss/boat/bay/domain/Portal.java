@@ -61,7 +61,7 @@ public class Portal implements Serializable {
 
     @OneToMany(mappedBy = "portal")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    private Set<Capability> capabilities = new HashSet<>();
+    private Set<Product> products = new HashSet<>();
 
     @OneToOne(mappedBy = "portal")
     @JsonIgnore
@@ -206,29 +206,29 @@ public class Portal implements Serializable {
         this.createdBy = createdBy;
     }
 
-    public Set<Capability> getCapabilities() {
-        return capabilities;
+    public Set<Product> getProducts() {
+        return products;
     }
 
-    public Portal capabilities(Set<Capability> capabilities) {
-        this.capabilities = capabilities;
+    public Portal products(Set<Product> products) {
+        this.products = products;
         return this;
     }
 
-    public Portal addCapability(Capability capability) {
-        this.capabilities.add(capability);
-        capability.setPortal(this);
+    public Portal addProduct(Product product) {
+        this.products.add(product);
+        product.setPortal(this);
         return this;
     }
 
-    public Portal removeCapability(Capability capability) {
-        this.capabilities.remove(capability);
-        capability.setPortal(null);
+    public Portal removeProduct(Product product) {
+        this.products.remove(product);
+        product.setPortal(null);
         return this;
     }
 
-    public void setCapabilities(Set<Capability> capabilities) {
-        this.capabilities = capabilities;
+    public void setProducts(Set<Product> products) {
+        this.products = products;
     }
 
     public PortalLintRuleSet getPortalRuleSet() {

@@ -15,6 +15,8 @@ import { PageRibbonComponent } from './layouts/profiles/page-ribbon.component';
 import { ErrorComponent } from './layouts/error/error.component';
 import { AngularMaterialModule } from 'app/angular-material.module';
 import { environment } from 'app/environments/environment';
+import { MatMenuModule } from '@angular/material/menu';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   imports: [
@@ -26,6 +28,8 @@ import { environment } from 'app/environments/environment';
     // jhipster-needle-angular-add-module JHipster will add new module here
     BoatBayEntityModule,
     BoatBayAppRoutingModule,
+    MatMenuModule,
+    BrowserAnimationsModule,
   ],
   providers: [...environment.providers],
   declarations: [MainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, FooterComponent],

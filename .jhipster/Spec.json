@@ -130,6 +130,14 @@
     },
     {
       "relationshipType": "many-to-one",
+      "otherEntityName": "product",
+      "otherEntityRelationshipName": "spec",
+      "relationshipValidateRules": "required",
+      "relationshipName": "product",
+      "otherEntityField": "name"
+    },
+    {
+      "relationshipType": "many-to-one",
       "otherEntityName": "serviceDefinition",
       "otherEntityRelationshipName": "spec",
       "relationshipValidateRules": "required",
