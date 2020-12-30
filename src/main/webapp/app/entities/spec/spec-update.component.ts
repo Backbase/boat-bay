@@ -14,8 +14,6 @@ import { SpecService } from './spec.service';
 import { AlertError } from 'app/shared/alert/alert-error.model';
 import { ILintReport } from 'app/shared/model/lint-report.model';
 import { LintReportService } from 'app/entities/lint-report/lint-report.service';
-import { ISpecType } from 'app/shared/model/spec-type.model';
-import { SpecTypeService } from 'app/entities/spec-type/spec-type.service';
 import { IPortal } from 'app/shared/model/portal.model';
 import { PortalService } from 'app/entities/portal/portal.service';
 import { ICapability } from 'app/shared/model/capability.model';
@@ -26,8 +24,10 @@ import { IServiceDefinition } from 'app/shared/model/service-definition.model';
 import { ServiceDefinitionService } from 'app/entities/service-definition/service-definition.service';
 import { ISource } from 'app/shared/model/source.model';
 import { SourceService } from 'app/entities/source/source.service';
+import { ISpecType } from 'app/shared/model/spec-type.model';
+import { SpecTypeService } from 'app/entities/spec-type/spec-type.service';
 
-type SelectableEntity = ILintReport | ISpecType | IPortal | ICapability | IProduct | IServiceDefinition | ISource;
+type SelectableEntity = ILintReport | IPortal | ICapability | IProduct | IServiceDefinition | ISource | ISpecType;
 
 @Component({
   selector: 'jhi-spec-update',
@@ -36,12 +36,12 @@ type SelectableEntity = ILintReport | ISpecType | IPortal | ICapability | IProdu
 export class SpecUpdateComponent implements OnInit {
   isSaving = false;
   lintreports: ILintReport[] = [];
-  spectypes: ISpecType[] = [];
   portals: IPortal[] = [];
   capabilities: ICapability[] = [];
   products: IProduct[] = [];
   servicedefinitions: IServiceDefinition[] = [];
   sources: ISource[] = [];
+  spectypes: ISpecType[] = [];
 
   editForm = this.fb.group({
     id: [],
@@ -67,12 +67,12 @@ export class SpecUpdateComponent implements OnInit {
     sourceLastModifiedOn: [],
     sourceLastModifiedBy: [],
     lintReport: [],
-    specType: [null, Validators.required],
     portal: [null, Validators.required],
     capability: [null, Validators.required],
     product: [null, Validators.required],
     serviceDefinition: [null, Validators.required],
     source: [],
+    specType: [null, Validators.required],
   });
 
   constructor(
@@ -80,12 +80,12 @@ export class SpecUpdateComponent implements OnInit {
     protected eventManager: JhiEventManager,
     protected specService: SpecService,
     protected lintReportService: LintReportService,
-    protected specTypeService: SpecTypeService,
     protected portalService: PortalService,
     protected capabilityService: CapabilityService,
     protected productService: ProductService,
     protected serviceDefinitionService: ServiceDefinitionService,
     protected sourceService: SourceService,
+    protected specTypeService: SpecTypeService,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
   ) {}
@@ -123,28 +123,6 @@ export class SpecUpdateComponent implements OnInit {
           }
         });
 
-      this.specTypeService
-        .query({ filter: 'spec-is-null' })
-        .pipe(
-          map((res: HttpResponse<ISpecType[]>) => {
-            return res.body || [];
-          })
-        )
-        .subscribe((resBody: ISpecType[]) => {
-          if (!spec.specType || !spec.specType.id) {
-            this.spectypes = resBody;
-          } else {
-            this.specTypeService
-              .find(spec.specType.id)
-              .pipe(
-                map((subRes: HttpResponse<ISpecType>) => {
-                  return subRes.body ? [subRes.body].concat(resBody) : resBody;
-                })
-              )
-              .subscribe((concatRes: ISpecType[]) => (this.spectypes = concatRes));
-          }
-        });
-
       this.portalService.query().subscribe((res: HttpResponse<IPortal[]>) => (this.portals = res.body || []));
 
       this.capabilityService.query().subscribe((res: HttpResponse<ICapability[]>) => (this.capabilities = res.body || []));
@@ -156,6 +134,8 @@ export class SpecUpdateComponent implements OnInit {
         .subscribe((res: HttpResponse<IServiceDefinition[]>) => (this.servicedefinitions = res.body || []));
 
       this.sourceService.query().subscribe((res: HttpResponse<ISource[]>) => (this.sources = res.body || []));
+
+      this.specTypeService.query().subscribe((res: HttpResponse<ISpecType[]>) => (this.spectypes = res.body || []));
     });
   }
 
@@ -184,12 +164,12 @@ export class SpecUpdateComponent implements OnInit {
       sourceLastModifiedOn: spec.sourceLastModifiedOn ? spec.sourceLastModifiedOn.format(DATE_TIME_FORMAT) : null,
       sourceLastModifiedBy: spec.sourceLastModifiedBy,
       lintReport: spec.lintReport,
-      specType: spec.specType,
       portal: spec.portal,
       capability: spec.capability,
       product: spec.product,
       serviceDefinition: spec.serviceDefinition,
       source: spec.source,
+      specType: spec.specType,
     });
   }
 
@@ -253,12 +233,12 @@ export class SpecUpdateComponent implements OnInit {
         : undefined,
       sourceLastModifiedBy: this.editForm.get(['sourceLastModifiedBy'])!.value,
       lintReport: this.editForm.get(['lintReport'])!.value,
-      specType: this.editForm.get(['specType'])!.value,
       portal: this.editForm.get(['portal'])!.value,
       capability: this.editForm.get(['capability'])!.value,
       product: this.editForm.get(['product'])!.value,
       serviceDefinition: this.editForm.get(['serviceDefinition'])!.value,
       source: this.editForm.get(['source'])!.value,
+      specType: this.editForm.get(['specType'])!.value,
     };
   }
 

@@ -45,12 +45,12 @@
                     <th scope="col" ><span>Source Last Modified On</span></th>
                     <th scope="col" ><span>Source Last Modified By</span></th>
                     <th scope="col" ><span>Lint Report</span></th>
-                    <th scope="col" ><span>Spec Type</span></th>
                     <th scope="col" ><span>Portal</span></th>
                     <th scope="col" ><span>Capability</span></th>
                     <th scope="col" ><span>Product</span></th>
                     <th scope="col" ><span>Service Definition</span></th>
                     <th scope="col" ><span>Source</span></th>
+                    <th scope="col" ><span>Spec Type</span></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -84,11 +84,6 @@
                         </div>
                     </td>
                     <td>
-                        <div *ngIf="spec.specType">
-                            <a [routerLink]="['/spec-type', spec.specType?.id, 'view']" >{{ spec.specType?.name }}</a>
-                        </div>
-                    </td>
-                    <td>
                         <div *ngIf="spec.portal">
                             <a [routerLink]="['/portal', spec.portal?.id, 'view']" >{{ spec.portal?.name }}</a>
                         </div>
@@ -111,6 +106,11 @@
                     <td>
                         <div *ngIf="spec.source">
                             <a [routerLink]="['/source', spec.source?.id, 'view']" >{{ spec.source?.name }}</a>
+                        </div>
+                    </td>
+                    <td>
+                        <div *ngIf="spec.specType">
+                            <a [routerLink]="['/spec-type', spec.specType?.id, 'view']" >{{ spec.specType?.name }}</a>
                         </div>
                     </td>
                     <td class="text-right">

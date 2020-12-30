@@ -103,11 +103,6 @@ public class Spec implements Serializable {
     @JoinColumn(unique = true)
     private LintReport lintReport;
 
-    @OneToOne(optional = false)
-    @NotNull
-    @JoinColumn(unique = true)
-    private SpecType specType;
-
     @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties(value = "specs", allowSetters = true)
@@ -131,6 +126,11 @@ public class Spec implements Serializable {
     @ManyToOne
     @JsonIgnoreProperties(value = "specs", allowSetters = true)
     private Source source;
+
+    @ManyToOne(optional = false)
+    @NotNull
+    @JsonIgnoreProperties(value = "specs", allowSetters = true)
+    private SpecType specType;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -427,19 +427,6 @@ public class Spec implements Serializable {
         this.lintReport = lintReport;
     }
 
-    public SpecType getSpecType() {
-        return specType;
-    }
-
-    public Spec specType(SpecType specType) {
-        this.specType = specType;
-        return this;
-    }
-
-    public void setSpecType(SpecType specType) {
-        this.specType = specType;
-    }
-
     public Portal getPortal() {
         return portal;
     }
@@ -503,6 +490,19 @@ public class Spec implements Serializable {
 
     public void setSource(Source source) {
         this.source = source;
+    }
+
+    public SpecType getSpecType() {
+        return specType;
+    }
+
+    public Spec specType(SpecType specType) {
+        this.specType = specType;
+        return this;
+    }
+
+    public void setSpecType(SpecType specType) {
+        this.specType = specType;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 

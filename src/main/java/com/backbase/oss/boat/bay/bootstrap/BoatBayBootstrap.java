@@ -67,7 +67,6 @@ public class BoatBayBootstrap {
                 }
             }
 
-
             bootstrap.getSources().forEach(source -> {
                 Optional<Source> existingSource = sourceRepository.findOne(Example.of(source));
                 if (existingSource.isEmpty()) {
@@ -90,7 +89,7 @@ public class BoatBayBootstrap {
             }
 
         } catch (IOException e) {
-            log.error("Failed to read bootstrap yaml file from location: {}", bootstrapFile);
+            log.error("Failed to read bootstrap yaml file from location: {}", bootstrapFile, e);
         } catch (BootstrapException e) {
             log.error("Failed to bootstrap ", e);
         }

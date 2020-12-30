@@ -85,7 +85,7 @@ entity Spec {
 entity SpecType {
     name String required
     description String
-    matchSpEL String required
+    matchSpEL String
     icon String required
 }
 
@@ -188,12 +188,13 @@ relationship ManyToOne {
     Spec{product(name) required} to Product
     Spec{serviceDefinition(name) required} to ServiceDefinition
     Spec{source(name)} to Source
+    Spec{specType(name) required} to SpecType
 }
 
 relationship OneToOne {
     Dashboard{defaultPortal(name) required} to Portal
 	Spec to LintReport
-	Spec{specType(name) required} to SpecType
+
 	LintRuleViolation  to LintRule
 	Source{portal(name) required} to Portal
 	Source{capability(name)} to Capability
