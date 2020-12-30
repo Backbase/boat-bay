@@ -1,10 +1,10 @@
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/variables';
 
-@import 'settings/spacing';
-@import 'settings/theme';
-@import 'settings/typography';
-@import 'settings/colors';
+@import '../../../content/scss/settings/spacing';
+@import '../../../content/scss/settings/theme';
+@import '../../../content/scss/settings/typography';
+@import '../../../content/scss/settings/colors';
 
 /* ==========================================================================
 Navbar
@@ -44,4 +44,106 @@ Logo styles
   vertical-align: middle;
   background: url('../../../content/images/logo-jhipster.png') no-repeat center center;
   background-size: contain;
+}
+
+mat-toolbar {
+  padding: 0;
+  box-sizing: border-box;
+  background-color: $color-white;
+  border: none;
+  transition: 150ms linear;
+}
+
+.fixed-top {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+}
+
+header {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: $spacer-xxl * 2;
+  align-items: center;
+  margin: 0px $spacer-xs * 15 0px $spacer-xs * 15/2;
+}
+
+.header-row {
+  display: flex;
+  width: 100%;
+}
+
+mat-toolbar.scrolling {
+  background-color: $main-color-darker;
+  height: $spacer-xl * 2;
+  color: $color-white !important;
+  transition: 150ms linear;
+  box-shadow: 0 $spacer-xs $spacer-xs + 2px 0 rgba($color-bg, 0.12);
+
+  .bb-brand-logo {
+    display: inline;
+  }
+
+  .bb-brand-logo-full {
+    display: none;
+  }
+
+  .bb-brand-spacer {
+    color: $bb-color;
+  }
+
+  .bb-brand-text,
+  .bb-brand-community-link {
+    color: $color-white;
+  }
+}
+
+a {
+  text-decoration: none;
+  background-color: transparent;
+}
+
+.bb-brand {
+  display: flex;
+  align-items: center;
+  color: rgba($color-bg, 0.9);
+  width: 50%;
+}
+
+.bb-brand-logo {
+  display: none;
+}
+
+.bb-brand-logo-full {
+  height: $spacer-md - 1px;
+}
+
+.bb-brand-spacer {
+  margin: 0 $baseline-grid;
+  font-size: 1em;
+  font-weight: 300;
+}
+
+.bb-brand-text {
+  font-size: $spacer-md + 3px;
+  font-weight: 300;
+}
+
+.bb-brand-community {
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.bb-brand-community-link {
+  text-transform: uppercase;
+  font-weight: 500;
+  font-size: $spacer-md - 3px;
+  letter-spacing: 1px;
+  color: rgba($color-bg, 0.9);
+  &:hover {
+    opacity: 0.7;
+  }
 }

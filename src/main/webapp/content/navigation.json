@@ -1,0 +1,458 @@
+{
+  "releases": {},
+  "products": {
+    "digital banking": {
+      "title": "Digital Banking",
+      "capabilities": [
+        "account-statement",
+        "action",
+        "approval",
+        "arrangement-manager",
+        "billpay-integrator",
+        "budget-planner",
+        "card-manager",
+        "cash-flow-forecasting",
+        "cash-management",
+        "consent",
+        "contact-manager",
+        "employee",
+        "financial-institution-manager",
+        "limit",
+        "message",
+        "payment",
+        "place-manager",
+        "portfolio-summary",
+        "saving-goal-planner",
+        "stop-checks",
+        "tradingfx",
+        "transaction-category-collector",
+        "transaction-manager"
+      ]
+    },
+    "digital sales": {
+      "title": "Digital Sales",
+      "capabilities": ["flow"]
+    },
+    "platform": {
+      "title": "Platform",
+      "capabilities": [
+        "access-control",
+        "audit",
+        "authorized-user",
+        "contentservices",
+        "device-management-service",
+        "notification",
+        "portal",
+        "provisioning",
+        "push-integration",
+        "renditionservice",
+        "space-controller",
+        "targeting",
+        "user-manager",
+        "user-profile-manager",
+        "versionmanagement-persistence"
+      ]
+    }
+  },
+  "capabilities": {
+    "access-control": {
+      "title": "access-control",
+      "modules": {
+        "access-control-client-api": {
+          "title": "AccessGroups",
+          "description": "# Access groups presentation API Documentation",
+          "versions": {
+            "v2": "https://api-staging.backbase.eu/access-control/access-control-client-api/v2/index.html",
+            "2.1.0": "https://api-staging.backbase.eu/access-control/access-control-client-api/2.1.0/index.html",
+            "2.2.0": "https://api-staging.backbase.eu/access-control/access-control-client-api/2.2.0/index.html",
+            "2.3.0": "https://api-staging.backbase.eu/access-control/access-control-client-api/2.3.0/index.html"
+          },
+          "tags": ["Basic", "Support", "Security", "accessgroups"],
+          "x-icon": "local_library"
+        },
+        "accesscontrol-client-api": {
+          "title": "AccessGroups",
+          "description": "# Access groups presentation API Documentation",
+          "versions": {
+            "2.1.0": "https://api-staging.backbase.eu/access-control/accesscontrol-client-api/2.1.0/index.html"
+          },
+          "tags": ["Basic", "Support", "Security", "accessgroups"],
+          "x-icon": "local_library"
+        }
+      }
+    },
+    "account-statement": {
+      "title": "account-statement",
+      "modules": {
+        "account-statement-client-api": {
+          "title": "Account Statement Client API",
+          "description": "## Supported Operations  Currently the Account Statement Client API contains the following operations: * Get account statements (GET and POST operations) * Get account statement categories * Download account statement  ## Default Errors  * HTTP 400:  Request for getting list of &#x27;available&#x27; statements or downloading them could not be understood by the server. * HTTP 500: The server encountered an unexpected condition which prevented it from fulfilling the request.  ## Authorization Errors  * HTTP 403: Request for getting list of &#x27;available&#x27; statements or downloading them was understood by the server but is refusing to fulfill it. * HTTP 404: The server has not found anything matching Request-URI. * HTTP 422: Request for getting list of &#x27;available&#x27; statements or downloading them was understood by the server but was unable to process the contained instructions.  Overall capability description can be found [here](https://community.backbase.com/documentation/DBS/latest/accountstatements_understand)",
+          "versions": {
+            "2.0.0": "https://api-staging.backbase.eu/account-statement/account-statement-client-api/2.0.0/index.html",
+            "2.0.1": "https://api-staging.backbase.eu/account-statement/account-statement-client-api/2.0.1/index.html",
+            "2.0.2": "https://api-staging.backbase.eu/account-statement/account-statement-client-api/2.0.2/index.html",
+            "$version": "https://api-staging.backbase.eu/account-statement/account-statement-client-api/$version/index.html"
+          },
+          "tags": ["Retail", "Business", "Wealth", "account-statement"],
+          "x-icon": "receipt"
+        }
+      }
+    },
+    "action": {
+      "title": "action",
+      "modules": {
+        "action-client-api": {
+          "title": "Action Client API",
+          "description": "# Action Client API documentation  Overall capability description can be found [here](https://community.backbase.com/documentation/DBS/latest/actions_reference#actions_services)",
+          "versions": {
+            "2.0.0": "https://api-staging.backbase.eu/action/action-client-api/2.0.0/index.html",
+            "2.0.1": "https://api-staging.backbase.eu/action/action-client-api/2.0.1/index.html",
+            "2.0.2": "https://api-staging.backbase.eu/action/action-client-api/2.0.2/index.html",
+            "2.0.3": "https://api-staging.backbase.eu/action/action-client-api/2.0.3/index.html",
+            "2.0.5": "https://api-staging.backbase.eu/action/action-client-api/2.0.5/index.html",
+            "2.0.6": "https://api-staging.backbase.eu/action/action-client-api/2.0.6/index.html",
+            "2.0.7": "https://api-staging.backbase.eu/action/action-client-api/2.0.7/index.html"
+          },
+          "tags": ["Retail", "Business", "Wealth", "action"],
+          "x-icon": "done_all"
+        }
+      }
+    },
+    "approval": {
+      "title": "approval",
+      "modules": {
+        "approval-client-api": {
+          "title": "Approvals Client Api",
+          "description": "# Approval presentation spec - Client API",
+          "versions": {
+            "2.0.1": "https://api-staging.backbase.eu/approval/approval-client-api/2.0.1/index.html",
+            "2.0.2": "https://api-staging.backbase.eu/approval/approval-client-api/2.0.2/index.html",
+            "2.0.3": "https://api-staging.backbase.eu/approval/approval-client-api/2.0.3/index.html"
+          },
+          "tags": ["Retail", "Business", "approval-type-assignments", "approval-types", "approvals", "policies", "policy-assignments"],
+          "x-icon": "assignment_turned_in"
+        },
+        "approval-service-client-api": {
+          "title": "Approvals Client Api",
+          "description": "# Approval presentation spec - Client API",
+          "versions": {
+            "2.0.0": "https://api-staging.backbase.eu/approval/approval-service-client-api/2.0.0/index.html"
+          },
+          "tags": ["Retail", "Business", "approval-type-assignments", "approval-types", "approvals", "policies", "policy-assignments"],
+          "x-icon": "assignment_turned_in"
+        }
+      }
+    },
+    "arrangement-manager": {
+      "title": "arrangement-manager",
+      "modules": {
+        "arrangement-client-api": {
+          "title": "Arrangement Manager Client API",
+          "description": "This API allows web and mobile widgets to display and change products for an end-user",
+          "versions": {
+            "2.0.0": "https://api-staging.backbase.eu/arrangement-manager/arrangement-client-api/2.0.0/index.html",
+            "2.0.1": "https://api-staging.backbase.eu/arrangement-manager/arrangement-client-api/2.0.1/index.html",
+            "2.0.2": "https://api-staging.backbase.eu/arrangement-manager/arrangement-client-api/2.0.2/index.html",
+            "2.0.3": "https://api-staging.backbase.eu/arrangement-manager/arrangement-client-api/2.0.3/index.html",
+            "2.0.4": "https://api-staging.backbase.eu/arrangement-manager/arrangement-client-api/2.0.4/index.html",
+            "2.0.5": "https://api-staging.backbase.eu/arrangement-manager/arrangement-client-api/2.0.5/index.html",
+            "2.0.6": "https://api-staging.backbase.eu/arrangement-manager/arrangement-client-api/2.0.6/index.html"
+          },
+          "tags": ["Retail", "Business", "accounts", "arrangements", "balances", "product-kinds", "product-summary"],
+          "x-icon": "change_history"
+        }
+      }
+    },
+    "audit": {
+      "title": "audit",
+      "modules": {
+        "audit-client-api": {
+          "title": "Audit Spec - Client API",
+          "description": "Client API specification for Audit",
+          "versions": {
+            "v3": "https://api-staging.backbase.eu/audit/audit-client-api/v3/index.html",
+            "3.0.0": "https://api-staging.backbase.eu/audit/audit-client-api/3.0.0/index.html",
+            "3.0.1": "https://api-staging.backbase.eu/audit/audit-client-api/3.0.1/index.html",
+            "3.0.2": "https://api-staging.backbase.eu/audit/audit-client-api/3.0.2/index.html",
+            "3.0.3": "https://api-staging.backbase.eu/audit/audit-client-api/3.0.3/index.html",
+            "3.0.4": "https://api-staging.backbase.eu/audit/audit-client-api/3.0.4/index.html",
+            "3.0.5": "https://api-staging.backbase.eu/audit/audit-client-api/3.0.5/index.html"
+          },
+          "tags": ["Basic", "Support", "Security", "audit", "client"],
+          "x-icon": "keyboard_voice"
+        }
+      }
+    },
+    "authorized-user": {
+      "title": "authorized-user",
+      "modules": {
+        "authorized-user-client-api": {
+          "title": "Authorized User Client API",
+          "description": "# Authorized User Client API Documentation  The API provides a way to manage Authorized Users and their level of access to accounts owned by other users.",
+          "versions": {
+            "v2": "https://api-staging.backbase.eu/authorized-user/authorized-user-client-api/v2/index.html",
+            "2.0.1": "https://api-staging.backbase.eu/authorized-user/authorized-user-client-api/2.0.1/index.html",
+            "2.0.2": "https://api-staging.backbase.eu/authorized-user/authorized-user-client-api/2.0.2/index.html"
+          },
+          "tags": ["Identity", "Security", "authorized-user"],
+          "x-icon": "verified_user"
+        }
+      }
+    },
+    "billpay-integrator": {
+      "title": "billpay-integrator",
+      "modules": {
+        "billpay-integrator-client-api": {
+          "title": "Billpay Integrator Client API",
+          "description": "This API allows web and mobile widgets to display and change bill pay information for an end-user",
+          "versions": {
+            "2.0.0": "https://api-staging.backbase.eu/billpay-integrator/billpay-integrator-client-api/2.0.0/index.html",
+            "2.0.1": "https://api-staging.backbase.eu/billpay-integrator/billpay-integrator-client-api/2.0.1/index.html"
+          },
+          "tags": [
+            "Retail",
+            "bill-pay-accounts",
+            "bill-pay-autopay",
+            "bill-pay-ebills",
+            "bill-pay-enrolment",
+            "bill-pay-payees",
+            "bill-pay-payees-summary",
+            "bill-pay-payments",
+            "bill-pay-payveris",
+            "bill-pay-search",
+            "billpay-integrator-client"
+          ],
+          "x-icon": "library_books"
+        }
+      }
+    },
+    "budget-planner": {
+      "title": "budget-planner",
+      "modules": {
+        "budget-planner-client-api": {
+          "title": "Budgeting Client API",
+          "description": "This API allows web and mobile widgets to create, retrieve, update and delete budgets for an end-user",
+          "versions": {
+            "2.0.0": "https://api-staging.backbase.eu/budget-planner/budget-planner-client-api/2.0.0/index.html",
+            "2.1.0": "https://api-staging.backbase.eu/budget-planner/budget-planner-client-api/2.1.0/index.html",
+            "2.2.0": "https://api-staging.backbase.eu/budget-planner/budget-planner-client-api/2.2.0/index.html"
+          },
+          "tags": ["Retail", "budgeting-presentation", "budgets"],
+          "x-icon": "account_balance_wallet"
+        }
+      }
+    },
+    "card-manager": {
+      "title": "card-manager",
+      "modules": {
+        "card-manager-client-api": {
+          "title": "Cards",
+          "description": "Cards Client API",
+          "versions": {
+            "2.0.0": "https://api-staging.backbase.eu/card-manager/card-manager-client-api/2.0.0/index.html",
+            "2.0.1": "https://api-staging.backbase.eu/card-manager/card-manager-client-api/2.0.1/index.html",
+            "2.1.0": "https://api-staging.backbase.eu/card-manager/card-manager-client-api/2.1.0/index.html",
+            "2.2.0": "https://api-staging.backbase.eu/card-manager/card-manager-client-api/2.2.0/index.html"
+          },
+          "tags": ["Retail", "Business", "Wealth", "cards", "travel-notices"],
+          "x-icon": "copy"
+        }
+      }
+    },
+    "cash-flow-forecasting": {
+      "title": "cash-flow-forecasting",
+      "modules": {
+        "cashflow-client-api": {
+          "title": "Cash Flow Forecasting API specification",
+          "description": "# Cash Flow Forecasting API Documentation",
+          "versions": {
+            "1.0.0": "https://api-staging.backbase.eu/cash-flow-forecasting/cashflow-client-api/1.0.0/index.html"
+          },
+          "tags": ["Business"],
+          "x-icon": "timeline"
+        }
+      }
+    },
+    "cash-management": {
+      "title": "cash-management",
+      "modules": {
+        "cash-management-client-api": {
+          "title": "Cash Management",
+          "description": "# Cash Management API Documentation",
+          "versions": {
+            "2.0.0": "https://api-staging.backbase.eu/cash-management/cash-management-client-api/2.0.0/index.html",
+            "2.1.0": "https://api-staging.backbase.eu/cash-management/cash-management-client-api/2.1.0/index.html"
+          },
+          "tags": ["Business", "cash", "management"],
+          "x-icon": ""
+        }
+      }
+    },
+    "comments": {
+      "title": "comments",
+      "modules": {
+        "comments-client-api": {
+          "title": "Comments API Specification",
+          "description": "API calls regarding comments. Deprecated in January 2021, removal in January 2022.",
+          "versions": {
+            "1.0.1": "https://api-staging.backbase.eu/comments/comments-client-api/1.0.1/index.html",
+            "2.0.0": "https://api-staging.backbase.eu/comments/comments-client-api/2.0.0/index.html"
+          },
+          "tags": ["Comments"],
+          "x-icon": ""
+        }
+      }
+    },
+    "consent": {
+      "title": "consent",
+      "modules": {
+        "consent-client-api": {
+          "title": "Consent",
+          "description": "# Consents API Documentation",
+          "versions": {
+            "v2": "https://api-staging.backbase.eu/consent/consent-client-api/v2/index.html",
+            "2.1.0": "https://api-staging.backbase.eu/consent/consent-client-api/2.1.0/index.html"
+          },
+          "tags": ["Retail", "Business", "Wealth", "consent"],
+          "x-icon": ""
+        }
+      }
+    },
+    "contact-manager": {
+      "title": "contact-manager",
+      "modules": {
+        "contact-manager-client-api": {
+          "title": "Contact Manager Client Api",
+          "description": "Contact Manager Client Api is exposed to frontend to interact with the capability",
+          "versions": {
+            "2.0.0": "https://api-staging.backbase.eu/contact-manager/contact-manager-client-api/2.0.0/index.html",
+            "2.0.1": "https://api-staging.backbase.eu/contact-manager/contact-manager-client-api/2.0.1/index.html",
+            "2.2.1": "https://api-staging.backbase.eu/contact-manager/contact-manager-client-api/2.2.1/index.html",
+            "2.3.0": "https://api-staging.backbase.eu/contact-manager/contact-manager-client-api/2.3.0/index.html"
+          },
+          "tags": ["Retail", "Business", "Wealth", "approvals", "contacts", "iban-restrictions"],
+          "x-icon": ""
+        }
+      }
+    },
+    "contentservices": {
+      "title": "contentservices",
+      "modules": {
+        "contentservices-client-api": {
+          "title": "Content Services Public API",
+          "description": "OpenAPI Documentation of Content Services Public API",
+          "versions": {
+            "1.1.0": "https://api-staging.backbase.eu/contentservices/contentservices-client-api/1.1.0/index.html"
+          },
+          "tags": [
+            "Foundation",
+            "RepositoryManagement",
+            "ContentExport",
+            "ContentImport",
+            "ResourceImport",
+            "ContentStream",
+            "ContentManagement"
+          ],
+          "x-icon": ""
+        }
+      }
+    },
+    "device-management-service": {
+      "title": "device-management-service",
+      "modules": {
+        "device-management-client-api": {
+          "title": "Device Management",
+          "description": "# Device Management Client API Documentation   The Device Management Client API currently supports the following operations:   ## List a User&#x27;s Devices   #### User   The logged-in DBS user is able to retrieve a list of all of the devices currently associated with their DBS user ID.   Devices whose &#x60;status&#x60; is set to &#x60;REMOVED&#x60; will NOT be included.   #### Admin   The logged-in DBS user is able to retrieve a list of all of the devices for the DBS user ID provided in the request.   Devices whose &#x60;status&#x60; is set to &#x60;REMOVED&#x60; will be included.   ## Update a User&#x27;s Device   #### User  The logged-in DBS user is able to update certain fields of their device:  * &#x60;status&#x60;.  This can only be set to &#x60;ENABLED&#x60; or &#x60;DISABLED&#x60; from this endpoint.  * &#x60;friendlyName&#x60;   #### Admin  The logged-in DBS user is able to update certain fields for the devices of the DBS user ID provided in the request:  * &#x60;status&#x60;.  This can only be set to &#x60;ENABLED&#x60; or &#x60;DISABLED&#x60; from this endpoint.  * &#x60;friendlyName&#x60;   ## Delete a User&#x27;s Devices   #### User  The logged-in DBS user is able to delete a device.   #### Admin  The logged-in DBS user is able to delete a device, if the user ID provided is associated to the device.   ## Add push notification token to a Device  This endpoint is currently used to attach a push notification token and platform to a device.",
+          "versions": {
+            "1.0.0": "https://api-staging.backbase.eu/device-management-service/device-management-client-api/1.0.0/index.html",
+            "1.0.1": "https://api-staging.backbase.eu/device-management-service/device-management-client-api/1.0.1/index.html"
+          },
+          "tags": ["Foundation", "Security", "manage-my-devices", "manage-other-users-devices"],
+          "x-icon": "devices"
+        }
+      }
+    },
+    "employee": {
+      "title": "employee",
+      "modules": {
+        "employee-client-api": {
+          "title": "Employee Client API Spec",
+          "description": "Client API specification for the Employee",
+          "versions": {
+            "v1": "https://api-staging.backbase.eu/employee/employee-client-api/v1/index.html",
+            "1.0.1": "https://api-staging.backbase.eu/employee/employee-client-api/1.0.1/index.html"
+          },
+          "tags": ["Retail", "Business", "account", "service", "agreements", "transactions"],
+          "x-icon": "assignment_ind"
+        }
+      }
+    },
+    "financial-institution-manager": {
+      "title": "financial-institution-manager",
+      "modules": {
+        "financial-institution-manager-client-api": {
+          "title": "Financial Institution Manager Client API",
+          "description": "This API allows web and mobile widgets to display financial institution information.",
+          "versions": {
+            "1.0.0": "https://api-staging.backbase.eu/financial-institution-manager/financial-institution-manager-client-api/1.0.0/index.html"
+          },
+          "tags": ["Business", "financial-institution-manager-client"],
+          "x-icon": ""
+        }
+      }
+    },
+    "flow": {
+      "title": "flow",
+      "modules": {
+        "comments-client-api": {
+          "title": "Comments API Specification",
+          "description": "API calls regarding comments. Deprecated in January 2021, removal in January 2022.",
+          "versions": {
+            "1.0.1": "https://api-staging.backbase.eu/flow/comments-client-api/1.0.1/index.html",
+            "2.0.0": "https://api-staging.backbase.eu/flow/comments-client-api/2.0.0/index.html"
+          },
+          "tags": ["Comments"],
+          "x-icon": ""
+        },
+        "flow-casedata-client-api": {
+          "title": "Flow Case API Specification",
+          "description": "API calls regarding case data",
+          "versions": {
+            "2.2.3": "https://api-staging.backbase.eu/flow/flow-casedata-client-api/2.2.3/index.html",
+            "2.3.0": "https://api-staging.backbase.eu/flow/flow-casedata-client-api/2.3.0/index.html",
+            "2.3.1": "https://api-staging.backbase.eu/flow/flow-casedata-client-api/2.3.1/index.html",
+            "2.4.0": "https://api-staging.backbase.eu/flow/flow-casedata-client-api/2.4.0/index.html",
+            "2.4.1": "https://api-staging.backbase.eu/flow/flow-casedata-client-api/2.4.1/index.html",
+            "3.0.0": "https://api-staging.backbase.eu/flow/flow-casedata-client-api/3.0.0/index.html",
+            "3.0.1": "https://api-staging.backbase.eu/flow/flow-casedata-client-api/3.0.1/index.html",
+            "3.0.2": "https://api-staging.backbase.eu/flow/flow-casedata-client-api/3.0.2/index.html",
+            "3.0.3": "https://api-staging.backbase.eu/flow/flow-casedata-client-api/3.0.3/index.html"
+          },
+          "tags": ["Flow", "Cases", "Case", "definitions"],
+          "x-icon": "folder"
+        },
+        "flow-document-store-client-api": {
+          "title": "Flow Document Storage API Specification",
+          "description": "API calls regarding document storage",
+          "versions": {
+            "3.0.0": "https://api-staging.backbase.eu/flow/flow-document-store-client-api/3.0.0/index.html",
+            "3.0.1": "https://api-staging.backbase.eu/flow/flow-document-store-client-api/3.0.1/index.html",
+            "3.0.2": "https://api-staging.backbase.eu/flow/flow-document-store-client-api/3.0.2/index.html"
+          },
+          "tags": ["Flow", "Document", "Storage"],
+          "x-icon": "cloud_upload"
+        },
+        "flow-collections-client-api": {
+          "title": "Flow Collections API Specification",
+          "description": "API calls regarding collections",
+          "versions": {
+            "1.0.10": "https://api-staging.backbase.eu/flow/flow-collections-client-api/1.0.10/index.html",
+            "1.0.9": "https://api-staging.backbase.eu/flow/flow-collections-client-api/1.0.9/index.html"
+          },
+          "tags": ["Flow", "Collections"],
+          "x-icon": "attach_file"
+        }
+      }
+    }
+  }
+}
