@@ -75,6 +75,8 @@ public class CacheConfiguration {
             createCache(cm, com.backbase.oss.boat.bay.domain.Portal.class.getName() + ".products");
             createCache(cm, com.backbase.oss.boat.bay.domain.Product.class.getName());
             createCache(cm, com.backbase.oss.boat.bay.domain.Product.class.getName() + ".capabilities");
+            createCache(cm, com.backbase.oss.boat.bay.domain.Dashboard.class.getName());
+            createCache(cm, com.backbase.oss.boat.bay.domain.SpecType.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }

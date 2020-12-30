@@ -24,7 +24,19 @@ describe('Service Tests', () => {
       httpMock = injector.get(HttpTestingController);
       currentDate = moment();
 
-      elemDefault = new Capability(0, 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', currentDate, 'AAAAAAA');
+      elemDefault = new Capability(
+        0,
+        'AAAAAAA',
+        'AAAAAAA',
+        0,
+        'AAAAAAA',
+        'AAAAAAA',
+        'AAAAAAA',
+        'AAAAAAA',
+        'AAAAAAA',
+        currentDate,
+        'AAAAAAA'
+      );
     });
 
     describe('Service methods', () => {
@@ -71,6 +83,7 @@ describe('Service Tests', () => {
           {
             key: 'BBBBBB',
             name: 'BBBBBB',
+            order: 1,
             title: 'BBBBBB',
             subTitle: 'BBBBBB',
             navTitle: 'BBBBBB',
@@ -101,6 +114,7 @@ describe('Service Tests', () => {
           {
             key: 'BBBBBB',
             name: 'BBBBBB',
+            order: 1,
             title: 'BBBBBB',
             subTitle: 'BBBBBB',
             navTitle: 'BBBBBB',

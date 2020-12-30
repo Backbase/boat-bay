@@ -6,6 +6,7 @@ export interface IProduct {
   id?: number;
   key?: string;
   name?: string;
+  order?: number;
   title?: string;
   content?: any;
   createdOn?: Moment;
@@ -19,6 +20,7 @@ export class Product implements IProduct {
     public id?: number,
     public key?: string,
     public name?: string,
+    public order?: number,
     public title?: string,
     public content?: any,
     public createdOn?: Moment,

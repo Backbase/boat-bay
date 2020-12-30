@@ -1,6 +1,15 @@
+entity Dashboard {
+    name String required
+    title String
+    subTitle String
+    navTitle String
+    content TextBlob
+}
+
 entity Portal {
 	key String required unique
 	name String required
+	version String required
     title String
     subTitle String
     navTitle String
@@ -14,6 +23,7 @@ entity Portal {
 entity Product {
     key String required
 	name String required
+	order Integer
     title String
     content TextBlob
     createdOn Instant
@@ -23,6 +33,7 @@ entity Product {
 entity Capability {
 	key String required
     name String required
+    order Integer
     title String
     subTitle String
     navTitle String
@@ -32,13 +43,16 @@ entity Capability {
     createdBy String
 }
 
+
 entity ServiceDefinition {
 	key String required
 	name String required
+	order Integer
     title String
     subTitle String
     navTitle String
     content TextBlob
+    order Integer
     createdOn Instant
     createdBy String
 }
@@ -49,12 +63,14 @@ entity Spec {
 	version String required
     title String
     openApi TextBlob required
+    tagsCsv String
+    description TextBlob
     createdOn Instant required
     createdBy String required
     checksum String required
     filename String required
     valid Boolean required
-
+    order Integer
     parseError TextBlob
 
     sourcePath String
@@ -64,9 +80,13 @@ entity Spec {
     sourceCreatedOn Instant
     sourceLastModifiedOn Instant
     sourceLastModifiedBy String
+}
 
-
-
+entity SpecType {
+    name String required
+    description String
+    matchSpEL String required
+    icon String required
 }
 
 entity Source {
@@ -171,7 +191,9 @@ relationship ManyToOne {
 }
 
 relationship OneToOne {
+    Dashboard{defaultPortal(name) required} to Portal
 	Spec to LintReport
+	Spec{specType(name) required} to SpecType
 	LintRuleViolation  to LintRule
 	Source{portal(name) required} to Portal
 	Source{capability(name)} to Capability

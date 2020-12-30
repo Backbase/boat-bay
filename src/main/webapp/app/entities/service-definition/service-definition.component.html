@@ -25,6 +25,7 @@
                     <th scope="col" ><span>ID</span></th>
                     <th scope="col" ><span>Key</span></th>
                     <th scope="col" ><span>Name</span></th>
+                    <th scope="col" ><span>Order</span></th>
                     <th scope="col" ><span>Title</span></th>
                     <th scope="col" ><span>Sub Title</span></th>
                     <th scope="col" ><span>Nav Title</span></th>
@@ -40,6 +41,7 @@
                     <td><a [routerLink]="['/service-definition', serviceDefinition.id, 'view']">{{ serviceDefinition.id }}</a></td>
                     <td>{{ serviceDefinition.key }}</td>
                     <td>{{ serviceDefinition.name }}</td>
+                    <td>{{ serviceDefinition.order }}</td>
                     <td>{{ serviceDefinition.title }}</td>
                     <td>{{ serviceDefinition.subTitle }}</td>
                     <td>{{ serviceDefinition.navTitle }}</td>

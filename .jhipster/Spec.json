@@ -35,6 +35,15 @@
       ]
     },
     {
+      "fieldName": "tagsCsv",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text"
+    },
+    {
       "fieldName": "createdOn",
       "fieldType": "Instant",
       "fieldValidateRules": [
@@ -68,6 +77,10 @@
       "fieldValidateRules": [
         "required"
       ]
+    },
+    {
+      "fieldName": "order",
+      "fieldType": "Integer"
     },
     {
       "fieldName": "parseError",
@@ -110,6 +123,15 @@
       "otherEntityRelationshipName": "spec",
       "relationshipName": "lintReport",
       "otherEntityField": "id",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "specType",
+      "otherEntityRelationshipName": "spec",
+      "relationshipValidateRules": "required",
+      "relationshipName": "specType",
+      "otherEntityField": "name",
       "ownerSide": true
     },
     {

@@ -14,6 +14,12 @@
                                  referencedColumnNames="id"
                                  referencedTableName="lint_report"/>
 
+        <addForeignKeyConstraint baseColumnNames="spec_type_id"
+                                 baseTableName="spec"
+                                 constraintName="fk_spec_spec_type_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="spec_type"/>
+
         <addForeignKeyConstraint baseColumnNames="portal_id"
                                  baseTableName="spec"
                                  constraintName="fk_spec_portal_id"

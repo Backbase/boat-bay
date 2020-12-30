@@ -17,6 +17,13 @@
       ]
     },
     {
+      "fieldName": "version",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
       "fieldName": "title",
       "fieldType": "String"
     },

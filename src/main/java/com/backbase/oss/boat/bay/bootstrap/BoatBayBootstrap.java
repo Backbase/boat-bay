@@ -1,9 +1,13 @@
 package com.backbase.oss.boat.bay.bootstrap;
 
+import com.backbase.oss.boat.bay.domain.Dashboard;
 import com.backbase.oss.boat.bay.domain.Portal;
 import com.backbase.oss.boat.bay.domain.Source;
-import com.backbase.oss.boat.bay.repository.PortalRepository;
+import com.backbase.oss.boat.bay.domain.SpecType;
+import com.backbase.oss.boat.bay.exceptions.BootstrapException;
 import com.backbase.oss.boat.bay.repository.SourceRepository;
+import com.backbase.oss.boat.bay.repository.SpecTypeRepository;
+import com.backbase.oss.boat.bay.repository.extended.BoatDashboardRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatPortalRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -33,6 +37,8 @@ public class BoatBayBootstrap {
 
     private final BoatPortalRepository portalRepository;
     private final SourceRepository sourceRepository;
+    private final BoatDashboardRepository dashboardRepository;
+    private final SpecTypeRepository specTypeRepository;
 
     @EventListener({ContextRefreshedEvent.class})
     @Async
@@ -44,28 +50,58 @@ public class BoatBayBootstrap {
             bootstrap.getPortals().forEach(portal -> {
                 Optional<Portal> existingPortal = portalRepository.findOne(Example.of(portal));
                 if (existingPortal.isEmpty()) {
+                    log.info("Bootstrapping portal: {}-{}", portal.getName(), portal.getVersion());
                     portalRepository.save(portal);
                 }
             });
 
+            Dashboard dashboard = bootstrap.getDashboard();
+
+            if (dashboard != null) {
+                Optional<Dashboard> existingDashboard = dashboardRepository.findDashboardByName(dashboard.getName());
+                if (existingDashboard.isEmpty()) {
+                    Portal portal = portalRepository.findOne(Example.of(dashboard.getDefaultPortal())).orElseThrow(() -> new BootstrapException("Cannot create dashboard with portal: " + dashboard.getDefaultPortal() + " as it does not exist"));
+                    dashboard.setDefaultPortal(portal);
+                    log.info("Bootstrapping dashboard: {}", dashboard.getName());
+                    dashboardRepository.save(dashboard);
+                }
+            }
+
+
             bootstrap.getSources().forEach(source -> {
                 Optional<Source> existingSource = sourceRepository.findOne(Example.of(source));
                 if (existingSource.isEmpty()) {
-                    source.setPortal(portalRepository.findByKey(source.getPortal().getKey()));
+                    Portal portal = source.getPortal();
+
+                    source.setPortal(portalRepository.findByKeyAndVersion(portal.getKey(), portal.getVersion()));
+                    log.info("Bootstrapping source: {}", source.getName());
                     sourceRepository.save(source);
                 }
             });
 
+            if(bootstrap.getSpecTypes()!=null) {
+                bootstrap.getSpecTypes().forEach(specType -> {
+                    Optional<SpecType> existingSpecType = specTypeRepository.findOne(Example.of(specType));
+                    if (existingSpecType.isEmpty()) {
+                        log.info("Bootstrapping Spec Type: {}", specType.getName());
+                        specTypeRepository.save(specType);
+                    }
+                });
+            }
+
         } catch (IOException e) {
             log.error("Failed to read bootstrap yaml file from location: {}", bootstrapFile);
+        } catch (BootstrapException e) {
+            log.error("Failed to bootstrap ", e);
         }
     }
 
     @Data
     public static class Bootstrap {
-
         private List<Portal> portals;
         private List<Source> sources;
+        private Dashboard dashboard;
+        private List<SpecType> specTypes;
     }
 
 }

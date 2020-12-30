@@ -39,6 +39,9 @@ public class ServiceDefinitionResourceIT {
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 
+    private static final Integer DEFAULT_ORDER = 1;
+    private static final Integer UPDATED_ORDER = 2;
+
     private static final String DEFAULT_TITLE = "AAAAAAAAAA";
     private static final String UPDATED_TITLE = "BBBBBBBBBB";
 
@@ -78,6 +81,7 @@ public class ServiceDefinitionResourceIT {
         ServiceDefinition serviceDefinition = new ServiceDefinition()
             .key(DEFAULT_KEY)
             .name(DEFAULT_NAME)
+            .order(DEFAULT_ORDER)
             .title(DEFAULT_TITLE)
             .subTitle(DEFAULT_SUB_TITLE)
             .navTitle(DEFAULT_NAV_TITLE)
@@ -106,6 +110,7 @@ public class ServiceDefinitionResourceIT {
         ServiceDefinition serviceDefinition = new ServiceDefinition()
             .key(UPDATED_KEY)
             .name(UPDATED_NAME)
+            .order(UPDATED_ORDER)
             .title(UPDATED_TITLE)
             .subTitle(UPDATED_SUB_TITLE)
             .navTitle(UPDATED_NAV_TITLE)
@@ -146,6 +151,7 @@ public class ServiceDefinitionResourceIT {
         ServiceDefinition testServiceDefinition = serviceDefinitionList.get(serviceDefinitionList.size() - 1);
         assertThat(testServiceDefinition.getKey()).isEqualTo(DEFAULT_KEY);
         assertThat(testServiceDefinition.getName()).isEqualTo(DEFAULT_NAME);
+        assertThat(testServiceDefinition.getOrder()).isEqualTo(DEFAULT_ORDER);
         assertThat(testServiceDefinition.getTitle()).isEqualTo(DEFAULT_TITLE);
         assertThat(testServiceDefinition.getSubTitle()).isEqualTo(DEFAULT_SUB_TITLE);
         assertThat(testServiceDefinition.getNavTitle()).isEqualTo(DEFAULT_NAV_TITLE);
@@ -225,6 +231,7 @@ public class ServiceDefinitionResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(serviceDefinition.getId().intValue())))
             .andExpect(jsonPath("$.[*].key").value(hasItem(DEFAULT_KEY)))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
+            .andExpect(jsonPath("$.[*].order").value(hasItem(DEFAULT_ORDER)))
             .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE)))
             .andExpect(jsonPath("$.[*].subTitle").value(hasItem(DEFAULT_SUB_TITLE)))
             .andExpect(jsonPath("$.[*].navTitle").value(hasItem(DEFAULT_NAV_TITLE)))
@@ -246,6 +253,7 @@ public class ServiceDefinitionResourceIT {
             .andExpect(jsonPath("$.id").value(serviceDefinition.getId().intValue()))
             .andExpect(jsonPath("$.key").value(DEFAULT_KEY))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
+            .andExpect(jsonPath("$.order").value(DEFAULT_ORDER))
             .andExpect(jsonPath("$.title").value(DEFAULT_TITLE))
             .andExpect(jsonPath("$.subTitle").value(DEFAULT_SUB_TITLE))
             .andExpect(jsonPath("$.navTitle").value(DEFAULT_NAV_TITLE))
@@ -276,6 +284,7 @@ public class ServiceDefinitionResourceIT {
         updatedServiceDefinition
             .key(UPDATED_KEY)
             .name(UPDATED_NAME)
+            .order(UPDATED_ORDER)
             .title(UPDATED_TITLE)
             .subTitle(UPDATED_SUB_TITLE)
             .navTitle(UPDATED_NAV_TITLE)
@@ -294,6 +303,7 @@ public class ServiceDefinitionResourceIT {
         ServiceDefinition testServiceDefinition = serviceDefinitionList.get(serviceDefinitionList.size() - 1);
         assertThat(testServiceDefinition.getKey()).isEqualTo(UPDATED_KEY);
         assertThat(testServiceDefinition.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testServiceDefinition.getOrder()).isEqualTo(UPDATED_ORDER);
         assertThat(testServiceDefinition.getTitle()).isEqualTo(UPDATED_TITLE);
         assertThat(testServiceDefinition.getSubTitle()).isEqualTo(UPDATED_SUB_TITLE);
         assertThat(testServiceDefinition.getNavTitle()).isEqualTo(UPDATED_NAV_TITLE);

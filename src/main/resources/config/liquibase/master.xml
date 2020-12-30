@@ -27,6 +27,8 @@
     <include file="config/liquibase/changelog/20201229100459_added_entity_PortalLintRule.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201229100559_added_entity_PortalLintRuleConfig.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201230121252_added_entity_Product.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201230133235_added_entity_Dashboard.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201230150441_added_entity_SpecType.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="config/liquibase/changelog/20201223102415_added_entity_constraints_Capability.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201223102615_added_entity_constraints_Spec.xml" relativeToChangelogFile="false"/>
@@ -39,6 +41,7 @@
     <include file="config/liquibase/changelog/20201229100459_added_entity_constraints_PortalLintRule.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201229100559_added_entity_constraints_PortalLintRuleConfig.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201230121252_added_entity_constraints_Product.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20201230133235_added_entity_constraints_Dashboard.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
 </databaseChangeLog>

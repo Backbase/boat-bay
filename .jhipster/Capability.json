@@ -16,6 +16,10 @@
       ]
     },
     {
+      "fieldName": "order",
+      "fieldType": "Integer"
+    },
+    {
       "fieldName": "title",
       "fieldType": "String"
     },

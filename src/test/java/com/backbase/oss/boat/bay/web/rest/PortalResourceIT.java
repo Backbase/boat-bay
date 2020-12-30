@@ -38,6 +38,9 @@ public class PortalResourceIT {
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 
+    private static final String DEFAULT_VERSION = "AAAAAAAAAA";
+    private static final String UPDATED_VERSION = "BBBBBBBBBB";
+
     private static final String DEFAULT_TITLE = "AAAAAAAAAA";
     private static final String UPDATED_TITLE = "BBBBBBBBBB";
 
@@ -83,6 +86,7 @@ public class PortalResourceIT {
         Portal portal = new Portal()
             .key(DEFAULT_KEY)
             .name(DEFAULT_NAME)
+            .version(DEFAULT_VERSION)
             .title(DEFAULT_TITLE)
             .subTitle(DEFAULT_SUB_TITLE)
             .navTitle(DEFAULT_NAV_TITLE)
@@ -103,6 +107,7 @@ public class PortalResourceIT {
         Portal portal = new Portal()
             .key(UPDATED_KEY)
             .name(UPDATED_NAME)
+            .version(UPDATED_VERSION)
             .title(UPDATED_TITLE)
             .subTitle(UPDATED_SUB_TITLE)
             .navTitle(UPDATED_NAV_TITLE)
@@ -135,6 +140,7 @@ public class PortalResourceIT {
         Portal testPortal = portalList.get(portalList.size() - 1);
         assertThat(testPortal.getKey()).isEqualTo(DEFAULT_KEY);
         assertThat(testPortal.getName()).isEqualTo(DEFAULT_NAME);
+        assertThat(testPortal.getVersion()).isEqualTo(DEFAULT_VERSION);
         assertThat(testPortal.getTitle()).isEqualTo(DEFAULT_TITLE);
         assertThat(testPortal.getSubTitle()).isEqualTo(DEFAULT_SUB_TITLE);
         assertThat(testPortal.getNavTitle()).isEqualTo(DEFAULT_NAV_TITLE);
@@ -205,6 +211,25 @@ public class PortalResourceIT {
 
     @Test
     @Transactional
+    public void checkVersionIsRequired() throws Exception {
+        int databaseSizeBeforeTest = portalRepository.findAll().size();
+        // set the field null
+        portal.setVersion(null);
+
+        // Create the Portal, which fails.
+
+
+        restPortalMockMvc.perform(post("/api/portals")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(portal)))
+            .andExpect(status().isBadRequest());
+
+        List<Portal> portalList = portalRepository.findAll();
+        assertThat(portalList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void getAllPortals() throws Exception {
         // Initialize the database
         portalRepository.saveAndFlush(portal);
@@ -216,6 +241,7 @@ public class PortalResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(portal.getId().intValue())))
             .andExpect(jsonPath("$.[*].key").value(hasItem(DEFAULT_KEY)))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
+            .andExpect(jsonPath("$.[*].version").value(hasItem(DEFAULT_VERSION)))
             .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE)))
             .andExpect(jsonPath("$.[*].subTitle").value(hasItem(DEFAULT_SUB_TITLE)))
             .andExpect(jsonPath("$.[*].navTitle").value(hasItem(DEFAULT_NAV_TITLE)))
@@ -239,6 +265,7 @@ public class PortalResourceIT {
             .andExpect(jsonPath("$.id").value(portal.getId().intValue()))
             .andExpect(jsonPath("$.key").value(DEFAULT_KEY))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
+            .andExpect(jsonPath("$.version").value(DEFAULT_VERSION))
             .andExpect(jsonPath("$.title").value(DEFAULT_TITLE))
             .andExpect(jsonPath("$.subTitle").value(DEFAULT_SUB_TITLE))
             .andExpect(jsonPath("$.navTitle").value(DEFAULT_NAV_TITLE))
@@ -271,6 +298,7 @@ public class PortalResourceIT {
         updatedPortal
             .key(UPDATED_KEY)
             .name(UPDATED_NAME)
+            .version(UPDATED_VERSION)
             .title(UPDATED_TITLE)
             .subTitle(UPDATED_SUB_TITLE)
             .navTitle(UPDATED_NAV_TITLE)
@@ -291,6 +319,7 @@ public class PortalResourceIT {
         Portal testPortal = portalList.get(portalList.size() - 1);
         assertThat(testPortal.getKey()).isEqualTo(UPDATED_KEY);
         assertThat(testPortal.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testPortal.getVersion()).isEqualTo(UPDATED_VERSION);
         assertThat(testPortal.getTitle()).isEqualTo(UPDATED_TITLE);
         assertThat(testPortal.getSubTitle()).isEqualTo(UPDATED_SUB_TITLE);
         assertThat(testPortal.getNavTitle()).isEqualTo(UPDATED_NAV_TITLE);

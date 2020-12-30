@@ -89,6 +89,7 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
         String title = null;
         Boolean valid;
         String parseErrorMessage = null;
+        String tags;
 
         try {
             OpenAPI openAPI = OpenAPILoader.parse(openApiContents);

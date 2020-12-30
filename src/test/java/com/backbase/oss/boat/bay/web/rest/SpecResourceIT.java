@@ -2,6 +2,7 @@ package com.backbase.oss.boat.bay.web.rest;
 
 import com.backbase.oss.boat.bay.BoatBayApp;
 import com.backbase.oss.boat.bay.domain.Spec;
+import com.backbase.oss.boat.bay.domain.SpecType;
 import com.backbase.oss.boat.bay.domain.Portal;
 import com.backbase.oss.boat.bay.domain.Capability;
 import com.backbase.oss.boat.bay.domain.Product;
@@ -51,6 +52,12 @@ public class SpecResourceIT {
     private static final String DEFAULT_OPEN_API = "AAAAAAAAAA";
     private static final String UPDATED_OPEN_API = "BBBBBBBBBB";
 
+    private static final String DEFAULT_TAGS_CSV = "AAAAAAAAAA";
+    private static final String UPDATED_TAGS_CSV = "BBBBBBBBBB";
+
+    private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
+    private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
+
     private static final Instant DEFAULT_CREATED_ON = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_CREATED_ON = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
@@ -65,6 +72,9 @@ public class SpecResourceIT {
 
     private static final Boolean DEFAULT_VALID = false;
     private static final Boolean UPDATED_VALID = true;
+
+    private static final Integer DEFAULT_ORDER = 1;
+    private static final Integer UPDATED_ORDER = 2;
 
     private static final String DEFAULT_PARSE_ERROR = "AAAAAAAAAA";
     private static final String UPDATED_PARSE_ERROR = "BBBBBBBBBB";
@@ -114,11 +124,14 @@ public class SpecResourceIT {
             .version(DEFAULT_VERSION)
             .title(DEFAULT_TITLE)
             .openApi(DEFAULT_OPEN_API)
+            .tagsCsv(DEFAULT_TAGS_CSV)
+            .description(DEFAULT_DESCRIPTION)
             .createdOn(DEFAULT_CREATED_ON)
             .createdBy(DEFAULT_CREATED_BY)
             .checksum(DEFAULT_CHECKSUM)
             .filename(DEFAULT_FILENAME)
             .valid(DEFAULT_VALID)
+            .order(DEFAULT_ORDER)
             .parseError(DEFAULT_PARSE_ERROR)
             .sourcePath(DEFAULT_SOURCE_PATH)
             .sourceName(DEFAULT_SOURCE_NAME)
@@ -127,6 +140,16 @@ public class SpecResourceIT {
             .sourceCreatedOn(DEFAULT_SOURCE_CREATED_ON)
             .sourceLastModifiedOn(DEFAULT_SOURCE_LAST_MODIFIED_ON)
             .sourceLastModifiedBy(DEFAULT_SOURCE_LAST_MODIFIED_BY);
+        // Add required entity
+        SpecType specType;
+        if (TestUtil.findAll(em, SpecType.class).isEmpty()) {
+            specType = SpecTypeResourceIT.createEntity(em);
+            em.persist(specType);
+            em.flush();
+        } else {
+            specType = TestUtil.findAll(em, SpecType.class).get(0);
+        }
+        spec.setSpecType(specType);
         // Add required entity
         Portal portal;
         if (TestUtil.findAll(em, Portal.class).isEmpty()) {
@@ -182,11 +205,14 @@ public class SpecResourceIT {
             .version(UPDATED_VERSION)
             .title(UPDATED_TITLE)
             .openApi(UPDATED_OPEN_API)
+            .tagsCsv(UPDATED_TAGS_CSV)
+            .description(UPDATED_DESCRIPTION)
             .createdOn(UPDATED_CREATED_ON)
             .createdBy(UPDATED_CREATED_BY)
             .checksum(UPDATED_CHECKSUM)
             .filename(UPDATED_FILENAME)
             .valid(UPDATED_VALID)
+            .order(UPDATED_ORDER)
             .parseError(UPDATED_PARSE_ERROR)
             .sourcePath(UPDATED_SOURCE_PATH)
             .sourceName(UPDATED_SOURCE_NAME)
@@ -195,6 +221,16 @@ public class SpecResourceIT {
             .sourceCreatedOn(UPDATED_SOURCE_CREATED_ON)
             .sourceLastModifiedOn(UPDATED_SOURCE_LAST_MODIFIED_ON)
             .sourceLastModifiedBy(UPDATED_SOURCE_LAST_MODIFIED_BY);
+        // Add required entity
+        SpecType specType;
+        if (TestUtil.findAll(em, SpecType.class).isEmpty()) {
+            specType = SpecTypeResourceIT.createUpdatedEntity(em);
+            em.persist(specType);
+            em.flush();
+        } else {
+            specType = TestUtil.findAll(em, SpecType.class).get(0);
+        }
+        spec.setSpecType(specType);
         // Add required entity
         Portal portal;
         if (TestUtil.findAll(em, Portal.class).isEmpty()) {
@@ -262,11 +298,14 @@ public class SpecResourceIT {
         assertThat(testSpec.getVersion()).isEqualTo(DEFAULT_VERSION);
         assertThat(testSpec.getTitle()).isEqualTo(DEFAULT_TITLE);
         assertThat(testSpec.getOpenApi()).isEqualTo(DEFAULT_OPEN_API);
+        assertThat(testSpec.getTagsCsv()).isEqualTo(DEFAULT_TAGS_CSV);
+        assertThat(testSpec.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testSpec.getCreatedOn()).isEqualTo(DEFAULT_CREATED_ON);
         assertThat(testSpec.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
         assertThat(testSpec.getChecksum()).isEqualTo(DEFAULT_CHECKSUM);
         assertThat(testSpec.getFilename()).isEqualTo(DEFAULT_FILENAME);
         assertThat(testSpec.isValid()).isEqualTo(DEFAULT_VALID);
+        assertThat(testSpec.getOrder()).isEqualTo(DEFAULT_ORDER);
         assertThat(testSpec.getParseError()).isEqualTo(DEFAULT_PARSE_ERROR);
         assertThat(testSpec.getSourcePath()).isEqualTo(DEFAULT_SOURCE_PATH);
         assertThat(testSpec.getSourceName()).isEqualTo(DEFAULT_SOURCE_NAME);
@@ -465,11 +504,14 @@ public class SpecResourceIT {
             .andExpect(jsonPath("$.[*].version").value(hasItem(DEFAULT_VERSION)))
             .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE)))
             .andExpect(jsonPath("$.[*].openApi").value(hasItem(DEFAULT_OPEN_API.toString())))
+            .andExpect(jsonPath("$.[*].tagsCsv").value(hasItem(DEFAULT_TAGS_CSV)))
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
             .andExpect(jsonPath("$.[*].createdOn").value(hasItem(DEFAULT_CREATED_ON.toString())))
             .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
             .andExpect(jsonPath("$.[*].checksum").value(hasItem(DEFAULT_CHECKSUM)))
             .andExpect(jsonPath("$.[*].filename").value(hasItem(DEFAULT_FILENAME)))
             .andExpect(jsonPath("$.[*].valid").value(hasItem(DEFAULT_VALID.booleanValue())))
+            .andExpect(jsonPath("$.[*].order").value(hasItem(DEFAULT_ORDER)))
             .andExpect(jsonPath("$.[*].parseError").value(hasItem(DEFAULT_PARSE_ERROR.toString())))
             .andExpect(jsonPath("$.[*].sourcePath").value(hasItem(DEFAULT_SOURCE_PATH)))
             .andExpect(jsonPath("$.[*].sourceName").value(hasItem(DEFAULT_SOURCE_NAME)))
@@ -496,11 +538,14 @@ public class SpecResourceIT {
             .andExpect(jsonPath("$.version").value(DEFAULT_VERSION))
             .andExpect(jsonPath("$.title").value(DEFAULT_TITLE))
             .andExpect(jsonPath("$.openApi").value(DEFAULT_OPEN_API.toString()))
+            .andExpect(jsonPath("$.tagsCsv").value(DEFAULT_TAGS_CSV))
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
             .andExpect(jsonPath("$.createdOn").value(DEFAULT_CREATED_ON.toString()))
             .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
             .andExpect(jsonPath("$.checksum").value(DEFAULT_CHECKSUM))
             .andExpect(jsonPath("$.filename").value(DEFAULT_FILENAME))
             .andExpect(jsonPath("$.valid").value(DEFAULT_VALID.booleanValue()))
+            .andExpect(jsonPath("$.order").value(DEFAULT_ORDER))
             .andExpect(jsonPath("$.parseError").value(DEFAULT_PARSE_ERROR.toString()))
             .andExpect(jsonPath("$.sourcePath").value(DEFAULT_SOURCE_PATH))
             .andExpect(jsonPath("$.sourceName").value(DEFAULT_SOURCE_NAME))
@@ -536,11 +581,14 @@ public class SpecResourceIT {
             .version(UPDATED_VERSION)
             .title(UPDATED_TITLE)
             .openApi(UPDATED_OPEN_API)
+            .tagsCsv(UPDATED_TAGS_CSV)
+            .description(UPDATED_DESCRIPTION)
             .createdOn(UPDATED_CREATED_ON)
             .createdBy(UPDATED_CREATED_BY)
             .checksum(UPDATED_CHECKSUM)
             .filename(UPDATED_FILENAME)
             .valid(UPDATED_VALID)
+            .order(UPDATED_ORDER)
             .parseError(UPDATED_PARSE_ERROR)
             .sourcePath(UPDATED_SOURCE_PATH)
             .sourceName(UPDATED_SOURCE_NAME)
@@ -564,11 +612,14 @@ public class SpecResourceIT {
         assertThat(testSpec.getVersion()).isEqualTo(UPDATED_VERSION);
         assertThat(testSpec.getTitle()).isEqualTo(UPDATED_TITLE);
         assertThat(testSpec.getOpenApi()).isEqualTo(UPDATED_OPEN_API);
+        assertThat(testSpec.getTagsCsv()).isEqualTo(UPDATED_TAGS_CSV);
+        assertThat(testSpec.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testSpec.getCreatedOn()).isEqualTo(UPDATED_CREATED_ON);
         assertThat(testSpec.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
         assertThat(testSpec.getChecksum()).isEqualTo(UPDATED_CHECKSUM);
         assertThat(testSpec.getFilename()).isEqualTo(UPDATED_FILENAME);
         assertThat(testSpec.isValid()).isEqualTo(UPDATED_VALID);
+        assertThat(testSpec.getOrder()).isEqualTo(UPDATED_ORDER);
         assertThat(testSpec.getParseError()).isEqualTo(UPDATED_PARSE_ERROR);
         assertThat(testSpec.getSourcePath()).isEqualTo(UPDATED_SOURCE_PATH);
         assertThat(testSpec.getSourceName()).isEqualTo(UPDATED_SOURCE_NAME);

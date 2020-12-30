@@ -28,6 +28,14 @@
                 <dd>
                     <span>{{ spec.openApi }}</span>
                 </dd>
+                <dt><span>Tags Csv</span></dt>
+                <dd>
+                    <span>{{ spec.tagsCsv }}</span>
+                </dd>
+                <dt><span>Description</span></dt>
+                <dd>
+                    <span>{{ spec.description }}</span>
+                </dd>
                 <dt><span>Created On</span></dt>
                 <dd>
                     <span>{{ spec.createdOn }}</span>
@@ -47,6 +55,10 @@
                 <dt><span>Valid</span></dt>
                 <dd>
                     <span>{{ spec.valid }}</span>
+                </dd>
+                <dt><span>Order</span></dt>
+                <dd>
+                    <span>{{ spec.order }}</span>
                 </dd>
                 <dt><span>Parse Error</span></dt>
                 <dd>
@@ -84,6 +96,12 @@
                 <dd>
                     <div *ngIf="spec.lintReport">
                         <a [routerLink]="['/lint-report', spec.lintReport?.id, 'view']">{{ spec.lintReport?.id }}</a>
+                    </div>
+                </dd>
+                <dt><span>Spec Type</span></dt>
+                <dd>
+                    <div *ngIf="spec.specType">
+                        <a [routerLink]="['/spec-type', spec.specType?.id, 'view']">{{ spec.specType?.name }}</a>
                     </div>
                 </dd>
                 <dt><span>Portal</span></dt>
