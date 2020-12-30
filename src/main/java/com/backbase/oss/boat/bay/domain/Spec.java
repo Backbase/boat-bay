@@ -44,6 +44,13 @@ public class Spec implements Serializable {
     @Column(name = "open_api", nullable = false)
     private String openApi;
 
+    @Column(name = "tags_csv")
+    private String tagsCsv;
+
+    @Lob
+    @Column(name = "description")
+    private String description;
+
     @NotNull
     @Column(name = "created_on", nullable = false)
     private Instant createdOn;
@@ -63,6 +70,9 @@ public class Spec implements Serializable {
     @NotNull
     @Column(name = "valid", nullable = false)
     private Boolean valid;
+
+    @Column(name = "jhi_order")
+    private Integer order;
 
     @Lob
     @Column(name = "parse_error")
@@ -92,6 +102,11 @@ public class Spec implements Serializable {
     @OneToOne
     @JoinColumn(unique = true)
     private LintReport lintReport;
+
+    @OneToOne(optional = false)
+    @NotNull
+    @JoinColumn(unique = true)
+    private SpecType specType;
 
     @ManyToOne(optional = false)
     @NotNull
@@ -191,6 +206,32 @@ public class Spec implements Serializable {
         this.openApi = openApi;
     }
 
+    public String getTagsCsv() {
+        return tagsCsv;
+    }
+
+    public Spec tagsCsv(String tagsCsv) {
+        this.tagsCsv = tagsCsv;
+        return this;
+    }
+
+    public void setTagsCsv(String tagsCsv) {
+        this.tagsCsv = tagsCsv;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public Spec description(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public Instant getCreatedOn() {
         return createdOn;
     }
@@ -254,6 +295,19 @@ public class Spec implements Serializable {
 
     public void setValid(Boolean valid) {
         this.valid = valid;
+    }
+
+    public Integer getOrder() {
+        return order;
+    }
+
+    public Spec order(Integer order) {
+        this.order = order;
+        return this;
+    }
+
+    public void setOrder(Integer order) {
+        this.order = order;
     }
 
     public String getParseError() {
@@ -373,6 +427,19 @@ public class Spec implements Serializable {
         this.lintReport = lintReport;
     }
 
+    public SpecType getSpecType() {
+        return specType;
+    }
+
+    public Spec specType(SpecType specType) {
+        this.specType = specType;
+        return this;
+    }
+
+    public void setSpecType(SpecType specType) {
+        this.specType = specType;
+    }
+
     public Portal getPortal() {
         return portal;
     }
@@ -465,11 +532,14 @@ public class Spec implements Serializable {
             ", version='" + getVersion() + "'" +
             ", title='" + getTitle() + "'" +
             ", openApi='" + getOpenApi() + "'" +
+            ", tagsCsv='" + getTagsCsv() + "'" +
+            ", description='" + getDescription() + "'" +
             ", createdOn='" + getCreatedOn() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
             ", checksum='" + getChecksum() + "'" +
             ", filename='" + getFilename() + "'" +
             ", valid='" + isValid() + "'" +
+            ", order=" + getOrder() +
             ", parseError='" + getParseError() + "'" +
             ", sourcePath='" + getSourcePath() + "'" +
             ", sourceName='" + getSourceName() + "'" +

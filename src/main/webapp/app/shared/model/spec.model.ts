@@ -1,5 +1,6 @@
 import { Moment } from 'moment';
 import { ILintReport } from 'app/shared/model/lint-report.model';
+import { ISpecType } from 'app/shared/model/spec-type.model';
 import { IPortal } from 'app/shared/model/portal.model';
 import { ICapability } from 'app/shared/model/capability.model';
 import { IProduct } from 'app/shared/model/product.model';
@@ -13,11 +14,14 @@ export interface ISpec {
   version?: string;
   title?: string;
   openApi?: any;
+  tagsCsv?: string;
+  description?: any;
   createdOn?: Moment;
   createdBy?: string;
   checksum?: string;
   filename?: string;
   valid?: boolean;
+  order?: number;
   parseError?: any;
   sourcePath?: string;
   sourceName?: string;
@@ -27,6 +31,7 @@ export interface ISpec {
   sourceLastModifiedOn?: Moment;
   sourceLastModifiedBy?: string;
   lintReport?: ILintReport;
+  specType?: ISpecType;
   portal?: IPortal;
   capability?: ICapability;
   product?: IProduct;
@@ -42,11 +47,14 @@ export class Spec implements ISpec {
     public version?: string,
     public title?: string,
     public openApi?: any,
+    public tagsCsv?: string,
+    public description?: any,
     public createdOn?: Moment,
     public createdBy?: string,
     public checksum?: string,
     public filename?: string,
     public valid?: boolean,
+    public order?: number,
     public parseError?: any,
     public sourcePath?: string,
     public sourceName?: string,
@@ -56,6 +64,7 @@ export class Spec implements ISpec {
     public sourceLastModifiedOn?: Moment,
     public sourceLastModifiedBy?: string,
     public lintReport?: ILintReport,
+    public specType?: ISpecType,
     public portal?: IPortal,
     public capability?: ICapability,
     public product?: IProduct,

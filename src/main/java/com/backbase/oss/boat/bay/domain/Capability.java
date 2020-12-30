@@ -34,6 +34,9 @@ public class Capability implements Serializable {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "jhi_order")
+    private Integer order;
+
     @Column(name = "title")
     private String title;
 
@@ -98,6 +101,19 @@ public class Capability implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Integer getOrder() {
+        return order;
+    }
+
+    public Capability order(Integer order) {
+        this.order = order;
+        return this;
+    }
+
+    public void setOrder(Integer order) {
+        this.order = order;
     }
 
     public String getTitle() {
@@ -253,6 +269,7 @@ public class Capability implements Serializable {
             "id=" + getId() +
             ", key='" + getKey() + "'" +
             ", name='" + getName() + "'" +
+            ", order=" + getOrder() +
             ", title='" + getTitle() + "'" +
             ", subTitle='" + getSubTitle() + "'" +
             ", navTitle='" + getNavTitle() + "'" +

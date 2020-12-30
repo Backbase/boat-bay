@@ -66,6 +66,18 @@
                 </div>
 
                 <div class="form-group">
+                    <label class="form-control-label" for="field_tagsCsv">Tags Csv</label>
+                    <input type="text" class="form-control" name="tagsCsv" id="field_tagsCsv"
+                           formControlName="tagsCsv"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_description">Description</label>
+                    <textarea class="form-control" name="description" id="field_description"
+                              formControlName="description"></textarea>
+                </div>
+
+                <div class="form-group">
                     <label class="form-control-label" for="field_createdOn">Created On</label>
                     <div class="d-flex">
                         <input id="field_createdOn" type="datetime-local" class="form-control" name="createdOn" formControlName="createdOn" placeholder="YYYY-MM-DD HH:mm"/>
@@ -131,6 +143,12 @@
                 </div>
 
                 <div class="form-group">
+                    <label class="form-control-label" for="field_order">Order</label>
+                    <input type="number" class="form-control" name="order" id="field_order"
+                           formControlName="order"/>
+                </div>
+
+                <div class="form-group">
                     <label class="form-control-label" for="field_parseError">Parse Error</label>
                     <textarea class="form-control" name="parseError" id="field_parseError"
                               formControlName="parseError"></textarea>
@@ -186,6 +204,20 @@
                         <option [ngValue]="null"></option>
                         <option [ngValue]="lintReportOption.id === editForm.get('lintReport')!.value?.id ? editForm.get('lintReport')!.value : lintReportOption" *ngFor="let lintReportOption of lintreports; trackBy: trackById">{{ lintReportOption.id }}</option>
                     </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_specType">Spec Type</label>
+                    <select class="form-control" id="field_specType" name="specType" formControlName="specType">
+                        <option *ngIf="!editForm.get('specType')!.value" [ngValue]="null" selected></option>
+                        <option [ngValue]="specTypeOption.id === editForm.get('specType')!.value?.id ? editForm.get('specType')!.value : specTypeOption" *ngFor="let specTypeOption of spectypes; trackBy: trackById">{{ specTypeOption.name }}</option>
+                    </select>
+                </div>
+                <div *ngIf="editForm.get('specType')!.invalid && (editForm.get('specType')!.dirty || editForm.get('specType')!.touched)">
+                    <small class="form-text text-danger"
+                           *ngIf="editForm.get('specType')?.errors?.required">
+                        This field is required.
+                    </small>
                 </div>
 
                 <div class="form-group">

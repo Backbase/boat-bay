@@ -9,6 +9,6 @@ import java.util.Optional;
 
 public interface BoatPortalRepository extends PortalRepository {
 
-    Portal findByKey(String key);
+    Portal findByKeyAndVersion(String key, String version);
 
 }

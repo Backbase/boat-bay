@@ -14,6 +14,8 @@ import { SpecService } from './spec.service';
 import { AlertError } from 'app/shared/alert/alert-error.model';
 import { ILintReport } from 'app/shared/model/lint-report.model';
 import { LintReportService } from 'app/entities/lint-report/lint-report.service';
+import { ISpecType } from 'app/shared/model/spec-type.model';
+import { SpecTypeService } from 'app/entities/spec-type/spec-type.service';
 import { IPortal } from 'app/shared/model/portal.model';
 import { PortalService } from 'app/entities/portal/portal.service';
 import { ICapability } from 'app/shared/model/capability.model';
@@ -25,7 +27,7 @@ import { ServiceDefinitionService } from 'app/entities/service-definition/servic
 import { ISource } from 'app/shared/model/source.model';
 import { SourceService } from 'app/entities/source/source.service';
 
-type SelectableEntity = ILintReport | IPortal | ICapability | IProduct | IServiceDefinition | ISource;
+type SelectableEntity = ILintReport | ISpecType | IPortal | ICapability | IProduct | IServiceDefinition | ISource;
 
 @Component({
   selector: 'jhi-spec-update',
@@ -34,6 +36,7 @@ type SelectableEntity = ILintReport | IPortal | ICapability | IProduct | IServic
 export class SpecUpdateComponent implements OnInit {
   isSaving = false;
   lintreports: ILintReport[] = [];
+  spectypes: ISpecType[] = [];
   portals: IPortal[] = [];
   capabilities: ICapability[] = [];
   products: IProduct[] = [];
@@ -47,11 +50,14 @@ export class SpecUpdateComponent implements OnInit {
     version: [null, [Validators.required]],
     title: [],
     openApi: [null, [Validators.required]],
+    tagsCsv: [],
+    description: [],
     createdOn: [null, [Validators.required]],
     createdBy: [null, [Validators.required]],
     checksum: [null, [Validators.required]],
     filename: [null, [Validators.required]],
     valid: [null, [Validators.required]],
+    order: [],
     parseError: [],
     sourcePath: [],
     sourceName: [],
@@ -61,6 +67,7 @@ export class SpecUpdateComponent implements OnInit {
     sourceLastModifiedOn: [],
     sourceLastModifiedBy: [],
     lintReport: [],
+    specType: [null, Validators.required],
     portal: [null, Validators.required],
     capability: [null, Validators.required],
     product: [null, Validators.required],
@@ -73,6 +80,7 @@ export class SpecUpdateComponent implements OnInit {
     protected eventManager: JhiEventManager,
     protected specService: SpecService,
     protected lintReportService: LintReportService,
+    protected specTypeService: SpecTypeService,
     protected portalService: PortalService,
     protected capabilityService: CapabilityService,
     protected productService: ProductService,
@@ -115,6 +123,28 @@ export class SpecUpdateComponent implements OnInit {
           }
         });
 
+      this.specTypeService
+        .query({ filter: 'spec-is-null' })
+        .pipe(
+          map((res: HttpResponse<ISpecType[]>) => {
+            return res.body || [];
+          })
+        )
+        .subscribe((resBody: ISpecType[]) => {
+          if (!spec.specType || !spec.specType.id) {
+            this.spectypes = resBody;
+          } else {
+            this.specTypeService
+              .find(spec.specType.id)
+              .pipe(
+                map((subRes: HttpResponse<ISpecType>) => {
+                  return subRes.body ? [subRes.body].concat(resBody) : resBody;
+                })
+              )
+              .subscribe((concatRes: ISpecType[]) => (this.spectypes = concatRes));
+          }
+        });
+
       this.portalService.query().subscribe((res: HttpResponse<IPortal[]>) => (this.portals = res.body || []));
 
       this.capabilityService.query().subscribe((res: HttpResponse<ICapability[]>) => (this.capabilities = res.body || []));
@@ -137,11 +167,14 @@ export class SpecUpdateComponent implements OnInit {
       version: spec.version,
       title: spec.title,
       openApi: spec.openApi,
+      tagsCsv: spec.tagsCsv,
+      description: spec.description,
       createdOn: spec.createdOn ? spec.createdOn.format(DATE_TIME_FORMAT) : null,
       createdBy: spec.createdBy,
       checksum: spec.checksum,
       filename: spec.filename,
       valid: spec.valid,
+      order: spec.order,
       parseError: spec.parseError,
       sourcePath: spec.sourcePath,
       sourceName: spec.sourceName,
@@ -151,6 +184,7 @@ export class SpecUpdateComponent implements OnInit {
       sourceLastModifiedOn: spec.sourceLastModifiedOn ? spec.sourceLastModifiedOn.format(DATE_TIME_FORMAT) : null,
       sourceLastModifiedBy: spec.sourceLastModifiedBy,
       lintReport: spec.lintReport,
+      specType: spec.specType,
       portal: spec.portal,
       capability: spec.capability,
       product: spec.product,
@@ -198,11 +232,14 @@ export class SpecUpdateComponent implements OnInit {
       version: this.editForm.get(['version'])!.value,
       title: this.editForm.get(['title'])!.value,
       openApi: this.editForm.get(['openApi'])!.value,
+      tagsCsv: this.editForm.get(['tagsCsv'])!.value,
+      description: this.editForm.get(['description'])!.value,
       createdOn: this.editForm.get(['createdOn'])!.value ? moment(this.editForm.get(['createdOn'])!.value, DATE_TIME_FORMAT) : undefined,
       createdBy: this.editForm.get(['createdBy'])!.value,
       checksum: this.editForm.get(['checksum'])!.value,
       filename: this.editForm.get(['filename'])!.value,
       valid: this.editForm.get(['valid'])!.value,
+      order: this.editForm.get(['order'])!.value,
       parseError: this.editForm.get(['parseError'])!.value,
       sourcePath: this.editForm.get(['sourcePath'])!.value,
       sourceName: this.editForm.get(['sourceName'])!.value,
@@ -216,6 +253,7 @@ export class SpecUpdateComponent implements OnInit {
         : undefined,
       sourceLastModifiedBy: this.editForm.get(['sourceLastModifiedBy'])!.value,
       lintReport: this.editForm.get(['lintReport'])!.value,
+      specType: this.editForm.get(['specType'])!.value,
       portal: this.editForm.get(['portal'])!.value,
       capability: this.editForm.get(['capability'])!.value,
       product: this.editForm.get(['product'])!.value,
