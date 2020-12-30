@@ -1,11 +1,10 @@
 package com.backbase.oss.boat.bay.service.source;
 
 import com.backbase.oss.boat.bay.domain.Spec;
+import com.backbase.oss.boat.bay.util.SpringExpressionUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.ValueSource;
 
 @Slf4j
 class SourceResolverTest {
@@ -31,7 +30,7 @@ class SourceResolverTest {
         };
 
         for (int i = 0; i < expressions.length; i++) {
-            log.info("Output  {}", SpecSourceResolver.parseName(expressions[i], spec, null));
+            log.info("Output  {}", SpringExpressionUtils.parseName(expressions[i], spec, null));
         }
 
     }

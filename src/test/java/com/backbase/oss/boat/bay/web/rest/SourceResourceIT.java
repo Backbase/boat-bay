@@ -58,6 +58,9 @@ public class SourceResourceIT {
     private static final String DEFAULT_CRON_EXPRESSION = "AAAAAAAAAA";
     private static final String UPDATED_CRON_EXPRESSION = "BBBBBBBBBB";
 
+    private static final String DEFAULT_SPEC_FILTER_SP_EL = "AAAAAAAAAA";
+    private static final String UPDATED_SPEC_FILTER_SP_EL = "BBBBBBBBBB";
+
     private static final String DEFAULT_PRODUCT_KEY_SP_EL = "AAAAAAAAAA";
     private static final String UPDATED_PRODUCT_KEY_SP_EL = "BBBBBBBBBB";
 
@@ -110,6 +113,7 @@ public class SourceResourceIT {
             .username(DEFAULT_USERNAME)
             .password(DEFAULT_PASSWORD)
             .cronExpression(DEFAULT_CRON_EXPRESSION)
+            .specFilterSpEL(DEFAULT_SPEC_FILTER_SP_EL)
             .productKeySpEL(DEFAULT_PRODUCT_KEY_SP_EL)
             .productNameSpEL(DEFAULT_PRODUCT_NAME_SP_EL)
             .capabilityKeySpEL(DEFAULT_CAPABILITY_KEY_SP_EL)
@@ -147,6 +151,7 @@ public class SourceResourceIT {
             .username(UPDATED_USERNAME)
             .password(UPDATED_PASSWORD)
             .cronExpression(UPDATED_CRON_EXPRESSION)
+            .specFilterSpEL(UPDATED_SPEC_FILTER_SP_EL)
             .productKeySpEL(UPDATED_PRODUCT_KEY_SP_EL)
             .productNameSpEL(UPDATED_PRODUCT_NAME_SP_EL)
             .capabilityKeySpEL(UPDATED_CAPABILITY_KEY_SP_EL)
@@ -196,6 +201,7 @@ public class SourceResourceIT {
         assertThat(testSource.getUsername()).isEqualTo(DEFAULT_USERNAME);
         assertThat(testSource.getPassword()).isEqualTo(DEFAULT_PASSWORD);
         assertThat(testSource.getCronExpression()).isEqualTo(DEFAULT_CRON_EXPRESSION);
+        assertThat(testSource.getSpecFilterSpEL()).isEqualTo(DEFAULT_SPEC_FILTER_SP_EL);
         assertThat(testSource.getProductKeySpEL()).isEqualTo(DEFAULT_PRODUCT_KEY_SP_EL);
         assertThat(testSource.getProductNameSpEL()).isEqualTo(DEFAULT_PRODUCT_NAME_SP_EL);
         assertThat(testSource.getCapabilityKeySpEL()).isEqualTo(DEFAULT_CAPABILITY_KEY_SP_EL);
@@ -303,6 +309,7 @@ public class SourceResourceIT {
             .andExpect(jsonPath("$.[*].username").value(hasItem(DEFAULT_USERNAME)))
             .andExpect(jsonPath("$.[*].password").value(hasItem(DEFAULT_PASSWORD)))
             .andExpect(jsonPath("$.[*].cronExpression").value(hasItem(DEFAULT_CRON_EXPRESSION)))
+            .andExpect(jsonPath("$.[*].specFilterSpEL").value(hasItem(DEFAULT_SPEC_FILTER_SP_EL)))
             .andExpect(jsonPath("$.[*].productKeySpEL").value(hasItem(DEFAULT_PRODUCT_KEY_SP_EL)))
             .andExpect(jsonPath("$.[*].productNameSpEL").value(hasItem(DEFAULT_PRODUCT_NAME_SP_EL)))
             .andExpect(jsonPath("$.[*].capabilityKeySpEL").value(hasItem(DEFAULT_CAPABILITY_KEY_SP_EL)))
@@ -333,6 +340,7 @@ public class SourceResourceIT {
             .andExpect(jsonPath("$.username").value(DEFAULT_USERNAME))
             .andExpect(jsonPath("$.password").value(DEFAULT_PASSWORD))
             .andExpect(jsonPath("$.cronExpression").value(DEFAULT_CRON_EXPRESSION))
+            .andExpect(jsonPath("$.specFilterSpEL").value(DEFAULT_SPEC_FILTER_SP_EL))
             .andExpect(jsonPath("$.productKeySpEL").value(DEFAULT_PRODUCT_KEY_SP_EL))
             .andExpect(jsonPath("$.productNameSpEL").value(DEFAULT_PRODUCT_NAME_SP_EL))
             .andExpect(jsonPath("$.capabilityKeySpEL").value(DEFAULT_CAPABILITY_KEY_SP_EL))
@@ -372,6 +380,7 @@ public class SourceResourceIT {
             .username(UPDATED_USERNAME)
             .password(UPDATED_PASSWORD)
             .cronExpression(UPDATED_CRON_EXPRESSION)
+            .specFilterSpEL(UPDATED_SPEC_FILTER_SP_EL)
             .productKeySpEL(UPDATED_PRODUCT_KEY_SP_EL)
             .productNameSpEL(UPDATED_PRODUCT_NAME_SP_EL)
             .capabilityKeySpEL(UPDATED_CAPABILITY_KEY_SP_EL)
@@ -399,6 +408,7 @@ public class SourceResourceIT {
         assertThat(testSource.getUsername()).isEqualTo(UPDATED_USERNAME);
         assertThat(testSource.getPassword()).isEqualTo(UPDATED_PASSWORD);
         assertThat(testSource.getCronExpression()).isEqualTo(UPDATED_CRON_EXPRESSION);
+        assertThat(testSource.getSpecFilterSpEL()).isEqualTo(UPDATED_SPEC_FILTER_SP_EL);
         assertThat(testSource.getProductKeySpEL()).isEqualTo(UPDATED_PRODUCT_KEY_SP_EL);
         assertThat(testSource.getProductNameSpEL()).isEqualTo(UPDATED_PRODUCT_NAME_SP_EL);
         assertThat(testSource.getCapabilityKeySpEL()).isEqualTo(UPDATED_CAPABILITY_KEY_SP_EL);

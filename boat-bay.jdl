@@ -99,7 +99,7 @@ entity Source {
     username String
     password String
     cronExpression String
-
+    specFilterSpEL String
     productKeySpEL String
     productNameSpEL String
     capabilityKeySpEL String

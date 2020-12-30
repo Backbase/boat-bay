@@ -55,6 +55,9 @@ public class Source implements Serializable {
     @Column(name = "cron_expression")
     private String cronExpression;
 
+    @Column(name = "spec_filter_sp_el")
+    private String specFilterSpEL;
+
     @Column(name = "product_key_sp_el")
     private String productKeySpEL;
 
@@ -216,6 +219,19 @@ public class Source implements Serializable {
 
     public void setCronExpression(String cronExpression) {
         this.cronExpression = cronExpression;
+    }
+
+    public String getSpecFilterSpEL() {
+        return specFilterSpEL;
+    }
+
+    public Source specFilterSpEL(String specFilterSpEL) {
+        this.specFilterSpEL = specFilterSpEL;
+        return this;
+    }
+
+    public void setSpecFilterSpEL(String specFilterSpEL) {
+        this.specFilterSpEL = specFilterSpEL;
     }
 
     public String getProductKeySpEL() {
@@ -392,6 +408,7 @@ public class Source implements Serializable {
             ", username='" + getUsername() + "'" +
             ", password='" + getPassword() + "'" +
             ", cronExpression='" + getCronExpression() + "'" +
+            ", specFilterSpEL='" + getSpecFilterSpEL() + "'" +
             ", productKeySpEL='" + getProductKeySpEL() + "'" +
             ", productNameSpEL='" + getProductNameSpEL() + "'" +
             ", capabilityKeySpEL='" + getCapabilityKeySpEL() + "'" +

@@ -39,6 +39,7 @@ describe('Service Tests', () => {
         'AAAAAAA',
         'AAAAAAA',
         'AAAAAAA',
+        'AAAAAAA',
         false
       );
     });
@@ -83,6 +84,7 @@ describe('Service Tests', () => {
             username: 'BBBBBB',
             password: 'BBBBBB',
             cronExpression: 'BBBBBB',
+            specFilterSpEL: 'BBBBBB',
             productKeySpEL: 'BBBBBB',
             productNameSpEL: 'BBBBBB',
             capabilityKeySpEL: 'BBBBBB',
@@ -116,6 +118,7 @@ describe('Service Tests', () => {
             username: 'BBBBBB',
             password: 'BBBBBB',
             cronExpression: 'BBBBBB',
+            specFilterSpEL: 'BBBBBB',
             productKeySpEL: 'BBBBBB',
             productNameSpEL: 'BBBBBB',
             capabilityKeySpEL: 'BBBBBB',

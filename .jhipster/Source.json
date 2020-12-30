@@ -48,6 +48,10 @@
       "fieldType": "String"
     },
     {
+      "fieldName": "specFilterSpEL",
+      "fieldType": "String"
+    },
+    {
       "fieldName": "productKeySpEL",
       "fieldType": "String"
     },

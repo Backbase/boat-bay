@@ -14,6 +14,7 @@ export interface ISource {
   username?: string;
   password?: string;
   cronExpression?: string;
+  specFilterSpEL?: string;
   productKeySpEL?: string;
   productNameSpEL?: string;
   capabilityKeySpEL?: string;
@@ -39,6 +40,7 @@ export class Source implements ISource {
     public username?: string,
     public password?: string,
     public cronExpression?: string,
+    public specFilterSpEL?: string,
     public productKeySpEL?: string,
     public productNameSpEL?: string,
     public capabilityKeySpEL?: string,
