@@ -33,12 +33,6 @@
                     <label class="form-control-label" for="field_matchSpEL">Match Sp EL</label>
                     <input type="text" class="form-control" name="matchSpEL" id="field_matchSpEL"
                            formControlName="matchSpEL"/>
-                    <div *ngIf="editForm.get('matchSpEL')!.invalid && (editForm.get('matchSpEL')!.dirty || editForm.get('matchSpEL')!.touched)">
-                        <small class="form-text text-danger"
-                               *ngIf="editForm.get('matchSpEL')?.errors?.required">
-                        This field is required.
-                        </small>
-                    </div>
                 </div>
 
                 <div class="form-group">

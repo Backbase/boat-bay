@@ -14,10 +14,7 @@
     },
     {
       "fieldName": "matchSpEL",
-      "fieldType": "String",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldType": "String"
     },
     {
       "fieldName": "icon",

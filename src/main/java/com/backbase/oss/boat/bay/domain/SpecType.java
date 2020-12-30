@@ -29,8 +29,7 @@ public class SpecType implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @NotNull
-    @Column(name = "match_sp_el", nullable = false)
+    @Column(name = "match_sp_el")
     private String matchSpEL;
 
     @NotNull

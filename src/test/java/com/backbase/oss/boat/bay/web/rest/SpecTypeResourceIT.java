@@ -147,25 +147,6 @@ public class SpecTypeResourceIT {
 
     @Test
     @Transactional
-    public void checkMatchSpELIsRequired() throws Exception {
-        int databaseSizeBeforeTest = specTypeRepository.findAll().size();
-        // set the field null
-        specType.setMatchSpEL(null);
-
-        // Create the SpecType, which fails.
-
-
-        restSpecTypeMockMvc.perform(post("/api/spec-types")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(specType)))
-            .andExpect(status().isBadRequest());
-
-        List<SpecType> specTypeList = specTypeRepository.findAll();
-        assertThat(specTypeList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void checkIconIsRequired() throws Exception {
         int databaseSizeBeforeTest = specTypeRepository.findAll().size();
         // set the field null

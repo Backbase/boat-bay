@@ -2,11 +2,11 @@ package com.backbase.oss.boat.bay.web.rest;
 
 import com.backbase.oss.boat.bay.BoatBayApp;
 import com.backbase.oss.boat.bay.domain.Spec;
-import com.backbase.oss.boat.bay.domain.SpecType;
 import com.backbase.oss.boat.bay.domain.Portal;
 import com.backbase.oss.boat.bay.domain.Capability;
 import com.backbase.oss.boat.bay.domain.Product;
 import com.backbase.oss.boat.bay.domain.ServiceDefinition;
+import com.backbase.oss.boat.bay.domain.SpecType;
 import com.backbase.oss.boat.bay.repository.SpecRepository;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -141,16 +141,6 @@ public class SpecResourceIT {
             .sourceLastModifiedOn(DEFAULT_SOURCE_LAST_MODIFIED_ON)
             .sourceLastModifiedBy(DEFAULT_SOURCE_LAST_MODIFIED_BY);
         // Add required entity
-        SpecType specType;
-        if (TestUtil.findAll(em, SpecType.class).isEmpty()) {
-            specType = SpecTypeResourceIT.createEntity(em);
-            em.persist(specType);
-            em.flush();
-        } else {
-            specType = TestUtil.findAll(em, SpecType.class).get(0);
-        }
-        spec.setSpecType(specType);
-        // Add required entity
         Portal portal;
         if (TestUtil.findAll(em, Portal.class).isEmpty()) {
             portal = PortalResourceIT.createEntity(em);
@@ -190,6 +180,16 @@ public class SpecResourceIT {
             serviceDefinition = TestUtil.findAll(em, ServiceDefinition.class).get(0);
         }
         spec.setServiceDefinition(serviceDefinition);
+        // Add required entity
+        SpecType specType;
+        if (TestUtil.findAll(em, SpecType.class).isEmpty()) {
+            specType = SpecTypeResourceIT.createEntity(em);
+            em.persist(specType);
+            em.flush();
+        } else {
+            specType = TestUtil.findAll(em, SpecType.class).get(0);
+        }
+        spec.setSpecType(specType);
         return spec;
     }
     /**
@@ -221,16 +221,6 @@ public class SpecResourceIT {
             .sourceCreatedOn(UPDATED_SOURCE_CREATED_ON)
             .sourceLastModifiedOn(UPDATED_SOURCE_LAST_MODIFIED_ON)
             .sourceLastModifiedBy(UPDATED_SOURCE_LAST_MODIFIED_BY);
-        // Add required entity
-        SpecType specType;
-        if (TestUtil.findAll(em, SpecType.class).isEmpty()) {
-            specType = SpecTypeResourceIT.createUpdatedEntity(em);
-            em.persist(specType);
-            em.flush();
-        } else {
-            specType = TestUtil.findAll(em, SpecType.class).get(0);
-        }
-        spec.setSpecType(specType);
         // Add required entity
         Portal portal;
         if (TestUtil.findAll(em, Portal.class).isEmpty()) {
@@ -271,6 +261,16 @@ public class SpecResourceIT {
             serviceDefinition = TestUtil.findAll(em, ServiceDefinition.class).get(0);
         }
         spec.setServiceDefinition(serviceDefinition);
+        // Add required entity
+        SpecType specType;
+        if (TestUtil.findAll(em, SpecType.class).isEmpty()) {
+            specType = SpecTypeResourceIT.createUpdatedEntity(em);
+            em.persist(specType);
+            em.flush();
+        } else {
+            specType = TestUtil.findAll(em, SpecType.class).get(0);
+        }
+        spec.setSpecType(specType);
         return spec;
     }
 

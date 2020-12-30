@@ -5,7 +5,9 @@ import com.backbase.oss.boat.bay.domain.Product;
 import com.backbase.oss.boat.bay.domain.ServiceDefinition;
 import com.backbase.oss.boat.bay.domain.Source;
 import com.backbase.oss.boat.bay.domain.Spec;
+import com.backbase.oss.boat.bay.domain.SpecType;
 import com.backbase.oss.boat.bay.repository.SpecRepository;
+import com.backbase.oss.boat.bay.repository.SpecTypeRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatCapabilityRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatProductRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatServiceRepository;
@@ -13,9 +15,12 @@ import com.backbase.oss.boat.bay.repository.extended.BoatSpecRepository;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.data.domain.Example;
 import org.springframework.expression.EvaluationException;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
@@ -36,6 +41,8 @@ public class SpecSourceResolver {
     private final BoatServiceRepository boatServiceRepository;
 
     private final BoatSpecRepository boatSpecRepository;
+    private final SpecTypeRepository specTypeRepository;
+
 
     public void processSpecs(List<Spec> specs) {
         specs.forEach(this::processSpec);
@@ -66,8 +73,32 @@ public class SpecSourceResolver {
         setProduct(spec, source);
         setCapability(spec, source);
         setServiceDefinition(spec, source);
+        setSpecType(spec);
         log.info("Storing spec: {}", spec.getName());
         specRepository.save(spec);
+    }
+
+    private void setSpecType(Spec spec) {
+        SpecType specType = specTypeRepository.findAll().stream()
+            .filter(st -> match(st.getMatchSpEL(), spec))
+            .findFirst()
+            .orElseGet(this::genericSpecType);
+        log.info("Assigning specType: {} to spec: {}", specType.getName(), spec.getName());
+        spec.setSpecType(specType);
+    }
+
+    private SpecType genericSpecType() {
+        SpecType specType = new SpecType();
+        specType.setName("generic");
+        specType.setIcon("api");
+        return specTypeRepository.findOne(Example.of(specType))
+            .orElseGet(() -> createSpecType(specType));
+
+    }
+
+    @NotNull
+    private SpecType createSpecType(SpecType specType) {
+        return specTypeRepository.save(specType);
     }
 
     private void setServiceDefinition(Spec spec, Source source) {
@@ -144,26 +175,36 @@ public class SpecSourceResolver {
         return capabilityRepository.save(capability);
     }
 
+    public static boolean match(String spEL, Spec spec) {
+        if (spEL == null) {
+            return false;
+        }
+        Expression exp = parser.parseExpression(spEL);
+        Boolean match;
+        try {
+            match = exp.getValue(spec, Boolean.class);
+            return Objects.requireNonNullElse(match, false);
+        } catch (EvaluationException | StringIndexOutOfBoundsException e) {
+            log.warn("Expression: {} failed on: {}", spEL, spec);
+            return false;
+        }
+    }
+
     public static String parseName(String spEL, Spec spec, String fallback) {
         if (spEL == null) {
             return fallback;
         }
-        log.info("Parsing SpEL: {} from spec:{}", spEL, spec.getName());
+        log.debug("Parsing SpEL: {} from spec:{}", spEL, spec.getName());
         Expression exp = parser.parseExpression(spEL);
-        Object name;
+        String name;
         try {
-            name = exp.getValue(spec);
+            name = exp.getValue(spec, String.class);
         } catch (EvaluationException | StringIndexOutOfBoundsException e) {
-            log.warn("Expression: {} failed on: {}", spEL, spec);
+            log.warn("Expression: {} failed on: {}", spEL, spec.getName(), e);
             return fallback;
         }
-        if (name instanceof String) {
-            log.info("Resolved: {}", name);
-            return (String) name;
-        } else {
-            log.info("Invalid expression: {}", spEL);
-            return fallback;
-        }
+        log.debug("Resolved: {}", name);
+        return name;
     }
 
 }

@@ -98,12 +98,6 @@
                         <a [routerLink]="['/lint-report', spec.lintReport?.id, 'view']">{{ spec.lintReport?.id }}</a>
                     </div>
                 </dd>
-                <dt><span>Spec Type</span></dt>
-                <dd>
-                    <div *ngIf="spec.specType">
-                        <a [routerLink]="['/spec-type', spec.specType?.id, 'view']">{{ spec.specType?.name }}</a>
-                    </div>
-                </dd>
                 <dt><span>Portal</span></dt>
                 <dd>
                     <div *ngIf="spec.portal">
@@ -132,6 +126,12 @@
                 <dd>
                     <div *ngIf="spec.source">
                         <a [routerLink]="['/source', spec.source?.id, 'view']">{{ spec.source?.name }}</a>
+                    </div>
+                </dd>
+                <dt><span>Spec Type</span></dt>
+                <dd>
+                    <div *ngIf="spec.specType">
+                        <a [routerLink]="['/spec-type', spec.specType?.id, 'view']">{{ spec.specType?.name }}</a>
                     </div>
                 </dd>
             </dl>

@@ -126,15 +126,6 @@
       "ownerSide": true
     },
     {
-      "relationshipType": "one-to-one",
-      "otherEntityName": "specType",
-      "otherEntityRelationshipName": "spec",
-      "relationshipValidateRules": "required",
-      "relationshipName": "specType",
-      "otherEntityField": "name",
-      "ownerSide": true
-    },
-    {
       "relationshipType": "many-to-one",
       "otherEntityName": "portal",
       "otherEntityRelationshipName": "spec",
@@ -171,6 +162,14 @@
       "otherEntityName": "source",
       "otherEntityRelationshipName": "spec",
       "relationshipName": "source",
+      "otherEntityField": "name"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "specType",
+      "otherEntityRelationshipName": "spec",
+      "relationshipValidateRules": "required",
+      "relationshipName": "specType",
       "otherEntityField": "name"
     }
   ],

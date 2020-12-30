@@ -19,7 +19,7 @@ export class SpecTypeUpdateComponent implements OnInit {
     id: [],
     name: [null, [Validators.required]],
     description: [],
-    matchSpEL: [null, [Validators.required]],
+    matchSpEL: [],
     icon: [null, [Validators.required]],
   });
 

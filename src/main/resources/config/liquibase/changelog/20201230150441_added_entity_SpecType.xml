@@ -23,7 +23,7 @@
                 <constraints nullable="true" />
             </column>
             <column name="match_sp_el" type="varchar(255)">
-                <constraints nullable="false" />
+                <constraints nullable="true" />
             </column>
             <column name="icon" type="varchar(255)">
                 <constraints nullable="false" />
