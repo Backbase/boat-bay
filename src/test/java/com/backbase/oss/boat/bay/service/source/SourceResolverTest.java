@@ -26,7 +26,8 @@ class SourceResolverTest {
             "sourceName.substring(0, sourceName.lastIndexOf('-'))",
             "sourcePath.substring(1, sourcePath.indexOf('/',1))",
             "sourceName.substring(0, sourceName.lastIndexOf('-')).replaceAll('-([a-z]*?)-api', '')",
-            "sourceName.replaceAll('integration-api','').replaceAll('client-api','').replaceAll('integration-api','').replaceAll('service-api','').replaceAll('api', '')"
+            "sourceName.replaceAll('integration-api','').replaceAll('client-api','').replaceAll('integration-api','').replaceAll('service-api','').replaceAll('api', '')",
+            "sourceName.substring(0, sourceName.lastIndexOf('-')).replaceAll('-([a-z]*?)-api', '')"
         };
 
         for (int i = 0; i < expressions.length; i++) {

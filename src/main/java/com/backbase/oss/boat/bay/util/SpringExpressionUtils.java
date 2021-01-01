@@ -51,7 +51,7 @@ public class SpringExpressionUtils {
         try {
             name = getExpression(spEL).getValue(spec, String.class);
         } catch (EvaluationException | StringIndexOutOfBoundsException e) {
-            log.warn("Expression: {} failed on: {}", spEL, spec.getName());
+            log.warn("Expression: {} failed on: {}. Reason: {}", spEL, spec.getName(),e.getMessage());
             return fallback;
         }
         log.debug("Resolved: {}", name);

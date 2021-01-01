@@ -67,18 +67,17 @@ public class BoatBayBootstrap {
                 }
             }
 
-            bootstrap.getSources().forEach(source -> {
-                Optional<Source> existingSource = sourceRepository.findOne(Example.of(source));
+            for (Source source : bootstrap.getSources()) {
+                Optional<Source> existingSource = sourceRepository.findOne(Example.of(new Source().name(source.getName())));
                 if (existingSource.isEmpty()) {
-                    Portal portal = source.getPortal();
-
-                    source.setPortal(portalRepository.findByKeyAndVersion(portal.getKey(), portal.getVersion()));
+                    Portal portal = portalRepository.findOne(Example.of(source.getPortal())).orElseThrow(() -> new BootstrapException("Cannot create source with portal: " + source.getPortal() + " as it does not exist"));
+                    source.setPortal(portal);
                     log.info("Bootstrapping source: {}", source.getName());
                     sourceRepository.save(source);
                 }
-            });
+            }
 
-            if(bootstrap.getSpecTypes()!=null) {
+            if (bootstrap.getSpecTypes() != null) {
                 bootstrap.getSpecTypes().forEach(specType -> {
                     Optional<SpecType> existingSpecType = specTypeRepository.findOne(Example.of(specType));
                     if (existingSpecType.isEmpty()) {
