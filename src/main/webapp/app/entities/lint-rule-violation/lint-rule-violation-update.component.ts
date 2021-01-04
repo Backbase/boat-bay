@@ -10,6 +10,10 @@ import { ILintRuleViolation, LintRuleViolation } from 'app/shared/model/lint-rul
 import { LintRuleViolationService } from './lint-rule-violation.service';
 import { ILintRule } from 'app/shared/model/lint-rule.model';
 import { LintRuleService } from 'app/entities/lint-rule/lint-rule.service';
+import { ILintReport } from 'app/shared/model/lint-report.model';
+import { LintReportService } from 'app/entities/lint-report/lint-report.service';
+
+type SelectableEntity = ILintRule | ILintReport;
 
 @Component({
   selector: 'jhi-lint-rule-violation-update',
@@ -18,23 +22,25 @@ import { LintRuleService } from 'app/entities/lint-rule/lint-rule.service';
 export class LintRuleViolationUpdateComponent implements OnInit {
   isSaving = false;
   lintrules: ILintRule[] = [];
+  lintreports: ILintReport[] = [];
 
   editForm = this.fb.group({
     id: [],
     name: [null, [Validators.required]],
     description: [null, [Validators.required]],
+    url: [],
     severity: [],
     lineStart: [],
-    lindEnd: [],
-    columnStart: [],
-    columnEnd: [],
+    lineEnd: [],
     jsonPointer: [],
     lintRule: [],
+    lintReport: [null, Validators.required],
   });
 
   constructor(
     protected lintRuleViolationService: LintRuleViolationService,
     protected lintRuleService: LintRuleService,
+    protected lintReportService: LintReportService,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
   ) {}
@@ -64,6 +70,8 @@ export class LintRuleViolationUpdateComponent implements OnInit {
               .subscribe((concatRes: ILintRule[]) => (this.lintrules = concatRes));
           }
         });
+
+      this.lintReportService.query().subscribe((res: HttpResponse<ILintReport[]>) => (this.lintreports = res.body || []));
     });
   }
 
@@ -72,13 +80,13 @@ export class LintRuleViolationUpdateComponent implements OnInit {
       id: lintRuleViolation.id,
       name: lintRuleViolation.name,
       description: lintRuleViolation.description,
+      url: lintRuleViolation.url,
       severity: lintRuleViolation.severity,
       lineStart: lintRuleViolation.lineStart,
-      lindEnd: lintRuleViolation.lindEnd,
-      columnStart: lintRuleViolation.columnStart,
-      columnEnd: lintRuleViolation.columnEnd,
+      lineEnd: lintRuleViolation.lineEnd,
       jsonPointer: lintRuleViolation.jsonPointer,
       lintRule: lintRuleViolation.lintRule,
+      lintReport: lintRuleViolation.lintReport,
     });
   }
 
@@ -102,13 +110,13 @@ export class LintRuleViolationUpdateComponent implements OnInit {
       id: this.editForm.get(['id'])!.value,
       name: this.editForm.get(['name'])!.value,
       description: this.editForm.get(['description'])!.value,
+      url: this.editForm.get(['url'])!.value,
       severity: this.editForm.get(['severity'])!.value,
       lineStart: this.editForm.get(['lineStart'])!.value,
-      lindEnd: this.editForm.get(['lindEnd'])!.value,
-      columnStart: this.editForm.get(['columnStart'])!.value,
-      columnEnd: this.editForm.get(['columnEnd'])!.value,
+      lineEnd: this.editForm.get(['lineEnd'])!.value,
       jsonPointer: this.editForm.get(['jsonPointer'])!.value,
       lintRule: this.editForm.get(['lintRule'])!.value,
+      lintReport: this.editForm.get(['lintReport'])!.value,
     };
   }
 
@@ -128,7 +136,7 @@ export class LintRuleViolationUpdateComponent implements OnInit {
     this.isSaving = false;
   }
 
-  trackById(index: number, item: ILintRule): any {
+  trackById(index: number, item: SelectableEntity): any {
     return item.id;
   }
 }

@@ -1,5 +1,7 @@
 import { TestBed, getTestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import * as moment from 'moment';
+import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { LintReportService } from 'app/entities/lint-report/lint-report.service';
 import { ILintReport, LintReport } from 'app/shared/model/lint-report.model';
 
@@ -10,6 +12,7 @@ describe('Service Tests', () => {
     let httpMock: HttpTestingController;
     let elemDefault: ILintReport;
     let expectedResult: ILintReport | ILintReport[] | boolean | null;
+    let currentDate: moment.Moment;
 
     beforeEach(() => {
       TestBed.configureTestingModule({
@@ -19,13 +22,19 @@ describe('Service Tests', () => {
       injector = getTestBed();
       service = injector.get(LintReportService);
       httpMock = injector.get(HttpTestingController);
+      currentDate = moment();
 
-      elemDefault = new LintReport(0, 'AAAAAAA', false);
+      elemDefault = new LintReport(0, 'AAAAAAA', 'AAAAAAA', false, currentDate);
     });
 
     describe('Service methods', () => {
       it('should find an element', () => {
-        const returnedFromService = Object.assign({}, elemDefault);
+        const returnedFromService = Object.assign(
+          {
+            lintedOn: currentDate.format(DATE_TIME_FORMAT),
+          },
+          elemDefault
+        );
 
         service.find(123).subscribe(resp => (expectedResult = resp.body));
 
@@ -38,11 +47,17 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             id: 0,
+            lintedOn: currentDate.format(DATE_TIME_FORMAT),
           },
           elemDefault
         );
 
-        const expected = Object.assign({}, returnedFromService);
+        const expected = Object.assign(
+          {
+            lintedOn: currentDate,
+          },
+          returnedFromService
+        );
 
         service.create(new LintReport()).subscribe(resp => (expectedResult = resp.body));
 
@@ -54,13 +69,20 @@ describe('Service Tests', () => {
       it('should update a LintReport', () => {
         const returnedFromService = Object.assign(
           {
+            name: 'BBBBBB',
             grade: 'BBBBBB',
             passed: true,
+            lintedOn: currentDate.format(DATE_TIME_FORMAT),
           },
           elemDefault
         );
 
-        const expected = Object.assign({}, returnedFromService);
+        const expected = Object.assign(
+          {
+            lintedOn: currentDate,
+          },
+          returnedFromService
+        );
 
         service.update(expected).subscribe(resp => (expectedResult = resp.body));
 
@@ -72,13 +94,20 @@ describe('Service Tests', () => {
       it('should return a list of LintReport', () => {
         const returnedFromService = Object.assign(
           {
+            name: 'BBBBBB',
             grade: 'BBBBBB',
             passed: true,
+            lintedOn: currentDate.format(DATE_TIME_FORMAT),
           },
           elemDefault
         );
 
-        const expected = Object.assign({}, returnedFromService);
+        const expected = Object.assign(
+          {
+            lintedOn: currentDate,
+          },
+          returnedFromService
+        );
 
         service.query().subscribe(resp => (expectedResult = resp.body));
 

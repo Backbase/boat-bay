@@ -1,5 +1,6 @@
 package com.backbase.oss.boat.bay.config;
 
+import com.backbase.oss.boat.bay.service.lint.BoatLintRuleValidatorFactory;
 import io.github.jhipster.config.JHipsterProperties;
 import io.github.jhipster.config.cache.PrefixedKeyGenerator;
 import java.time.Duration;
@@ -80,7 +81,11 @@ public class CacheConfiguration {
             createCache(cm, com.backbase.oss.boat.bay.domain.Spec.class.getName() + ".serviceDefinitions");
             createCache(cm, com.backbase.oss.boat.bay.domain.ServiceDefinition.class.getName() + ".specs");
             createCache(cm, com.backbase.oss.boat.bay.domain.ServiceDefinition.class.getName() + ".serviceDefinitions");
+            createCache(cm, com.backbase.oss.boat.bay.domain.LintReport.class.getName() + ".lintReports");
+            createCache(cm, com.backbase.oss.boat.bay.domain.LintReport.class.getName() + ".lintRuleViolations");
             // jhipster-needle-ehcache-add-entry
+            createCache(cm, BoatLintRuleValidatorFactory.API_VALIDATORS);
+            createCache(cm, BoatLintRuleValidatorFactory.API_RULE_POLICY);
         };
     }
 

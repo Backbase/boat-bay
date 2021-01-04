@@ -1,11 +1,11 @@
-id;name;description;severity;line_start;lind_end;column_start;column_end;json_pointer
-1;Avon Ethiopian Birr;Rial Omani;SHOULD;89436;85114;70635;4791;Checking Account Italy calculate
-2;Sleek;Illinois compress Specialist;MUST;38345;74907;84553;87795;generating copying
-3;bandwidth-monitored;wireless withdrawal Clothing;MAY;60847;24861;35158;69233;Stravenue Accounts FTP
-4;calculating;virtual;SHOULD;47325;91371;1672;31495;Handmade Granite Computer
-5;feed parsing revolutionize;Luxembourg Lebanon Oklahoma;MAY;29777;89972;4566;53946;benchmark quantify
-6;functionalities Borders Configuration;engage Yemeni Rial;MAY;11430;85613;20356;31623;Senior Industrial
-7;Home;Pennsylvania;HINT;73368;32816;74128;98755;Avenue Granite
-8;matrix Human Plastic;Developer Gambia JSON;MUST;93693;88089;46156;92076;Toys
-9;architecture Computer methodology;overriding ivory;MUST;88699;47886;51218;3840;paradigms Computers Tools
-10;Usability Argentine Peso;RAM payment;HINT;8411;45076;12603;14829;Montana Pizza
+id;name;description;url;severity;line_start;line_end;json_pointer;lint_report_id
+1;Avon Ethiopian Birr;Rial Omani;https://destinee.biz;HINT;85114;70635;Orchestrator;1
+2;Italy;withdrawal Sleek COM;http://nolan.biz;MAY;84553;87795;generating copying;2
+3;bandwidth-monitored;wireless withdrawal Clothing;http://cleveland.com;HINT;46387;81614;program scalable calculating;3
+4;virtual;Checking Account;http://jaqueline.org;MUST;73321;51177;Legacy;4
+5;parsing revolutionize Designer;Lebanon Oklahoma;http://trevor.info;MUST;62282;29777;Awesome Rubber Shirt Auto Loan Account Wisconsin;5
+6;Central Personal Loan Account;niches Credit Card Account Specialist;https://rosendo.name;SHOULD;48381;89487;Industrial;6
+7;Home;Pennsylvania;http://merle.name;MAY;98755;55539;Music Saint Pierre and Miquelon;7
+8;Agent RAM user-facing;Tugrik strategy Program;https://preston.com;HINT;29940;8127;Incredible;8
+9;Cambridgeshire teal;Stravenue Lead synergies;https://javier.name;MUST;177;26929;brand;9
+10;Developer Sleek Fresh Computer payment;front-end;https://art.info;MAY;51275;16929;Bedfordshire HTTP Burkina Faso;10

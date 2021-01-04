@@ -6,14 +6,13 @@ export interface ILintRuleViolation {
   id?: number;
   name?: string;
   description?: string;
+  url?: string;
   severity?: Severity;
   lineStart?: number;
-  lindEnd?: number;
-  columnStart?: number;
-  columnEnd?: number;
+  lineEnd?: number;
   jsonPointer?: string;
   lintRule?: ILintRule;
-  lintReports?: ILintReport[];
+  lintReport?: ILintReport;
 }
 
 export class LintRuleViolation implements ILintRuleViolation {
@@ -21,13 +20,12 @@ export class LintRuleViolation implements ILintRuleViolation {
     public id?: number,
     public name?: string,
     public description?: string,
+    public url?: string,
     public severity?: Severity,
     public lineStart?: number,
-    public lindEnd?: number,
-    public columnStart?: number,
-    public columnEnd?: number,
+    public lineEnd?: number,
     public jsonPointer?: string,
     public lintRule?: ILintRule,
-    public lintReports?: ILintReport[]
+    public lintReport?: ILintReport
   ) {}
 }

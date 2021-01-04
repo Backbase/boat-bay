@@ -14,6 +14,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,11 +31,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WithMockUser
 public class LintReportResourceIT {
 
+    private static final String DEFAULT_NAME = "AAAAAAAAAA";
+    private static final String UPDATED_NAME = "BBBBBBBBBB";
+
     private static final String DEFAULT_GRADE = "AAAAAAAAAA";
     private static final String UPDATED_GRADE = "BBBBBBBBBB";
 
     private static final Boolean DEFAULT_PASSED = false;
     private static final Boolean UPDATED_PASSED = true;
+
+    private static final Instant DEFAULT_LINTED_ON = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_LINTED_ON = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
     @Autowired
     private LintReportRepository lintReportRepository;
@@ -54,8 +62,10 @@ public class LintReportResourceIT {
      */
     public static LintReport createEntity(EntityManager em) {
         LintReport lintReport = new LintReport()
+            .name(DEFAULT_NAME)
             .grade(DEFAULT_GRADE)
-            .passed(DEFAULT_PASSED);
+            .passed(DEFAULT_PASSED)
+            .lintedOn(DEFAULT_LINTED_ON);
         return lintReport;
     }
     /**
@@ -66,8 +76,10 @@ public class LintReportResourceIT {
      */
     public static LintReport createUpdatedEntity(EntityManager em) {
         LintReport lintReport = new LintReport()
+            .name(UPDATED_NAME)
             .grade(UPDATED_GRADE)
-            .passed(UPDATED_PASSED);
+            .passed(UPDATED_PASSED)
+            .lintedOn(UPDATED_LINTED_ON);
         return lintReport;
     }
 
@@ -90,8 +102,10 @@ public class LintReportResourceIT {
         List<LintReport> lintReportList = lintReportRepository.findAll();
         assertThat(lintReportList).hasSize(databaseSizeBeforeCreate + 1);
         LintReport testLintReport = lintReportList.get(lintReportList.size() - 1);
+        assertThat(testLintReport.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testLintReport.getGrade()).isEqualTo(DEFAULT_GRADE);
         assertThat(testLintReport.isPassed()).isEqualTo(DEFAULT_PASSED);
+        assertThat(testLintReport.getLintedOn()).isEqualTo(DEFAULT_LINTED_ON);
     }
 
     @Test
@@ -125,8 +139,10 @@ public class LintReportResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(lintReport.getId().intValue())))
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].grade").value(hasItem(DEFAULT_GRADE)))
-            .andExpect(jsonPath("$.[*].passed").value(hasItem(DEFAULT_PASSED.booleanValue())));
+            .andExpect(jsonPath("$.[*].passed").value(hasItem(DEFAULT_PASSED.booleanValue())))
+            .andExpect(jsonPath("$.[*].lintedOn").value(hasItem(DEFAULT_LINTED_ON.toString())));
     }
     
     @Test
@@ -140,8 +156,10 @@ public class LintReportResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(lintReport.getId().intValue()))
+            .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.grade").value(DEFAULT_GRADE))
-            .andExpect(jsonPath("$.passed").value(DEFAULT_PASSED.booleanValue()));
+            .andExpect(jsonPath("$.passed").value(DEFAULT_PASSED.booleanValue()))
+            .andExpect(jsonPath("$.lintedOn").value(DEFAULT_LINTED_ON.toString()));
     }
     @Test
     @Transactional
@@ -164,8 +182,10 @@ public class LintReportResourceIT {
         // Disconnect from session so that the updates on updatedLintReport are not directly saved in db
         em.detach(updatedLintReport);
         updatedLintReport
+            .name(UPDATED_NAME)
             .grade(UPDATED_GRADE)
-            .passed(UPDATED_PASSED);
+            .passed(UPDATED_PASSED)
+            .lintedOn(UPDATED_LINTED_ON);
 
         restLintReportMockMvc.perform(put("/api/lint-reports")
             .contentType(MediaType.APPLICATION_JSON)
@@ -176,8 +196,10 @@ public class LintReportResourceIT {
         List<LintReport> lintReportList = lintReportRepository.findAll();
         assertThat(lintReportList).hasSize(databaseSizeBeforeUpdate);
         LintReport testLintReport = lintReportList.get(lintReportList.size() - 1);
+        assertThat(testLintReport.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testLintReport.getGrade()).isEqualTo(UPDATED_GRADE);
         assertThat(testLintReport.isPassed()).isEqualTo(UPDATED_PASSED);
+        assertThat(testLintReport.getLintedOn()).isEqualTo(UPDATED_LINTED_ON);
     }
 
     @Test

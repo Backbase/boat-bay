@@ -23,22 +23,20 @@
             <thead>
                 <tr>
                     <th scope="col" ><span>ID</span></th>
+                    <th scope="col" ><span>Name</span></th>
                     <th scope="col" ><span>Grade</span></th>
                     <th scope="col" ><span>Passed</span></th>
-                    <th scope="col" ><span>Link Rule Violation</span></th>
+                    <th scope="col" ><span>Linted On</span></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let lintReport of lintReports ;trackBy: trackId">
                     <td><a [routerLink]="['/lint-report', lintReport.id, 'view']">{{ lintReport.id }}</a></td>
+                    <td>{{ lintReport.name }}</td>
                     <td>{{ lintReport.grade }}</td>
                     <td>{{ lintReport.passed }}</td>
-                    <td>
-                        <div *ngIf="lintReport.linkRuleViolation">
-                            <a [routerLink]="['/lint-rule-violation', lintReport.linkRuleViolation?.id, 'view']" >{{ lintReport.linkRuleViolation?.name }}</a>
-                        </div>
-                    </td>
+                    <td>{{ lintReport.lintedOn | date:'medium' }}</td>
                     <td class="text-right">
                         <div class="btn-group">
                             <button type="submit"

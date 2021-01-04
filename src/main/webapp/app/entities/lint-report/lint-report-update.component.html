@@ -12,6 +12,12 @@
                 </div>
 
                 <div class="form-group">
+                    <label class="form-control-label" for="field_name">Name</label>
+                    <input type="text" class="form-control" name="name" id="field_name"
+                           formControlName="name"/>
+                </div>
+
+                <div class="form-group">
                     <label class="form-control-label" for="field_grade">Grade</label>
                     <input type="text" class="form-control" name="grade" id="field_grade"
                            formControlName="grade"/>
@@ -24,11 +30,10 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-control-label" for="field_linkRuleViolation">Link Rule Violation</label>
-                    <select class="form-control" id="field_linkRuleViolation" name="linkRuleViolation" formControlName="linkRuleViolation">
-                        <option [ngValue]="null"></option>
-                        <option [ngValue]="lintRuleViolationOption.id === editForm.get('linkRuleViolation')!.value?.id ? editForm.get('linkRuleViolation')!.value : lintRuleViolationOption" *ngFor="let lintRuleViolationOption of lintruleviolations; trackBy: trackById">{{ lintRuleViolationOption.name }}</option>
-                    </select>
+                    <label class="form-control-label" for="field_lintedOn">Linted On</label>
+                    <div class="d-flex">
+                        <input id="field_lintedOn" type="datetime-local" class="form-control" name="lintedOn" formControlName="lintedOn" placeholder="YYYY-MM-DD HH:mm"/>
+                    </div>
                 </div>
             </div>
 

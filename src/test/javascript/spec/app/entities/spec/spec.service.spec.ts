@@ -44,6 +44,7 @@ describe('Service Tests', () => {
         'AAAAAAA',
         'AAAAAAA',
         'AAAAAAA',
+        'AAAAAAA',
         currentDate,
         currentDate,
         'AAAAAAA'
@@ -112,6 +113,7 @@ describe('Service Tests', () => {
             valid: true,
             order: 1,
             parseError: 'BBBBBB',
+            externalDocs: 'BBBBBB',
             sourcePath: 'BBBBBB',
             sourceName: 'BBBBBB',
             sourceUrl: 'BBBBBB',
@@ -156,6 +158,7 @@ describe('Service Tests', () => {
             valid: true,
             order: 1,
             parseError: 'BBBBBB',
+            externalDocs: 'BBBBBB',
             sourcePath: 'BBBBBB',
             sourceName: 'BBBBBB',
             sourceUrl: 'BBBBBB',

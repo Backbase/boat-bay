@@ -2,28 +2,35 @@
   "name": "LintReport",
   "fields": [
     {
+      "fieldName": "name",
+      "fieldType": "String"
+    },
+    {
       "fieldName": "grade",
       "fieldType": "String"
     },
     {
       "fieldName": "passed",
       "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "lintedOn",
+      "fieldType": "Instant"
     }
   ],
   "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "lintRuleViolation",
+      "otherEntityRelationshipName": "lintReport",
+      "relationshipName": "lintRuleViolation"
+    },
     {
       "relationshipType": "one-to-one",
       "otherEntityName": "spec",
       "otherEntityRelationshipName": "lintReport",
       "relationshipName": "spec",
       "ownerSide": false
-    },
-    {
-      "relationshipType": "many-to-one",
-      "otherEntityName": "lintRuleViolation",
-      "otherEntityRelationshipName": "lintReport",
-      "relationshipName": "linkRuleViolation",
-      "otherEntityField": "name"
     }
   ],
   "changelogDate": "20201223103015",
