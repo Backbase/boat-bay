@@ -16,17 +16,21 @@
             <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
             <column name="grade" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
             <column name="passed" type="boolean">
                 <constraints nullable="true" />
             </column>
-            <column name="link_rule_violation_id" type="bigint">
+            <column name="linted_on" type="datetime">
                 <constraints nullable="true" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
+        <dropDefaultValue tableName="lint_report" columnName="linted_on" columnDataType="datetime"/>
     </changeSet>
 
     <changeSet id="20201223103015-1-relations" author="jhipster">
@@ -48,8 +52,10 @@
                   separator=";"
                   tableName="lint_report">
             <column name="id" type="numeric"/>
+            <column name="name" type="string"/>
             <column name="grade" type="string"/>
             <column name="passed" type="boolean"/>
+            <column name="linted_on" type="datetime"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

@@ -14,5 +14,11 @@
                                  referencedColumnNames="id"
                                  referencedTableName="lint_rule"/>
 
+        <addForeignKeyConstraint baseColumnNames="lint_report_id"
+                                 baseTableName="lint_rule_violation"
+                                 constraintName="fk_lint_rule_violation_lint_report_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="lint_report"/>
+
     </changeSet>
 </databaseChangeLog>
