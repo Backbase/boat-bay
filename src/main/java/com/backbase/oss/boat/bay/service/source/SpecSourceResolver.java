@@ -13,16 +13,20 @@ import com.backbase.oss.boat.bay.repository.extended.BoatProductRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatServiceRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatSpecRepository;
 import com.backbase.oss.boat.bay.util.SpringExpressionUtils;
+import com.backbase.oss.boat.loader.OpenAPILoader;
+import com.backbase.oss.boat.loader.OpenAPILoaderException;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.tags.Tag;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Example;
-import org.springframework.expression.ExpressionParser;
-import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
@@ -49,10 +53,6 @@ public class SpecSourceResolver {
     private void processSpec(Spec spec) {
         Source source = spec.getSource();
 
-        if (source.getSpecFilterSpEL() != null && SpringExpressionUtils.match(source.getSpecFilterSpEL(), spec)) {
-            log.info("Spec: {} is ignored because it matches the spec filter expression: {}", spec.getName(), source.getSpecFilterSpEL());
-            return;
-        }
 
         String md5 = spec.getChecksum();
         if (md5 == null) {
@@ -69,15 +69,38 @@ public class SpecSourceResolver {
         } else {
             log.info("Spec: {} is not yet in BOAT BAY. Creating new Spec", spec.getName());
         }
-        if (!spec.isValid()) {
-            spec.version("");
-        }
         setProduct(spec, source);
         setCapability(spec, source);
         setServiceDefinition(spec, source);
         setSpecType(spec);
+        setInformationFromSpec(spec);
+
         log.info("Storing spec: {}", spec.getName());
         specRepository.save(spec);
+    }
+
+    private void setInformationFromSpec(Spec spec) {
+        try {
+            OpenAPI openAPI = OpenAPILoader.parse(spec.getOpenApi());
+
+            Info info = openAPI.getInfo();
+            spec.setVersion(info.getVersion());
+            spec.setTitle(info.getTitle());
+            spec.setDescription(info.getDescription());
+            spec.setValid(true);
+            if (openAPI.getTags() != null) {
+                spec.setTagsCsv(openAPI.getTags().stream().map(Tag::getName).collect(Collectors.joining(",")));
+            }
+        } catch (OpenAPILoaderException e) {
+            String parseErrorMessage = e.getMessage();
+            if (e.getParseMessages() != null) {
+                parseErrorMessage += "\n" + String.join("\n\t" + e.getParseMessages());
+            }
+            spec.setParseError(parseErrorMessage);
+            spec.setValid(false);
+            spec.setVersion("");
+            log.info("Failed to parse OpenAPI for item: {}", spec.getName());
+        }
     }
 
     private void setSpecType(Spec spec) {
