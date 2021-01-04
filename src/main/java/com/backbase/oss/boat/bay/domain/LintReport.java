@@ -1,13 +1,15 @@
 package com.backbase.oss.boat.bay.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 
 import java.io.Serializable;
+import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A LintReport.
@@ -23,19 +25,25 @@ public class LintReport implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "name")
+    private String name;
+
     @Column(name = "grade")
     private String grade;
 
     @Column(name = "passed")
     private Boolean passed;
 
+    @Column(name = "linted_on")
+    private Instant lintedOn;
+
+    @OneToMany(mappedBy = "lintReport")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<LintRuleViolation> lintRuleViolations = new HashSet<>();
+
     @OneToOne(mappedBy = "lintReport")
     @JsonIgnore
     private Spec spec;
-
-    @ManyToOne
-    @JsonIgnoreProperties(value = "lintReports", allowSetters = true)
-    private LintRuleViolation linkRuleViolation;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -44,6 +52,19 @@ public class LintReport implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public LintReport name(String name) {
+        this.name = name;
+        return this;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getGrade() {
@@ -72,6 +93,44 @@ public class LintReport implements Serializable {
         this.passed = passed;
     }
 
+    public Instant getLintedOn() {
+        return lintedOn;
+    }
+
+    public LintReport lintedOn(Instant lintedOn) {
+        this.lintedOn = lintedOn;
+        return this;
+    }
+
+    public void setLintedOn(Instant lintedOn) {
+        this.lintedOn = lintedOn;
+    }
+
+    public Set<LintRuleViolation> getLintRuleViolations() {
+        return lintRuleViolations;
+    }
+
+    public LintReport lintRuleViolations(Set<LintRuleViolation> lintRuleViolations) {
+        this.lintRuleViolations = lintRuleViolations;
+        return this;
+    }
+
+    public LintReport addLintRuleViolation(LintRuleViolation lintRuleViolation) {
+        this.lintRuleViolations.add(lintRuleViolation);
+        lintRuleViolation.setLintReport(this);
+        return this;
+    }
+
+    public LintReport removeLintRuleViolation(LintRuleViolation lintRuleViolation) {
+        this.lintRuleViolations.remove(lintRuleViolation);
+        lintRuleViolation.setLintReport(null);
+        return this;
+    }
+
+    public void setLintRuleViolations(Set<LintRuleViolation> lintRuleViolations) {
+        this.lintRuleViolations = lintRuleViolations;
+    }
+
     public Spec getSpec() {
         return spec;
     }
@@ -83,19 +142,6 @@ public class LintReport implements Serializable {
 
     public void setSpec(Spec spec) {
         this.spec = spec;
-    }
-
-    public LintRuleViolation getLinkRuleViolation() {
-        return linkRuleViolation;
-    }
-
-    public LintReport linkRuleViolation(LintRuleViolation lintRuleViolation) {
-        this.linkRuleViolation = lintRuleViolation;
-        return this;
-    }
-
-    public void setLinkRuleViolation(LintRuleViolation lintRuleViolation) {
-        this.linkRuleViolation = lintRuleViolation;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
@@ -120,8 +166,10 @@ public class LintReport implements Serializable {
     public String toString() {
         return "LintReport{" +
             "id=" + getId() +
+            ", name='" + getName() + "'" +
             ", grade='" + getGrade() + "'" +
             ", passed='" + isPassed() + "'" +
+            ", lintedOn='" + getLintedOn() + "'" +
             "}";
     }
 }

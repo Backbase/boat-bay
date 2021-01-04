@@ -4,11 +4,11 @@ import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+import * as moment from 'moment';
+import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 
 import { ILintReport, LintReport } from 'app/shared/model/lint-report.model';
 import { LintReportService } from './lint-report.service';
-import { ILintRuleViolation } from 'app/shared/model/lint-rule-violation.model';
-import { LintRuleViolationService } from 'app/entities/lint-rule-violation/lint-rule-violation.service';
 
 @Component({
   selector: 'jhi-lint-report-update',
@@ -16,38 +16,35 @@ import { LintRuleViolationService } from 'app/entities/lint-rule-violation/lint-
 })
 export class LintReportUpdateComponent implements OnInit {
   isSaving = false;
-  lintruleviolations: ILintRuleViolation[] = [];
 
   editForm = this.fb.group({
     id: [],
+    name: [],
     grade: [],
     passed: [],
-    linkRuleViolation: [],
+    lintedOn: [],
   });
 
-  constructor(
-    protected lintReportService: LintReportService,
-    protected lintRuleViolationService: LintRuleViolationService,
-    protected activatedRoute: ActivatedRoute,
-    private fb: FormBuilder
-  ) {}
+  constructor(protected lintReportService: LintReportService, protected activatedRoute: ActivatedRoute, private fb: FormBuilder) {}
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ lintReport }) => {
-      this.updateForm(lintReport);
+      if (!lintReport.id) {
+        const today = moment().startOf('day');
+        lintReport.lintedOn = today;
+      }
 
-      this.lintRuleViolationService
-        .query()
-        .subscribe((res: HttpResponse<ILintRuleViolation[]>) => (this.lintruleviolations = res.body || []));
+      this.updateForm(lintReport);
     });
   }
 
   updateForm(lintReport: ILintReport): void {
     this.editForm.patchValue({
       id: lintReport.id,
+      name: lintReport.name,
       grade: lintReport.grade,
       passed: lintReport.passed,
-      linkRuleViolation: lintReport.linkRuleViolation,
+      lintedOn: lintReport.lintedOn ? lintReport.lintedOn.format(DATE_TIME_FORMAT) : null,
     });
   }
 
@@ -69,9 +66,10 @@ export class LintReportUpdateComponent implements OnInit {
     return {
       ...new LintReport(),
       id: this.editForm.get(['id'])!.value,
+      name: this.editForm.get(['name'])!.value,
       grade: this.editForm.get(['grade'])!.value,
       passed: this.editForm.get(['passed'])!.value,
-      linkRuleViolation: this.editForm.get(['linkRuleViolation'])!.value,
+      lintedOn: this.editForm.get(['lintedOn'])!.value ? moment(this.editForm.get(['lintedOn'])!.value, DATE_TIME_FORMAT) : undefined,
     };
   }
 
@@ -89,9 +87,5 @@ export class LintReportUpdateComponent implements OnInit {
 
   protected onSaveError(): void {
     this.isSaving = false;
-  }
-
-  trackById(index: number, item: ILintRuleViolation): any {
-    return item.id;
   }
 }

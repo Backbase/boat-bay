@@ -36,6 +36,12 @@
                 </div>
 
                 <div class="form-group">
+                    <label class="form-control-label" for="field_url">Url</label>
+                    <input type="text" class="form-control" name="url" id="field_url"
+                           formControlName="url"/>
+                </div>
+
+                <div class="form-group">
                     <label class="form-control-label" for="field_severity">Severity</label>
                     <select class="form-control" name="severity" formControlName="severity" id="field_severity">
                         <option value="MUST">MUST</option>
@@ -52,21 +58,9 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-control-label" for="field_lindEnd">Lind End</label>
-                    <input type="number" class="form-control" name="lindEnd" id="field_lindEnd"
-                           formControlName="lindEnd"/>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-control-label" for="field_columnStart">Column Start</label>
-                    <input type="number" class="form-control" name="columnStart" id="field_columnStart"
-                           formControlName="columnStart"/>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-control-label" for="field_columnEnd">Column End</label>
-                    <input type="number" class="form-control" name="columnEnd" id="field_columnEnd"
-                           formControlName="columnEnd"/>
+                    <label class="form-control-label" for="field_lineEnd">Line End</label>
+                    <input type="number" class="form-control" name="lineEnd" id="field_lineEnd"
+                           formControlName="lineEnd"/>
                 </div>
 
                 <div class="form-group">
@@ -81,6 +75,20 @@
                         <option [ngValue]="null"></option>
                         <option [ngValue]="lintRuleOption.id === editForm.get('lintRule')!.value?.id ? editForm.get('lintRule')!.value : lintRuleOption" *ngFor="let lintRuleOption of lintrules; trackBy: trackById">{{ lintRuleOption.id }}</option>
                     </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_lintReport">Lint Report</label>
+                    <select class="form-control" id="field_lintReport" name="lintReport" formControlName="lintReport">
+                        <option *ngIf="!editForm.get('lintReport')!.value" [ngValue]="null" selected></option>
+                        <option [ngValue]="lintReportOption.id === editForm.get('lintReport')!.value?.id ? editForm.get('lintReport')!.value : lintReportOption" *ngFor="let lintReportOption of lintreports; trackBy: trackById">{{ lintReportOption.name }}</option>
+                    </select>
+                </div>
+                <div *ngIf="editForm.get('lintReport')!.invalid && (editForm.get('lintReport')!.dirty || editForm.get('lintReport')!.touched)">
+                    <small class="form-text text-danger"
+                           *ngIf="editForm.get('lintReport')?.errors?.required">
+                        This field is required.
+                    </small>
                 </div>
             </div>
 

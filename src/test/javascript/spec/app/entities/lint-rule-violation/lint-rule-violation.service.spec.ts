@@ -21,7 +21,7 @@ describe('Service Tests', () => {
       service = injector.get(LintRuleViolationService);
       httpMock = injector.get(HttpTestingController);
 
-      elemDefault = new LintRuleViolation(0, 'AAAAAAA', 'AAAAAAA', Severity.MUST, 0, 0, 0, 0, 'AAAAAAA');
+      elemDefault = new LintRuleViolation(0, 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', Severity.MUST, 0, 0, 'AAAAAAA');
     });
 
     describe('Service methods', () => {
@@ -57,11 +57,10 @@ describe('Service Tests', () => {
           {
             name: 'BBBBBB',
             description: 'BBBBBB',
+            url: 'BBBBBB',
             severity: 'BBBBBB',
             lineStart: 1,
-            lindEnd: 1,
-            columnStart: 1,
-            columnEnd: 1,
+            lineEnd: 1,
             jsonPointer: 'BBBBBB',
           },
           elemDefault
@@ -81,11 +80,10 @@ describe('Service Tests', () => {
           {
             name: 'BBBBBB',
             description: 'BBBBBB',
+            url: 'BBBBBB',
             severity: 'BBBBBB',
             lineStart: 1,
-            lindEnd: 1,
-            columnStart: 1,
-            columnEnd: 1,
+            lineEnd: 1,
             jsonPointer: 'BBBBBB',
           },
           elemDefault

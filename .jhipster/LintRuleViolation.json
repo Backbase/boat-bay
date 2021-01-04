@@ -16,6 +16,10 @@
       ]
     },
     {
+      "fieldName": "url",
+      "fieldType": "String"
+    },
+    {
       "fieldName": "severity",
       "fieldType": "Severity",
       "fieldValues": "MUST,SHOULD,MAY,HINT"
@@ -25,15 +29,7 @@
       "fieldType": "Integer"
     },
     {
-      "fieldName": "lindEnd",
-      "fieldType": "Integer"
-    },
-    {
-      "fieldName": "columnStart",
-      "fieldType": "Integer"
-    },
-    {
-      "fieldName": "columnEnd",
+      "fieldName": "lineEnd",
       "fieldType": "Integer"
     },
     {
@@ -51,10 +47,12 @@
       "ownerSide": true
     },
     {
-      "relationshipType": "one-to-many",
+      "relationshipType": "many-to-one",
       "otherEntityName": "lintReport",
-      "otherEntityRelationshipName": "linkRuleViolation",
-      "relationshipName": "lintReport"
+      "otherEntityRelationshipName": "lintRuleViolation",
+      "relationshipValidateRules": "required",
+      "relationshipName": "lintReport",
+      "otherEntityField": "name"
     }
   ],
   "changelogDate": "20201223103115",

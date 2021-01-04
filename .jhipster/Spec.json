@@ -88,6 +88,10 @@
       "fieldTypeBlobContent": "text"
     },
     {
+      "fieldName": "externalDocs",
+      "fieldType": "String"
+    },
+    {
       "fieldName": "sourcePath",
       "fieldType": "String"
     },

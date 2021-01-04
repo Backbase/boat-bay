@@ -1,5 +1,6 @@
 package com.backbase.oss.boat.bay.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -7,8 +8,6 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 import com.backbase.oss.boat.bay.domain.enumeration.Severity;
 
@@ -34,6 +33,9 @@ public class LintRuleViolation implements Serializable {
     @Column(name = "description", nullable = false)
     private String description;
 
+    @Column(name = "url")
+    private String url;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "severity")
     private Severity severity;
@@ -41,14 +43,8 @@ public class LintRuleViolation implements Serializable {
     @Column(name = "line_start")
     private Integer lineStart;
 
-    @Column(name = "lind_end")
-    private Integer lindEnd;
-
-    @Column(name = "column_start")
-    private Integer columnStart;
-
-    @Column(name = "column_end")
-    private Integer columnEnd;
+    @Column(name = "line_end")
+    private Integer lineEnd;
 
     @Column(name = "json_pointer")
     private String jsonPointer;
@@ -57,9 +53,10 @@ public class LintRuleViolation implements Serializable {
     @JoinColumn(unique = true)
     private LintRule lintRule;
 
-    @OneToMany(mappedBy = "linkRuleViolation")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    private Set<LintReport> lintReports = new HashSet<>();
+    @ManyToOne(optional = false)
+    @NotNull
+    @JsonIgnoreProperties(value = "lintRuleViolations", allowSetters = true)
+    private LintReport lintReport;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -96,6 +93,19 @@ public class LintRuleViolation implements Serializable {
         this.description = description;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
+    public LintRuleViolation url(String url) {
+        this.url = url;
+        return this;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     public Severity getSeverity() {
         return severity;
     }
@@ -122,43 +132,17 @@ public class LintRuleViolation implements Serializable {
         this.lineStart = lineStart;
     }
 
-    public Integer getLindEnd() {
-        return lindEnd;
+    public Integer getLineEnd() {
+        return lineEnd;
     }
 
-    public LintRuleViolation lindEnd(Integer lindEnd) {
-        this.lindEnd = lindEnd;
+    public LintRuleViolation lineEnd(Integer lineEnd) {
+        this.lineEnd = lineEnd;
         return this;
     }
 
-    public void setLindEnd(Integer lindEnd) {
-        this.lindEnd = lindEnd;
-    }
-
-    public Integer getColumnStart() {
-        return columnStart;
-    }
-
-    public LintRuleViolation columnStart(Integer columnStart) {
-        this.columnStart = columnStart;
-        return this;
-    }
-
-    public void setColumnStart(Integer columnStart) {
-        this.columnStart = columnStart;
-    }
-
-    public Integer getColumnEnd() {
-        return columnEnd;
-    }
-
-    public LintRuleViolation columnEnd(Integer columnEnd) {
-        this.columnEnd = columnEnd;
-        return this;
-    }
-
-    public void setColumnEnd(Integer columnEnd) {
-        this.columnEnd = columnEnd;
+    public void setLineEnd(Integer lineEnd) {
+        this.lineEnd = lineEnd;
     }
 
     public String getJsonPointer() {
@@ -187,29 +171,17 @@ public class LintRuleViolation implements Serializable {
         this.lintRule = lintRule;
     }
 
-    public Set<LintReport> getLintReports() {
-        return lintReports;
+    public LintReport getLintReport() {
+        return lintReport;
     }
 
-    public LintRuleViolation lintReports(Set<LintReport> lintReports) {
-        this.lintReports = lintReports;
+    public LintRuleViolation lintReport(LintReport lintReport) {
+        this.lintReport = lintReport;
         return this;
     }
 
-    public LintRuleViolation addLintReport(LintReport lintReport) {
-        this.lintReports.add(lintReport);
-        lintReport.setLinkRuleViolation(this);
-        return this;
-    }
-
-    public LintRuleViolation removeLintReport(LintReport lintReport) {
-        this.lintReports.remove(lintReport);
-        lintReport.setLinkRuleViolation(null);
-        return this;
-    }
-
-    public void setLintReports(Set<LintReport> lintReports) {
-        this.lintReports = lintReports;
+    public void setLintReport(LintReport lintReport) {
+        this.lintReport = lintReport;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
@@ -236,11 +208,10 @@ public class LintRuleViolation implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
+            ", url='" + getUrl() + "'" +
             ", severity='" + getSeverity() + "'" +
             ", lineStart=" + getLineStart() +
-            ", lindEnd=" + getLindEnd() +
-            ", columnStart=" + getColumnStart() +
-            ", columnEnd=" + getColumnEnd() +
+            ", lineEnd=" + getLineEnd() +
             ", jsonPointer='" + getJsonPointer() + "'" +
             "}";
     }

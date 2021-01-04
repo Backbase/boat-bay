@@ -16,6 +16,10 @@
                 <dd>
                     <span>{{ lintRuleViolation.description }}</span>
                 </dd>
+                <dt><span>Url</span></dt>
+                <dd>
+                    <span>{{ lintRuleViolation.url }}</span>
+                </dd>
                 <dt><span>Severity</span></dt>
                 <dd>
                     <span>{{ lintRuleViolation.severity }}</span>
@@ -24,17 +28,9 @@
                 <dd>
                     <span>{{ lintRuleViolation.lineStart }}</span>
                 </dd>
-                <dt><span>Lind End</span></dt>
+                <dt><span>Line End</span></dt>
                 <dd>
-                    <span>{{ lintRuleViolation.lindEnd }}</span>
-                </dd>
-                <dt><span>Column Start</span></dt>
-                <dd>
-                    <span>{{ lintRuleViolation.columnStart }}</span>
-                </dd>
-                <dt><span>Column End</span></dt>
-                <dd>
-                    <span>{{ lintRuleViolation.columnEnd }}</span>
+                    <span>{{ lintRuleViolation.lineEnd }}</span>
                 </dd>
                 <dt><span>Json Pointer</span></dt>
                 <dd>
@@ -44,6 +40,12 @@
                 <dd>
                     <div *ngIf="lintRuleViolation.lintRule">
                         <a [routerLink]="['/lint-rule', lintRuleViolation.lintRule?.id, 'view']">{{ lintRuleViolation.lintRule?.id }}</a>
+                    </div>
+                </dd>
+                <dt><span>Lint Report</span></dt>
+                <dd>
+                    <div *ngIf="lintRuleViolation.lintReport">
+                        <a [routerLink]="['/lint-report', lintRuleViolation.lintReport?.id, 'view']">{{ lintRuleViolation.lintReport?.name }}</a>
                     </div>
                 </dd>
             </dl>

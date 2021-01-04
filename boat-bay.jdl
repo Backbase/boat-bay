@@ -71,6 +71,7 @@ entity Spec {
     valid Boolean required
     order Integer
     parseError TextBlob
+    externalDocs String
 
     sourcePath String
     sourceName String
@@ -145,18 +146,19 @@ entity PortalLintRuleConfig {
 }
 
 entity LintReport {
+    name String
     grade String
     passed Boolean
+    lintedOn Instant
 }
 
 entity LintRuleViolation {
     name String required
 	description String required
+	url String
 	severity Severity
     lineStart Integer
-    lindEnd Integer
-    columnStart Integer
-    columnEnd Integer
+    lineEnd Integer
     jsonPointer String
 }
 
@@ -177,7 +179,7 @@ relationship OneToMany {
 	Product to Capability{product(name) required}
 	Capability to ServiceDefinition{capability(name) required}
 	ServiceDefinition to Spec{serviceDefinition(name) required}
-	LintRuleViolation to LintReport{linkRuleViolation(name)}
+	LintReport to LintRuleViolation{lintReport(name) required}
 	LintRuleSet to LintRule{ruleSet(name) required}
 	PortalLintRuleSet to PortalLintRule{portalRuleSet(name) required}
 }
@@ -194,7 +196,7 @@ relationship OneToOne {
     Dashboard{defaultPortal(name) required} to Portal
 	Spec to LintReport
 
-	LintRuleViolation  to LintRule
+	LintRuleViolation to LintRule
 	Source{portal(name) required} to Portal
 	Source{capability(name)} to Capability
 	Source{serviceDefinition(name)} to ServiceDefinition

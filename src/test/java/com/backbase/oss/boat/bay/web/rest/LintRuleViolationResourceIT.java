@@ -2,6 +2,7 @@ package com.backbase.oss.boat.bay.web.rest;
 
 import com.backbase.oss.boat.bay.BoatBayApp;
 import com.backbase.oss.boat.bay.domain.LintRuleViolation;
+import com.backbase.oss.boat.bay.domain.LintReport;
 import com.backbase.oss.boat.bay.repository.LintRuleViolationRepository;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -36,20 +37,17 @@ public class LintRuleViolationResourceIT {
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
+    private static final String DEFAULT_URL = "AAAAAAAAAA";
+    private static final String UPDATED_URL = "BBBBBBBBBB";
+
     private static final Severity DEFAULT_SEVERITY = Severity.MUST;
     private static final Severity UPDATED_SEVERITY = Severity.SHOULD;
 
     private static final Integer DEFAULT_LINE_START = 1;
     private static final Integer UPDATED_LINE_START = 2;
 
-    private static final Integer DEFAULT_LIND_END = 1;
-    private static final Integer UPDATED_LIND_END = 2;
-
-    private static final Integer DEFAULT_COLUMN_START = 1;
-    private static final Integer UPDATED_COLUMN_START = 2;
-
-    private static final Integer DEFAULT_COLUMN_END = 1;
-    private static final Integer UPDATED_COLUMN_END = 2;
+    private static final Integer DEFAULT_LINE_END = 1;
+    private static final Integer UPDATED_LINE_END = 2;
 
     private static final String DEFAULT_JSON_POINTER = "AAAAAAAAAA";
     private static final String UPDATED_JSON_POINTER = "BBBBBBBBBB";
@@ -75,12 +73,21 @@ public class LintRuleViolationResourceIT {
         LintRuleViolation lintRuleViolation = new LintRuleViolation()
             .name(DEFAULT_NAME)
             .description(DEFAULT_DESCRIPTION)
+            .url(DEFAULT_URL)
             .severity(DEFAULT_SEVERITY)
             .lineStart(DEFAULT_LINE_START)
-            .lindEnd(DEFAULT_LIND_END)
-            .columnStart(DEFAULT_COLUMN_START)
-            .columnEnd(DEFAULT_COLUMN_END)
+            .lineEnd(DEFAULT_LINE_END)
             .jsonPointer(DEFAULT_JSON_POINTER);
+        // Add required entity
+        LintReport lintReport;
+        if (TestUtil.findAll(em, LintReport.class).isEmpty()) {
+            lintReport = LintReportResourceIT.createEntity(em);
+            em.persist(lintReport);
+            em.flush();
+        } else {
+            lintReport = TestUtil.findAll(em, LintReport.class).get(0);
+        }
+        lintRuleViolation.setLintReport(lintReport);
         return lintRuleViolation;
     }
     /**
@@ -93,12 +100,21 @@ public class LintRuleViolationResourceIT {
         LintRuleViolation lintRuleViolation = new LintRuleViolation()
             .name(UPDATED_NAME)
             .description(UPDATED_DESCRIPTION)
+            .url(UPDATED_URL)
             .severity(UPDATED_SEVERITY)
             .lineStart(UPDATED_LINE_START)
-            .lindEnd(UPDATED_LIND_END)
-            .columnStart(UPDATED_COLUMN_START)
-            .columnEnd(UPDATED_COLUMN_END)
+            .lineEnd(UPDATED_LINE_END)
             .jsonPointer(UPDATED_JSON_POINTER);
+        // Add required entity
+        LintReport lintReport;
+        if (TestUtil.findAll(em, LintReport.class).isEmpty()) {
+            lintReport = LintReportResourceIT.createUpdatedEntity(em);
+            em.persist(lintReport);
+            em.flush();
+        } else {
+            lintReport = TestUtil.findAll(em, LintReport.class).get(0);
+        }
+        lintRuleViolation.setLintReport(lintReport);
         return lintRuleViolation;
     }
 
@@ -123,11 +139,10 @@ public class LintRuleViolationResourceIT {
         LintRuleViolation testLintRuleViolation = lintRuleViolationList.get(lintRuleViolationList.size() - 1);
         assertThat(testLintRuleViolation.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testLintRuleViolation.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
+        assertThat(testLintRuleViolation.getUrl()).isEqualTo(DEFAULT_URL);
         assertThat(testLintRuleViolation.getSeverity()).isEqualTo(DEFAULT_SEVERITY);
         assertThat(testLintRuleViolation.getLineStart()).isEqualTo(DEFAULT_LINE_START);
-        assertThat(testLintRuleViolation.getLindEnd()).isEqualTo(DEFAULT_LIND_END);
-        assertThat(testLintRuleViolation.getColumnStart()).isEqualTo(DEFAULT_COLUMN_START);
-        assertThat(testLintRuleViolation.getColumnEnd()).isEqualTo(DEFAULT_COLUMN_END);
+        assertThat(testLintRuleViolation.getLineEnd()).isEqualTo(DEFAULT_LINE_END);
         assertThat(testLintRuleViolation.getJsonPointer()).isEqualTo(DEFAULT_JSON_POINTER);
     }
 
@@ -202,11 +217,10 @@ public class LintRuleViolationResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(lintRuleViolation.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
+            .andExpect(jsonPath("$.[*].url").value(hasItem(DEFAULT_URL)))
             .andExpect(jsonPath("$.[*].severity").value(hasItem(DEFAULT_SEVERITY.toString())))
             .andExpect(jsonPath("$.[*].lineStart").value(hasItem(DEFAULT_LINE_START)))
-            .andExpect(jsonPath("$.[*].lindEnd").value(hasItem(DEFAULT_LIND_END)))
-            .andExpect(jsonPath("$.[*].columnStart").value(hasItem(DEFAULT_COLUMN_START)))
-            .andExpect(jsonPath("$.[*].columnEnd").value(hasItem(DEFAULT_COLUMN_END)))
+            .andExpect(jsonPath("$.[*].lineEnd").value(hasItem(DEFAULT_LINE_END)))
             .andExpect(jsonPath("$.[*].jsonPointer").value(hasItem(DEFAULT_JSON_POINTER)));
     }
     
@@ -223,11 +237,10 @@ public class LintRuleViolationResourceIT {
             .andExpect(jsonPath("$.id").value(lintRuleViolation.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
+            .andExpect(jsonPath("$.url").value(DEFAULT_URL))
             .andExpect(jsonPath("$.severity").value(DEFAULT_SEVERITY.toString()))
             .andExpect(jsonPath("$.lineStart").value(DEFAULT_LINE_START))
-            .andExpect(jsonPath("$.lindEnd").value(DEFAULT_LIND_END))
-            .andExpect(jsonPath("$.columnStart").value(DEFAULT_COLUMN_START))
-            .andExpect(jsonPath("$.columnEnd").value(DEFAULT_COLUMN_END))
+            .andExpect(jsonPath("$.lineEnd").value(DEFAULT_LINE_END))
             .andExpect(jsonPath("$.jsonPointer").value(DEFAULT_JSON_POINTER));
     }
     @Test
@@ -253,11 +266,10 @@ public class LintRuleViolationResourceIT {
         updatedLintRuleViolation
             .name(UPDATED_NAME)
             .description(UPDATED_DESCRIPTION)
+            .url(UPDATED_URL)
             .severity(UPDATED_SEVERITY)
             .lineStart(UPDATED_LINE_START)
-            .lindEnd(UPDATED_LIND_END)
-            .columnStart(UPDATED_COLUMN_START)
-            .columnEnd(UPDATED_COLUMN_END)
+            .lineEnd(UPDATED_LINE_END)
             .jsonPointer(UPDATED_JSON_POINTER);
 
         restLintRuleViolationMockMvc.perform(put("/api/lint-rule-violations")
@@ -271,11 +283,10 @@ public class LintRuleViolationResourceIT {
         LintRuleViolation testLintRuleViolation = lintRuleViolationList.get(lintRuleViolationList.size() - 1);
         assertThat(testLintRuleViolation.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testLintRuleViolation.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+        assertThat(testLintRuleViolation.getUrl()).isEqualTo(UPDATED_URL);
         assertThat(testLintRuleViolation.getSeverity()).isEqualTo(UPDATED_SEVERITY);
         assertThat(testLintRuleViolation.getLineStart()).isEqualTo(UPDATED_LINE_START);
-        assertThat(testLintRuleViolation.getLindEnd()).isEqualTo(UPDATED_LIND_END);
-        assertThat(testLintRuleViolation.getColumnStart()).isEqualTo(UPDATED_COLUMN_START);
-        assertThat(testLintRuleViolation.getColumnEnd()).isEqualTo(UPDATED_COLUMN_END);
+        assertThat(testLintRuleViolation.getLineEnd()).isEqualTo(UPDATED_LINE_END);
         assertThat(testLintRuleViolation.getJsonPointer()).isEqualTo(UPDATED_JSON_POINTER);
     }
 

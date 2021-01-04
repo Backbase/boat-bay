@@ -78,6 +78,9 @@ public class Spec implements Serializable {
     @Column(name = "parse_error")
     private String parseError;
 
+    @Column(name = "external_docs")
+    private String externalDocs;
+
     @Column(name = "source_path")
     private String sourcePath;
 
@@ -323,6 +326,19 @@ public class Spec implements Serializable {
         this.parseError = parseError;
     }
 
+    public String getExternalDocs() {
+        return externalDocs;
+    }
+
+    public Spec externalDocs(String externalDocs) {
+        this.externalDocs = externalDocs;
+        return this;
+    }
+
+    public void setExternalDocs(String externalDocs) {
+        this.externalDocs = externalDocs;
+    }
+
     public String getSourcePath() {
         return sourcePath;
     }
@@ -541,6 +557,7 @@ public class Spec implements Serializable {
             ", valid='" + isValid() + "'" +
             ", order=" + getOrder() +
             ", parseError='" + getParseError() + "'" +
+            ", externalDocs='" + getExternalDocs() + "'" +
             ", sourcePath='" + getSourcePath() + "'" +
             ", sourceName='" + getSourceName() + "'" +
             ", sourceUrl='" + getSourceUrl() + "'" +

@@ -23,6 +23,7 @@ export interface ISpec {
   valid?: boolean;
   order?: number;
   parseError?: any;
+  externalDocs?: string;
   sourcePath?: string;
   sourceName?: string;
   sourceUrl?: string;
@@ -56,6 +57,7 @@ export class Spec implements ISpec {
     public valid?: boolean,
     public order?: number,
     public parseError?: any,
+    public externalDocs?: string,
     public sourcePath?: string,
     public sourceName?: string,
     public sourceUrl?: string,
