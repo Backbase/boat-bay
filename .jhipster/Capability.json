@@ -37,10 +37,6 @@
       "fieldTypeBlobContent": "text"
     },
     {
-      "fieldName": "version",
-      "fieldType": "String"
-    },
-    {
       "fieldName": "createdOn",
       "fieldType": "Instant"
     },

@@ -47,6 +47,12 @@
   ],
   "relationships": [
     {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "spec",
+      "otherEntityRelationshipName": "serviceDefinition",
+      "relationshipName": "spec"
+    },
+    {
       "relationshipType": "many-to-one",
       "otherEntityName": "capability",
       "otherEntityRelationshipName": "serviceDefinition",

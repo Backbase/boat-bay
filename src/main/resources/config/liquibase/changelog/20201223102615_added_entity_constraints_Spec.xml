@@ -32,12 +32,6 @@
                                  referencedColumnNames="id"
                                  referencedTableName="product"/>
 
-        <addForeignKeyConstraint baseColumnNames="service_definition_id"
-                                 baseTableName="spec"
-                                 constraintName="fk_spec_service_definition_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="service_definition"/>
-
         <addForeignKeyConstraint baseColumnNames="source_id"
                                  baseTableName="spec"
                                  constraintName="fk_spec_source_id"
@@ -49,6 +43,12 @@
                                  constraintName="fk_spec_spec_type_id"
                                  referencedColumnNames="id"
                                  referencedTableName="spec_type"/>
+
+        <addForeignKeyConstraint baseColumnNames="service_definition_id"
+                                 baseTableName="spec"
+                                 constraintName="fk_spec_service_definition_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="service_definition"/>
 
     </changeSet>
 </databaseChangeLog>

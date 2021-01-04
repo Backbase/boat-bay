@@ -1,4 +1,5 @@
 import { Moment } from 'moment';
+import { ISpec } from 'app/shared/model/spec.model';
 import { ICapability } from 'app/shared/model/capability.model';
 
 export interface IServiceDefinition {
@@ -12,6 +13,7 @@ export interface IServiceDefinition {
   content?: any;
   createdOn?: Moment;
   createdBy?: string;
+  specs?: ISpec[];
   capability?: ICapability;
 }
 
@@ -27,6 +29,7 @@ export class ServiceDefinition implements IServiceDefinition {
     public content?: any,
     public createdOn?: Moment,
     public createdBy?: string,
+    public specs?: ISpec[],
     public capability?: ICapability
   ) {}
 }

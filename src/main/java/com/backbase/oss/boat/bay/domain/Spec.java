@@ -118,11 +118,6 @@ public class Spec implements Serializable {
     @JsonIgnoreProperties(value = "specs", allowSetters = true)
     private Product product;
 
-    @ManyToOne(optional = false)
-    @NotNull
-    @JsonIgnoreProperties(value = "specs", allowSetters = true)
-    private ServiceDefinition serviceDefinition;
-
     @ManyToOne
     @JsonIgnoreProperties(value = "specs", allowSetters = true)
     private Source source;
@@ -131,6 +126,11 @@ public class Spec implements Serializable {
     @NotNull
     @JsonIgnoreProperties(value = "specs", allowSetters = true)
     private SpecType specType;
+
+    @ManyToOne(optional = false)
+    @NotNull
+    @JsonIgnoreProperties(value = "specs", allowSetters = true)
+    private ServiceDefinition serviceDefinition;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -466,19 +466,6 @@ public class Spec implements Serializable {
         this.product = product;
     }
 
-    public ServiceDefinition getServiceDefinition() {
-        return serviceDefinition;
-    }
-
-    public Spec serviceDefinition(ServiceDefinition serviceDefinition) {
-        this.serviceDefinition = serviceDefinition;
-        return this;
-    }
-
-    public void setServiceDefinition(ServiceDefinition serviceDefinition) {
-        this.serviceDefinition = serviceDefinition;
-    }
-
     public Source getSource() {
         return source;
     }
@@ -503,6 +490,19 @@ public class Spec implements Serializable {
 
     public void setSpecType(SpecType specType) {
         this.specType = specType;
+    }
+
+    public ServiceDefinition getServiceDefinition() {
+        return serviceDefinition;
+    }
+
+    public Spec serviceDefinition(ServiceDefinition serviceDefinition) {
+        this.serviceDefinition = serviceDefinition;
+        return this;
+    }
+
+    public void setServiceDefinition(ServiceDefinition serviceDefinition) {
+        this.serviceDefinition = serviceDefinition;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 

@@ -3,9 +3,9 @@ import { ILintReport } from 'app/shared/model/lint-report.model';
 import { IPortal } from 'app/shared/model/portal.model';
 import { ICapability } from 'app/shared/model/capability.model';
 import { IProduct } from 'app/shared/model/product.model';
-import { IServiceDefinition } from 'app/shared/model/service-definition.model';
 import { ISource } from 'app/shared/model/source.model';
 import { ISpecType } from 'app/shared/model/spec-type.model';
+import { IServiceDefinition } from 'app/shared/model/service-definition.model';
 
 export interface ISpec {
   id?: number;
@@ -34,9 +34,9 @@ export interface ISpec {
   portal?: IPortal;
   capability?: ICapability;
   product?: IProduct;
-  serviceDefinition?: IServiceDefinition;
   source?: ISource;
   specType?: ISpecType;
+  serviceDefinition?: IServiceDefinition;
 }
 
 export class Spec implements ISpec {
@@ -67,9 +67,9 @@ export class Spec implements ISpec {
     public portal?: IPortal,
     public capability?: ICapability,
     public product?: IProduct,
-    public serviceDefinition?: IServiceDefinition,
     public source?: ISource,
-    public specType?: ISpecType
+    public specType?: ISpecType,
+    public serviceDefinition?: IServiceDefinition
   ) {
     this.valid = this.valid || false;
   }

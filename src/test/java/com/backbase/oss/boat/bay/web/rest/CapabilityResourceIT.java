@@ -54,9 +54,6 @@ public class CapabilityResourceIT {
     private static final String DEFAULT_CONTENT = "AAAAAAAAAA";
     private static final String UPDATED_CONTENT = "BBBBBBBBBB";
 
-    private static final String DEFAULT_VERSION = "AAAAAAAAAA";
-    private static final String UPDATED_VERSION = "BBBBBBBBBB";
-
     private static final Instant DEFAULT_CREATED_ON = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_CREATED_ON = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
@@ -89,7 +86,6 @@ public class CapabilityResourceIT {
             .subTitle(DEFAULT_SUB_TITLE)
             .navTitle(DEFAULT_NAV_TITLE)
             .content(DEFAULT_CONTENT)
-            .version(DEFAULT_VERSION)
             .createdOn(DEFAULT_CREATED_ON)
             .createdBy(DEFAULT_CREATED_BY);
         // Add required entity
@@ -119,7 +115,6 @@ public class CapabilityResourceIT {
             .subTitle(UPDATED_SUB_TITLE)
             .navTitle(UPDATED_NAV_TITLE)
             .content(UPDATED_CONTENT)
-            .version(UPDATED_VERSION)
             .createdOn(UPDATED_CREATED_ON)
             .createdBy(UPDATED_CREATED_BY);
         // Add required entity
@@ -161,7 +156,6 @@ public class CapabilityResourceIT {
         assertThat(testCapability.getSubTitle()).isEqualTo(DEFAULT_SUB_TITLE);
         assertThat(testCapability.getNavTitle()).isEqualTo(DEFAULT_NAV_TITLE);
         assertThat(testCapability.getContent()).isEqualTo(DEFAULT_CONTENT);
-        assertThat(testCapability.getVersion()).isEqualTo(DEFAULT_VERSION);
         assertThat(testCapability.getCreatedOn()).isEqualTo(DEFAULT_CREATED_ON);
         assertThat(testCapability.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
     }
@@ -242,7 +236,6 @@ public class CapabilityResourceIT {
             .andExpect(jsonPath("$.[*].subTitle").value(hasItem(DEFAULT_SUB_TITLE)))
             .andExpect(jsonPath("$.[*].navTitle").value(hasItem(DEFAULT_NAV_TITLE)))
             .andExpect(jsonPath("$.[*].content").value(hasItem(DEFAULT_CONTENT.toString())))
-            .andExpect(jsonPath("$.[*].version").value(hasItem(DEFAULT_VERSION)))
             .andExpect(jsonPath("$.[*].createdOn").value(hasItem(DEFAULT_CREATED_ON.toString())))
             .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)));
     }
@@ -265,7 +258,6 @@ public class CapabilityResourceIT {
             .andExpect(jsonPath("$.subTitle").value(DEFAULT_SUB_TITLE))
             .andExpect(jsonPath("$.navTitle").value(DEFAULT_NAV_TITLE))
             .andExpect(jsonPath("$.content").value(DEFAULT_CONTENT.toString()))
-            .andExpect(jsonPath("$.version").value(DEFAULT_VERSION))
             .andExpect(jsonPath("$.createdOn").value(DEFAULT_CREATED_ON.toString()))
             .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY));
     }
@@ -297,7 +289,6 @@ public class CapabilityResourceIT {
             .subTitle(UPDATED_SUB_TITLE)
             .navTitle(UPDATED_NAV_TITLE)
             .content(UPDATED_CONTENT)
-            .version(UPDATED_VERSION)
             .createdOn(UPDATED_CREATED_ON)
             .createdBy(UPDATED_CREATED_BY);
 
@@ -317,7 +308,6 @@ public class CapabilityResourceIT {
         assertThat(testCapability.getSubTitle()).isEqualTo(UPDATED_SUB_TITLE);
         assertThat(testCapability.getNavTitle()).isEqualTo(UPDATED_NAV_TITLE);
         assertThat(testCapability.getContent()).isEqualTo(UPDATED_CONTENT);
-        assertThat(testCapability.getVersion()).isEqualTo(UPDATED_VERSION);
         assertThat(testCapability.getCreatedOn()).isEqualTo(UPDATED_CREATED_ON);
         assertThat(testCapability.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
     }

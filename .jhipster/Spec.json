@@ -151,14 +151,6 @@
     },
     {
       "relationshipType": "many-to-one",
-      "otherEntityName": "serviceDefinition",
-      "otherEntityRelationshipName": "spec",
-      "relationshipValidateRules": "required",
-      "relationshipName": "serviceDefinition",
-      "otherEntityField": "name"
-    },
-    {
-      "relationshipType": "many-to-one",
       "otherEntityName": "source",
       "otherEntityRelationshipName": "spec",
       "relationshipName": "source",
@@ -170,6 +162,14 @@
       "otherEntityRelationshipName": "spec",
       "relationshipValidateRules": "required",
       "relationshipName": "specType",
+      "otherEntityField": "name"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "serviceDefinition",
+      "otherEntityRelationshipName": "spec",
+      "relationshipValidateRules": "required",
+      "relationshipName": "serviceDefinition",
       "otherEntityField": "name"
     }
   ],

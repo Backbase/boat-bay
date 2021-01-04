@@ -50,9 +50,6 @@ public class Capability implements Serializable {
     @Column(name = "content")
     private String content;
 
-    @Column(name = "version")
-    private String version;
-
     @Column(name = "created_on")
     private Instant createdOn;
 
@@ -168,19 +165,6 @@ public class Capability implements Serializable {
         this.content = content;
     }
 
-    public String getVersion() {
-        return version;
-    }
-
-    public Capability version(String version) {
-        this.version = version;
-        return this;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
     public Instant getCreatedOn() {
         return createdOn;
     }
@@ -274,7 +258,6 @@ public class Capability implements Serializable {
             ", subTitle='" + getSubTitle() + "'" +
             ", navTitle='" + getNavTitle() + "'" +
             ", content='" + getContent() + "'" +
-            ", version='" + getVersion() + "'" +
             ", createdOn='" + getCreatedOn() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
             "}";
