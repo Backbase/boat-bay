@@ -8,12 +8,6 @@
     -->
     <changeSet id="20201223102615-2" author="jhipster">
         
-        <addForeignKeyConstraint baseColumnNames="lint_report_id"
-                                 baseTableName="spec"
-                                 constraintName="fk_spec_lint_report_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="lint_report"/>
-
         <addForeignKeyConstraint baseColumnNames="portal_id"
                                  baseTableName="spec"
                                  constraintName="fk_spec_portal_id"

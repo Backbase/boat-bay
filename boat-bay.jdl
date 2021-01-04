@@ -194,8 +194,7 @@ relationship ManyToOne {
 
 relationship OneToOne {
     Dashboard{defaultPortal(name) required} to Portal
-	Spec to LintReport
-
+	LintReport to Spec
 	LintRuleViolation to LintRule
 	Source{portal(name) required} to Portal
 	Source{capability(name)} to Capability

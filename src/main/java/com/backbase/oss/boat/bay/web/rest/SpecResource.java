@@ -18,6 +18,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 /**
  * REST controller for managing {@link com.backbase.oss.boat.bay.domain.Spec}.
@@ -83,10 +85,18 @@ public class SpecResource {
     /**
      * {@code GET  /specs} : get all the specs.
      *
+     * @param filter the filter of the request.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of specs in body.
      */
     @GetMapping("/specs")
-    public List<Spec> getAllSpecs() {
+    public List<Spec> getAllSpecs(@RequestParam(required = false) String filter) {
+        if ("lintreport-is-null".equals(filter)) {
+            log.debug("REST request to get all Specs where lintReport is null");
+            return StreamSupport
+                .stream(specRepository.findAll().spliterator(), false)
+                .filter(spec -> spec.getLintReport() == null)
+                .collect(Collectors.toList());
+        }
         log.debug("REST request to get all Specs");
         return specRepository.findAll();
     }

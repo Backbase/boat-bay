@@ -39,8 +39,13 @@ public class SpecRepositoryAspect {
 
         if (joinPoint.getArgs().length == 1 && joinPoint.getArgs()[0] instanceof Spec) {
             Spec spec = (Spec) result;
-            log.info("Publishing Spec Updated Event for Spec: {}", spec.getName());
-            publisher.publishEvent(new SpecUpdatedEvent(this, spec));
+            if(spec.getId() != null) {
+                log.info("Publishing Spec Updated Event for Spec: {}", spec.getName());
+                publisher.publishEvent(new SpecUpdatedEvent(this, spec));
+            } else {
+                log.info("Spec is not stored somehow...");
+            }
+
         }
 
         return result;

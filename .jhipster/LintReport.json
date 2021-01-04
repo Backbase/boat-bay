@@ -20,17 +20,18 @@
   ],
   "relationships": [
     {
-      "relationshipType": "one-to-many",
-      "otherEntityName": "lintRuleViolation",
-      "otherEntityRelationshipName": "lintReport",
-      "relationshipName": "lintRuleViolation"
-    },
-    {
       "relationshipType": "one-to-one",
       "otherEntityName": "spec",
       "otherEntityRelationshipName": "lintReport",
       "relationshipName": "spec",
-      "ownerSide": false
+      "otherEntityField": "id",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "lintRuleViolation",
+      "otherEntityRelationshipName": "lintReport",
+      "relationshipName": "lintRuleViolation"
     }
   ],
   "changelogDate": "20201223103015",

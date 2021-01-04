@@ -99,7 +99,7 @@ spring:
     execution:
       thread-name-prefix: boat-bay-task-
       pool:
-        core-size: 2
+        core-size: 8
         max-size: 50
         queue-capacity: 10000
     scheduling:

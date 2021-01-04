@@ -1,6 +1,5 @@
 package com.backbase.oss.boat.bay.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -37,13 +36,13 @@ public class LintReport implements Serializable {
     @Column(name = "linted_on")
     private Instant lintedOn;
 
+    @OneToOne
+    @JoinColumn(unique = true)
+    private Spec spec;
+
     @OneToMany(mappedBy = "lintReport")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<LintRuleViolation> lintRuleViolations = new HashSet<>();
-
-    @OneToOne(mappedBy = "lintReport")
-    @JsonIgnore
-    private Spec spec;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -106,6 +105,19 @@ public class LintReport implements Serializable {
         this.lintedOn = lintedOn;
     }
 
+    public Spec getSpec() {
+        return spec;
+    }
+
+    public LintReport spec(Spec spec) {
+        this.spec = spec;
+        return this;
+    }
+
+    public void setSpec(Spec spec) {
+        this.spec = spec;
+    }
+
     public Set<LintRuleViolation> getLintRuleViolations() {
         return lintRuleViolations;
     }
@@ -129,19 +141,6 @@ public class LintReport implements Serializable {
 
     public void setLintRuleViolations(Set<LintRuleViolation> lintRuleViolations) {
         this.lintRuleViolations = lintRuleViolations;
-    }
-
-    public Spec getSpec() {
-        return spec;
-    }
-
-    public LintReport spec(Spec spec) {
-        this.spec = spec;
-        return this;
-    }
-
-    public void setSpec(Spec spec) {
-        this.spec = spec;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 

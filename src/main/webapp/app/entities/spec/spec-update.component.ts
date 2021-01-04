@@ -4,7 +4,6 @@ import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { JhiDataUtils, JhiFileLoadError, JhiEventManager, JhiEventWithContent } from 'ng-jhipster';
@@ -12,8 +11,6 @@ import { JhiDataUtils, JhiFileLoadError, JhiEventManager, JhiEventWithContent } 
 import { ISpec, Spec } from 'app/shared/model/spec.model';
 import { SpecService } from './spec.service';
 import { AlertError } from 'app/shared/alert/alert-error.model';
-import { ILintReport } from 'app/shared/model/lint-report.model';
-import { LintReportService } from 'app/entities/lint-report/lint-report.service';
 import { IPortal } from 'app/shared/model/portal.model';
 import { PortalService } from 'app/entities/portal/portal.service';
 import { ICapability } from 'app/shared/model/capability.model';
@@ -27,7 +24,7 @@ import { SpecTypeService } from 'app/entities/spec-type/spec-type.service';
 import { IServiceDefinition } from 'app/shared/model/service-definition.model';
 import { ServiceDefinitionService } from 'app/entities/service-definition/service-definition.service';
 
-type SelectableEntity = ILintReport | IPortal | ICapability | IProduct | ISource | ISpecType | IServiceDefinition;
+type SelectableEntity = IPortal | ICapability | IProduct | ISource | ISpecType | IServiceDefinition;
 
 @Component({
   selector: 'jhi-spec-update',
@@ -35,7 +32,6 @@ type SelectableEntity = ILintReport | IPortal | ICapability | IProduct | ISource
 })
 export class SpecUpdateComponent implements OnInit {
   isSaving = false;
-  lintreports: ILintReport[] = [];
   portals: IPortal[] = [];
   capabilities: ICapability[] = [];
   products: IProduct[] = [];
@@ -67,7 +63,6 @@ export class SpecUpdateComponent implements OnInit {
     sourceCreatedOn: [],
     sourceLastModifiedOn: [],
     sourceLastModifiedBy: [],
-    lintReport: [],
     portal: [null, Validators.required],
     capability: [null, Validators.required],
     product: [null, Validators.required],
@@ -80,7 +75,6 @@ export class SpecUpdateComponent implements OnInit {
     protected dataUtils: JhiDataUtils,
     protected eventManager: JhiEventManager,
     protected specService: SpecService,
-    protected lintReportService: LintReportService,
     protected portalService: PortalService,
     protected capabilityService: CapabilityService,
     protected productService: ProductService,
@@ -101,28 +95,6 @@ export class SpecUpdateComponent implements OnInit {
       }
 
       this.updateForm(spec);
-
-      this.lintReportService
-        .query({ filter: 'spec-is-null' })
-        .pipe(
-          map((res: HttpResponse<ILintReport[]>) => {
-            return res.body || [];
-          })
-        )
-        .subscribe((resBody: ILintReport[]) => {
-          if (!spec.lintReport || !spec.lintReport.id) {
-            this.lintreports = resBody;
-          } else {
-            this.lintReportService
-              .find(spec.lintReport.id)
-              .pipe(
-                map((subRes: HttpResponse<ILintReport>) => {
-                  return subRes.body ? [subRes.body].concat(resBody) : resBody;
-                })
-              )
-              .subscribe((concatRes: ILintReport[]) => (this.lintreports = concatRes));
-          }
-        });
 
       this.portalService.query().subscribe((res: HttpResponse<IPortal[]>) => (this.portals = res.body || []));
 
@@ -165,7 +137,6 @@ export class SpecUpdateComponent implements OnInit {
       sourceCreatedOn: spec.sourceCreatedOn ? spec.sourceCreatedOn.format(DATE_TIME_FORMAT) : null,
       sourceLastModifiedOn: spec.sourceLastModifiedOn ? spec.sourceLastModifiedOn.format(DATE_TIME_FORMAT) : null,
       sourceLastModifiedBy: spec.sourceLastModifiedBy,
-      lintReport: spec.lintReport,
       portal: spec.portal,
       capability: spec.capability,
       product: spec.product,
@@ -235,7 +206,6 @@ export class SpecUpdateComponent implements OnInit {
         ? moment(this.editForm.get(['sourceLastModifiedOn'])!.value, DATE_TIME_FORMAT)
         : undefined,
       sourceLastModifiedBy: this.editForm.get(['sourceLastModifiedBy'])!.value,
-      lintReport: this.editForm.get(['lintReport'])!.value,
       portal: this.editForm.get(['portal'])!.value,
       capability: this.editForm.get(['capability'])!.value,
       product: this.editForm.get(['product'])!.value,

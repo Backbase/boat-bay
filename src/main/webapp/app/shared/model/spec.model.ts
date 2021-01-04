@@ -1,10 +1,10 @@
 import { Moment } from 'moment';
-import { ILintReport } from 'app/shared/model/lint-report.model';
 import { IPortal } from 'app/shared/model/portal.model';
 import { ICapability } from 'app/shared/model/capability.model';
 import { IProduct } from 'app/shared/model/product.model';
 import { ISource } from 'app/shared/model/source.model';
 import { ISpecType } from 'app/shared/model/spec-type.model';
+import { ILintReport } from 'app/shared/model/lint-report.model';
 import { IServiceDefinition } from 'app/shared/model/service-definition.model';
 
 export interface ISpec {
@@ -31,12 +31,12 @@ export interface ISpec {
   sourceCreatedOn?: Moment;
   sourceLastModifiedOn?: Moment;
   sourceLastModifiedBy?: string;
-  lintReport?: ILintReport;
   portal?: IPortal;
   capability?: ICapability;
   product?: IProduct;
   source?: ISource;
   specType?: ISpecType;
+  lintReport?: ILintReport;
   serviceDefinition?: IServiceDefinition;
 }
 
@@ -65,12 +65,12 @@ export class Spec implements ISpec {
     public sourceCreatedOn?: Moment,
     public sourceLastModifiedOn?: Moment,
     public sourceLastModifiedBy?: string,
-    public lintReport?: ILintReport,
     public portal?: IPortal,
     public capability?: ICapability,
     public product?: IProduct,
     public source?: ISource,
     public specType?: ISpecType,
+    public lintReport?: ILintReport,
     public serviceDefinition?: IServiceDefinition
   ) {
     this.valid = this.valid || false;

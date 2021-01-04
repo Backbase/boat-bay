@@ -82,9 +82,6 @@
             <column name="source_last_modified_by" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-            <column name="lint_report_id" type="bigint">
-                <constraints unique="true" nullable="true" uniqueConstraintName="ux_spec_lint_report_id" />
-            </column>
             <column name="portal_id" type="bigint">
                 <constraints nullable="false" />
             </column>

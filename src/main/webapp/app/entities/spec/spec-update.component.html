@@ -205,14 +205,6 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-control-label" for="field_lintReport">Lint Report</label>
-                    <select class="form-control" id="field_lintReport" name="lintReport" formControlName="lintReport">
-                        <option [ngValue]="null"></option>
-                        <option [ngValue]="lintReportOption.id === editForm.get('lintReport')!.value?.id ? editForm.get('lintReport')!.value : lintReportOption" *ngFor="let lintReportOption of lintreports; trackBy: trackById">{{ lintReportOption.id }}</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
                     <label class="form-control-label" for="field_portal">Portal</label>
                     <select class="form-control" id="field_portal" name="portal" formControlName="portal">
                         <option *ngIf="!editForm.get('portal')!.value" [ngValue]="null" selected></option>

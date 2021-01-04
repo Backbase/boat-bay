@@ -24,6 +24,12 @@
                 <dd>
                     <span>{{ lintReport.lintedOn }}</span>
                 </dd>
+                <dt><span>Spec</span></dt>
+                <dd>
+                    <div *ngIf="lintReport.spec">
+                        <a [routerLink]="['/spec', lintReport.spec?.id, 'view']">{{ lintReport.spec?.id }}</a>
+                    </div>
+                </dd>
             </dl>
 
             <button type="submit"

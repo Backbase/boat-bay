@@ -4,11 +4,14 @@ import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 
 import { ILintReport, LintReport } from 'app/shared/model/lint-report.model';
 import { LintReportService } from './lint-report.service';
+import { ISpec } from 'app/shared/model/spec.model';
+import { SpecService } from 'app/entities/spec/spec.service';
 
 @Component({
   selector: 'jhi-lint-report-update',
@@ -16,6 +19,7 @@ import { LintReportService } from './lint-report.service';
 })
 export class LintReportUpdateComponent implements OnInit {
   isSaving = false;
+  specs: ISpec[] = [];
 
   editForm = this.fb.group({
     id: [],
@@ -23,9 +27,15 @@ export class LintReportUpdateComponent implements OnInit {
     grade: [],
     passed: [],
     lintedOn: [],
+    spec: [],
   });
 
-  constructor(protected lintReportService: LintReportService, protected activatedRoute: ActivatedRoute, private fb: FormBuilder) {}
+  constructor(
+    protected lintReportService: LintReportService,
+    protected specService: SpecService,
+    protected activatedRoute: ActivatedRoute,
+    private fb: FormBuilder
+  ) {}
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ lintReport }) => {
@@ -35,6 +45,28 @@ export class LintReportUpdateComponent implements OnInit {
       }
 
       this.updateForm(lintReport);
+
+      this.specService
+        .query({ filter: 'lintreport-is-null' })
+        .pipe(
+          map((res: HttpResponse<ISpec[]>) => {
+            return res.body || [];
+          })
+        )
+        .subscribe((resBody: ISpec[]) => {
+          if (!lintReport.spec || !lintReport.spec.id) {
+            this.specs = resBody;
+          } else {
+            this.specService
+              .find(lintReport.spec.id)
+              .pipe(
+                map((subRes: HttpResponse<ISpec>) => {
+                  return subRes.body ? [subRes.body].concat(resBody) : resBody;
+                })
+              )
+              .subscribe((concatRes: ISpec[]) => (this.specs = concatRes));
+          }
+        });
     });
   }
 
@@ -45,6 +77,7 @@ export class LintReportUpdateComponent implements OnInit {
       grade: lintReport.grade,
       passed: lintReport.passed,
       lintedOn: lintReport.lintedOn ? lintReport.lintedOn.format(DATE_TIME_FORMAT) : null,
+      spec: lintReport.spec,
     });
   }
 
@@ -70,6 +103,7 @@ export class LintReportUpdateComponent implements OnInit {
       grade: this.editForm.get(['grade'])!.value,
       passed: this.editForm.get(['passed'])!.value,
       lintedOn: this.editForm.get(['lintedOn'])!.value ? moment(this.editForm.get(['lintedOn'])!.value, DATE_TIME_FORMAT) : undefined,
+      spec: this.editForm.get(['spec'])!.value,
     };
   }
 
@@ -87,5 +121,9 @@ export class LintReportUpdateComponent implements OnInit {
 
   protected onSaveError(): void {
     this.isSaving = false;
+  }
+
+  trackById(index: number, item: ISpec): any {
+    return item.id;
   }
 }
