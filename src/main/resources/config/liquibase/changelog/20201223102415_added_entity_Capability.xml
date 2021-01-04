@@ -37,9 +37,6 @@
             <column name="content" type="${clobType}">
                 <constraints nullable="true" />
             </column>
-            <column name="version" type="varchar(255)">
-                <constraints nullable="true" />
-            </column>
             <column name="created_on" type="datetime">
                 <constraints nullable="true" />
             </column>
@@ -80,7 +77,6 @@
             <column name="sub_title" type="string"/>
             <column name="nav_title" type="string"/>
             <column name="content" type="clob"/>
-            <column name="version" type="string"/>
             <column name="created_on" type="datetime"/>
             <column name="created_by" type="string"/>
             <column name="product_id" type="numeric"/>

@@ -20,14 +20,14 @@ import { ICapability } from 'app/shared/model/capability.model';
 import { CapabilityService } from 'app/entities/capability/capability.service';
 import { IProduct } from 'app/shared/model/product.model';
 import { ProductService } from 'app/entities/product/product.service';
-import { IServiceDefinition } from 'app/shared/model/service-definition.model';
-import { ServiceDefinitionService } from 'app/entities/service-definition/service-definition.service';
 import { ISource } from 'app/shared/model/source.model';
 import { SourceService } from 'app/entities/source/source.service';
 import { ISpecType } from 'app/shared/model/spec-type.model';
 import { SpecTypeService } from 'app/entities/spec-type/spec-type.service';
+import { IServiceDefinition } from 'app/shared/model/service-definition.model';
+import { ServiceDefinitionService } from 'app/entities/service-definition/service-definition.service';
 
-type SelectableEntity = ILintReport | IPortal | ICapability | IProduct | IServiceDefinition | ISource | ISpecType;
+type SelectableEntity = ILintReport | IPortal | ICapability | IProduct | ISource | ISpecType | IServiceDefinition;
 
 @Component({
   selector: 'jhi-spec-update',
@@ -39,9 +39,9 @@ export class SpecUpdateComponent implements OnInit {
   portals: IPortal[] = [];
   capabilities: ICapability[] = [];
   products: IProduct[] = [];
-  servicedefinitions: IServiceDefinition[] = [];
   sources: ISource[] = [];
   spectypes: ISpecType[] = [];
+  servicedefinitions: IServiceDefinition[] = [];
 
   editForm = this.fb.group({
     id: [],
@@ -70,9 +70,9 @@ export class SpecUpdateComponent implements OnInit {
     portal: [null, Validators.required],
     capability: [null, Validators.required],
     product: [null, Validators.required],
-    serviceDefinition: [null, Validators.required],
     source: [],
     specType: [null, Validators.required],
+    serviceDefinition: [null, Validators.required],
   });
 
   constructor(
@@ -83,9 +83,9 @@ export class SpecUpdateComponent implements OnInit {
     protected portalService: PortalService,
     protected capabilityService: CapabilityService,
     protected productService: ProductService,
-    protected serviceDefinitionService: ServiceDefinitionService,
     protected sourceService: SourceService,
     protected specTypeService: SpecTypeService,
+    protected serviceDefinitionService: ServiceDefinitionService,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
   ) {}
@@ -129,13 +129,13 @@ export class SpecUpdateComponent implements OnInit {
 
       this.productService.query().subscribe((res: HttpResponse<IProduct[]>) => (this.products = res.body || []));
 
-      this.serviceDefinitionService
-        .query()
-        .subscribe((res: HttpResponse<IServiceDefinition[]>) => (this.servicedefinitions = res.body || []));
-
       this.sourceService.query().subscribe((res: HttpResponse<ISource[]>) => (this.sources = res.body || []));
 
       this.specTypeService.query().subscribe((res: HttpResponse<ISpecType[]>) => (this.spectypes = res.body || []));
+
+      this.serviceDefinitionService
+        .query()
+        .subscribe((res: HttpResponse<IServiceDefinition[]>) => (this.servicedefinitions = res.body || []));
     });
   }
 
@@ -167,9 +167,9 @@ export class SpecUpdateComponent implements OnInit {
       portal: spec.portal,
       capability: spec.capability,
       product: spec.product,
-      serviceDefinition: spec.serviceDefinition,
       source: spec.source,
       specType: spec.specType,
+      serviceDefinition: spec.serviceDefinition,
     });
   }
 
@@ -236,9 +236,9 @@ export class SpecUpdateComponent implements OnInit {
       portal: this.editForm.get(['portal'])!.value,
       capability: this.editForm.get(['capability'])!.value,
       product: this.editForm.get(['product'])!.value,
-      serviceDefinition: this.editForm.get(['serviceDefinition'])!.value,
       source: this.editForm.get(['source'])!.value,
       specType: this.editForm.get(['specType'])!.value,
+      serviceDefinition: this.editForm.get(['serviceDefinition'])!.value,
     };
   }
 

@@ -9,6 +9,8 @@ import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A ServiceDefinition.
@@ -53,6 +55,10 @@ public class ServiceDefinition implements Serializable {
 
     @Column(name = "created_by")
     private String createdBy;
+
+    @OneToMany(mappedBy = "serviceDefinition")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<Spec> specs = new HashSet<>();
 
     @ManyToOne(optional = false)
     @NotNull
@@ -183,6 +189,31 @@ public class ServiceDefinition implements Serializable {
 
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
+    }
+
+    public Set<Spec> getSpecs() {
+        return specs;
+    }
+
+    public ServiceDefinition specs(Set<Spec> specs) {
+        this.specs = specs;
+        return this;
+    }
+
+    public ServiceDefinition addSpec(Spec spec) {
+        this.specs.add(spec);
+        spec.setServiceDefinition(this);
+        return this;
+    }
+
+    public ServiceDefinition removeSpec(Spec spec) {
+        this.specs.remove(spec);
+        spec.setServiceDefinition(null);
+        return this;
+    }
+
+    public void setSpecs(Set<Spec> specs) {
+        this.specs = specs;
     }
 
     public Capability getCapability() {

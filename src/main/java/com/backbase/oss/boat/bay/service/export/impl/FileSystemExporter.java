@@ -4,6 +4,8 @@ import com.backbase.oss.boat.ExportException;
 import com.backbase.oss.boat.bay.domain.Capability;
 import com.backbase.oss.boat.bay.domain.Portal;
 import com.backbase.oss.boat.bay.domain.Product;
+import com.backbase.oss.boat.bay.domain.ServiceDefinition;
+import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.service.export.ExportInfo;
 import com.backbase.oss.boat.bay.service.export.ExportOptions;
 import com.backbase.oss.boat.bay.service.export.ExportType;
@@ -17,10 +19,12 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -37,29 +41,67 @@ public class FileSystemExporter implements Exporter {
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         objectMapper.addMixIn(Portal.class, MixInPortal.class);
         objectMapper.addMixIn(Product.class, MixInProduct.class);
+        objectMapper.addMixIn(Capability.class, MixInCapability.class);
+        objectMapper.addMixIn(ServiceDefinition.class, MixInCapability.class);
+        objectMapper.addMixIn(Spec.class, MixInSpec.class);
     }
 
     @Override
     public ExportInfo export(ExportOptions exportOptions) throws ExportException {
         Portal portal = exportOptions.getPortal();
-
         try {
-            Path portalPath = Files.createDirectories(Path.of(exportOptions.getLocation(), portal.getName()));
-            objectMapper.writeValue(new File(portalPath.toFile(), "portal.yaml"), portal);
-
-            for (Product product : portal.getProducts()) {
-                Path productPath = Files.createDirectories(portalPath.resolve(product.getKey()));
-                objectMapper.writeValue(new File(productPath.toFile(), product.getName() + ".yaml"), product);
-            }
-
+            Path portalPath = exportPortal(exportOptions, portal);
             ExportInfo exportInfo = new ExportInfo();
             exportInfo.setLocation(portalPath.toString());
             return exportInfo;
         } catch (IOException e) {
             throw new ExportException("Failed to export", e);
         }
+    }
 
+    @NotNull
+    private Path exportPortal(ExportOptions exportOptions, Portal portal) throws IOException {
+        Path portalPath = Files.createDirectories(Path.of(exportOptions.getLocation(), portal.getName()));
+        objectMapper.writeValue(new File(portalPath.toFile(), "portal.yaml"), portal);
 
+        for (Product product : portal.getProducts()) {
+            exportProduct(portalPath, product);
+        }
+        return portalPath;
+    }
+
+    private void exportProduct(Path parent, Product product) throws IOException {
+        Path path = Files.createDirectories(parent.resolve(product.getKey()));
+        objectMapper.writeValue(new File(path.toFile(), "product.yaml"), product);
+
+        for (Capability capability : product.getCapabilities()) {
+            exportCapability(path, capability);
+        }
+    }
+
+    private void exportCapability(Path parent, Capability capability) throws IOException {
+        Path path = Files.createDirectories(parent.resolve(capability.getKey()));
+        objectMapper.writeValue(new File(path.toFile(), "capability.yaml"), capability);
+
+        for (ServiceDefinition serviceDefinition : capability.getServiceDefinitions()) {
+            exportService(path, serviceDefinition);
+        }
+    }
+
+    private void exportService(Path parent, ServiceDefinition serviceDefinition) throws IOException {
+        Path path = Files.createDirectories(parent.resolve(serviceDefinition.getKey()));
+        objectMapper.writeValue(new File(path.toFile(), "service.yaml"), serviceDefinition);
+
+        for (Spec spec : serviceDefinition.getSpecs()) {
+            exportSpec(path, spec);
+        }
+
+    }
+
+    private void exportSpec(Path parent, Spec spec) throws IOException {
+        Path path = Files.createDirectories(parent.resolve(spec.getKey() + "-" + spec.getVersion()));
+        objectMapper.writeValue(new File(path.toFile(), "spec.yaml"), spec);
+        Files.write(path.resolve(spec.getFilename()), spec.getOpenApi().getBytes(StandardCharsets.UTF_8));
     }
 
     @Override
@@ -80,5 +122,35 @@ public class FileSystemExporter implements Exporter {
 
         @JsonIgnore
         abstract Set<Capability> getCapabilities();
+    }
+
+    private abstract static class MixInCapability {
+
+        @JsonIgnore
+        abstract Capability getCapability();
+
+        @JsonIgnore
+        abstract Set<ServiceDefinition> getServiceDefinitions();
+
+    }
+
+    private abstract static class MixInServiceDefinition {
+
+        @JsonIgnore
+        abstract ServiceDefinition getServiceDefinition();
+
+        @JsonIgnore
+        abstract Set<Spec> getSpecs();
+
+    }
+
+    private abstract static class MixInSpec {
+
+        @JsonIgnore
+        abstract ServiceDefinition getServiceDefinition();
+
+        @JsonIgnore
+        abstract Set<Spec> getSpecs();
+
     }
 }

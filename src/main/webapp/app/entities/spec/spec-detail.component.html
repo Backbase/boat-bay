@@ -116,12 +116,6 @@
                         <a [routerLink]="['/product', spec.product?.id, 'view']">{{ spec.product?.name }}</a>
                     </div>
                 </dd>
-                <dt><span>Service Definition</span></dt>
-                <dd>
-                    <div *ngIf="spec.serviceDefinition">
-                        <a [routerLink]="['/service-definition', spec.serviceDefinition?.id, 'view']">{{ spec.serviceDefinition?.name }}</a>
-                    </div>
-                </dd>
                 <dt><span>Source</span></dt>
                 <dd>
                     <div *ngIf="spec.source">
@@ -132,6 +126,12 @@
                 <dd>
                     <div *ngIf="spec.specType">
                         <a [routerLink]="['/spec-type', spec.specType?.id, 'view']">{{ spec.specType?.name }}</a>
+                    </div>
+                </dd>
+                <dt><span>Service Definition</span></dt>
+                <dd>
+                    <div *ngIf="spec.serviceDefinition">
+                        <a [routerLink]="['/service-definition', spec.serviceDefinition?.id, 'view']">{{ spec.serviceDefinition?.name }}</a>
                     </div>
                 </dd>
             </dl>

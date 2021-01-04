@@ -5,8 +5,8 @@ import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.domain.Portal;
 import com.backbase.oss.boat.bay.domain.Capability;
 import com.backbase.oss.boat.bay.domain.Product;
-import com.backbase.oss.boat.bay.domain.ServiceDefinition;
 import com.backbase.oss.boat.bay.domain.SpecType;
+import com.backbase.oss.boat.bay.domain.ServiceDefinition;
 import com.backbase.oss.boat.bay.repository.SpecRepository;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -171,16 +171,6 @@ public class SpecResourceIT {
         }
         spec.setProduct(product);
         // Add required entity
-        ServiceDefinition serviceDefinition;
-        if (TestUtil.findAll(em, ServiceDefinition.class).isEmpty()) {
-            serviceDefinition = ServiceDefinitionResourceIT.createEntity(em);
-            em.persist(serviceDefinition);
-            em.flush();
-        } else {
-            serviceDefinition = TestUtil.findAll(em, ServiceDefinition.class).get(0);
-        }
-        spec.setServiceDefinition(serviceDefinition);
-        // Add required entity
         SpecType specType;
         if (TestUtil.findAll(em, SpecType.class).isEmpty()) {
             specType = SpecTypeResourceIT.createEntity(em);
@@ -190,6 +180,16 @@ public class SpecResourceIT {
             specType = TestUtil.findAll(em, SpecType.class).get(0);
         }
         spec.setSpecType(specType);
+        // Add required entity
+        ServiceDefinition serviceDefinition;
+        if (TestUtil.findAll(em, ServiceDefinition.class).isEmpty()) {
+            serviceDefinition = ServiceDefinitionResourceIT.createEntity(em);
+            em.persist(serviceDefinition);
+            em.flush();
+        } else {
+            serviceDefinition = TestUtil.findAll(em, ServiceDefinition.class).get(0);
+        }
+        spec.setServiceDefinition(serviceDefinition);
         return spec;
     }
     /**
@@ -252,16 +252,6 @@ public class SpecResourceIT {
         }
         spec.setProduct(product);
         // Add required entity
-        ServiceDefinition serviceDefinition;
-        if (TestUtil.findAll(em, ServiceDefinition.class).isEmpty()) {
-            serviceDefinition = ServiceDefinitionResourceIT.createUpdatedEntity(em);
-            em.persist(serviceDefinition);
-            em.flush();
-        } else {
-            serviceDefinition = TestUtil.findAll(em, ServiceDefinition.class).get(0);
-        }
-        spec.setServiceDefinition(serviceDefinition);
-        // Add required entity
         SpecType specType;
         if (TestUtil.findAll(em, SpecType.class).isEmpty()) {
             specType = SpecTypeResourceIT.createUpdatedEntity(em);
@@ -271,6 +261,16 @@ public class SpecResourceIT {
             specType = TestUtil.findAll(em, SpecType.class).get(0);
         }
         spec.setSpecType(specType);
+        // Add required entity
+        ServiceDefinition serviceDefinition;
+        if (TestUtil.findAll(em, ServiceDefinition.class).isEmpty()) {
+            serviceDefinition = ServiceDefinitionResourceIT.createUpdatedEntity(em);
+            em.persist(serviceDefinition);
+            em.flush();
+        } else {
+            serviceDefinition = TestUtil.findAll(em, ServiceDefinition.class).get(0);
+        }
+        spec.setServiceDefinition(serviceDefinition);
         return spec;
     }
 

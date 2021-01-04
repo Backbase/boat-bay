@@ -11,7 +11,6 @@ export interface ICapability {
   subTitle?: string;
   navTitle?: string;
   content?: any;
-  version?: string;
   createdOn?: Moment;
   createdBy?: string;
   serviceDefinitions?: IServiceDefinition[];
@@ -28,7 +27,6 @@ export class Capability implements ICapability {
     public subTitle?: string,
     public navTitle?: string,
     public content?: any,
-    public version?: string,
     public createdOn?: Moment,
     public createdBy?: string,
     public serviceDefinitions?: IServiceDefinition[],
