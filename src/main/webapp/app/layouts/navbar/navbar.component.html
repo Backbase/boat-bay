@@ -22,17 +22,31 @@
                 <span class="bb-brand-text">BOAT 🚢 BAY 🏝</span>
             </div>
 
-            <div class="bb-brand-community">
+            <div class="bb-brand-community" [ngSwitch]="isAuthenticated()" >
 
-                <button mat-menu-item [mat-menu-trigger-for]="entities">Entities</button>
-                <button mat-menu-item [mat-menu-trigger-for]="administration">Administration</button>
+                <button class="bb-brand-community-link" *ngSwitchCase="true" mat-menu-item [mat-menu-trigger-for]="entities">Entities</button>
+                <button class="bb-brand-community-link" *jhiHasAnyAuthority="'ROLE_ADMIN'" mat-menu-item [mat-menu-trigger-for]="administration">Administration</button>
+                <button class="bb-brand-community-link" mat-menu-item [mat-menu-trigger-for]="account">Account</button>
 
                 <mat-menu #entities>
                     <a routerLink="portal" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Portal</a>
+                    <a routerLink="product" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Products</a>
                     <a routerLink="capability" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Capability</a>
                     <a routerLink="service-definition" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>ServiceDefinition</a>
                     <a routerLink="spec" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Spec</a>
+                    <mat-divider></mat-divider>
                     <a routerLink="source" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Source</a>
+                    <mat-divider></mat-divider>
+                    <a routerLink="dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Dashboard</a>
+                    <a routerLink="spec-type" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Spec Types</a>
+                    <mat-divider></mat-divider>
+                    <a routerLink="lint-rule-set" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Lint Rule Set</a>
+                    <a routerLink="lint-rule" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Lint Rule</a>
+                    <a routerLink="portal-lint-rule-set" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Portal Lint Rule Set</a>
+                    <a routerLink="portal-lint-rule" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Portal Lint Rule</a>
+                    <a routerLink="portal-lint-rule-config" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Portal Lint Rule Config</a>
+                    <mat-divider></mat-divider>
+
                 </mat-menu>
                 <mat-menu #administration>
                     <a routerLink="admin/user-management" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>User management</a>
@@ -42,12 +56,19 @@
                     <a routerLink="admin/logs" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Logs</a>
                 </mat-menu>
 
-                <a
-                    class="bb-brand-community-link"
-                    href="https://community.backbase.com/"
-                    target="_blank"
-                >Community</a
-                >
+                <mat-menu #account >
+                    <a *ngSwitchCase="true" routerLink="account/settings" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Settings</a>
+                    <a *ngSwitchCase="true" routerLink="account/password" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Password</a>
+                    <a *ngSwitchCase="true" (click)="logout()" mat-menu-item>Logout</a>
+                    <a *ngSwitchCase="false" (click)="login()"  mat-menu-item>Login</a>
+                    <a *ngSwitchCase="false" routerLink="account/register" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Register</a>
+                </mat-menu>
+<!--                <a-->
+<!--                    class="bb-brand-community-link"-->
+<!--                    href="https://community.backbase.com/"-->
+<!--                    target="_blank"-->
+<!--                >Community</a-->
+<!--                >-->
 
 
             </div>

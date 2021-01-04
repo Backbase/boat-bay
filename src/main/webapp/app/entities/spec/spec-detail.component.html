@@ -96,12 +96,6 @@
                 <dd>
                     <span>{{ spec.sourceLastModifiedBy }}</span>
                 </dd>
-                <dt><span>Lint Report</span></dt>
-                <dd>
-                    <div *ngIf="spec.lintReport">
-                        <a [routerLink]="['/lint-report', spec.lintReport?.id, 'view']">{{ spec.lintReport?.id }}</a>
-                    </div>
-                </dd>
                 <dt><span>Portal</span></dt>
                 <dd>
                     <div *ngIf="spec.portal">

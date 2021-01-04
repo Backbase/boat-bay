@@ -17,8 +17,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 /**
  * REST controller for managing {@link com.backbase.oss.boat.bay.domain.LintReport}.
@@ -84,18 +82,10 @@ public class LintReportResource {
     /**
      * {@code GET  /lint-reports} : get all the lintReports.
      *
-     * @param filter the filter of the request.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of lintReports in body.
      */
     @GetMapping("/lint-reports")
-    public List<LintReport> getAllLintReports(@RequestParam(required = false) String filter) {
-        if ("spec-is-null".equals(filter)) {
-            log.debug("REST request to get all LintReports where spec is null");
-            return StreamSupport
-                .stream(lintReportRepository.findAll().spliterator(), false)
-                .filter(lintReport -> lintReport.getSpec() == null)
-                .collect(Collectors.toList());
-        }
+    public List<LintReport> getAllLintReports() {
         log.debug("REST request to get all LintReports");
         return lintReportRepository.findAll();
     }

@@ -45,7 +45,6 @@
                     <th scope="col" ><span>Source Created On</span></th>
                     <th scope="col" ><span>Source Last Modified On</span></th>
                     <th scope="col" ><span>Source Last Modified By</span></th>
-                    <th scope="col" ><span>Lint Report</span></th>
                     <th scope="col" ><span>Portal</span></th>
                     <th scope="col" ><span>Capability</span></th>
                     <th scope="col" ><span>Product</span></th>
@@ -80,11 +79,6 @@
                     <td>{{ spec.sourceCreatedOn | date:'medium' }}</td>
                     <td>{{ spec.sourceLastModifiedOn | date:'medium' }}</td>
                     <td>{{ spec.sourceLastModifiedBy }}</td>
-                    <td>
-                        <div *ngIf="spec.lintReport">
-                            <a [routerLink]="['/lint-report', spec.lintReport?.id, 'view']" >{{ spec.lintReport?.id }}</a>
-                        </div>
-                    </td>
                     <td>
                         <div *ngIf="spec.portal">
                             <a [routerLink]="['/portal', spec.portal?.id, 'view']" >{{ spec.portal?.name }}</a>

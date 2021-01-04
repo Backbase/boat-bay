@@ -27,6 +27,7 @@
                     <th scope="col" ><span>Grade</span></th>
                     <th scope="col" ><span>Passed</span></th>
                     <th scope="col" ><span>Linted On</span></th>
+                    <th scope="col" ><span>Spec</span></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -37,6 +38,11 @@
                     <td>{{ lintReport.grade }}</td>
                     <td>{{ lintReport.passed }}</td>
                     <td>{{ lintReport.lintedOn | date:'medium' }}</td>
+                    <td>
+                        <div *ngIf="lintReport.spec">
+                            <a [routerLink]="['/spec', lintReport.spec?.id, 'view']" >{{ lintReport.spec?.id }}</a>
+                        </div>
+                    </td>
                     <td class="text-right">
                         <div class="btn-group">
                             <button type="submit"

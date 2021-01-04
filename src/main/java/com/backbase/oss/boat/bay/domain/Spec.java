@@ -1,5 +1,6 @@
 package com.backbase.oss.boat.bay.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -102,10 +103,6 @@ public class Spec implements Serializable {
     @Column(name = "source_last_modified_by")
     private String sourceLastModifiedBy;
 
-    @OneToOne
-    @JoinColumn(unique = true)
-    private LintReport lintReport;
-
     @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties(value = "specs", allowSetters = true)
@@ -129,6 +126,10 @@ public class Spec implements Serializable {
     @NotNull
     @JsonIgnoreProperties(value = "specs", allowSetters = true)
     private SpecType specType;
+
+    @OneToOne(mappedBy = "spec")
+    @JsonIgnore
+    private LintReport lintReport;
 
     @ManyToOne(optional = false)
     @NotNull
@@ -430,19 +431,6 @@ public class Spec implements Serializable {
         this.sourceLastModifiedBy = sourceLastModifiedBy;
     }
 
-    public LintReport getLintReport() {
-        return lintReport;
-    }
-
-    public Spec lintReport(LintReport lintReport) {
-        this.lintReport = lintReport;
-        return this;
-    }
-
-    public void setLintReport(LintReport lintReport) {
-        this.lintReport = lintReport;
-    }
-
     public Portal getPortal() {
         return portal;
     }
@@ -506,6 +494,19 @@ public class Spec implements Serializable {
 
     public void setSpecType(SpecType specType) {
         this.specType = specType;
+    }
+
+    public LintReport getLintReport() {
+        return lintReport;
+    }
+
+    public Spec lintReport(LintReport lintReport) {
+        this.lintReport = lintReport;
+        return this;
+    }
+
+    public void setLintReport(LintReport lintReport) {
+        this.lintReport = lintReport;
     }
 
     public ServiceDefinition getServiceDefinition() {

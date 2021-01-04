@@ -31,8 +31,7 @@ public class BoatSpecLinter {
     private final BoatLintRuleValidatorFactory boatLintRuleValidatorFactory;
     private final BoatLintRuleViolationRepository boatLintRuleViolationRepository;
     private final BoatLintRuleRepository boatLintRuleRepository;
-
-    private LintReportRepository lintReportRepository;
+    private final LintReportRepository lintReportRepository;
 
     private void lint(Spec spec) {
         log.info("Linting Spec: {}", spec.getName());
