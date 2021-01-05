@@ -1,0 +1,19 @@
+<div class="container">
+  <div class="container__controls-wrapper">
+    <app-specs-filter></app-specs-filter>
+
+    <app-release-selector
+      [releaseVersionOptions]="releaseVersions$ | async"
+      [currentReleaseVersion]="currentReleaseVersion$ | async"
+      (updatedReleaseVersion)="onReleaseVersionChange($event)"
+    ></app-release-selector>
+  </div>
+
+  <ng-container *ngIf="products$ | async as products">
+    <app-product
+      *ngFor="let product of products"
+      [name]="product.title"
+      [isCollapsible]="true"
+    ></app-product>
+  </ng-container>
+</div>

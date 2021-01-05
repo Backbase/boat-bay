@@ -32,6 +32,7 @@
                     <th scope="col" ><span>Content</span></th>
                     <th scope="col" ><span>Created On</span></th>
                     <th scope="col" ><span>Created By</span></th>
+                    <th scope="col" ><span>Hide</span></th>
                     <th scope="col" ><span>Capability</span></th>
                     <th scope="col"></th>
                 </tr>
@@ -48,6 +49,7 @@
                     <td>{{ serviceDefinition.content }}</td>
                     <td>{{ serviceDefinition.createdOn | date:'medium' }}</td>
                     <td>{{ serviceDefinition.createdBy }}</td>
+                    <td>{{ serviceDefinition.hide }}</td>
                     <td>
                         <div *ngIf="serviceDefinition.capability">
                             <a [routerLink]="['/capability', serviceDefinition.capability?.id, 'view']" >{{ serviceDefinition.capability?.name }}</a>

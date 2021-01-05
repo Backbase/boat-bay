@@ -18,6 +18,12 @@ entity Portal {
     content TextBlob
     createdOn Instant
     createdBy String
+    hide Boolean
+}
+
+entity ProductRelease {
+    key String required
+    name String required
 }
 
 entity Product {
@@ -28,6 +34,7 @@ entity Product {
     content TextBlob
     createdOn Instant
     createdBy String
+    hide Boolean
 }
 
 entity Capability {
@@ -40,8 +47,8 @@ entity Capability {
     content TextBlob
     createdOn Instant
     createdBy String
+    hide Boolean
 }
-
 
 entity ServiceDefinition {
 	key String required
@@ -54,6 +61,7 @@ entity ServiceDefinition {
     order Integer
     createdOn Instant
     createdBy String
+    hide Boolean
 }
 
 entity Spec {
@@ -72,6 +80,7 @@ entity Spec {
     order Integer
     parseError TextBlob
     externalDocs String
+    hide Boolean
 
     sourcePath String
     sourceName String
@@ -80,6 +89,7 @@ entity Spec {
     sourceCreatedOn Instant
     sourceLastModifiedOn Instant
     sourceLastModifiedBy String
+
 }
 
 entity SpecType {
@@ -174,7 +184,12 @@ enum SourceType {
     GIT JFROG HTTP FILE_SYSTEM BOAT_MAVEN_PLUGIN
 }
 
+relationship ManyToMany {
+    ProductRelease to Spec
+}
+
 relationship OneToMany {
+    Portal to ProductRelease{portal(name) required}
 	Portal to Product{portal(name) required}
 	Product to Capability{product(name) required}
 	Capability to ServiceDefinition{capability(name) required}
@@ -190,6 +205,7 @@ relationship ManyToOne {
     Spec{product(name) required} to Product
     Spec{source(name)} to Source
     Spec{specType(name) required} to SpecType
+
 }
 
 relationship OneToOne {

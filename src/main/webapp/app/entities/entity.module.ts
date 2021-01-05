@@ -65,6 +65,10 @@ import { RouterModule } from '@angular/router';
         path: 'spec-type',
         loadChildren: () => import('./spec-type/spec-type.module').then(m => m.BoatBaySpecTypeModule),
       },
+      {
+        path: 'product-release',
+        loadChildren: () => import('./product-release/product-release.module').then(m => m.BoatBayProductReleaseModule),
+      },
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ]),
   ],

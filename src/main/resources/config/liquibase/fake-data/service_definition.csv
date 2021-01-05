@@ -1,11 +1,11 @@
-id;jhi_key;name;jhi_order;title;sub_title;nav_title;content;created_on;created_by;capability_id
-1;impactful silver;Corporate;11536;quantifying ADP;Armenia Fresh seamless;Montana;../fake-data/blob/hipster.txt;2020-12-27T15:52:03;International;1
-2;synthesizing indexing Gorgeous Wooden Chair;Reverse-engineered Lead;36618;Ergonomic;Infrastructure;Handcrafted Wooden Tuna;../fake-data/blob/hipster.txt;2020-12-27T14:00:30;North Dakota Frozen;2
-3;zero tolerance;Developer;73532;Salad Customer North Dakota;multi-byte Avon;Music Awesome Cotton Table;../fake-data/blob/hipster.txt;2020-12-27T11:58:31;empowering Practical Fresh Chair;3
-4;Port ivory Yuan Renminbi;client-driven Kentucky;87074;program Technician;Sri Lanka Rupee incremental;revolutionize;../fake-data/blob/hipster.txt;2020-12-28T06:32:51;invoice synthesize;4
-5;Plastic hack XSS;Awesome Rustic Wooden Car Brand;14731;Villages Shoes;Paradigm Peso Uruguayo Uruguay Peso en Unidades Indexadas;application;../fake-data/blob/hipster.txt;2020-12-28T00:09:01;facilitate;5
-6;grid-enabled Coordinator Enhanced;Jewelery invoice revolutionize;96118;Vietnam Persistent Music;Associate connect Practical Fresh Car;generating;../fake-data/blob/hipster.txt;2020-12-28T00:29:36;Baby Morocco;6
-7;Handcrafted Concrete Pants Credit Card Account;Chief extend online;93721;Profit-focused;New Hampshire;Mongolia Lebanon;../fake-data/blob/hipster.txt;2020-12-27T20:26:10;Baby service-desk;7
-8;Metal national Practical;Books;44792;Avon Canadian Dollar;ubiquitous Money Market Account;Garden full-range Cambridgeshire;../fake-data/blob/hipster.txt;2020-12-28T09:08:04;Zambia innovative Senior;8
-9;Division Portugal copy;access B2C dynamic;23693;networks IB content;Communications CSS;Toys;../fake-data/blob/hipster.txt;2020-12-27T23:36:13;Israel array;9
-10;Savings Account deliver Granite;Qatari Rial Frozen Cape Verde Escudo;88583;strategize Bedfordshire;Gorgeous;innovative clicks-and-mortar initiatives;../fake-data/blob/hipster.txt;2020-12-28T06:33:10;Licensed Cove;10
+id;jhi_key;name;jhi_order;title;sub_title;nav_title;content;created_on;created_by;hide;capability_id
+1;impactful silver;Corporate;11536;quantifying ADP;Armenia Fresh seamless;Montana;../fake-data/blob/hipster.txt;2020-12-27T15:52:03;International;true;1
+2;neural paradigms Cross-platform;Bedfordshire;75258;Fantastic Concrete Computer Ergonomic Infrastructure;Handcrafted Wooden Tuna;New Jersey Belize Dollar Manager;../fake-data/blob/hipster.txt;2020-12-28T03:59:27;Tasty Metal Fish back-end JSON;true;2
+3;payment multi-byte;Generic Steel Computer Awesome Cotton Table;94573;empowering Practical Fresh Chair;Port ivory Yuan Renminbi;client-driven Kentucky;../fake-data/blob/hipster.txt;2020-12-27T13:46:30;program Technician;false;3
+4;Green Cameroon revolutionize;Borders;76035;Palladium Plastic hack;Quality Awesome Rustic Wooden Car;Rustic Plastic Shoes Directives Berkshire;../fake-data/blob/hipster.txt;2020-12-27T11:49:07;Peso Uruguayo Uruguay Peso en Unidades Indexadas;false;4
+5;Practical Concrete Shirt;port web services;39455;Reverse-engineered;bluetooth;revolutionize Accountability Vietnam;../fake-data/blob/hipster.txt;2020-12-28T04:38:47;Music Principal;false;5
+6;Canyon Underpass Gorgeous Fresh Towels;Albania payment;60190;Handcrafted Concrete Pants Credit Card Account;Chief extend online;contingency withdrawal New Hampshire;../fake-data/blob/hipster.txt;2020-12-27T19:07:09;Nebraska Borders;true;6
+7;withdrawal;RAM withdrawal Bahraini Dinar;45339;Books;supply-chains Handcrafted Wooden Hat;Investor static;../fake-data/blob/hipster.txt;2020-12-28T10:23:18;full-range Cambridgeshire;false;7
+8;Zambia innovative Senior;Division Portugal copy;94865;Garden;dynamic;Group;../fake-data/blob/hipster.txt;2020-12-27T14:54:12;ADP relationships Communications;true;8
+9;Small Rubber Shoes;Israel array;98830;Shirt Brunei Darussalam;wireless deposit;Cape Verde Escudo EXE strategize;../fake-data/blob/hipster.txt;2020-12-27T22:53:59;Car;false;9
+10;innovative clicks-and-mortar initiatives;Corner;76812;Concrete indexing;Representative THX Representative;Soap black firmware;../fake-data/blob/hipster.txt;2020-12-27T23:30:19;Money Market Account Adaptive cross-platform;false;10

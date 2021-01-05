@@ -1,0 +1,98 @@
+@import '../../../content/scss/settings/theme';
+
+$tile-colors: (
+  'retail': mat-color($mat-red, 900),
+  'business': mat-color($mat-indigo, 900),
+  'wealth': mat-color($mat-cyan, 900),
+  'mixed': mat-color($mat-pink, 900),
+  'foundation': mat-color($mat-light-green, 900),
+  'flow': mat-color($mat-yellow, 800),
+  'identity': mat-color($mat-lime, 900),
+  'basic-support': mat-color($mat-blue-grey, 700),
+  'default': mat-color($mat-grey, 700),
+);
+
+@each $tag, $tag-color in $tile-colors {
+  .#{$tag} {
+    border-top: 4px solid $tag-color;
+    .tile-icon {
+      color: $tag-color;
+    }
+  }
+}
+
+a {
+  text-decoration: none;
+}
+
+mat-card {
+  width: 300px;
+  height: 268px;
+  display: flex;
+  flex-direction: column;
+  padding: 25px 16px 16px 16px;
+  border-radius: 0px 0px 4px 4px;
+  letter-spacing: 0.25px;
+
+  &:hover {
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  }
+
+  mat-card-header {
+    flex-shrink: 0;
+
+    mat-icon {
+      width: auto;
+    }
+
+    mat-card-title {
+      margin: 0;
+      font-size: 20px;
+      font-weight: bold;
+      letter-spacing: 0.25px;
+      line-height: 24px;
+    }
+
+    .mat-card-subtitle:not(:first-child) {
+      margin-top: 4px;
+      line-height: initial;
+    }
+  }
+
+  mat-card-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-top: 10px;
+    font-size: 14px;
+    padding-left: 36px;
+    margin-bottom: 0px;
+    flex-grow: 1;
+    overflow: auto;
+
+    .tag {
+      color: #999;
+    }
+  }
+
+  mat-card-footer {
+    margin-top: auto;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 8px 16px 16px 16px;
+    font-size: 12px;
+
+    mat-icon {
+      color: #666;
+      cursor: pointer;
+      margin-right: 16px;
+    }
+
+    p {
+      margin: 0;
+      color: #999;
+      height: 16px;
+    }
+  }
+}

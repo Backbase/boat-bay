@@ -1,11 +1,16 @@
 package com.backbase.oss.boat.bay.dto;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import lombok.Data;
 
+@Data
 public class ProductDto {
 
+    private Long id;
     private String title;
+    private String key;
+    private String name;
+
     private List<String> capabilities;
+
 }

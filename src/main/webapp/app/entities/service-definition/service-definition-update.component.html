@@ -79,6 +79,12 @@
                 </div>
 
                 <div class="form-group">
+                    <label class="form-control-label" for="field_hide">Hide</label>
+                    <input type="checkbox" class="form-control" name="hide" id="field_hide"
+                           formControlName="hide"/>
+                </div>
+
+                <div class="form-group">
                     <label class="form-control-label" for="field_capability">Capability</label>
                     <select class="form-control" id="field_capability" name="capability" formControlName="capability">
                         <option *ngIf="!editForm.get('capability')!.value" [ngValue]="null" selected></option>
