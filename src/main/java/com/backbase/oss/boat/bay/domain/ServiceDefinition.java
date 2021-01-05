@@ -56,6 +56,9 @@ public class ServiceDefinition implements Serializable {
     @Column(name = "created_by")
     private String createdBy;
 
+    @Column(name = "hide")
+    private Boolean hide;
+
     @OneToMany(mappedBy = "serviceDefinition")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Spec> specs = new HashSet<>();
@@ -191,6 +194,19 @@ public class ServiceDefinition implements Serializable {
         this.createdBy = createdBy;
     }
 
+    public Boolean isHide() {
+        return hide;
+    }
+
+    public ServiceDefinition hide(Boolean hide) {
+        this.hide = hide;
+        return this;
+    }
+
+    public void setHide(Boolean hide) {
+        this.hide = hide;
+    }
+
     public Set<Spec> getSpecs() {
         return specs;
     }
@@ -260,6 +276,7 @@ public class ServiceDefinition implements Serializable {
             ", content='" + getContent() + "'" +
             ", createdOn='" + getCreatedOn() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
+            ", hide='" + isHide() + "'" +
             "}";
     }
 }

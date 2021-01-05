@@ -18,6 +18,12 @@ import { environment } from 'app/environments/environment';
 import { MatMenuModule } from '@angular/material/menu';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { SpecTileComponent } from 'app/components/spec-tile/spec-tile.component';
+import { ProductComponent } from 'app/components/product/product.component';
+import { ReleaseSelectorComponent } from 'app/components/release-selector/release-selector.component';
+import { MatDividerModule } from '@angular/material/divider';
+import { SpecsFilterComponent } from 'app/components/specs-filter/specs-filter.component';
+
 @NgModule({
   imports: [
     BrowserModule,
@@ -30,9 +36,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     BoatBayAppRoutingModule,
     MatMenuModule,
     BrowserAnimationsModule,
+    MatDividerModule,
   ],
   providers: [...environment.providers],
   declarations: [MainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, FooterComponent],
   bootstrap: [MainComponent],
+  exports: [],
 })
 export class BoatBayAppModule {}

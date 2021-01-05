@@ -6,6 +6,7 @@ import { ISource } from 'app/shared/model/source.model';
 import { ISpecType } from 'app/shared/model/spec-type.model';
 import { ILintReport } from 'app/shared/model/lint-report.model';
 import { IServiceDefinition } from 'app/shared/model/service-definition.model';
+import { IProductRelease } from 'app/shared/model/product-release.model';
 
 export interface ISpec {
   id?: number;
@@ -24,6 +25,7 @@ export interface ISpec {
   order?: number;
   parseError?: any;
   externalDocs?: string;
+  hide?: boolean;
   sourcePath?: string;
   sourceName?: string;
   sourceUrl?: string;
@@ -38,6 +40,7 @@ export interface ISpec {
   specType?: ISpecType;
   lintReport?: ILintReport;
   serviceDefinition?: IServiceDefinition;
+  productReleases?: IProductRelease[];
 }
 
 export class Spec implements ISpec {
@@ -58,6 +61,7 @@ export class Spec implements ISpec {
     public order?: number,
     public parseError?: any,
     public externalDocs?: string,
+    public hide?: boolean,
     public sourcePath?: string,
     public sourceName?: string,
     public sourceUrl?: string,
@@ -71,8 +75,10 @@ export class Spec implements ISpec {
     public source?: ISource,
     public specType?: ISpecType,
     public lintReport?: ILintReport,
-    public serviceDefinition?: IServiceDefinition
+    public serviceDefinition?: IServiceDefinition,
+    public productReleases?: IProductRelease[]
   ) {
     this.valid = this.valid || false;
+    this.hide = this.hide || false;
   }
 }

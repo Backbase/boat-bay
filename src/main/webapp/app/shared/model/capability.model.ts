@@ -13,6 +13,7 @@ export interface ICapability {
   content?: any;
   createdOn?: Moment;
   createdBy?: string;
+  hide?: boolean;
   serviceDefinitions?: IServiceDefinition[];
   product?: IProduct;
 }
@@ -29,7 +30,10 @@ export class Capability implements ICapability {
     public content?: any,
     public createdOn?: Moment,
     public createdBy?: string,
+    public hide?: boolean,
     public serviceDefinitions?: IServiceDefinition[],
     public product?: IProduct
-  ) {}
+  ) {
+    this.hide = this.hide || false;
+  }
 }

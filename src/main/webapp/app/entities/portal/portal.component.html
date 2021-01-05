@@ -34,6 +34,7 @@
                     <th scope="col" ><span>Content</span></th>
                     <th scope="col" ><span>Created On</span></th>
                     <th scope="col" ><span>Created By</span></th>
+                    <th scope="col" ><span>Hide</span></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -51,6 +52,7 @@
                     <td>{{ portal.content }}</td>
                     <td>{{ portal.createdOn | date:'medium' }}</td>
                     <td>{{ portal.createdBy }}</td>
+                    <td>{{ portal.hide }}</td>
                     <td class="text-right">
                         <div class="btn-group">
                             <button type="submit"

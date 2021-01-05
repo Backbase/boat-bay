@@ -1,0 +1,19 @@
+<label for="apiSpecsSearch"><b>Find an API</b></label>
+<mat-form-field floatLabel="always" appearance="outline">
+  <input
+    matInput
+    id="apiSpecsSearch"
+    placeholder="Search by name or tag"
+    #searchInputEl
+    (keydown.enter)="search($event)"
+  />
+  <mat-icon
+    *ngIf="searchInputEl.value.length > 0"
+    matSuffix
+    (click)="clearInput()"
+    >close
+  </mat-icon>
+  <mat-hint *ngIf="toShowHint" align="end"
+    >Please use 3 or more characters</mat-hint
+  >
+</mat-form-field>

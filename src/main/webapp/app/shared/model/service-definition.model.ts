@@ -13,6 +13,7 @@ export interface IServiceDefinition {
   content?: any;
   createdOn?: Moment;
   createdBy?: string;
+  hide?: boolean;
   specs?: ISpec[];
   capability?: ICapability;
 }
@@ -29,7 +30,10 @@ export class ServiceDefinition implements IServiceDefinition {
     public content?: any,
     public createdOn?: Moment,
     public createdBy?: string,
+    public hide?: boolean,
     public specs?: ISpec[],
     public capability?: ICapability
-  ) {}
+  ) {
+    this.hide = this.hide || false;
+  }
 }

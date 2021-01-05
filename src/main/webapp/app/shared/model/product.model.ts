@@ -11,6 +11,7 @@ export interface IProduct {
   content?: any;
   createdOn?: Moment;
   createdBy?: string;
+  hide?: boolean;
   capabilities?: ICapability[];
   portal?: IPortal;
 }
@@ -25,7 +26,10 @@ export class Product implements IProduct {
     public content?: any,
     public createdOn?: Moment,
     public createdBy?: string,
+    public hide?: boolean,
     public capabilities?: ICapability[],
     public portal?: IPortal
-  ) {}
+  ) {
+    this.hide = this.hide || false;
+  }
 }

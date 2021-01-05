@@ -1,0 +1,11 @@
+<label><b>Release version</b></label>
+<mat-select
+  [value]="currentReleaseVersion"
+  (selectionChange)="onUpdateReleaseVersion($event)"
+>
+  <mat-option
+    *ngFor="let version of releaseVersionOptions; index as i"
+    [value]="version"
+    >{{ version }} {{ i === 0 ? '(latest)' : '' }}</mat-option
+  >
+</mat-select>

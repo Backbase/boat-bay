@@ -92,6 +92,10 @@
       "fieldType": "String"
     },
     {
+      "fieldName": "hide",
+      "fieldType": "Boolean"
+    },
+    {
       "fieldName": "sourcePath",
       "fieldType": "String"
     },
@@ -174,6 +178,14 @@
       "relationshipValidateRules": "required",
       "relationshipName": "serviceDefinition",
       "otherEntityField": "name"
+    },
+    {
+      "relationshipType": "many-to-many",
+      "otherEntityName": "productRelease",
+      "otherEntityRelationshipName": "spec",
+      "relationshipName": "productRelease",
+      "otherEntityField": "id",
+      "ownerSide": false
     }
   ],
   "changelogDate": "20201223102615",

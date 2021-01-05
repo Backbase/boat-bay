@@ -33,6 +33,7 @@ export class ServiceDefinitionUpdateComponent implements OnInit {
     content: [],
     createdOn: [],
     createdBy: [],
+    hide: [],
     capability: [null, Validators.required],
   });
 
@@ -70,6 +71,7 @@ export class ServiceDefinitionUpdateComponent implements OnInit {
       content: serviceDefinition.content,
       createdOn: serviceDefinition.createdOn ? serviceDefinition.createdOn.format(DATE_TIME_FORMAT) : null,
       createdBy: serviceDefinition.createdBy,
+      hide: serviceDefinition.hide,
       capability: serviceDefinition.capability,
     });
   }
@@ -117,6 +119,7 @@ export class ServiceDefinitionUpdateComponent implements OnInit {
       content: this.editForm.get(['content'])!.value,
       createdOn: this.editForm.get(['createdOn'])!.value ? moment(this.editForm.get(['createdOn'])!.value, DATE_TIME_FORMAT) : undefined,
       createdBy: this.editForm.get(['createdBy'])!.value,
+      hide: this.editForm.get(['hide'])!.value,
       capability: this.editForm.get(['capability'])!.value,
     };
   }

@@ -32,6 +32,7 @@ export class PortalUpdateComponent implements OnInit {
     content: [],
     createdOn: [],
     createdBy: [],
+    hide: [],
   });
 
   constructor(
@@ -67,6 +68,7 @@ export class PortalUpdateComponent implements OnInit {
       content: portal.content,
       createdOn: portal.createdOn ? portal.createdOn.format(DATE_TIME_FORMAT) : null,
       createdBy: portal.createdBy,
+      hide: portal.hide,
     });
   }
 
@@ -115,6 +117,7 @@ export class PortalUpdateComponent implements OnInit {
       content: this.editForm.get(['content'])!.value,
       createdOn: this.editForm.get(['createdOn'])!.value ? moment(this.editForm.get(['createdOn'])!.value, DATE_TIME_FORMAT) : undefined,
       createdBy: this.editForm.get(['createdBy'])!.value,
+      hide: this.editForm.get(['hide'])!.value,
     };
   }
 

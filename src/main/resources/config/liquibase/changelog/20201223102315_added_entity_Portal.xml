@@ -49,6 +49,9 @@
             <column name="created_by" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
+            <column name="hide" type="boolean">
+                <constraints nullable="true" />
+            </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
         <dropDefaultValue tableName="portal" columnName="created_on" columnDataType="datetime"/>
@@ -84,6 +87,7 @@
             <column name="content" type="clob"/>
             <column name="created_on" type="datetime"/>
             <column name="created_by" type="string"/>
+            <column name="hide" type="boolean"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

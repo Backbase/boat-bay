@@ -61,6 +61,9 @@
             <column name="external_docs" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
+            <column name="hide" type="boolean">
+                <constraints nullable="true" />
+            </column>
             <column name="source_path" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
@@ -141,6 +144,7 @@
             <column name="jhi_order" type="numeric"/>
             <column name="parse_error" type="clob"/>
             <column name="external_docs" type="string"/>
+            <column name="hide" type="boolean"/>
             <column name="source_path" type="string"/>
             <column name="source_name" type="string"/>
             <column name="source_url" type="string"/>

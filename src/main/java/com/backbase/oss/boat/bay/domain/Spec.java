@@ -10,6 +10,8 @@ import javax.validation.constraints.*;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A Spec.
@@ -82,6 +84,9 @@ public class Spec implements Serializable {
     @Column(name = "external_docs")
     private String externalDocs;
 
+    @Column(name = "hide")
+    private Boolean hide;
+
     @Column(name = "source_path")
     private String sourcePath;
 
@@ -135,6 +140,11 @@ public class Spec implements Serializable {
     @NotNull
     @JsonIgnoreProperties(value = "specs", allowSetters = true)
     private ServiceDefinition serviceDefinition;
+
+    @ManyToMany(mappedBy = "specs")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnore
+    private Set<ProductRelease> productReleases = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -340,6 +350,19 @@ public class Spec implements Serializable {
         this.externalDocs = externalDocs;
     }
 
+    public Boolean isHide() {
+        return hide;
+    }
+
+    public Spec hide(Boolean hide) {
+        this.hide = hide;
+        return this;
+    }
+
+    public void setHide(Boolean hide) {
+        this.hide = hide;
+    }
+
     public String getSourcePath() {
         return sourcePath;
     }
@@ -521,6 +544,31 @@ public class Spec implements Serializable {
     public void setServiceDefinition(ServiceDefinition serviceDefinition) {
         this.serviceDefinition = serviceDefinition;
     }
+
+    public Set<ProductRelease> getProductReleases() {
+        return productReleases;
+    }
+
+    public Spec productReleases(Set<ProductRelease> productReleases) {
+        this.productReleases = productReleases;
+        return this;
+    }
+
+    public Spec addProductRelease(ProductRelease productRelease) {
+        this.productReleases.add(productRelease);
+        productRelease.getSpecs().add(this);
+        return this;
+    }
+
+    public Spec removeProductRelease(ProductRelease productRelease) {
+        this.productReleases.remove(productRelease);
+        productRelease.getSpecs().remove(this);
+        return this;
+    }
+
+    public void setProductReleases(Set<ProductRelease> productReleases) {
+        this.productReleases = productReleases;
+    }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -559,6 +607,7 @@ public class Spec implements Serializable {
             ", order=" + getOrder() +
             ", parseError='" + getParseError() + "'" +
             ", externalDocs='" + getExternalDocs() + "'" +
+            ", hide='" + isHide() + "'" +
             ", sourcePath='" + getSourcePath() + "'" +
             ", sourceName='" + getSourceName() + "'" +
             ", sourceUrl='" + getSourceUrl() + "'" +

@@ -54,6 +54,9 @@ public class ProductResourceIT {
     private static final String DEFAULT_CREATED_BY = "AAAAAAAAAA";
     private static final String UPDATED_CREATED_BY = "BBBBBBBBBB";
 
+    private static final Boolean DEFAULT_HIDE = false;
+    private static final Boolean UPDATED_HIDE = true;
+
     @Autowired
     private ProductRepository productRepository;
 
@@ -79,7 +82,8 @@ public class ProductResourceIT {
             .title(DEFAULT_TITLE)
             .content(DEFAULT_CONTENT)
             .createdOn(DEFAULT_CREATED_ON)
-            .createdBy(DEFAULT_CREATED_BY);
+            .createdBy(DEFAULT_CREATED_BY)
+            .hide(DEFAULT_HIDE);
         // Add required entity
         Portal portal;
         if (TestUtil.findAll(em, Portal.class).isEmpty()) {
@@ -106,7 +110,8 @@ public class ProductResourceIT {
             .title(UPDATED_TITLE)
             .content(UPDATED_CONTENT)
             .createdOn(UPDATED_CREATED_ON)
-            .createdBy(UPDATED_CREATED_BY);
+            .createdBy(UPDATED_CREATED_BY)
+            .hide(UPDATED_HIDE);
         // Add required entity
         Portal portal;
         if (TestUtil.findAll(em, Portal.class).isEmpty()) {
@@ -146,6 +151,7 @@ public class ProductResourceIT {
         assertThat(testProduct.getContent()).isEqualTo(DEFAULT_CONTENT);
         assertThat(testProduct.getCreatedOn()).isEqualTo(DEFAULT_CREATED_ON);
         assertThat(testProduct.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+        assertThat(testProduct.isHide()).isEqualTo(DEFAULT_HIDE);
     }
 
     @Test
@@ -223,7 +229,8 @@ public class ProductResourceIT {
             .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE)))
             .andExpect(jsonPath("$.[*].content").value(hasItem(DEFAULT_CONTENT.toString())))
             .andExpect(jsonPath("$.[*].createdOn").value(hasItem(DEFAULT_CREATED_ON.toString())))
-            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)));
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
+            .andExpect(jsonPath("$.[*].hide").value(hasItem(DEFAULT_HIDE.booleanValue())));
     }
     
     @Test
@@ -243,7 +250,8 @@ public class ProductResourceIT {
             .andExpect(jsonPath("$.title").value(DEFAULT_TITLE))
             .andExpect(jsonPath("$.content").value(DEFAULT_CONTENT.toString()))
             .andExpect(jsonPath("$.createdOn").value(DEFAULT_CREATED_ON.toString()))
-            .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY));
+            .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
+            .andExpect(jsonPath("$.hide").value(DEFAULT_HIDE.booleanValue()));
     }
     @Test
     @Transactional
@@ -272,7 +280,8 @@ public class ProductResourceIT {
             .title(UPDATED_TITLE)
             .content(UPDATED_CONTENT)
             .createdOn(UPDATED_CREATED_ON)
-            .createdBy(UPDATED_CREATED_BY);
+            .createdBy(UPDATED_CREATED_BY)
+            .hide(UPDATED_HIDE);
 
         restProductMockMvc.perform(put("/api/products")
             .contentType(MediaType.APPLICATION_JSON)
@@ -290,6 +299,7 @@ public class ProductResourceIT {
         assertThat(testProduct.getContent()).isEqualTo(UPDATED_CONTENT);
         assertThat(testProduct.getCreatedOn()).isEqualTo(UPDATED_CREATED_ON);
         assertThat(testProduct.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testProduct.isHide()).isEqualTo(UPDATED_HIDE);
     }
 
     @Test
