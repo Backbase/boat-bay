@@ -7,6 +7,7 @@ import lombok.Data;
 @Data
 public class ModuleDto {
 
+    private String key;
     private Long id;
     private String title;
     private Map<String,String> versions;
@@ -14,5 +15,7 @@ public class ModuleDto {
     private String[] tags;
     @JsonProperty("x-icon")
     private String xIcon;
+
+    private Map<String, SpecDto> specs;
 
 }

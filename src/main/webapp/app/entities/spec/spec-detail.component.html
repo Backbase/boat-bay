@@ -28,10 +28,6 @@
                 <dd>
                     <span>{{ spec.openApi }}</span>
                 </dd>
-                <dt><span>Tags Csv</span></dt>
-                <dd>
-                    <span>{{ spec.tagsCsv }}</span>
-                </dd>
                 <dt><span>Description</span></dt>
                 <dd>
                     <span>{{ spec.description }}</span>
@@ -129,6 +125,12 @@
                     <div *ngIf="spec.specType">
                         <a [routerLink]="['/spec-type', spec.specType?.id, 'view']">{{ spec.specType?.name }}</a>
                     </div>
+                </dd>
+                <dt><span>Tag</span></dt>
+                <dd>
+                    <span *ngFor="let tag of spec.tags; let last = last">
+                        <a [routerLink]="['/tag', tag?.id, 'view']">{{ tag.id }}</a>{{ last ? '' : ', ' }}
+                    </span>
                 </dd>
                 <dt><span>Service Definition</span></dt>
                 <dd>

@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
@@ -27,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Slf4j
 @DependsOn({"liquibase","boatBayBootstrap"})
+@ConditionalOnProperty(value = "boat.scheduler.source.scanner.enabled", havingValue = "true")
 public class SpecSourceScheduler {
 
     // Task Scheduler

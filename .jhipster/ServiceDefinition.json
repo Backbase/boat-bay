@@ -32,9 +32,17 @@
       "fieldType": "String"
     },
     {
-      "fieldName": "content",
+      "fieldName": "description",
       "fieldType": "byte[]",
       "fieldTypeBlobContent": "text"
+    },
+    {
+      "fieldName": "icon",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "color",
+      "fieldType": "String"
     },
     {
       "fieldName": "createdOn",

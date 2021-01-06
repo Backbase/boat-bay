@@ -57,7 +57,9 @@ entity ServiceDefinition {
     title String
     subTitle String
     navTitle String
-    content TextBlob
+    description TextBlob
+    icon String
+    color String
     order Integer
     createdOn Instant
     createdBy String
@@ -70,7 +72,6 @@ entity Spec {
 	version String required
     title String
     openApi TextBlob required
-    tagsCsv String
     description TextBlob
     createdOn Instant required
     createdBy String required
@@ -90,6 +91,11 @@ entity Spec {
     sourceLastModifiedOn Instant
     sourceLastModifiedBy String
 
+}
+
+entity Tag {
+    name String required unique
+    description String
 }
 
 entity SpecType {
@@ -186,6 +192,7 @@ enum SourceType {
 
 relationship ManyToMany {
     ProductRelease to Spec
+    Spec to Tag
 }
 
 relationship OneToMany {
@@ -224,9 +231,3 @@ relationship OneToOne {
     PortalLintRuleConfig to PortalLintRule
 
 }
-
-
-
-
-
-

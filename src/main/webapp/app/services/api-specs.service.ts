@@ -4,7 +4,7 @@ import { catchError, first, map, shareReplay } from 'rxjs/operators';
 
 import { ApiModule, PortalView, Product, UiApiModule } from '../models';
 import { NAVIGATION_FILE_PATH } from '../tokens';
-import { DashboardViewService } from 'app/service/dashboard.view.service';
+import { DashboardViewService } from 'app/services/dashboard.view.service';
 
 @Injectable({
   providedIn: 'root',

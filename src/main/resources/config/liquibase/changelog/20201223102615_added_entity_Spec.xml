@@ -31,9 +31,6 @@
             <column name="open_api" type="${clobType}">
                 <constraints nullable="false" />
             </column>
-            <column name="tags_csv" type="varchar(255)">
-                <constraints nullable="true" />
-            </column>
             <column name="description" type="${clobType}">
                 <constraints nullable="true" />
             </column>
@@ -112,6 +109,17 @@
 
     <changeSet id="20201223102615-1-relations" author="jhipster">
 
+        <createTable tableName="spec_tag">
+            <column name="tag_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="spec_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="spec_id, tag_id" tableName="spec_tag"/>
+        
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
 
@@ -134,7 +142,6 @@
             <column name="version" type="string"/>
             <column name="title" type="string"/>
             <column name="open_api" type="clob"/>
-            <column name="tags_csv" type="string"/>
             <column name="description" type="clob"/>
             <column name="created_on" type="datetime"/>
             <column name="created_by" type="string"/>

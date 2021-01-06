@@ -11,8 +11,8 @@ import com.backbase.oss.boat.bay.dto.PortalDto;
 import com.backbase.oss.boat.bay.dto.PortalVersionDto;
 import com.backbase.oss.boat.bay.dto.ProductDto;
 import com.backbase.oss.boat.bay.dto.ProductReleaseDto;
+import com.backbase.oss.boat.bay.dto.SpecDto;
 import com.backbase.oss.boat.bay.repository.extended.BoatPortalRepository;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -43,9 +43,25 @@ public interface DashboardMapper {
     }
 
     default Map<String, ModuleDto> mapModules(Set<ServiceDefinition> serviceDefinitions) {
-        return new HashMap<>();
+        return serviceDefinitions.stream()
+            .map(this::mapModule)
+            .collect(Collectors.toMap(ModuleDto::getKey, moduleDto -> moduleDto));
     }
 
+    @Mapping(target = "XIcon", source = "icon")
+    @Mapping(target = "versions", ignore = true)
+    @Mapping(target = "tags", ignore = true)
+    ModuleDto mapModule(ServiceDefinition serviceDefinition);
+
+    default Map<String, SpecDto> map(Set<Spec> specs) {
+        return specs.stream()
+            .map(this::mapSpec)
+            .collect(Collectors.toMap(SpecDto::getVersion, specDto -> specDto));
+    }
+
+    @Mapping(target = "grade", source = "spec.lintReport.grade")
+    @Mapping(target = "icon", source = "spec.specType.icon")
+    SpecDto mapSpec(Spec spec);
 
     default Map<String, ProductReleaseDto> mapReleases(Portal portal) {
         return portal.getProducts().stream()

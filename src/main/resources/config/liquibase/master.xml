@@ -31,6 +31,7 @@
     <include file="config/liquibase/changelog/20201223103115_added_entity_LintRuleViolation.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210105091636_added_entity_ProductRelease.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210105153413_added_entity_SourcePath.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210106114822_added_entity_Tag.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="config/liquibase/changelog/20201230133235_added_entity_constraints_Dashboard.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201230121252_added_entity_constraints_Product.xml" relativeToChangelogFile="false"/>

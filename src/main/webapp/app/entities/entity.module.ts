@@ -73,6 +73,10 @@ import { RouterModule } from '@angular/router';
         path: 'source-path',
         loadChildren: () => import('./source-path/source-path.module').then(m => m.BoatBaySourcePathModule),
       },
+      {
+        path: 'tag',
+        loadChildren: () => import('./tag/tag.module').then(m => m.BoatBayTagModule),
+      },
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ]),
   ],
