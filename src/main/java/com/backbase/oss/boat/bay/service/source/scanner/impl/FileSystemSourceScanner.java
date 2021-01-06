@@ -41,11 +41,10 @@ public class FileSystemSourceScanner implements SpecSourceScanner {
 
 
     public FileSystemSourceScanner() {
-        JavaTimeModule javaTimeModule = new JavaTimeModule();
-        Jdk8Module jdk8Module = new Jdk8Module();
+
         objectMapper = new ObjectMapper(new YAMLFactory());
-        objectMapper.registerModule(javaTimeModule);
-        objectMapper.registerModule(jdk8Module);
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.registerModule(new Jdk8Module());
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
     }
@@ -69,13 +68,11 @@ public class FileSystemSourceScanner implements SpecSourceScanner {
 
     @NotNull
     private Optional<Spec> mapSpec(Path scanPath, Path path) {
-        Path relativize = scanPath.relativize(path);
 
         Spec spec = new Spec();
         String openApi ;
         try {
            // openApi = Files.readString(path);
-            ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
             if(path.getFileName().toString().equals("spec.yaml")) {
                 spec = objectMapper.readValue(new File(path.toString()), Spec.class);
             }
@@ -92,7 +89,6 @@ public class FileSystemSourceScanner implements SpecSourceScanner {
         ServiceDefinition service= new ServiceDefinition();
 
         try{
-            ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
             if (serviceFile.exists()) {
                 service = objectMapper.readValue(serviceFile, ServiceDefinition.class);
                 service.setSpecs(Files.walk(path.getParent())
@@ -116,7 +112,6 @@ public class FileSystemSourceScanner implements SpecSourceScanner {
         File capabilityFile = new File(path.toString());
 
         try {
-            ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
             if (capabilityFile.exists()) {
                 capability = objectMapper.readValue(capabilityFile, Capability.class);
                 capability.setServiceDefinitions(
@@ -141,7 +136,6 @@ public class FileSystemSourceScanner implements SpecSourceScanner {
 
 
         try {
-            ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
             if (path.getFileName().toString().equals("product.yaml")) {
                 product = objectMapper.readValue(new File(path.toString()), Product.class);
                 product.setCapabilities(
@@ -163,7 +157,6 @@ public class FileSystemSourceScanner implements SpecSourceScanner {
     private Optional<Portal> mapPortal(Path scanPath, Path path){
         Portal portal;
         try {
-             ObjectMapper objectMapper = new ObjectMapper(new YAMLFactory());
              File portalFile = new File(path.toString());
              portal = objectMapper.readValue(portalFile,Portal.class);
              portal.setProducts(Files.walk(path.getParent())
