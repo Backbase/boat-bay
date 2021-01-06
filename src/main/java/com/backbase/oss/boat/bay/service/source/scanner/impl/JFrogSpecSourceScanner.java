@@ -1,6 +1,7 @@
 package com.backbase.oss.boat.bay.service.source.scanner.impl;
 
 import com.backbase.oss.boat.bay.domain.Source;
+import com.backbase.oss.boat.bay.domain.SourcePath;
 import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.domain.enumeration.SourceType;
 import com.backbase.oss.boat.bay.service.source.scanner.SpecSourceScanner;
@@ -8,15 +9,20 @@ import com.backbase.oss.boat.bay.util.SpringExpressionUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.net.URI;
 import java.nio.charset.Charset;
 import java.time.Instant;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jfrog.artifactory.client.Artifactory;
 import org.jfrog.artifactory.client.ArtifactoryClientBuilder;
 import org.jfrog.artifactory.client.ItemHandle;
@@ -27,22 +33,39 @@ import org.jfrog.artifactory.client.model.RepoPath;
 @Slf4j
 public class JFrogSpecSourceScanner implements SpecSourceScanner {
 
-    @Getter
-    @Setter
+
     private Source source;
 
     private Artifactory artifactory;
+    private String repository;
+    private String baseUrl;
+    private Set<SourcePath> paths = new LinkedHashSet<>();
+
+    @Override
+    public void setSource(Source source) {
+        this.source = source;
+
+        URI  uri = URI.create(source.getBaseUrl());
+        this.baseUrl = uri.getScheme() + "://" + uri.getHost() + (uri.getPort() != -1 ? ":" + uri.getPort() : "");
+        this.repository = uri.getPath().substring(1);
+        source.getSourcePaths().forEach(paths::add);
+    }
+
+    @Override
+    public Source getSource() {
+        return source;
+    }
 
     public List<Spec> scan() {
-        log.info("Scanning Artifactory Source: {} in repo: {}", source.getBaseUrl(), source.getPath());
+        log.info("Scanning Artifactory Source: {}", source.getName());
         return getArtifactory().searches()
-            .repositories(source.getPath())
+            .repositories(repository)
             .artifactsByName(source.getFilter())
             .doSearch()
             .stream()
             .parallel()
             .map(this::getItem)
-            .filter(this::isFile)
+            .filter(this::isFileAndInSourcePaths)
             .map(this::createSpec)
             .filter(Optional::isPresent)
             .map(Optional::get)
@@ -51,9 +74,9 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
 
     private Artifactory getArtifactory() {
         if (artifactory == null) {
-            log.info("Setting up artifactory client with url: {} and username: {}", source.getBaseUrl(), source.getUsername());
+            log.info("Setting up artifactory client with url: {} and username: {}", baseUrl, source.getUsername());
             artifactory = ArtifactoryClientBuilder.create()
-                .setUrl(source.getBaseUrl())
+                .setUrl(baseUrl)
                 .setUsername(source.getUsername())
                 .setPassword(source.getPassword())
                 .build();
@@ -61,12 +84,25 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
         return artifactory;
     }
 
-    private boolean isFile(ItemHandle itemHandle) {
-        return !itemHandle.isFolder();
+    private boolean isFileAndInSourcePaths(ItemHandle itemHandle) {
+        boolean isFolder = itemHandle.isFolder();
+        String path = itemHandle.info().getPath();
+        if(isFolder) {
+            log.debug("Skipping JFROG Item: {} as it's a folder", path);
+            return false;
+        }
+        boolean isInSourcePaths = paths.stream().anyMatch(sourcePath -> path.startsWith(sourcePath.getName()));
+        if(isInSourcePaths) {
+            log.debug("Include item in scan: {}", path);
+            return true;
+        } else {
+            log.debug("Exclude item in scan: {} as it's not in the source paths: [{}] ", path, paths.stream().map(SourcePath::getName).collect(Collectors.joining(",")));
+            return false;
+        }
     }
 
     private ItemHandle getItem(RepoPath repoPath) {
-        return getArtifactory().repository(source.getPath())
+        return getArtifactory().repository(repository)
             .file(repoPath.getItemPath());
     }
 
@@ -90,7 +126,7 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
     private Spec getSpec(ItemHandle item) {
         File file = item.info();
         Spec spec = new Spec();
-        spec.setKey(source.getPath());
+        spec.setKey(item.info().getName());
         spec.setPortal(source.getPortal());
         spec.setCapability(source.getCapability());
         spec.setServiceDefinition(source.getServiceDefinition());
@@ -111,7 +147,7 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
     }
 
     private String download(ItemHandle item) throws IOException {
-        InputStream inputStream = getArtifactory().repository(source.getPath()).download(item.info().getPath()).doDownload();
+        InputStream inputStream = getArtifactory().repository(repository).download(item.info().getPath()).doDownload();
 
         StringWriter writer = new StringWriter();
         IOUtils.copy(inputStream, writer, Charset.defaultCharset());

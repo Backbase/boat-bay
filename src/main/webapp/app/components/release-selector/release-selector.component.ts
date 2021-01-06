@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-release-selector',
@@ -12,7 +11,7 @@ export class ReleaseSelectorComponent {
 
   @Output() updatedReleaseVersion = new EventEmitter<string>();
 
-  public onUpdateReleaseVersion({ value }: { value: string }) {
+  public onUpdateReleaseVersion({ value }: { value: string }): void {
     this.updatedReleaseVersion.emit(value);
   }
 }

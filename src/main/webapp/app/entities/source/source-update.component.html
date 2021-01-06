@@ -59,12 +59,6 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-control-label" for="field_path">Path</label>
-                    <input type="text" class="form-control" name="path" id="field_path"
-                           formControlName="path"/>
-                </div>
-
-                <div class="form-group">
                     <label class="form-control-label" for="field_filter">Filter</label>
                     <input type="text" class="form-control" name="filter" id="field_filter"
                            formControlName="filter"/>
@@ -92,18 +86,6 @@
                     <label class="form-control-label" for="field_specFilterSpEL">Spec Filter Sp EL</label>
                     <input type="text" class="form-control" name="specFilterSpEL" id="field_specFilterSpEL"
                            formControlName="specFilterSpEL"/>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-control-label" for="field_productKeySpEL">Product Key Sp EL</label>
-                    <input type="text" class="form-control" name="productKeySpEL" id="field_productKeySpEL"
-                           formControlName="productKeySpEL"/>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-control-label" for="field_productNameSpEL">Product Name Sp EL</label>
-                    <input type="text" class="form-control" name="productNameSpEL" id="field_productNameSpEL"
-                           formControlName="productNameSpEL"/>
                 </div>
 
                 <div class="form-group">
@@ -152,6 +134,20 @@
                 <div *ngIf="editForm.get('portal')!.invalid && (editForm.get('portal')!.dirty || editForm.get('portal')!.touched)">
                     <small class="form-text text-danger"
                            *ngIf="editForm.get('portal')?.errors?.required">
+                        This field is required.
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_product">Product</label>
+                    <select class="form-control" id="field_product" name="product" formControlName="product">
+                        <option *ngIf="!editForm.get('product')!.value" [ngValue]="null" selected></option>
+                        <option [ngValue]="productOption.id === editForm.get('product')!.value?.id ? editForm.get('product')!.value : productOption" *ngFor="let productOption of products; trackBy: trackById">{{ productOption.name }}</option>
+                    </select>
+                </div>
+                <div *ngIf="editForm.get('product')!.invalid && (editForm.get('product')!.dirty || editForm.get('product')!.touched)">
+                    <small class="form-text text-danger"
+                           *ngIf="editForm.get('product')?.errors?.required">
                         This field is required.
                     </small>
                 </div>

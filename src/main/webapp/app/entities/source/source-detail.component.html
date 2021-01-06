@@ -24,10 +24,6 @@
                 <dd>
                     <span>{{ source.active }}</span>
                 </dd>
-                <dt><span>Path</span></dt>
-                <dd>
-                    <span>{{ source.path }}</span>
-                </dd>
                 <dt><span>Filter</span></dt>
                 <dd>
                     <span>{{ source.filter }}</span>
@@ -47,14 +43,6 @@
                 <dt><span>Spec Filter Sp EL</span></dt>
                 <dd>
                     <span>{{ source.specFilterSpEL }}</span>
-                </dd>
-                <dt><span>Product Key Sp EL</span></dt>
-                <dd>
-                    <span>{{ source.productKeySpEL }}</span>
-                </dd>
-                <dt><span>Product Name Sp EL</span></dt>
-                <dd>
-                    <span>{{ source.productNameSpEL }}</span>
                 </dd>
                 <dt><span>Capability Key Sp EL</span></dt>
                 <dd>
@@ -84,6 +72,12 @@
                 <dd>
                     <div *ngIf="source.portal">
                         <a [routerLink]="['/portal', source.portal?.id, 'view']">{{ source.portal?.name }}</a>
+                    </div>
+                </dd>
+                <dt><span>Product</span></dt>
+                <dd>
+                    <div *ngIf="source.product">
+                        <a [routerLink]="['/product', source.product?.id, 'view']">{{ source.product?.name }}</a>
                     </div>
                 </dd>
                 <dt><span>Capability</span></dt>

@@ -1,9 +1,8 @@
-import { HttpResponse } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable, throwError } from 'rxjs';
 import { catchError, first, map, shareReplay } from 'rxjs/operators';
 
-import { ApiModule, PortalView, Product, ProductRelease, UiApiModule } from '../models';
+import { ApiModule, PortalView, Product, UiApiModule } from '../models';
 import { NAVIGATION_FILE_PATH } from '../tokens';
 import { DashboardViewService } from 'app/service/dashboard.view.service';
 
@@ -31,7 +30,7 @@ export class ApiSpecsService {
 
   private readonly apiModules$: Observable<[string, ApiModule][]> = this.dashboardView.pipe(
     map((value: PortalView) => {
-      return Object.values(value!.capabilities)
+      return Object.values(value.capabilities)
         .map(({ modules }) => Object.entries(modules))
         .flat();
     })
@@ -39,7 +38,7 @@ export class ApiSpecsService {
 
   private readonly releases$ = this.dashboardView.pipe(
     map((value: PortalView) => {
-      return value!.releases;
+      return value.releases;
     })
   );
 
@@ -60,20 +59,17 @@ export class ApiSpecsService {
 
   public readonly products$: Observable<Product[]> = this.dashboardView.pipe(
     map((value: PortalView) => {
-      return Object.values(value!.products);
+      return Object.values(value.products);
     })
   );
 
   public readonly availableReleaseVersions$: Observable<string[]> = this.dashboardView.pipe(
     map((value: PortalView) => {
-      return Object.keys(value!.releases);
+      return Object.keys(value.releases);
     })
   );
 
-  constructor(
-    @Inject(NAVIGATION_FILE_PATH) private readonly navigationFilePath: string,
-    private readonly dashboardViewService: DashboardViewService
-  ) {
+  constructor(@Inject(NAVIGATION_FILE_PATH) private navigationFilePath: string, private dashboardViewService: DashboardViewService) {
     this.availableReleaseVersions$.pipe(first()).subscribe(releaseVersions => this.selectCurrentReleaseVersion(releaseVersions[0]));
   }
 
@@ -94,7 +90,7 @@ export class ApiSpecsService {
     return combineLatest([this.currentReleaseVersion$$, this.releases$, this.filteredApiModules$]).pipe(
       map(([selectedVersion, releases, apiModulesMap]) => {
         const formattedProductName = product.trim().toLowerCase();
-        const productsForSelectedReleas = releases[selectedVersion!];
+        const productsForSelectedReleas = releases[selectedVersion];
 
         return this.constructApiStructureForModules(productsForSelectedReleas[formattedProductName].modules, apiModulesMap);
       })
@@ -125,7 +121,7 @@ export class ApiSpecsService {
     return combineLatest([this.currentReleaseVersion$$, this.releases$]).pipe(
       map(([selectedVersion, releases]) => {
         const formattedProductName = product.trim().toLowerCase();
-        const productsForSelectedReleas = releases[selectedVersion!];
+        const productsForSelectedReleas = releases[selectedVersion];
         const productModulesDict = productsForSelectedReleas[formattedProductName].modules;
         const amountOfModulesPerProduct = Object.keys(productModulesDict).length;
 
@@ -134,7 +130,7 @@ export class ApiSpecsService {
     );
   }
 
-  public selectCurrentReleaseVersion(version: string) {
+  public selectCurrentReleaseVersion(version: string): void {
     this.currentReleaseVersion$$.next(version);
   }
 }

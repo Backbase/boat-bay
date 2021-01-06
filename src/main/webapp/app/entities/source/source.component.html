@@ -27,14 +27,11 @@
                     <th scope="col" ><span>Type</span></th>
                     <th scope="col" ><span>Base Url</span></th>
                     <th scope="col" ><span>Active</span></th>
-                    <th scope="col" ><span>Path</span></th>
                     <th scope="col" ><span>Filter</span></th>
                     <th scope="col" ><span>Username</span></th>
                     <th scope="col" ><span>Password</span></th>
                     <th scope="col" ><span>Cron Expression</span></th>
                     <th scope="col" ><span>Spec Filter Sp EL</span></th>
-                    <th scope="col" ><span>Product Key Sp EL</span></th>
-                    <th scope="col" ><span>Product Name Sp EL</span></th>
                     <th scope="col" ><span>Capability Key Sp EL</span></th>
                     <th scope="col" ><span>Capability Name Sp EL</span></th>
                     <th scope="col" ><span>Service Key Sp EL</span></th>
@@ -42,6 +39,7 @@
                     <th scope="col" ><span>Version Sp EL</span></th>
                     <th scope="col" ><span>Overwrite Changes</span></th>
                     <th scope="col" ><span>Portal</span></th>
+                    <th scope="col" ><span>Product</span></th>
                     <th scope="col" ><span>Capability</span></th>
                     <th scope="col" ><span>Service Definition</span></th>
                     <th scope="col"></th>
@@ -54,14 +52,11 @@
                     <td>{{ source.type }}</td>
                     <td>{{ source.baseUrl }}</td>
                     <td>{{ source.active }}</td>
-                    <td>{{ source.path }}</td>
                     <td>{{ source.filter }}</td>
                     <td>{{ source.username }}</td>
                     <td>{{ source.password }}</td>
                     <td>{{ source.cronExpression }}</td>
                     <td>{{ source.specFilterSpEL }}</td>
-                    <td>{{ source.productKeySpEL }}</td>
-                    <td>{{ source.productNameSpEL }}</td>
                     <td>{{ source.capabilityKeySpEL }}</td>
                     <td>{{ source.capabilityNameSpEL }}</td>
                     <td>{{ source.serviceKeySpEL }}</td>
@@ -71,6 +66,11 @@
                     <td>
                         <div *ngIf="source.portal">
                             <a [routerLink]="['/portal', source.portal?.id, 'view']" >{{ source.portal?.name }}</a>
+                        </div>
+                    </td>
+                    <td>
+                        <div *ngIf="source.product">
+                            <a [routerLink]="['/product', source.product?.id, 'view']" >{{ source.product?.name }}</a>
                         </div>
                     </td>
                     <td>

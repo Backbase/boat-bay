@@ -69,6 +69,10 @@ import { RouterModule } from '@angular/router';
         path: 'product-release',
         loadChildren: () => import('./product-release/product-release.module').then(m => m.BoatBayProductReleaseModule),
       },
+      {
+        path: 'source-path',
+        loadChildren: () => import('./source-path/source-path.module').then(m => m.BoatBaySourcePathModule),
+      },
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ]),
   ],

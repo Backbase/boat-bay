@@ -2,12 +2,10 @@ package com.backbase.oss.boat.bay.web.views;
 
 import com.backbase.oss.boat.bay.domain.Dashboard;
 import com.backbase.oss.boat.bay.domain.Portal;
-import com.backbase.oss.boat.bay.dto.DashboardDto;
 import com.backbase.oss.boat.bay.dto.PortalDto;
 import com.backbase.oss.boat.bay.mapper.DashboardMapper;
 import com.backbase.oss.boat.bay.repository.extended.BoatDashboardRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatPortalRepository;
-import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

@@ -53,7 +53,6 @@ public class SpecSourceResolver {
     private void processSpec(Spec spec) {
         Source source = spec.getSource();
 
-
         String md5 = spec.getChecksum();
         if (md5 == null) {
             md5 = DigestUtils.md5DigestAsHex(spec.getOpenApi().getBytes(StandardCharsets.UTF_8));
@@ -77,6 +76,12 @@ public class SpecSourceResolver {
 
         log.info("Storing spec: {}", spec.getName());
         specRepository.save(spec);
+    }
+
+    private void setProduct(Spec spec, Source source) {
+        Product product = source.getProduct();
+        spec.setProduct(product);
+        log.info("Adding spec: {} to product: {}", spec.getName(), product.getName());
     }
 
     private void setInformationFromSpec(Spec spec) {
@@ -146,16 +151,6 @@ public class SpecSourceResolver {
         }
     }
 
-    private void setProduct(Spec spec, Source source) {
-        if (spec.getProduct() == null || source.isOverwriteChanges()) {
-            String key = SpringExpressionUtils.parseName(source.getProductKeySpEL(), spec, "unknown");
-            Product product = boatProductRepository.findByPortalAndKey(spec.getPortal(), key)
-                .orElseGet(() -> createProductWithKey(spec, key));
-            log.info("Assigning product: {} to spec: {}", product.getName(), spec.getName());
-            spec.setProduct(product);
-        }
-    }
-
     private ServiceDefinition createServiceDefinition(Spec spec, String key) {
         log.info("Creating service: {} for spec: {}", key, spec.getName());
         Optional<String> serviceNameSpEL = Optional.ofNullable(spec.getSource().getServiceNameSpEL());
@@ -167,21 +162,6 @@ public class SpecSourceResolver {
         serviceDefinition.setCreatedOn(Instant.now());
         serviceDefinition.setName(serviceNameSpEL.map(exp -> SpringExpressionUtils.parseName(exp, spec, key)).orElse(key));
         return boatServiceRepository.save(serviceDefinition);
-    }
-
-    private Product createProductWithKey(Spec spec, String key) {
-        log.info("Creating product: {} with spec: {}", key, spec.getName());
-
-        Optional<String> productNameSpEL = Optional.of(spec.getSource().getProductNameSpEL());
-        Product product = new Product();
-        product.setKey(key);
-        product.setPortal(spec.getPortal());
-        product.setCreatedBy(spec.getCreatedBy());
-        product.setCreatedOn(Instant.now());
-        product.setName(productNameSpEL.map(exp -> SpringExpressionUtils.parseName(exp, spec, key)).orElse(key));
-
-        return boatProductRepository.save(product);
-
     }
 
     private Capability createCapabilityForSpecWithKey(Spec spec, String key) {

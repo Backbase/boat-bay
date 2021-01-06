@@ -11,7 +11,7 @@ import { ApiSpecsService } from 'app/service/api-specs.service';
 })
 export class ProductComponent implements OnInit, OnDestroy {
   @Input() name!: string;
-  @Input() isCollapsible: boolean = false;
+  @Input() isCollapsible = false;
   @ViewChild(MatAccordion) accordion!: MatAccordion;
 
   public apiSpecs$!: Observable<UiApiModule[]>;
@@ -20,7 +20,7 @@ export class ProductComponent implements OnInit, OnDestroy {
   public hasSearchText$ = this.apiSpecsService.hasSearchText$;
   private subscription!: Subscription;
 
-  constructor(private readonly apiSpecsService: ApiSpecsService) {}
+  constructor(private apiSpecsService: ApiSpecsService) {}
 
   ngOnInit(): void {
     this.apiSpecs$ = this.apiSpecsService.getApiModulesFor(this.name);

@@ -23,6 +23,7 @@ class SourceResolverTest {
 
         log.info("path: {}, name: {}", path, name);
         String[] expressions = {
+            "sourceName.substring(0, sourceName.lastIndexOf('-')).replaceAll('-([a-z]*?)-api', '')",
             "sourceName.substring(0, sourceName.lastIndexOf('-'))",
             "sourcePath.substring(1, sourcePath.indexOf('/',1))",
             "sourceName.substring(0, sourceName.lastIndexOf('-')).replaceAll('-([a-z]*?)-api', '')",

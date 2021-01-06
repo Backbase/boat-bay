@@ -3,6 +3,7 @@ package com.backbase.oss.boat.bay.web.rest;
 import com.backbase.oss.boat.bay.BoatBayApp;
 import com.backbase.oss.boat.bay.domain.Source;
 import com.backbase.oss.boat.bay.domain.Portal;
+import com.backbase.oss.boat.bay.domain.Product;
 import com.backbase.oss.boat.bay.repository.SourceRepository;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -43,9 +44,6 @@ public class SourceResourceIT {
     private static final Boolean DEFAULT_ACTIVE = false;
     private static final Boolean UPDATED_ACTIVE = true;
 
-    private static final String DEFAULT_PATH = "AAAAAAAAAA";
-    private static final String UPDATED_PATH = "BBBBBBBBBB";
-
     private static final String DEFAULT_FILTER = "AAAAAAAAAA";
     private static final String UPDATED_FILTER = "BBBBBBBBBB";
 
@@ -60,12 +58,6 @@ public class SourceResourceIT {
 
     private static final String DEFAULT_SPEC_FILTER_SP_EL = "AAAAAAAAAA";
     private static final String UPDATED_SPEC_FILTER_SP_EL = "BBBBBBBBBB";
-
-    private static final String DEFAULT_PRODUCT_KEY_SP_EL = "AAAAAAAAAA";
-    private static final String UPDATED_PRODUCT_KEY_SP_EL = "BBBBBBBBBB";
-
-    private static final String DEFAULT_PRODUCT_NAME_SP_EL = "AAAAAAAAAA";
-    private static final String UPDATED_PRODUCT_NAME_SP_EL = "BBBBBBBBBB";
 
     private static final String DEFAULT_CAPABILITY_KEY_SP_EL = "AAAAAAAAAA";
     private static final String UPDATED_CAPABILITY_KEY_SP_EL = "BBBBBBBBBB";
@@ -108,14 +100,11 @@ public class SourceResourceIT {
             .type(DEFAULT_TYPE)
             .baseUrl(DEFAULT_BASE_URL)
             .active(DEFAULT_ACTIVE)
-            .path(DEFAULT_PATH)
             .filter(DEFAULT_FILTER)
             .username(DEFAULT_USERNAME)
             .password(DEFAULT_PASSWORD)
             .cronExpression(DEFAULT_CRON_EXPRESSION)
             .specFilterSpEL(DEFAULT_SPEC_FILTER_SP_EL)
-            .productKeySpEL(DEFAULT_PRODUCT_KEY_SP_EL)
-            .productNameSpEL(DEFAULT_PRODUCT_NAME_SP_EL)
             .capabilityKeySpEL(DEFAULT_CAPABILITY_KEY_SP_EL)
             .capabilityNameSpEL(DEFAULT_CAPABILITY_NAME_SP_EL)
             .serviceKeySpEL(DEFAULT_SERVICE_KEY_SP_EL)
@@ -132,6 +121,16 @@ public class SourceResourceIT {
             portal = TestUtil.findAll(em, Portal.class).get(0);
         }
         source.setPortal(portal);
+        // Add required entity
+        Product product;
+        if (TestUtil.findAll(em, Product.class).isEmpty()) {
+            product = ProductResourceIT.createEntity(em);
+            em.persist(product);
+            em.flush();
+        } else {
+            product = TestUtil.findAll(em, Product.class).get(0);
+        }
+        source.setProduct(product);
         return source;
     }
     /**
@@ -146,14 +145,11 @@ public class SourceResourceIT {
             .type(UPDATED_TYPE)
             .baseUrl(UPDATED_BASE_URL)
             .active(UPDATED_ACTIVE)
-            .path(UPDATED_PATH)
             .filter(UPDATED_FILTER)
             .username(UPDATED_USERNAME)
             .password(UPDATED_PASSWORD)
             .cronExpression(UPDATED_CRON_EXPRESSION)
             .specFilterSpEL(UPDATED_SPEC_FILTER_SP_EL)
-            .productKeySpEL(UPDATED_PRODUCT_KEY_SP_EL)
-            .productNameSpEL(UPDATED_PRODUCT_NAME_SP_EL)
             .capabilityKeySpEL(UPDATED_CAPABILITY_KEY_SP_EL)
             .capabilityNameSpEL(UPDATED_CAPABILITY_NAME_SP_EL)
             .serviceKeySpEL(UPDATED_SERVICE_KEY_SP_EL)
@@ -170,6 +166,16 @@ public class SourceResourceIT {
             portal = TestUtil.findAll(em, Portal.class).get(0);
         }
         source.setPortal(portal);
+        // Add required entity
+        Product product;
+        if (TestUtil.findAll(em, Product.class).isEmpty()) {
+            product = ProductResourceIT.createUpdatedEntity(em);
+            em.persist(product);
+            em.flush();
+        } else {
+            product = TestUtil.findAll(em, Product.class).get(0);
+        }
+        source.setProduct(product);
         return source;
     }
 
@@ -196,14 +202,11 @@ public class SourceResourceIT {
         assertThat(testSource.getType()).isEqualTo(DEFAULT_TYPE);
         assertThat(testSource.getBaseUrl()).isEqualTo(DEFAULT_BASE_URL);
         assertThat(testSource.isActive()).isEqualTo(DEFAULT_ACTIVE);
-        assertThat(testSource.getPath()).isEqualTo(DEFAULT_PATH);
         assertThat(testSource.getFilter()).isEqualTo(DEFAULT_FILTER);
         assertThat(testSource.getUsername()).isEqualTo(DEFAULT_USERNAME);
         assertThat(testSource.getPassword()).isEqualTo(DEFAULT_PASSWORD);
         assertThat(testSource.getCronExpression()).isEqualTo(DEFAULT_CRON_EXPRESSION);
         assertThat(testSource.getSpecFilterSpEL()).isEqualTo(DEFAULT_SPEC_FILTER_SP_EL);
-        assertThat(testSource.getProductKeySpEL()).isEqualTo(DEFAULT_PRODUCT_KEY_SP_EL);
-        assertThat(testSource.getProductNameSpEL()).isEqualTo(DEFAULT_PRODUCT_NAME_SP_EL);
         assertThat(testSource.getCapabilityKeySpEL()).isEqualTo(DEFAULT_CAPABILITY_KEY_SP_EL);
         assertThat(testSource.getCapabilityNameSpEL()).isEqualTo(DEFAULT_CAPABILITY_NAME_SP_EL);
         assertThat(testSource.getServiceKeySpEL()).isEqualTo(DEFAULT_SERVICE_KEY_SP_EL);
@@ -304,14 +307,11 @@ public class SourceResourceIT {
             .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())))
             .andExpect(jsonPath("$.[*].baseUrl").value(hasItem(DEFAULT_BASE_URL)))
             .andExpect(jsonPath("$.[*].active").value(hasItem(DEFAULT_ACTIVE.booleanValue())))
-            .andExpect(jsonPath("$.[*].path").value(hasItem(DEFAULT_PATH)))
             .andExpect(jsonPath("$.[*].filter").value(hasItem(DEFAULT_FILTER)))
             .andExpect(jsonPath("$.[*].username").value(hasItem(DEFAULT_USERNAME)))
             .andExpect(jsonPath("$.[*].password").value(hasItem(DEFAULT_PASSWORD)))
             .andExpect(jsonPath("$.[*].cronExpression").value(hasItem(DEFAULT_CRON_EXPRESSION)))
             .andExpect(jsonPath("$.[*].specFilterSpEL").value(hasItem(DEFAULT_SPEC_FILTER_SP_EL)))
-            .andExpect(jsonPath("$.[*].productKeySpEL").value(hasItem(DEFAULT_PRODUCT_KEY_SP_EL)))
-            .andExpect(jsonPath("$.[*].productNameSpEL").value(hasItem(DEFAULT_PRODUCT_NAME_SP_EL)))
             .andExpect(jsonPath("$.[*].capabilityKeySpEL").value(hasItem(DEFAULT_CAPABILITY_KEY_SP_EL)))
             .andExpect(jsonPath("$.[*].capabilityNameSpEL").value(hasItem(DEFAULT_CAPABILITY_NAME_SP_EL)))
             .andExpect(jsonPath("$.[*].serviceKeySpEL").value(hasItem(DEFAULT_SERVICE_KEY_SP_EL)))
@@ -335,14 +335,11 @@ public class SourceResourceIT {
             .andExpect(jsonPath("$.type").value(DEFAULT_TYPE.toString()))
             .andExpect(jsonPath("$.baseUrl").value(DEFAULT_BASE_URL))
             .andExpect(jsonPath("$.active").value(DEFAULT_ACTIVE.booleanValue()))
-            .andExpect(jsonPath("$.path").value(DEFAULT_PATH))
             .andExpect(jsonPath("$.filter").value(DEFAULT_FILTER))
             .andExpect(jsonPath("$.username").value(DEFAULT_USERNAME))
             .andExpect(jsonPath("$.password").value(DEFAULT_PASSWORD))
             .andExpect(jsonPath("$.cronExpression").value(DEFAULT_CRON_EXPRESSION))
             .andExpect(jsonPath("$.specFilterSpEL").value(DEFAULT_SPEC_FILTER_SP_EL))
-            .andExpect(jsonPath("$.productKeySpEL").value(DEFAULT_PRODUCT_KEY_SP_EL))
-            .andExpect(jsonPath("$.productNameSpEL").value(DEFAULT_PRODUCT_NAME_SP_EL))
             .andExpect(jsonPath("$.capabilityKeySpEL").value(DEFAULT_CAPABILITY_KEY_SP_EL))
             .andExpect(jsonPath("$.capabilityNameSpEL").value(DEFAULT_CAPABILITY_NAME_SP_EL))
             .andExpect(jsonPath("$.serviceKeySpEL").value(DEFAULT_SERVICE_KEY_SP_EL))
@@ -375,14 +372,11 @@ public class SourceResourceIT {
             .type(UPDATED_TYPE)
             .baseUrl(UPDATED_BASE_URL)
             .active(UPDATED_ACTIVE)
-            .path(UPDATED_PATH)
             .filter(UPDATED_FILTER)
             .username(UPDATED_USERNAME)
             .password(UPDATED_PASSWORD)
             .cronExpression(UPDATED_CRON_EXPRESSION)
             .specFilterSpEL(UPDATED_SPEC_FILTER_SP_EL)
-            .productKeySpEL(UPDATED_PRODUCT_KEY_SP_EL)
-            .productNameSpEL(UPDATED_PRODUCT_NAME_SP_EL)
             .capabilityKeySpEL(UPDATED_CAPABILITY_KEY_SP_EL)
             .capabilityNameSpEL(UPDATED_CAPABILITY_NAME_SP_EL)
             .serviceKeySpEL(UPDATED_SERVICE_KEY_SP_EL)
@@ -403,14 +397,11 @@ public class SourceResourceIT {
         assertThat(testSource.getType()).isEqualTo(UPDATED_TYPE);
         assertThat(testSource.getBaseUrl()).isEqualTo(UPDATED_BASE_URL);
         assertThat(testSource.isActive()).isEqualTo(UPDATED_ACTIVE);
-        assertThat(testSource.getPath()).isEqualTo(UPDATED_PATH);
         assertThat(testSource.getFilter()).isEqualTo(UPDATED_FILTER);
         assertThat(testSource.getUsername()).isEqualTo(UPDATED_USERNAME);
         assertThat(testSource.getPassword()).isEqualTo(UPDATED_PASSWORD);
         assertThat(testSource.getCronExpression()).isEqualTo(UPDATED_CRON_EXPRESSION);
         assertThat(testSource.getSpecFilterSpEL()).isEqualTo(UPDATED_SPEC_FILTER_SP_EL);
-        assertThat(testSource.getProductKeySpEL()).isEqualTo(UPDATED_PRODUCT_KEY_SP_EL);
-        assertThat(testSource.getProductNameSpEL()).isEqualTo(UPDATED_PRODUCT_NAME_SP_EL);
         assertThat(testSource.getCapabilityKeySpEL()).isEqualTo(UPDATED_CAPABILITY_KEY_SP_EL);
         assertThat(testSource.getCapabilityNameSpEL()).isEqualTo(UPDATED_CAPABILITY_NAME_SP_EL);
         assertThat(testSource.getServiceKeySpEL()).isEqualTo(UPDATED_SERVICE_KEY_SP_EL);
