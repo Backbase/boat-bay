@@ -17,12 +17,7 @@ import { AngularMaterialModule } from 'app/angular-material.module';
 import { environment } from 'app/environments/environment';
 import { MatMenuModule } from '@angular/material/menu';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
-import { SpecTileComponent } from 'app/components/spec-tile/spec-tile.component';
-import { ProductComponent } from 'app/components/product/product.component';
-import { ReleaseSelectorComponent } from 'app/components/release-selector/release-selector.component';
 import { MatDividerModule } from '@angular/material/divider';
-import { SpecsFilterComponent } from 'app/components/specs-filter/specs-filter.component';
 
 @NgModule({
   imports: [

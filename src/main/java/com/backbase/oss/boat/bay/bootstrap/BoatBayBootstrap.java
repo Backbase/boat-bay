@@ -2,19 +2,25 @@ package com.backbase.oss.boat.bay.bootstrap;
 
 import com.backbase.oss.boat.bay.domain.Dashboard;
 import com.backbase.oss.boat.bay.domain.Portal;
+import com.backbase.oss.boat.bay.domain.Product;
 import com.backbase.oss.boat.bay.domain.Source;
+import com.backbase.oss.boat.bay.domain.SourcePath;
 import com.backbase.oss.boat.bay.domain.SpecType;
 import com.backbase.oss.boat.bay.exceptions.BootstrapException;
+import com.backbase.oss.boat.bay.repository.ProductRepository;
+import com.backbase.oss.boat.bay.repository.SourcePathRepository;
 import com.backbase.oss.boat.bay.repository.SourceRepository;
 import com.backbase.oss.boat.bay.repository.SpecTypeRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatDashboardRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatPortalRepository;
+import com.backbase.oss.boat.bay.repository.extended.BoatSourcePathRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import javax.annotation.PostConstruct;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,12 +44,13 @@ public class BoatBayBootstrap {
     private File bootstrapFile;
 
     private final BoatPortalRepository portalRepository;
+    private final ProductRepository productRepository;
     private final SourceRepository sourceRepository;
     private final BoatDashboardRepository dashboardRepository;
     private final SpecTypeRepository specTypeRepository;
+    private final BoatSourcePathRepository sourcePathRepository;
 
-    @EventListener({ContextRefreshedEvent.class})
-    @Async
+    @PostConstruct
     public void loadBootstrapFile() {
         log.info("Loading bootstrap from: {}", bootstrapFile);
         ObjectMapper objectMapper = new ObjectMapper(YAMLFactory.builder().build());
@@ -72,10 +79,7 @@ public class BoatBayBootstrap {
             for (Source source : bootstrap.getSources()) {
                 Optional<Source> existingSource = sourceRepository.findOne(Example.of(new Source().name(source.getName())));
                 if (existingSource.isEmpty()) {
-                    Portal portal = portalRepository.findOne(Example.of(source.getPortal())).orElseThrow(() -> new BootstrapException("Cannot create source with portal: " + source.getPortal() + " as it does not exist"));
-                    source.setPortal(portal);
-                    log.info("Bootstrapping source: {}", source.getName());
-                    sourceRepository.save(source);
+                    bootstrapSource(source);
                 }
             }
 
@@ -93,6 +97,25 @@ public class BoatBayBootstrap {
             log.error("Failed to read bootstrap yaml file from location: {}", bootstrapFile, e);
         } catch (BootstrapException e) {
             log.error("Failed to bootstrap ", e);
+        }
+    }
+
+    private void bootstrapSource(Source source) throws BootstrapException {
+        Portal portal = portalRepository.findOne(Example.of(source.getPortal())).orElseThrow(() -> new BootstrapException("Cannot create source with portal: " + source.getPortal() + " as it does not exist"));
+        source.setPortal(portal);
+        if(source.getProduct() == null) {
+            throw new BootstrapException("You must define a product in the source");
+        }
+        source.getProduct().setPortal(portal);
+        Product product  = productRepository.findOne(Example.of(source.getProduct())).orElseGet(() -> productRepository.save(source.getProduct()));
+        source.setProduct(product);
+        log.info("Bootstrapping source: {}", source.getName());
+        sourceRepository.save(source);
+        sourcePathRepository.deleteAllBySource(source);
+
+        for (SourcePath sourcePath : source.getSourcePaths()) {
+            sourcePath.setSource(source);
+            sourcePathRepository.save(sourcePath);
         }
     }
 

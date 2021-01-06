@@ -10,9 +10,9 @@ export class SpecsFilterComponent {
   @ViewChild('searchInputEl') searchInputEl!: ElementRef;
   toShowHint = false;
 
-  constructor(private readonly apiSpecsService: ApiSpecsService) {}
+  constructor(private apiSpecsService: ApiSpecsService) {}
 
-  search(event: Event) {
+  search(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
 
     if (value.length === 0) {
@@ -26,7 +26,7 @@ export class SpecsFilterComponent {
     }
   }
 
-  clearInput() {
+  clearInput(): void {
     this.toShowHint = false;
     this.searchInputEl.nativeElement.value = '';
     this.apiSpecsService.setSearchQuery('');

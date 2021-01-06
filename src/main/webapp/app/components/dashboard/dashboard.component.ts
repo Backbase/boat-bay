@@ -13,7 +13,7 @@ export class DashboardComponent {
   public readonly releaseVersions$: Observable<string[]> = this.apiService.availableReleaseVersions$;
   public readonly currentReleaseVersion$: Observable<string> = this.apiService.currentReleaseVersion$;
 
-  constructor(private readonly apiService: ApiSpecsService) {}
+  constructor(private apiService: ApiSpecsService) {}
 
   public onReleaseVersionChange(updatedReleaseVersion: string): void {
     this.apiService.selectCurrentReleaseVersion(updatedReleaseVersion);

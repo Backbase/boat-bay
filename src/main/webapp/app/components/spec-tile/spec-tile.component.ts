@@ -12,10 +12,10 @@ export class SpecTileComponent implements OnInit {
   @Input() spec!: UiApiModule;
   public tileColor!: string;
   readonly searchableString = this.apiSpecsService.searchQuery$;
-  public titleLength = environment.lengthOfTitle!;
-  public descriptionLength = environment.lengthOfDescription!;
+  public titleLength = environment.lengthOfTitle;
+  public descriptionLength = environment.lengthOfDescription;
 
-  constructor(private readonly apiSpecsService: ApiSpecsService) {}
+  constructor(private apiSpecsService: ApiSpecsService) {}
 
   ngOnInit(): void {
     this.tileColor = this.apiSpecsService.getSpecColorAsPerTags(this.spec.tags);

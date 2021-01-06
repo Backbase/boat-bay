@@ -87,6 +87,8 @@ public class CacheConfiguration {
             createCache(cm, com.backbase.oss.boat.bay.domain.ProductRelease.class.getName());
             createCache(cm, com.backbase.oss.boat.bay.domain.ProductRelease.class.getName() + ".specs");
             createCache(cm, com.backbase.oss.boat.bay.domain.Spec.class.getName() + ".productReleases");
+            createCache(cm, com.backbase.oss.boat.bay.domain.Source.class.getName() + ".sourcePaths");
+            createCache(cm, com.backbase.oss.boat.bay.domain.SourcePath.class.getName());
             // jhipster-needle-ehcache-add-entry
             createCache(cm, BoatLintRuleValidatorFactory.API_VALIDATORS);
             createCache(cm, BoatLintRuleValidatorFactory.API_RULE_POLICY);

@@ -1,5 +1,6 @@
 package com.backbase.oss.boat.bay.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -7,6 +8,8 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.backbase.oss.boat.bay.domain.enumeration.SourceType;
 
@@ -40,9 +43,6 @@ public class Source implements Serializable {
     @Column(name = "active")
     private Boolean active;
 
-    @Column(name = "path")
-    private String path;
-
     @Column(name = "filter")
     private String filter;
 
@@ -57,12 +57,6 @@ public class Source implements Serializable {
 
     @Column(name = "spec_filter_sp_el")
     private String specFilterSpEL;
-
-    @Column(name = "product_key_sp_el")
-    private String productKeySpEL;
-
-    @Column(name = "product_name_sp_el")
-    private String productNameSpEL;
 
     @Column(name = "capability_key_sp_el")
     private String capabilityKeySpEL;
@@ -82,17 +76,26 @@ public class Source implements Serializable {
     @Column(name = "overwrite_changes")
     private Boolean overwriteChanges;
 
-    @OneToOne(optional = false)
+    @OneToMany(mappedBy = "source")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<SourcePath> sourcePaths = new HashSet<>();
+
+    @ManyToOne(optional = false)
     @NotNull
-    @JoinColumn(unique = true)
+    @JsonIgnoreProperties(value = "sources", allowSetters = true)
     private Portal portal;
 
-    @OneToOne
-    @JoinColumn(unique = true)
+    @ManyToOne(optional = false)
+    @NotNull
+    @JsonIgnoreProperties(value = "sources", allowSetters = true)
+    private Product product;
+
+    @ManyToOne
+    @JsonIgnoreProperties(value = "sources", allowSetters = true)
     private Capability capability;
 
-    @OneToOne
-    @JoinColumn(unique = true)
+    @ManyToOne
+    @JsonIgnoreProperties(value = "sources", allowSetters = true)
     private ServiceDefinition serviceDefinition;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -154,19 +157,6 @@ public class Source implements Serializable {
 
     public void setActive(Boolean active) {
         this.active = active;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public Source path(String path) {
-        this.path = path;
-        return this;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
     }
 
     public String getFilter() {
@@ -232,32 +222,6 @@ public class Source implements Serializable {
 
     public void setSpecFilterSpEL(String specFilterSpEL) {
         this.specFilterSpEL = specFilterSpEL;
-    }
-
-    public String getProductKeySpEL() {
-        return productKeySpEL;
-    }
-
-    public Source productKeySpEL(String productKeySpEL) {
-        this.productKeySpEL = productKeySpEL;
-        return this;
-    }
-
-    public void setProductKeySpEL(String productKeySpEL) {
-        this.productKeySpEL = productKeySpEL;
-    }
-
-    public String getProductNameSpEL() {
-        return productNameSpEL;
-    }
-
-    public Source productNameSpEL(String productNameSpEL) {
-        this.productNameSpEL = productNameSpEL;
-        return this;
-    }
-
-    public void setProductNameSpEL(String productNameSpEL) {
-        this.productNameSpEL = productNameSpEL;
     }
 
     public String getCapabilityKeySpEL() {
@@ -338,6 +302,31 @@ public class Source implements Serializable {
         this.overwriteChanges = overwriteChanges;
     }
 
+    public Set<SourcePath> getSourcePaths() {
+        return sourcePaths;
+    }
+
+    public Source sourcePaths(Set<SourcePath> sourcePaths) {
+        this.sourcePaths = sourcePaths;
+        return this;
+    }
+
+    public Source addSourcePath(SourcePath sourcePath) {
+        this.sourcePaths.add(sourcePath);
+        sourcePath.setSource(this);
+        return this;
+    }
+
+    public Source removeSourcePath(SourcePath sourcePath) {
+        this.sourcePaths.remove(sourcePath);
+        sourcePath.setSource(null);
+        return this;
+    }
+
+    public void setSourcePaths(Set<SourcePath> sourcePaths) {
+        this.sourcePaths = sourcePaths;
+    }
+
     public Portal getPortal() {
         return portal;
     }
@@ -349,6 +338,19 @@ public class Source implements Serializable {
 
     public void setPortal(Portal portal) {
         this.portal = portal;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public Source product(Product product) {
+        this.product = product;
+        return this;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public Capability getCapability() {
@@ -403,14 +405,11 @@ public class Source implements Serializable {
             ", type='" + getType() + "'" +
             ", baseUrl='" + getBaseUrl() + "'" +
             ", active='" + isActive() + "'" +
-            ", path='" + getPath() + "'" +
             ", filter='" + getFilter() + "'" +
             ", username='" + getUsername() + "'" +
             ", password='" + getPassword() + "'" +
             ", cronExpression='" + getCronExpression() + "'" +
             ", specFilterSpEL='" + getSpecFilterSpEL() + "'" +
-            ", productKeySpEL='" + getProductKeySpEL() + "'" +
-            ", productNameSpEL='" + getProductNameSpEL() + "'" +
             ", capabilityKeySpEL='" + getCapabilityKeySpEL() + "'" +
             ", capabilityNameSpEL='" + getCapabilityNameSpEL() + "'" +
             ", serviceKeySpEL='" + getServiceKeySpEL() + "'" +

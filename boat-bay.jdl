@@ -104,21 +104,21 @@ entity Source {
     type SourceType required
     baseUrl String required
     active Boolean
-    path String
     filter String
     username String
     password String
     cronExpression String
     specFilterSpEL String
-    productKeySpEL String
-    productNameSpEL String
     capabilityKeySpEL String
     capabilityNameSpEL String
     serviceKeySpEL String
     serviceNameSpEL String
-
     versionSpEL String
     overwriteChanges Boolean
+}
+
+entity SourcePath {
+    name String
 }
 
 @readOnly(true)
@@ -197,6 +197,7 @@ relationship OneToMany {
 	LintReport to LintRuleViolation{lintReport(name) required}
 	LintRuleSet to LintRule{ruleSet(name) required}
 	PortalLintRuleSet to PortalLintRule{portalRuleSet(name) required}
+	Source to SourcePath{source(name)}
 }
 
 relationship ManyToOne {
@@ -206,15 +207,18 @@ relationship ManyToOne {
     Spec{source(name)} to Source
     Spec{specType(name) required} to SpecType
 
+    Source{portal(name) required} to Portal
+    Source{product(name) required} to Product
+    Source{capability(name)} to Capability
+    Source{serviceDefinition(name)} to ServiceDefinition
+
 }
 
 relationship OneToOne {
     Dashboard{defaultPortal(name) required} to Portal
 	LintReport to Spec
 	LintRuleViolation to LintRule
-	Source{portal(name) required} to Portal
-	Source{capability(name)} to Capability
-	Source{serviceDefinition(name)} to ServiceDefinition
+
 
     PortalLintRuleSet{portal(name) required} to Portal{portalRuleSet(name)}
     PortalLintRuleConfig to PortalLintRule
