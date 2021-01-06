@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { environment } from 'app/environments/environment';
 import { UiApiModule } from 'app/models';
-import { ApiSpecsService } from 'app/service/api-specs.service';
+import { ApiSpecsService } from 'app/services/api-specs.service';
 
 @Component({
   selector: 'app-spec-tile',

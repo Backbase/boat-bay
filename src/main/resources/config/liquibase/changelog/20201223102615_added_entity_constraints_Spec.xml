@@ -38,6 +38,18 @@
                                  referencedColumnNames="id"
                                  referencedTableName="spec_type"/>
 
+        <addForeignKeyConstraint baseColumnNames="spec_id"
+                                 baseTableName="spec_tag"
+                                 constraintName="fk_spec_tag_spec_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="spec"/>
+
+        <addForeignKeyConstraint baseColumnNames="tag_id"
+                                 baseTableName="spec_tag"
+                                 constraintName="fk_spec_tag_tag_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="tag"/>
+        
         <addForeignKeyConstraint baseColumnNames="service_definition_id"
                                  baseTableName="spec"
                                  constraintName="fk_spec_service_definition_id"

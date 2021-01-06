@@ -47,8 +47,14 @@ public class ServiceDefinition implements Serializable {
     private String navTitle;
 
     @Lob
-    @Column(name = "content")
-    private String content;
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "icon")
+    private String icon;
+
+    @Column(name = "color")
+    private String color;
 
     @Column(name = "created_on")
     private Instant createdOn;
@@ -155,17 +161,43 @@ public class ServiceDefinition implements Serializable {
         this.navTitle = navTitle;
     }
 
-    public String getContent() {
-        return content;
+    public String getDescription() {
+        return description;
     }
 
-    public ServiceDefinition content(String content) {
-        this.content = content;
+    public ServiceDefinition description(String description) {
+        this.description = description;
         return this;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public ServiceDefinition icon(String icon) {
+        this.icon = icon;
+        return this;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public ServiceDefinition color(String color) {
+        this.color = color;
+        return this;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 
     public Instant getCreatedOn() {
@@ -273,7 +305,9 @@ public class ServiceDefinition implements Serializable {
             ", title='" + getTitle() + "'" +
             ", subTitle='" + getSubTitle() + "'" +
             ", navTitle='" + getNavTitle() + "'" +
-            ", content='" + getContent() + "'" +
+            ", description='" + getDescription() + "'" +
+            ", icon='" + getIcon() + "'" +
+            ", color='" + getColor() + "'" +
             ", createdOn='" + getCreatedOn() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
             ", hide='" + isHide() + "'" +

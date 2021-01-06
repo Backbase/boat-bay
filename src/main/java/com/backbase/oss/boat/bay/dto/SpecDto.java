@@ -1,5 +1,8 @@
 package com.backbase.oss.boat.bay.dto;
 
+import lombok.Data;
+
+@Data
 public class SpecDto {
 
     private String title;

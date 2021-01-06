@@ -35,10 +35,6 @@
       ]
     },
     {
-      "fieldName": "tagsCsv",
-      "fieldType": "String"
-    },
-    {
       "fieldName": "description",
       "fieldType": "byte[]",
       "fieldTypeBlobContent": "text"
@@ -163,6 +159,14 @@
       "relationshipValidateRules": "required",
       "relationshipName": "specType",
       "otherEntityField": "name"
+    },
+    {
+      "relationshipType": "many-to-many",
+      "otherEntityName": "tag",
+      "otherEntityRelationshipName": "spec",
+      "relationshipName": "tag",
+      "otherEntityField": "id",
+      "ownerSide": true
     },
     {
       "relationshipType": "one-to-one",

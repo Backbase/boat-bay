@@ -4,6 +4,7 @@ import { ICapability } from 'app/shared/model/capability.model';
 import { IProduct } from 'app/shared/model/product.model';
 import { ISource } from 'app/shared/model/source.model';
 import { ISpecType } from 'app/shared/model/spec-type.model';
+import { ITag } from 'app/shared/model/tag.model';
 import { ILintReport } from 'app/shared/model/lint-report.model';
 import { IServiceDefinition } from 'app/shared/model/service-definition.model';
 import { IProductRelease } from 'app/shared/model/product-release.model';
@@ -15,7 +16,6 @@ export interface ISpec {
   version?: string;
   title?: string;
   openApi?: any;
-  tagsCsv?: string;
   description?: any;
   createdOn?: Moment;
   createdBy?: string;
@@ -38,6 +38,7 @@ export interface ISpec {
   product?: IProduct;
   source?: ISource;
   specType?: ISpecType;
+  tags?: ITag[];
   lintReport?: ILintReport;
   serviceDefinition?: IServiceDefinition;
   productReleases?: IProductRelease[];
@@ -51,7 +52,6 @@ export class Spec implements ISpec {
     public version?: string,
     public title?: string,
     public openApi?: any,
-    public tagsCsv?: string,
     public description?: any,
     public createdOn?: Moment,
     public createdBy?: string,
@@ -74,6 +74,7 @@ export class Spec implements ISpec {
     public product?: IProduct,
     public source?: ISource,
     public specType?: ISpecType,
+    public tags?: ITag[],
     public lintReport?: ILintReport,
     public serviceDefinition?: IServiceDefinition,
     public productReleases?: IProductRelease[]

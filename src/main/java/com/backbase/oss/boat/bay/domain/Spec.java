@@ -47,9 +47,6 @@ public class Spec implements Serializable {
     @Column(name = "open_api", nullable = false)
     private String openApi;
 
-    @Column(name = "tags_csv")
-    private String tagsCsv;
-
     @Lob
     @Column(name = "description")
     private String description;
@@ -131,6 +128,13 @@ public class Spec implements Serializable {
     @NotNull
     @JsonIgnoreProperties(value = "specs", allowSetters = true)
     private SpecType specType;
+
+    @ManyToMany
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JoinTable(name = "spec_tag",
+               joinColumns = @JoinColumn(name = "spec_id", referencedColumnName = "id"),
+               inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))
+    private Set<Tag> tags = new HashSet<>();
 
     @OneToOne(mappedBy = "spec")
     @JsonIgnore
@@ -218,19 +222,6 @@ public class Spec implements Serializable {
 
     public void setOpenApi(String openApi) {
         this.openApi = openApi;
-    }
-
-    public String getTagsCsv() {
-        return tagsCsv;
-    }
-
-    public Spec tagsCsv(String tagsCsv) {
-        this.tagsCsv = tagsCsv;
-        return this;
-    }
-
-    public void setTagsCsv(String tagsCsv) {
-        this.tagsCsv = tagsCsv;
     }
 
     public String getDescription() {
@@ -519,6 +510,31 @@ public class Spec implements Serializable {
         this.specType = specType;
     }
 
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public Spec tags(Set<Tag> tags) {
+        this.tags = tags;
+        return this;
+    }
+
+    public Spec addTag(Tag tag) {
+        this.tags.add(tag);
+        tag.getSpecs().add(this);
+        return this;
+    }
+
+    public Spec removeTag(Tag tag) {
+        this.tags.remove(tag);
+        tag.getSpecs().remove(this);
+        return this;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
+    }
+
     public LintReport getLintReport() {
         return lintReport;
     }
@@ -597,7 +613,6 @@ public class Spec implements Serializable {
             ", version='" + getVersion() + "'" +
             ", title='" + getTitle() + "'" +
             ", openApi='" + getOpenApi() + "'" +
-            ", tagsCsv='" + getTagsCsv() + "'" +
             ", description='" + getDescription() + "'" +
             ", createdOn='" + getCreatedOn() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +

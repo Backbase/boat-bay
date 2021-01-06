@@ -6,22 +6,24 @@ import com.backbase.oss.boat.bay.domain.ServiceDefinition;
 import com.backbase.oss.boat.bay.domain.Source;
 import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.domain.SpecType;
+import com.backbase.oss.boat.bay.domain.Tag;
 import com.backbase.oss.boat.bay.repository.SpecRepository;
 import com.backbase.oss.boat.bay.repository.SpecTypeRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatCapabilityRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatProductRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatServiceRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatSpecRepository;
+import com.backbase.oss.boat.bay.repository.extended.BoatTagRepository;
 import com.backbase.oss.boat.bay.util.SpringExpressionUtils;
 import com.backbase.oss.boat.loader.OpenAPILoader;
 import com.backbase.oss.boat.loader.OpenAPILoaderException;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
-import io.swagger.v3.oas.models.tags.Tag;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +45,7 @@ public class SpecSourceResolver {
 
     private final BoatSpecRepository boatSpecRepository;
     private final SpecTypeRepository specTypeRepository;
+    private final BoatTagRepository boatTagRepository;
 
 
     public void processSpecs(List<Spec> specs) {
@@ -94,7 +97,10 @@ public class SpecSourceResolver {
             spec.setDescription(info.getDescription());
             spec.setValid(true);
             if (openAPI.getTags() != null) {
-                spec.setTagsCsv(openAPI.getTags().stream().map(Tag::getName).collect(Collectors.joining(",")));
+                Set<Tag> tags = openAPI.getTags().stream()
+                    .map(this::getOrCreateTag)
+                    .collect(Collectors.toSet());
+                spec.setTags(tags);
             }
         } catch (OpenAPILoaderException e) {
             String parseErrorMessage = e.getMessage();
@@ -106,6 +112,12 @@ public class SpecSourceResolver {
             spec.setVersion("");
             log.info("Failed to parse OpenAPI for item: {}", spec.getName());
         }
+    }
+
+    @NotNull
+    private Tag getOrCreateTag(io.swagger.v3.oas.models.tags.Tag tag) {
+        return boatTagRepository.findByName(tag.getName())
+            .orElseGet(() -> boatTagRepository.save(new Tag().name(tag.getName()).description(tag.getDescription())));
     }
 
     private void setSpecType(Spec spec) {

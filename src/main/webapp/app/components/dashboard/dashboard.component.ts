@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Product } from 'app/models';
-import { ApiSpecsService } from 'app/service/api-specs.service';
+import { ApiSpecsService } from 'app/services/api-specs.service';
 
 @Component({
   selector: 'app-dashboard',
