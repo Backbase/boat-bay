@@ -56,6 +56,9 @@ public class SourceResourceIT {
     private static final String DEFAULT_CRON_EXPRESSION = "AAAAAAAAAA";
     private static final String UPDATED_CRON_EXPRESSION = "BBBBBBBBBB";
 
+    private static final Boolean DEFAULT_RUN_ON_STARTUP = false;
+    private static final Boolean UPDATED_RUN_ON_STARTUP = true;
+
     private static final String DEFAULT_SPEC_FILTER_SP_EL = "AAAAAAAAAA";
     private static final String UPDATED_SPEC_FILTER_SP_EL = "BBBBBBBBBB";
 
@@ -70,6 +73,9 @@ public class SourceResourceIT {
 
     private static final String DEFAULT_SERVICE_NAME_SP_EL = "AAAAAAAAAA";
     private static final String UPDATED_SERVICE_NAME_SP_EL = "BBBBBBBBBB";
+
+    private static final String DEFAULT_SPEC_KEY_SP_EL = "AAAAAAAAAA";
+    private static final String UPDATED_SPEC_KEY_SP_EL = "BBBBBBBBBB";
 
     private static final String DEFAULT_VERSION_SP_EL = "AAAAAAAAAA";
     private static final String UPDATED_VERSION_SP_EL = "BBBBBBBBBB";
@@ -104,11 +110,13 @@ public class SourceResourceIT {
             .username(DEFAULT_USERNAME)
             .password(DEFAULT_PASSWORD)
             .cronExpression(DEFAULT_CRON_EXPRESSION)
+            .runOnStartup(DEFAULT_RUN_ON_STARTUP)
             .specFilterSpEL(DEFAULT_SPEC_FILTER_SP_EL)
             .capabilityKeySpEL(DEFAULT_CAPABILITY_KEY_SP_EL)
             .capabilityNameSpEL(DEFAULT_CAPABILITY_NAME_SP_EL)
             .serviceKeySpEL(DEFAULT_SERVICE_KEY_SP_EL)
             .serviceNameSpEL(DEFAULT_SERVICE_NAME_SP_EL)
+            .specKeySpEL(DEFAULT_SPEC_KEY_SP_EL)
             .versionSpEL(DEFAULT_VERSION_SP_EL)
             .overwriteChanges(DEFAULT_OVERWRITE_CHANGES);
         // Add required entity
@@ -149,11 +157,13 @@ public class SourceResourceIT {
             .username(UPDATED_USERNAME)
             .password(UPDATED_PASSWORD)
             .cronExpression(UPDATED_CRON_EXPRESSION)
+            .runOnStartup(UPDATED_RUN_ON_STARTUP)
             .specFilterSpEL(UPDATED_SPEC_FILTER_SP_EL)
             .capabilityKeySpEL(UPDATED_CAPABILITY_KEY_SP_EL)
             .capabilityNameSpEL(UPDATED_CAPABILITY_NAME_SP_EL)
             .serviceKeySpEL(UPDATED_SERVICE_KEY_SP_EL)
             .serviceNameSpEL(UPDATED_SERVICE_NAME_SP_EL)
+            .specKeySpEL(UPDATED_SPEC_KEY_SP_EL)
             .versionSpEL(UPDATED_VERSION_SP_EL)
             .overwriteChanges(UPDATED_OVERWRITE_CHANGES);
         // Add required entity
@@ -206,11 +216,13 @@ public class SourceResourceIT {
         assertThat(testSource.getUsername()).isEqualTo(DEFAULT_USERNAME);
         assertThat(testSource.getPassword()).isEqualTo(DEFAULT_PASSWORD);
         assertThat(testSource.getCronExpression()).isEqualTo(DEFAULT_CRON_EXPRESSION);
+        assertThat(testSource.isRunOnStartup()).isEqualTo(DEFAULT_RUN_ON_STARTUP);
         assertThat(testSource.getSpecFilterSpEL()).isEqualTo(DEFAULT_SPEC_FILTER_SP_EL);
         assertThat(testSource.getCapabilityKeySpEL()).isEqualTo(DEFAULT_CAPABILITY_KEY_SP_EL);
         assertThat(testSource.getCapabilityNameSpEL()).isEqualTo(DEFAULT_CAPABILITY_NAME_SP_EL);
         assertThat(testSource.getServiceKeySpEL()).isEqualTo(DEFAULT_SERVICE_KEY_SP_EL);
         assertThat(testSource.getServiceNameSpEL()).isEqualTo(DEFAULT_SERVICE_NAME_SP_EL);
+        assertThat(testSource.getSpecKeySpEL()).isEqualTo(DEFAULT_SPEC_KEY_SP_EL);
         assertThat(testSource.getVersionSpEL()).isEqualTo(DEFAULT_VERSION_SP_EL);
         assertThat(testSource.isOverwriteChanges()).isEqualTo(DEFAULT_OVERWRITE_CHANGES);
     }
@@ -311,11 +323,13 @@ public class SourceResourceIT {
             .andExpect(jsonPath("$.[*].username").value(hasItem(DEFAULT_USERNAME)))
             .andExpect(jsonPath("$.[*].password").value(hasItem(DEFAULT_PASSWORD)))
             .andExpect(jsonPath("$.[*].cronExpression").value(hasItem(DEFAULT_CRON_EXPRESSION)))
+            .andExpect(jsonPath("$.[*].runOnStartup").value(hasItem(DEFAULT_RUN_ON_STARTUP.booleanValue())))
             .andExpect(jsonPath("$.[*].specFilterSpEL").value(hasItem(DEFAULT_SPEC_FILTER_SP_EL)))
             .andExpect(jsonPath("$.[*].capabilityKeySpEL").value(hasItem(DEFAULT_CAPABILITY_KEY_SP_EL)))
             .andExpect(jsonPath("$.[*].capabilityNameSpEL").value(hasItem(DEFAULT_CAPABILITY_NAME_SP_EL)))
             .andExpect(jsonPath("$.[*].serviceKeySpEL").value(hasItem(DEFAULT_SERVICE_KEY_SP_EL)))
             .andExpect(jsonPath("$.[*].serviceNameSpEL").value(hasItem(DEFAULT_SERVICE_NAME_SP_EL)))
+            .andExpect(jsonPath("$.[*].specKeySpEL").value(hasItem(DEFAULT_SPEC_KEY_SP_EL)))
             .andExpect(jsonPath("$.[*].versionSpEL").value(hasItem(DEFAULT_VERSION_SP_EL)))
             .andExpect(jsonPath("$.[*].overwriteChanges").value(hasItem(DEFAULT_OVERWRITE_CHANGES.booleanValue())));
     }
@@ -339,11 +353,13 @@ public class SourceResourceIT {
             .andExpect(jsonPath("$.username").value(DEFAULT_USERNAME))
             .andExpect(jsonPath("$.password").value(DEFAULT_PASSWORD))
             .andExpect(jsonPath("$.cronExpression").value(DEFAULT_CRON_EXPRESSION))
+            .andExpect(jsonPath("$.runOnStartup").value(DEFAULT_RUN_ON_STARTUP.booleanValue()))
             .andExpect(jsonPath("$.specFilterSpEL").value(DEFAULT_SPEC_FILTER_SP_EL))
             .andExpect(jsonPath("$.capabilityKeySpEL").value(DEFAULT_CAPABILITY_KEY_SP_EL))
             .andExpect(jsonPath("$.capabilityNameSpEL").value(DEFAULT_CAPABILITY_NAME_SP_EL))
             .andExpect(jsonPath("$.serviceKeySpEL").value(DEFAULT_SERVICE_KEY_SP_EL))
             .andExpect(jsonPath("$.serviceNameSpEL").value(DEFAULT_SERVICE_NAME_SP_EL))
+            .andExpect(jsonPath("$.specKeySpEL").value(DEFAULT_SPEC_KEY_SP_EL))
             .andExpect(jsonPath("$.versionSpEL").value(DEFAULT_VERSION_SP_EL))
             .andExpect(jsonPath("$.overwriteChanges").value(DEFAULT_OVERWRITE_CHANGES.booleanValue()));
     }
@@ -376,11 +392,13 @@ public class SourceResourceIT {
             .username(UPDATED_USERNAME)
             .password(UPDATED_PASSWORD)
             .cronExpression(UPDATED_CRON_EXPRESSION)
+            .runOnStartup(UPDATED_RUN_ON_STARTUP)
             .specFilterSpEL(UPDATED_SPEC_FILTER_SP_EL)
             .capabilityKeySpEL(UPDATED_CAPABILITY_KEY_SP_EL)
             .capabilityNameSpEL(UPDATED_CAPABILITY_NAME_SP_EL)
             .serviceKeySpEL(UPDATED_SERVICE_KEY_SP_EL)
             .serviceNameSpEL(UPDATED_SERVICE_NAME_SP_EL)
+            .specKeySpEL(UPDATED_SPEC_KEY_SP_EL)
             .versionSpEL(UPDATED_VERSION_SP_EL)
             .overwriteChanges(UPDATED_OVERWRITE_CHANGES);
 
@@ -401,11 +419,13 @@ public class SourceResourceIT {
         assertThat(testSource.getUsername()).isEqualTo(UPDATED_USERNAME);
         assertThat(testSource.getPassword()).isEqualTo(UPDATED_PASSWORD);
         assertThat(testSource.getCronExpression()).isEqualTo(UPDATED_CRON_EXPRESSION);
+        assertThat(testSource.isRunOnStartup()).isEqualTo(UPDATED_RUN_ON_STARTUP);
         assertThat(testSource.getSpecFilterSpEL()).isEqualTo(UPDATED_SPEC_FILTER_SP_EL);
         assertThat(testSource.getCapabilityKeySpEL()).isEqualTo(UPDATED_CAPABILITY_KEY_SP_EL);
         assertThat(testSource.getCapabilityNameSpEL()).isEqualTo(UPDATED_CAPABILITY_NAME_SP_EL);
         assertThat(testSource.getServiceKeySpEL()).isEqualTo(UPDATED_SERVICE_KEY_SP_EL);
         assertThat(testSource.getServiceNameSpEL()).isEqualTo(UPDATED_SERVICE_NAME_SP_EL);
+        assertThat(testSource.getSpecKeySpEL()).isEqualTo(UPDATED_SPEC_KEY_SP_EL);
         assertThat(testSource.getVersionSpEL()).isEqualTo(UPDATED_VERSION_SP_EL);
         assertThat(testSource.isOverwriteChanges()).isEqualTo(UPDATED_OVERWRITE_CHANGES);
     }

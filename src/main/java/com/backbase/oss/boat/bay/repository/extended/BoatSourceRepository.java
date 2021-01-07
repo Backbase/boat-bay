@@ -11,6 +11,8 @@ public interface BoatSourceRepository extends SourceRepository {
 
     List<Source> findAllByCronExpressionIsNotNullAndActiveIsTrue();
 
+    List<Source> findAllByActiveIsTrueAndRunOnStartupIsTrue();
+
 
 
 

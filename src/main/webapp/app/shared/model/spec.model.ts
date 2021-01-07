@@ -15,6 +15,7 @@ export interface ISpec {
   name?: string;
   version?: string;
   title?: string;
+  icon?: string;
   openApi?: any;
   description?: any;
   createdOn?: Moment;
@@ -51,6 +52,7 @@ export class Spec implements ISpec {
     public name?: string,
     public version?: string,
     public title?: string,
+    public icon?: string,
     public openApi?: any,
     public description?: any,
     public createdOn?: Moment,

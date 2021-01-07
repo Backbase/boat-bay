@@ -10,7 +10,7 @@ import com.backbase.oss.boat.bay.service.source.scanner.SpecSourceScanner;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-
+import com.backbase.oss.boat.bay.service.source.scanner.ScanResult;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -57,7 +57,7 @@ public class FileSystemSourceScanner implements SpecSourceScanner {
     private final ObjectMapper objectMapper;
 
 
-    public List<Spec> scan() {
+    public ScanResult scan() {
         //objectMapper = new ObjectMapper(new YAMLFactory());
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.registerModule(new Jdk8Module());
@@ -86,7 +86,7 @@ public class FileSystemSourceScanner implements SpecSourceScanner {
             }
         }
 
-        return specs;
+        return new ScanResult(source, specs);
     }
 
     @NotNull

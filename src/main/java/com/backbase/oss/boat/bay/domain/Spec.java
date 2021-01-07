@@ -42,6 +42,9 @@ public class Spec implements Serializable {
     @Column(name = "title")
     private String title;
 
+    @Column(name = "icon")
+    private String icon;
+
     
     @Lob
     @Column(name = "open_api", nullable = false)
@@ -209,6 +212,19 @@ public class Spec implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public Spec icon(String icon) {
+        this.icon = icon;
+        return this;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
     public String getOpenApi() {
@@ -612,6 +628,7 @@ public class Spec implements Serializable {
             ", name='" + getName() + "'" +
             ", version='" + getVersion() + "'" +
             ", title='" + getTitle() + "'" +
+            ", icon='" + getIcon() + "'" +
             ", openApi='" + getOpenApi() + "'" +
             ", description='" + getDescription() + "'" +
             ", createdOn='" + getCreatedOn() + "'" +

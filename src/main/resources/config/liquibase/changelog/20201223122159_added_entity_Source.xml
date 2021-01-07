@@ -40,6 +40,9 @@
             <column name="cron_expression" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
+            <column name="run_on_startup" type="boolean">
+                <constraints nullable="true" />
+            </column>
             <column name="spec_filter_sp_el" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
@@ -53,6 +56,9 @@
                 <constraints nullable="true" />
             </column>
             <column name="service_name_sp_el" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="spec_key_sp_el" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
             <column name="version_sp_el" type="varchar(255)">
@@ -104,11 +110,13 @@
             <column name="username" type="string"/>
             <column name="password" type="string"/>
             <column name="cron_expression" type="string"/>
+            <column name="run_on_startup" type="boolean"/>
             <column name="spec_filter_sp_el" type="string"/>
             <column name="capability_key_sp_el" type="string"/>
             <column name="capability_name_sp_el" type="string"/>
             <column name="service_key_sp_el" type="string"/>
             <column name="service_name_sp_el" type="string"/>
+            <column name="spec_key_sp_el" type="string"/>
             <column name="version_sp_el" type="string"/>
             <column name="overwrite_changes" type="boolean"/>
             <column name="portal_id" type="numeric"/>

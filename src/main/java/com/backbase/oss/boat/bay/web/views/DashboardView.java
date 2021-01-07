@@ -8,6 +8,7 @@ import com.backbase.oss.boat.bay.repository.extended.BoatDashboardRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatPortalRepository;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class DashboardView {
 
+    public static final String VIEWS = "views";
     private final BoatDashboardRepository dashboardRepository;
     private final BoatPortalRepository boatPortalRepository;
 
@@ -27,6 +29,7 @@ public class DashboardView {
 
 
     @GetMapping("/dashboard")
+    @Cacheable(VIEWS)
     public ResponseEntity<PortalDto> getDefaultPortal() {
 
         Dashboard dashboard = dashboardRepository.findAll().stream().findFirst().orElseThrow(() -> new IllegalStateException("No dashboard present"));

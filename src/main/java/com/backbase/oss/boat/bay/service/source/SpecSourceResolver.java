@@ -2,11 +2,13 @@ package com.backbase.oss.boat.bay.service.source;
 
 import com.backbase.oss.boat.bay.domain.Capability;
 import com.backbase.oss.boat.bay.domain.Product;
+import com.backbase.oss.boat.bay.domain.ProductRelease;
 import com.backbase.oss.boat.bay.domain.ServiceDefinition;
 import com.backbase.oss.boat.bay.domain.Source;
 import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.domain.SpecType;
 import com.backbase.oss.boat.bay.domain.Tag;
+import com.backbase.oss.boat.bay.repository.ProductReleaseRepository;
 import com.backbase.oss.boat.bay.repository.SpecRepository;
 import com.backbase.oss.boat.bay.repository.SpecTypeRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatCapabilityRepository;
@@ -14,6 +16,7 @@ import com.backbase.oss.boat.bay.repository.extended.BoatProductRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatServiceRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatSpecRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatTagRepository;
+import com.backbase.oss.boat.bay.service.source.scanner.ScanResult;
 import com.backbase.oss.boat.bay.util.SpringExpressionUtils;
 import com.backbase.oss.boat.loader.OpenAPILoader;
 import com.backbase.oss.boat.loader.OpenAPILoaderException;
@@ -21,6 +24,7 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -46,14 +50,37 @@ public class SpecSourceResolver {
     private final BoatSpecRepository boatSpecRepository;
     private final SpecTypeRepository specTypeRepository;
     private final BoatTagRepository boatTagRepository;
+    private final ProductReleaseRepository productReleaseRepository;
 
 
-    public void processSpecs(List<Spec> specs) {
-        specs.forEach(this::processSpec);
+    public void process(ScanResult scan) {
+        Source source = scan.getSource();
+        List<Spec> processedSpecs = scan.getSpecs().stream().map(this::processSpec).collect(Collectors.toList());
+
+        if (scan.getProductReleases() == null) {
+
+            ProductRelease latest = new ProductRelease().key("latest").portal(source.getPortal());
+            ProductRelease productRelease = productReleaseRepository.findOne(Example.of(latest)).orElseGet(() -> productReleaseRepository.save(latest.name("Latest")));
+
+            processedSpecs.stream()
+                .collect(Collectors.toMap(Spec::getKey, spec -> spec, this::compareVersion))
+                .forEach((s, spec) -> productRelease.addSpec(spec));
+            productReleaseRepository.save(productRelease);
+        }
+
+    }
+
+    @NotNull
+    private Spec compareVersion(Spec s1, Spec s2) {
+        if (s1.getVersion().compareTo(s2.getVersion()) > 0) {
+            return s1;
+        } else {
+            return s2;
+        }
     }
 
     @SuppressWarnings("java:S5411")
-    private void processSpec(Spec spec) {
+    private Spec processSpec(Spec spec) {
         Source source = spec.getSource();
 
         String md5 = spec.getChecksum();
@@ -64,21 +91,22 @@ public class SpecSourceResolver {
 
         if (existingSpec.isPresent() && !source.isOverwriteChanges()) {
             log.info("Spec: {}  already exists for source: {}", existingSpec.get().getName(), source.getName());
-            return;
+            return existingSpec.get();
         } else if (existingSpec.isPresent() && source.isOverwriteChanges()) {
             log.info("Updating spec: {}", spec.getName());
             spec.setId(existingSpec.get().getId());
         } else {
             log.info("Spec: {} is not yet in BOAT BAY. Creating new Spec", spec.getName());
         }
+        setInformationFromSpec(spec, source);
         setProduct(spec, source);
         setCapability(spec, source);
         setServiceDefinition(spec, source);
         setSpecType(spec);
-        setInformationFromSpec(spec);
+
 
         log.info("Storing spec: {}", spec.getName());
-        specRepository.save(spec);
+        return specRepository.save(spec);
     }
 
     private void setProduct(Spec spec, Source source) {
@@ -87,7 +115,7 @@ public class SpecSourceResolver {
         log.info("Adding spec: {} to product: {}", spec.getName(), product.getName());
     }
 
-    private void setInformationFromSpec(Spec spec) {
+    private void setInformationFromSpec(Spec spec, Source source) {
         try {
             OpenAPI openAPI = OpenAPILoader.parse(spec.getOpenApi());
 
@@ -102,6 +130,10 @@ public class SpecSourceResolver {
                     .collect(Collectors.toSet());
                 spec.setTags(tags);
             }
+
+            if (info.getExtensions() != null && info.getExtensions().containsKey("x-icon")) {
+                spec.setIcon(info.getExtensions().get("x-icon").toString());
+            }
         } catch (OpenAPILoaderException e) {
             String parseErrorMessage = e.getMessage();
             if (e.getParseMessages() != null) {
@@ -112,6 +144,9 @@ public class SpecSourceResolver {
             spec.setVersion("");
             log.info("Failed to parse OpenAPI for item: {}", spec.getName());
         }
+
+        spec.setKey(SpringExpressionUtils.parseName(source.getSpecKeySpEL(), spec, spec.getKey()));
+
     }
 
     @NotNull
@@ -172,6 +207,8 @@ public class SpecSourceResolver {
         serviceDefinition.setKey(key);
         serviceDefinition.setCreatedBy(spec.getCreatedBy());
         serviceDefinition.setCreatedOn(Instant.now());
+        serviceDefinition.setTitle(spec.getTitle());
+        serviceDefinition.setDescription(spec.getDescription());
         serviceDefinition.setName(serviceNameSpEL.map(exp -> SpringExpressionUtils.parseName(exp, spec, key)).orElse(key));
         return boatServiceRepository.save(serviceDefinition);
     }
@@ -191,5 +228,6 @@ public class SpecSourceResolver {
         capability.setTitle(key);
         return capabilityRepository.save(capability);
     }
+
 
 }

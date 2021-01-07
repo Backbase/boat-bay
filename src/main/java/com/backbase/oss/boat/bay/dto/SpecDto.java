@@ -5,6 +5,8 @@ import lombok.Data;
 @Data
 public class SpecDto {
 
+    private String name;
+    private String key;
     private String title;
     private String description;
     private String icon;
