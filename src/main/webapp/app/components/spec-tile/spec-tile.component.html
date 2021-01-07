@@ -1,37 +1,37 @@
-<a [href]="spec.portalPath">
-  <mat-card [attr.aria-label]="spec.title + '-tile'" [ngClass]="tileColor">
+<a [href]="service.portalPath">
+  <mat-card [attr.aria-label]="service.title + '-tile'" [ngClass]="tileColor">
     <mat-card-header>
       <mat-icon mat-card-avatar class="tile-icon">{{
-        spec.icon || 'extension'
+        service.icon || 'extension'
       }}</mat-icon>
       <mat-card-title
         data-role="title"
         [innerHTML]="
-          spec.title
+          service.title
             | ellipsis: titleLength
             | titlecase
             | highlight: (searchableString | async)
         "
       >
       </mat-card-title>
-      <mat-card-subtitle>
-        <span
-          data-role="tag"
-          *ngFor="let tag of spec.tags || []; let isLast = last"
-          class="tag"
-          [innerHTML]="
-            tag + (isLast ? '' : ', ')
-              | titlecase
-              | highlight: (searchableString | async)
-          "
-        >
-        </span>
-      </mat-card-subtitle>
+<!--      <mat-card-subtitle>-->
+<!--        <span-->
+<!--          data-role="tag"-->
+<!--          *ngFor="let tag of service.tags || []; let isLast = last"-->
+<!--          class="tag"-->
+<!--          [innerHTML]="-->
+<!--            tag + (isLast ? '' : ', ')-->
+<!--              | titlecase-->
+<!--              | highlight: (searchableString | async)-->
+<!--          "-->
+<!--        >-->
+<!--        </span>-->
+<!--      </mat-card-subtitle>-->
     </mat-card-header>
     <mat-card-content
       data-role="description"
       [innerHTML]="
-        spec.description
+        service.description
         | linkReplacer
         | ellipsis: descriptionLength
       "
@@ -39,8 +39,9 @@
     </mat-card-content>
 
     <mat-card-footer>
-      <mat-icon>arrow_forward</mat-icon>
-      <p data-role="version">v {{ spec.version }}</p>
+        <button mat-icon-button *ngFor="let spec of service.specs || []" >
+            <mat-icon>{{spec.icon || 'extension'}}</mat-icon>
+        </button>
     </mat-card-footer>
   </mat-card>
 </a>

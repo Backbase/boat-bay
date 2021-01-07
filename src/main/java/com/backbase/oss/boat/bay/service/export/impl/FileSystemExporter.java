@@ -3,13 +3,18 @@ package com.backbase.oss.boat.bay.service.export.impl;
 import com.backbase.oss.boat.ExportException;
 import com.backbase.oss.boat.bay.domain.Capability;
 import com.backbase.oss.boat.bay.domain.Portal;
+import com.backbase.oss.boat.bay.domain.PortalLintRuleSet;
 import com.backbase.oss.boat.bay.domain.Product;
+import com.backbase.oss.boat.bay.domain.ProductRelease;
 import com.backbase.oss.boat.bay.domain.ServiceDefinition;
+import com.backbase.oss.boat.bay.domain.Source;
 import com.backbase.oss.boat.bay.domain.Spec;
+import com.backbase.oss.boat.bay.domain.Tag;
 import com.backbase.oss.boat.bay.service.export.ExportInfo;
 import com.backbase.oss.boat.bay.service.export.ExportOptions;
 import com.backbase.oss.boat.bay.service.export.ExportType;
 import com.backbase.oss.boat.bay.service.export.Exporter;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,6 +32,7 @@ import java.util.Set;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
+@SuppressWarnings("java:S1610")
 @Service
 public class FileSystemExporter implements Exporter {
 
@@ -42,8 +48,11 @@ public class FileSystemExporter implements Exporter {
         objectMapper.addMixIn(Portal.class, MixInPortal.class);
         objectMapper.addMixIn(Product.class, MixInProduct.class);
         objectMapper.addMixIn(Capability.class, MixInCapability.class);
-        objectMapper.addMixIn(ServiceDefinition.class, MixInCapability.class);
+        objectMapper.addMixIn(ServiceDefinition.class, MixInServiceDefinition.class);
         objectMapper.addMixIn(Spec.class, MixInSpec.class);
+        objectMapper.addMixIn(ProductRelease.class, MixInProductRelease.class);
+        objectMapper.addMixIn(Tag.class, MixIn.class);
+        objectMapper.addMixIn(PortalLintRuleSet.class, MixInPortalLintRuleSet.class);
     }
 
     @Override
@@ -113,6 +122,7 @@ public class FileSystemExporter implements Exporter {
 
         @JsonIgnore
         abstract List<Product> getProducts();
+
     }
 
     private abstract static class MixInProduct {
@@ -127,7 +137,7 @@ public class FileSystemExporter implements Exporter {
     private abstract static class MixInCapability {
 
         @JsonIgnore
-        abstract Capability getCapability();
+        abstract Product getProduct();
 
         @JsonIgnore
         abstract Set<ServiceDefinition> getServiceDefinitions();
@@ -137,7 +147,7 @@ public class FileSystemExporter implements Exporter {
     private abstract static class MixInServiceDefinition {
 
         @JsonIgnore
-        abstract ServiceDefinition getServiceDefinition();
+        abstract Capability getCapability();
 
         @JsonIgnore
         abstract Set<Spec> getSpecs();
@@ -147,7 +157,45 @@ public class FileSystemExporter implements Exporter {
     private abstract static class MixInSpec {
 
         @JsonIgnore
+        abstract Portal getPortal();
+
+        @JsonIgnore
+        abstract Product getProduct();
+
+        @JsonIgnore
+        abstract Capability getCapability();
+
+        @JsonIgnore
+        abstract Source getSource();
+
+        @JsonIgnore
         abstract ServiceDefinition getServiceDefinition();
+
+        @JsonIgnore
+        abstract Set<Spec> getSpecs();
+
+        @JsonIgnore
+        abstract String getOpenApi();
+
+    }
+
+    private abstract static class MixInProductRelease {
+
+        @JsonIgnore
+        abstract Portal getPortal();
+
+        @JsonIgnore
+        abstract Set<Spec> getSpecs();
+    }
+
+    private abstract static class MixInPortalLintRuleSet {
+
+        @JsonIgnore
+        abstract Portal getPortal();
+    }
+
+
+    private abstract static class MixIn {
 
         @JsonIgnore
         abstract Set<Spec> getSpecs();

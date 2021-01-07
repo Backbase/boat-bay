@@ -51,7 +51,6 @@ public class LintRulesLoader {
                     });
                 log.info("Loaded Rule Set: {}", lintRuleSet.getName());
 
-
                 rules.forEach(ruleDetails -> {
                     Rule rule = ruleDetails.getRule();
                     LintRule lintRule = lintRuleRepository.findByRuleId(rule.id())

@@ -23,7 +23,7 @@
     <ng-container *ngIf="apiSpecs$ | async as apiSpecs; else loading">
       <div class="spec-tile" *ngFor="let spec of apiSpecs">
         <app-spec-tile
-          [spec]="spec"
+            [service]="spec"
           [attr.data-role]="spec.title + '-spec-tile' | lowercase"
         ></app-spec-tile>
       </div>

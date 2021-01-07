@@ -1,9 +1,7 @@
-package com.backbase.oss.boat.bay.web.views;
+package com.backbase.oss.boat.bay.web.views.dashboard.v1;
 
 import com.backbase.oss.boat.bay.domain.Dashboard;
 import com.backbase.oss.boat.bay.domain.Portal;
-import com.backbase.oss.boat.bay.dto.PortalDto;
-import com.backbase.oss.boat.bay.mapper.DashboardMapper;
 import com.backbase.oss.boat.bay.repository.extended.BoatDashboardRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatPortalRepository;
 import java.util.stream.Collectors;
@@ -16,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/view")
+@RequestMapping("/api/view/v1")
 @Transactional
 @RequiredArgsConstructor
-public class DashboardView {
+public class DashboardV1View {
 
     public static final String VIEWS = "views";
     private final BoatDashboardRepository dashboardRepository;
@@ -30,7 +28,7 @@ public class DashboardView {
 
     @GetMapping("/dashboard")
     @Cacheable(VIEWS)
-    public ResponseEntity<PortalDto> getDefaultPortal() {
+    public ResponseEntity<LegacyPortalDto> getDefaultPortal() {
 
         Dashboard dashboard = dashboardRepository.findAll().stream().findFirst().orElseThrow(() -> new IllegalStateException("No dashboard present"));
 
@@ -38,7 +36,7 @@ public class DashboardView {
         // Only list products with capabilities...
         portal.setProducts(portal.getProducts().stream().filter(product -> !product.getCapabilities().isEmpty()).collect(Collectors.toSet()));
 
-        PortalDto portalDto = dashboardMapper.mapPortal(portal);
+        LegacyPortalDto portalDto = dashboardMapper.mapPortal(portal);
         portalDto.setReleases(dashboardMapper.mapReleases(portal));
         portalDto.setCapabilities(dashboardMapper.mapCapabilities(portal));
 
