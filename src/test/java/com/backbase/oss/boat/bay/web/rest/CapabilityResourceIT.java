@@ -60,6 +60,9 @@ public class CapabilityResourceIT {
     private static final String DEFAULT_CREATED_BY = "AAAAAAAAAA";
     private static final String UPDATED_CREATED_BY = "BBBBBBBBBB";
 
+    private static final Boolean DEFAULT_HIDE = false;
+    private static final Boolean UPDATED_HIDE = true;
+
     @Autowired
     private CapabilityRepository capabilityRepository;
 
@@ -87,7 +90,8 @@ public class CapabilityResourceIT {
             .navTitle(DEFAULT_NAV_TITLE)
             .content(DEFAULT_CONTENT)
             .createdOn(DEFAULT_CREATED_ON)
-            .createdBy(DEFAULT_CREATED_BY);
+            .createdBy(DEFAULT_CREATED_BY)
+            .hide(DEFAULT_HIDE);
         // Add required entity
         Product product;
         if (TestUtil.findAll(em, Product.class).isEmpty()) {
@@ -116,7 +120,8 @@ public class CapabilityResourceIT {
             .navTitle(UPDATED_NAV_TITLE)
             .content(UPDATED_CONTENT)
             .createdOn(UPDATED_CREATED_ON)
-            .createdBy(UPDATED_CREATED_BY);
+            .createdBy(UPDATED_CREATED_BY)
+            .hide(UPDATED_HIDE);
         // Add required entity
         Product product;
         if (TestUtil.findAll(em, Product.class).isEmpty()) {
@@ -158,6 +163,7 @@ public class CapabilityResourceIT {
         assertThat(testCapability.getContent()).isEqualTo(DEFAULT_CONTENT);
         assertThat(testCapability.getCreatedOn()).isEqualTo(DEFAULT_CREATED_ON);
         assertThat(testCapability.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+        assertThat(testCapability.isHide()).isEqualTo(DEFAULT_HIDE);
     }
 
     @Test
@@ -237,7 +243,8 @@ public class CapabilityResourceIT {
             .andExpect(jsonPath("$.[*].navTitle").value(hasItem(DEFAULT_NAV_TITLE)))
             .andExpect(jsonPath("$.[*].content").value(hasItem(DEFAULT_CONTENT.toString())))
             .andExpect(jsonPath("$.[*].createdOn").value(hasItem(DEFAULT_CREATED_ON.toString())))
-            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)));
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
+            .andExpect(jsonPath("$.[*].hide").value(hasItem(DEFAULT_HIDE.booleanValue())));
     }
     
     @Test
@@ -259,7 +266,8 @@ public class CapabilityResourceIT {
             .andExpect(jsonPath("$.navTitle").value(DEFAULT_NAV_TITLE))
             .andExpect(jsonPath("$.content").value(DEFAULT_CONTENT.toString()))
             .andExpect(jsonPath("$.createdOn").value(DEFAULT_CREATED_ON.toString()))
-            .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY));
+            .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
+            .andExpect(jsonPath("$.hide").value(DEFAULT_HIDE.booleanValue()));
     }
     @Test
     @Transactional
@@ -290,7 +298,8 @@ public class CapabilityResourceIT {
             .navTitle(UPDATED_NAV_TITLE)
             .content(UPDATED_CONTENT)
             .createdOn(UPDATED_CREATED_ON)
-            .createdBy(UPDATED_CREATED_BY);
+            .createdBy(UPDATED_CREATED_BY)
+            .hide(UPDATED_HIDE);
 
         restCapabilityMockMvc.perform(put("/api/capabilities")
             .contentType(MediaType.APPLICATION_JSON)
@@ -310,6 +319,7 @@ public class CapabilityResourceIT {
         assertThat(testCapability.getContent()).isEqualTo(UPDATED_CONTENT);
         assertThat(testCapability.getCreatedOn()).isEqualTo(UPDATED_CREATED_ON);
         assertThat(testCapability.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testCapability.isHide()).isEqualTo(UPDATED_HIDE);
     }
 
     @Test

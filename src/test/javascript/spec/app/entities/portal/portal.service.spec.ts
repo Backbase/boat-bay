@@ -36,7 +36,8 @@ describe('Service Tests', () => {
         'AAAAAAA',
         'AAAAAAA',
         currentDate,
-        'AAAAAAA'
+        'AAAAAAA',
+        false
       );
     });
 
@@ -93,6 +94,7 @@ describe('Service Tests', () => {
             content: 'BBBBBB',
             createdOn: currentDate.format(DATE_TIME_FORMAT),
             createdBy: 'BBBBBB',
+            hide: true,
           },
           elemDefault
         );
@@ -125,6 +127,7 @@ describe('Service Tests', () => {
             content: 'BBBBBB',
             createdOn: currentDate.format(DATE_TIME_FORMAT),
             createdBy: 'BBBBBB',
+            hide: true,
           },
           elemDefault
         );

@@ -7,7 +7,9 @@
 
     <header>
         <div class="header-row">
-            <div class="bb-brand">
+
+            <div class="bb-brand" >
+                <a href="/">
                 <img
                     class="bb-brand-logo"
                     [src]="imageAssetsPath + 'logo-emblem.svg'"
@@ -18,9 +20,12 @@
                     [src]="imageAssetsPath + 'backbase-logo.png'"
                     alt="Backbase Logo with text"
                 />
+
                 <span class="bb-brand-spacer">/</span>
                 <span class="bb-brand-text">BOAT 🚢 BAY 🏝</span>
+                </a>
             </div>
+
 
             <div class="bb-brand-community" [ngSwitch]="isAuthenticated()" >
 
@@ -34,6 +39,7 @@
                     <a routerLink="capability" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Capability</a>
                     <a routerLink="service-definition" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>ServiceDefinition</a>
                     <a routerLink="spec" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Spec</a>
+                    <a routerLink="lint-report" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Lint Report</a>
                     <mat-divider></mat-divider>
                     <a routerLink="source" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Source</a>
                     <mat-divider></mat-divider>
@@ -268,6 +274,24 @@
                             <span>Spec Type</span>
                         </a>
                     </li>-->
+                    <li>
+                        <a class="dropdown-item" routerLink="product-release" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Product Release</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="source-path" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Source Path</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="tag" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Tag</span>
+                        </a>
+                    </li>
                     <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
 <!--
 </ul>

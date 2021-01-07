@@ -17,6 +17,7 @@ import { AngularMaterialModule } from 'app/angular-material.module';
 import { environment } from 'app/environments/environment';
 import { MatMenuModule } from '@angular/material/menu';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   imports: [
@@ -30,9 +31,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     BoatBayAppRoutingModule,
     MatMenuModule,
     BrowserAnimationsModule,
+    MatDividerModule,
   ],
   providers: [...environment.providers],
   declarations: [MainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, FooterComponent],
   bootstrap: [MainComponent],
+  exports: [],
 })
 export class BoatBayAppModule {}

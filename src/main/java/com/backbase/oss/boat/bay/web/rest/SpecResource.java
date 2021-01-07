@@ -85,11 +85,12 @@ public class SpecResource {
     /**
      * {@code GET  /specs} : get all the specs.
      *
+     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
      * @param filter the filter of the request.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of specs in body.
      */
     @GetMapping("/specs")
-    public List<Spec> getAllSpecs(@RequestParam(required = false) String filter) {
+    public List<Spec> getAllSpecs(@RequestParam(required = false) String filter,@RequestParam(required = false, defaultValue = "false") boolean eagerload) {
         if ("lintreport-is-null".equals(filter)) {
             log.debug("REST request to get all Specs where lintReport is null");
             return StreamSupport
@@ -98,7 +99,7 @@ public class SpecResource {
                 .collect(Collectors.toList());
         }
         log.debug("REST request to get all Specs");
-        return specRepository.findAll();
+        return specRepository.findAllWithEagerRelationships();
     }
 
     /**
@@ -110,7 +111,7 @@ public class SpecResource {
     @GetMapping("/specs/{id}")
     public ResponseEntity<Spec> getSpec(@PathVariable Long id) {
         log.debug("REST request to get Spec : {}", id);
-        Optional<Spec> spec = specRepository.findById(id);
+        Optional<Spec> spec = specRepository.findOneWithEagerRelationships(id);
         return ResponseUtil.wrapOrNotFound(spec);
     }
 

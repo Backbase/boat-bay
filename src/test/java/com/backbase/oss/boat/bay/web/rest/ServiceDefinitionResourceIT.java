@@ -51,14 +51,23 @@ public class ServiceDefinitionResourceIT {
     private static final String DEFAULT_NAV_TITLE = "AAAAAAAAAA";
     private static final String UPDATED_NAV_TITLE = "BBBBBBBBBB";
 
-    private static final String DEFAULT_CONTENT = "AAAAAAAAAA";
-    private static final String UPDATED_CONTENT = "BBBBBBBBBB";
+    private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
+    private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
+
+    private static final String DEFAULT_ICON = "AAAAAAAAAA";
+    private static final String UPDATED_ICON = "BBBBBBBBBB";
+
+    private static final String DEFAULT_COLOR = "AAAAAAAAAA";
+    private static final String UPDATED_COLOR = "BBBBBBBBBB";
 
     private static final Instant DEFAULT_CREATED_ON = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_CREATED_ON = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
     private static final String DEFAULT_CREATED_BY = "AAAAAAAAAA";
     private static final String UPDATED_CREATED_BY = "BBBBBBBBBB";
+
+    private static final Boolean DEFAULT_HIDE = false;
+    private static final Boolean UPDATED_HIDE = true;
 
     @Autowired
     private ServiceDefinitionRepository serviceDefinitionRepository;
@@ -85,9 +94,12 @@ public class ServiceDefinitionResourceIT {
             .title(DEFAULT_TITLE)
             .subTitle(DEFAULT_SUB_TITLE)
             .navTitle(DEFAULT_NAV_TITLE)
-            .content(DEFAULT_CONTENT)
+            .description(DEFAULT_DESCRIPTION)
+            .icon(DEFAULT_ICON)
+            .color(DEFAULT_COLOR)
             .createdOn(DEFAULT_CREATED_ON)
-            .createdBy(DEFAULT_CREATED_BY);
+            .createdBy(DEFAULT_CREATED_BY)
+            .hide(DEFAULT_HIDE);
         // Add required entity
         Capability capability;
         if (TestUtil.findAll(em, Capability.class).isEmpty()) {
@@ -114,9 +126,12 @@ public class ServiceDefinitionResourceIT {
             .title(UPDATED_TITLE)
             .subTitle(UPDATED_SUB_TITLE)
             .navTitle(UPDATED_NAV_TITLE)
-            .content(UPDATED_CONTENT)
+            .description(UPDATED_DESCRIPTION)
+            .icon(UPDATED_ICON)
+            .color(UPDATED_COLOR)
             .createdOn(UPDATED_CREATED_ON)
-            .createdBy(UPDATED_CREATED_BY);
+            .createdBy(UPDATED_CREATED_BY)
+            .hide(UPDATED_HIDE);
         // Add required entity
         Capability capability;
         if (TestUtil.findAll(em, Capability.class).isEmpty()) {
@@ -155,9 +170,12 @@ public class ServiceDefinitionResourceIT {
         assertThat(testServiceDefinition.getTitle()).isEqualTo(DEFAULT_TITLE);
         assertThat(testServiceDefinition.getSubTitle()).isEqualTo(DEFAULT_SUB_TITLE);
         assertThat(testServiceDefinition.getNavTitle()).isEqualTo(DEFAULT_NAV_TITLE);
-        assertThat(testServiceDefinition.getContent()).isEqualTo(DEFAULT_CONTENT);
+        assertThat(testServiceDefinition.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
+        assertThat(testServiceDefinition.getIcon()).isEqualTo(DEFAULT_ICON);
+        assertThat(testServiceDefinition.getColor()).isEqualTo(DEFAULT_COLOR);
         assertThat(testServiceDefinition.getCreatedOn()).isEqualTo(DEFAULT_CREATED_ON);
         assertThat(testServiceDefinition.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+        assertThat(testServiceDefinition.isHide()).isEqualTo(DEFAULT_HIDE);
     }
 
     @Test
@@ -235,9 +253,12 @@ public class ServiceDefinitionResourceIT {
             .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE)))
             .andExpect(jsonPath("$.[*].subTitle").value(hasItem(DEFAULT_SUB_TITLE)))
             .andExpect(jsonPath("$.[*].navTitle").value(hasItem(DEFAULT_NAV_TITLE)))
-            .andExpect(jsonPath("$.[*].content").value(hasItem(DEFAULT_CONTENT.toString())))
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
+            .andExpect(jsonPath("$.[*].icon").value(hasItem(DEFAULT_ICON)))
+            .andExpect(jsonPath("$.[*].color").value(hasItem(DEFAULT_COLOR)))
             .andExpect(jsonPath("$.[*].createdOn").value(hasItem(DEFAULT_CREATED_ON.toString())))
-            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)));
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
+            .andExpect(jsonPath("$.[*].hide").value(hasItem(DEFAULT_HIDE.booleanValue())));
     }
     
     @Test
@@ -257,9 +278,12 @@ public class ServiceDefinitionResourceIT {
             .andExpect(jsonPath("$.title").value(DEFAULT_TITLE))
             .andExpect(jsonPath("$.subTitle").value(DEFAULT_SUB_TITLE))
             .andExpect(jsonPath("$.navTitle").value(DEFAULT_NAV_TITLE))
-            .andExpect(jsonPath("$.content").value(DEFAULT_CONTENT.toString()))
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
+            .andExpect(jsonPath("$.icon").value(DEFAULT_ICON))
+            .andExpect(jsonPath("$.color").value(DEFAULT_COLOR))
             .andExpect(jsonPath("$.createdOn").value(DEFAULT_CREATED_ON.toString()))
-            .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY));
+            .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
+            .andExpect(jsonPath("$.hide").value(DEFAULT_HIDE.booleanValue()));
     }
     @Test
     @Transactional
@@ -288,9 +312,12 @@ public class ServiceDefinitionResourceIT {
             .title(UPDATED_TITLE)
             .subTitle(UPDATED_SUB_TITLE)
             .navTitle(UPDATED_NAV_TITLE)
-            .content(UPDATED_CONTENT)
+            .description(UPDATED_DESCRIPTION)
+            .icon(UPDATED_ICON)
+            .color(UPDATED_COLOR)
             .createdOn(UPDATED_CREATED_ON)
-            .createdBy(UPDATED_CREATED_BY);
+            .createdBy(UPDATED_CREATED_BY)
+            .hide(UPDATED_HIDE);
 
         restServiceDefinitionMockMvc.perform(put("/api/service-definitions")
             .contentType(MediaType.APPLICATION_JSON)
@@ -307,9 +334,12 @@ public class ServiceDefinitionResourceIT {
         assertThat(testServiceDefinition.getTitle()).isEqualTo(UPDATED_TITLE);
         assertThat(testServiceDefinition.getSubTitle()).isEqualTo(UPDATED_SUB_TITLE);
         assertThat(testServiceDefinition.getNavTitle()).isEqualTo(UPDATED_NAV_TITLE);
-        assertThat(testServiceDefinition.getContent()).isEqualTo(UPDATED_CONTENT);
+        assertThat(testServiceDefinition.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+        assertThat(testServiceDefinition.getIcon()).isEqualTo(UPDATED_ICON);
+        assertThat(testServiceDefinition.getColor()).isEqualTo(UPDATED_COLOR);
         assertThat(testServiceDefinition.getCreatedOn()).isEqualTo(UPDATED_CREATED_ON);
         assertThat(testServiceDefinition.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testServiceDefinition.isHide()).isEqualTo(UPDATED_HIDE);
     }
 
     @Test

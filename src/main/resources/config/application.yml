@@ -56,6 +56,8 @@ management:
         request:
           autotime:
             enabled: true
+  server:
+    base-path:
 
 spring:
   application:
@@ -163,3 +165,4 @@ jhipster:
 # ===================================================================
 
 # application:
+

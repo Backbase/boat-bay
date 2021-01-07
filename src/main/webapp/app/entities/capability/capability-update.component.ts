@@ -33,6 +33,7 @@ export class CapabilityUpdateComponent implements OnInit {
     content: [],
     createdOn: [],
     createdBy: [],
+    hide: [],
     product: [null, Validators.required],
   });
 
@@ -70,6 +71,7 @@ export class CapabilityUpdateComponent implements OnInit {
       content: capability.content,
       createdOn: capability.createdOn ? capability.createdOn.format(DATE_TIME_FORMAT) : null,
       createdBy: capability.createdBy,
+      hide: capability.hide,
       product: capability.product,
     });
   }
@@ -117,6 +119,7 @@ export class CapabilityUpdateComponent implements OnInit {
       content: this.editForm.get(['content'])!.value,
       createdOn: this.editForm.get(['createdOn'])!.value ? moment(this.editForm.get(['createdOn'])!.value, DATE_TIME_FORMAT) : undefined,
       createdBy: this.editForm.get(['createdBy'])!.value,
+      hide: this.editForm.get(['hide'])!.value,
       product: this.editForm.get(['product'])!.value,
     };
   }

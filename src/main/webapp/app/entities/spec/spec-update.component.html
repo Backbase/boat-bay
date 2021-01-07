@@ -66,12 +66,6 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-control-label" for="field_tagsCsv">Tags Csv</label>
-                    <input type="text" class="form-control" name="tagsCsv" id="field_tagsCsv"
-                           formControlName="tagsCsv"/>
-                </div>
-
-                <div class="form-group">
                     <label class="form-control-label" for="field_description">Description</label>
                     <textarea class="form-control" name="description" id="field_description"
                               formControlName="description"></textarea>
@@ -158,6 +152,12 @@
                     <label class="form-control-label" for="field_externalDocs">External Docs</label>
                     <input type="text" class="form-control" name="externalDocs" id="field_externalDocs"
                            formControlName="externalDocs"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_hide">Hide</label>
+                    <input type="checkbox" class="form-control" name="hide" id="field_hide"
+                           formControlName="hide"/>
                 </div>
 
                 <div class="form-group">
@@ -266,6 +266,13 @@
                            *ngIf="editForm.get('specType')?.errors?.required">
                         This field is required.
                     </small>
+                </div>
+
+                <div class="form-group">
+                    <label for="field_tags">Tag</label>
+                    <select class="form-control" id="field_tags" multiple name="tags" formControlName="tags">
+                        <option [ngValue]="getSelected(editForm.get('tags')!.value, tagOption)" *ngFor="let tagOption of tags; trackBy: trackById">{{ tagOption.id }}</option>
+                    </select>
                 </div>
 
                 <div class="form-group">

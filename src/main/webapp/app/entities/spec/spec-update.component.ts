@@ -21,10 +21,12 @@ import { ISource } from 'app/shared/model/source.model';
 import { SourceService } from 'app/entities/source/source.service';
 import { ISpecType } from 'app/shared/model/spec-type.model';
 import { SpecTypeService } from 'app/entities/spec-type/spec-type.service';
+import { ITag } from 'app/shared/model/tag.model';
+import { TagService } from 'app/entities/tag/tag.service';
 import { IServiceDefinition } from 'app/shared/model/service-definition.model';
 import { ServiceDefinitionService } from 'app/entities/service-definition/service-definition.service';
 
-type SelectableEntity = IPortal | ICapability | IProduct | ISource | ISpecType | IServiceDefinition;
+type SelectableEntity = IPortal | ICapability | IProduct | ISource | ISpecType | ITag | IServiceDefinition;
 
 @Component({
   selector: 'jhi-spec-update',
@@ -37,6 +39,7 @@ export class SpecUpdateComponent implements OnInit {
   products: IProduct[] = [];
   sources: ISource[] = [];
   spectypes: ISpecType[] = [];
+  tags: ITag[] = [];
   servicedefinitions: IServiceDefinition[] = [];
 
   editForm = this.fb.group({
@@ -46,7 +49,6 @@ export class SpecUpdateComponent implements OnInit {
     version: [null, [Validators.required]],
     title: [],
     openApi: [null, [Validators.required]],
-    tagsCsv: [],
     description: [],
     createdOn: [null, [Validators.required]],
     createdBy: [null, [Validators.required]],
@@ -56,6 +58,7 @@ export class SpecUpdateComponent implements OnInit {
     order: [],
     parseError: [],
     externalDocs: [],
+    hide: [],
     sourcePath: [],
     sourceName: [],
     sourceUrl: [],
@@ -68,6 +71,7 @@ export class SpecUpdateComponent implements OnInit {
     product: [null, Validators.required],
     source: [],
     specType: [null, Validators.required],
+    tags: [],
     serviceDefinition: [null, Validators.required],
   });
 
@@ -80,6 +84,7 @@ export class SpecUpdateComponent implements OnInit {
     protected productService: ProductService,
     protected sourceService: SourceService,
     protected specTypeService: SpecTypeService,
+    protected tagService: TagService,
     protected serviceDefinitionService: ServiceDefinitionService,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
@@ -106,6 +111,8 @@ export class SpecUpdateComponent implements OnInit {
 
       this.specTypeService.query().subscribe((res: HttpResponse<ISpecType[]>) => (this.spectypes = res.body || []));
 
+      this.tagService.query().subscribe((res: HttpResponse<ITag[]>) => (this.tags = res.body || []));
+
       this.serviceDefinitionService
         .query()
         .subscribe((res: HttpResponse<IServiceDefinition[]>) => (this.servicedefinitions = res.body || []));
@@ -120,7 +127,6 @@ export class SpecUpdateComponent implements OnInit {
       version: spec.version,
       title: spec.title,
       openApi: spec.openApi,
-      tagsCsv: spec.tagsCsv,
       description: spec.description,
       createdOn: spec.createdOn ? spec.createdOn.format(DATE_TIME_FORMAT) : null,
       createdBy: spec.createdBy,
@@ -130,6 +136,7 @@ export class SpecUpdateComponent implements OnInit {
       order: spec.order,
       parseError: spec.parseError,
       externalDocs: spec.externalDocs,
+      hide: spec.hide,
       sourcePath: spec.sourcePath,
       sourceName: spec.sourceName,
       sourceUrl: spec.sourceUrl,
@@ -142,6 +149,7 @@ export class SpecUpdateComponent implements OnInit {
       product: spec.product,
       source: spec.source,
       specType: spec.specType,
+      tags: spec.tags,
       serviceDefinition: spec.serviceDefinition,
     });
   }
@@ -185,7 +193,6 @@ export class SpecUpdateComponent implements OnInit {
       version: this.editForm.get(['version'])!.value,
       title: this.editForm.get(['title'])!.value,
       openApi: this.editForm.get(['openApi'])!.value,
-      tagsCsv: this.editForm.get(['tagsCsv'])!.value,
       description: this.editForm.get(['description'])!.value,
       createdOn: this.editForm.get(['createdOn'])!.value ? moment(this.editForm.get(['createdOn'])!.value, DATE_TIME_FORMAT) : undefined,
       createdBy: this.editForm.get(['createdBy'])!.value,
@@ -195,6 +202,7 @@ export class SpecUpdateComponent implements OnInit {
       order: this.editForm.get(['order'])!.value,
       parseError: this.editForm.get(['parseError'])!.value,
       externalDocs: this.editForm.get(['externalDocs'])!.value,
+      hide: this.editForm.get(['hide'])!.value,
       sourcePath: this.editForm.get(['sourcePath'])!.value,
       sourceName: this.editForm.get(['sourceName'])!.value,
       sourceUrl: this.editForm.get(['sourceUrl'])!.value,
@@ -211,6 +219,7 @@ export class SpecUpdateComponent implements OnInit {
       product: this.editForm.get(['product'])!.value,
       source: this.editForm.get(['source'])!.value,
       specType: this.editForm.get(['specType'])!.value,
+      tags: this.editForm.get(['tags'])!.value,
       serviceDefinition: this.editForm.get(['serviceDefinition'])!.value,
     };
   }
@@ -233,5 +242,16 @@ export class SpecUpdateComponent implements OnInit {
 
   trackById(index: number, item: SelectableEntity): any {
     return item.id;
+  }
+
+  getSelected(selectedVals: ITag[], option: ITag): ITag {
+    if (selectedVals) {
+      for (let i = 0; i < selectedVals.length; i++) {
+        if (option.id === selectedVals[i].id) {
+          return selectedVals[i];
+        }
+      }
+    }
+    return option;
   }
 }

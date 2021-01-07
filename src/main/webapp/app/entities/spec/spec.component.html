@@ -28,7 +28,6 @@
                     <th scope="col" ><span>Version</span></th>
                     <th scope="col" ><span>Title</span></th>
                     <th scope="col" ><span>Open Api</span></th>
-                    <th scope="col" ><span>Tags Csv</span></th>
                     <th scope="col" ><span>Description</span></th>
                     <th scope="col" ><span>Created On</span></th>
                     <th scope="col" ><span>Created By</span></th>
@@ -38,6 +37,7 @@
                     <th scope="col" ><span>Order</span></th>
                     <th scope="col" ><span>Parse Error</span></th>
                     <th scope="col" ><span>External Docs</span></th>
+                    <th scope="col" ><span>Hide</span></th>
                     <th scope="col" ><span>Source Path</span></th>
                     <th scope="col" ><span>Source Name</span></th>
                     <th scope="col" ><span>Source Url</span></th>
@@ -50,6 +50,7 @@
                     <th scope="col" ><span>Product</span></th>
                     <th scope="col" ><span>Source</span></th>
                     <th scope="col" ><span>Spec Type</span></th>
+                    <th scope="col" ><span>Tag</span></th>
                     <th scope="col" ><span>Service Definition</span></th>
                     <th scope="col"></th>
                 </tr>
@@ -62,7 +63,6 @@
                     <td>{{ spec.version }}</td>
                     <td>{{ spec.title }}</td>
                     <td>{{ spec.openApi }}</td>
-                    <td>{{ spec.tagsCsv }}</td>
                     <td>{{ spec.description }}</td>
                     <td>{{ spec.createdOn | date:'medium' }}</td>
                     <td>{{ spec.createdBy }}</td>
@@ -72,6 +72,7 @@
                     <td>{{ spec.order }}</td>
                     <td>{{ spec.parseError }}</td>
                     <td>{{ spec.externalDocs }}</td>
+                    <td>{{ spec.hide }}</td>
                     <td>{{ spec.sourcePath }}</td>
                     <td>{{ spec.sourceName }}</td>
                     <td>{{ spec.sourceUrl }}</td>
@@ -103,6 +104,11 @@
                         <div *ngIf="spec.specType">
                             <a [routerLink]="['/spec-type', spec.specType?.id, 'view']" >{{ spec.specType?.name }}</a>
                         </div>
+                    </td>
+                    <td>
+                        <span *ngFor="let tag of spec.tags; let last = last">
+                            <a class="form-control-static" [routerLink]="['/tag', tag?.id, 'view']">{{ tag.id }}</a>{{ last ? '' : ', ' }}
+                        </span>
                     </td>
                     <td>
                         <div *ngIf="spec.serviceDefinition">

@@ -28,10 +28,6 @@
       "fieldType": "Boolean"
     },
     {
-      "fieldName": "path",
-      "fieldType": "String"
-    },
-    {
       "fieldName": "filter",
       "fieldType": "String"
     },
@@ -49,14 +45,6 @@
     },
     {
       "fieldName": "specFilterSpEL",
-      "fieldType": "String"
-    },
-    {
-      "fieldName": "productKeySpEL",
-      "fieldType": "String"
-    },
-    {
-      "fieldName": "productNameSpEL",
       "fieldType": "String"
     },
     {
@@ -86,29 +74,40 @@
   ],
   "relationships": [
     {
-      "relationshipType": "one-to-one",
+      "relationshipType": "one-to-many",
+      "otherEntityName": "sourcePath",
+      "otherEntityRelationshipName": "source",
+      "relationshipName": "sourcePath"
+    },
+    {
+      "relationshipType": "many-to-one",
       "otherEntityName": "portal",
       "otherEntityRelationshipName": "source",
       "relationshipValidateRules": "required",
       "relationshipName": "portal",
-      "otherEntityField": "name",
-      "ownerSide": true
+      "otherEntityField": "name"
     },
     {
-      "relationshipType": "one-to-one",
+      "relationshipType": "many-to-one",
+      "otherEntityName": "product",
+      "otherEntityRelationshipName": "source",
+      "relationshipValidateRules": "required",
+      "relationshipName": "product",
+      "otherEntityField": "name"
+    },
+    {
+      "relationshipType": "many-to-one",
       "otherEntityName": "capability",
       "otherEntityRelationshipName": "source",
       "relationshipName": "capability",
-      "otherEntityField": "name",
-      "ownerSide": true
+      "otherEntityField": "name"
     },
     {
-      "relationshipType": "one-to-one",
+      "relationshipType": "many-to-one",
       "otherEntityName": "serviceDefinition",
       "otherEntityRelationshipName": "source",
       "relationshipName": "serviceDefinition",
-      "otherEntityField": "name",
-      "ownerSide": true
+      "otherEntityField": "name"
     }
   ],
   "changelogDate": "20201223122159",

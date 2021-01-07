@@ -29,9 +29,12 @@
                     <th scope="col" ><span>Title</span></th>
                     <th scope="col" ><span>Sub Title</span></th>
                     <th scope="col" ><span>Nav Title</span></th>
-                    <th scope="col" ><span>Content</span></th>
+                    <th scope="col" ><span>Description</span></th>
+                    <th scope="col" ><span>Icon</span></th>
+                    <th scope="col" ><span>Color</span></th>
                     <th scope="col" ><span>Created On</span></th>
                     <th scope="col" ><span>Created By</span></th>
+                    <th scope="col" ><span>Hide</span></th>
                     <th scope="col" ><span>Capability</span></th>
                     <th scope="col"></th>
                 </tr>
@@ -45,9 +48,12 @@
                     <td>{{ serviceDefinition.title }}</td>
                     <td>{{ serviceDefinition.subTitle }}</td>
                     <td>{{ serviceDefinition.navTitle }}</td>
-                    <td>{{ serviceDefinition.content }}</td>
+                    <td>{{ serviceDefinition.description }}</td>
+                    <td>{{ serviceDefinition.icon }}</td>
+                    <td>{{ serviceDefinition.color }}</td>
                     <td>{{ serviceDefinition.createdOn | date:'medium' }}</td>
                     <td>{{ serviceDefinition.createdBy }}</td>
+                    <td>{{ serviceDefinition.hide }}</td>
                     <td>
                         <div *ngIf="serviceDefinition.capability">
                             <a [routerLink]="['/capability', serviceDefinition.capability?.id, 'view']" >{{ serviceDefinition.capability?.name }}</a>

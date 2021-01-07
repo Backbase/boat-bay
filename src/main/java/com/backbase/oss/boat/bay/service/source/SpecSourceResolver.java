@@ -6,22 +6,24 @@ import com.backbase.oss.boat.bay.domain.ServiceDefinition;
 import com.backbase.oss.boat.bay.domain.Source;
 import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.domain.SpecType;
+import com.backbase.oss.boat.bay.domain.Tag;
 import com.backbase.oss.boat.bay.repository.SpecRepository;
 import com.backbase.oss.boat.bay.repository.SpecTypeRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatCapabilityRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatProductRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatServiceRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatSpecRepository;
+import com.backbase.oss.boat.bay.repository.extended.BoatTagRepository;
 import com.backbase.oss.boat.bay.util.SpringExpressionUtils;
 import com.backbase.oss.boat.loader.OpenAPILoader;
 import com.backbase.oss.boat.loader.OpenAPILoaderException;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
-import io.swagger.v3.oas.models.tags.Tag;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +45,7 @@ public class SpecSourceResolver {
 
     private final BoatSpecRepository boatSpecRepository;
     private final SpecTypeRepository specTypeRepository;
+    private final BoatTagRepository boatTagRepository;
 
 
     public void processSpecs(List<Spec> specs) {
@@ -52,7 +55,6 @@ public class SpecSourceResolver {
     @SuppressWarnings("java:S5411")
     private void processSpec(Spec spec) {
         Source source = spec.getSource();
-
 
         String md5 = spec.getChecksum();
         if (md5 == null) {
@@ -79,6 +81,12 @@ public class SpecSourceResolver {
         specRepository.save(spec);
     }
 
+    private void setProduct(Spec spec, Source source) {
+        Product product = source.getProduct();
+        spec.setProduct(product);
+        log.info("Adding spec: {} to product: {}", spec.getName(), product.getName());
+    }
+
     private void setInformationFromSpec(Spec spec) {
         try {
             OpenAPI openAPI = OpenAPILoader.parse(spec.getOpenApi());
@@ -89,7 +97,10 @@ public class SpecSourceResolver {
             spec.setDescription(info.getDescription());
             spec.setValid(true);
             if (openAPI.getTags() != null) {
-                spec.setTagsCsv(openAPI.getTags().stream().map(Tag::getName).collect(Collectors.joining(",")));
+                Set<Tag> tags = openAPI.getTags().stream()
+                    .map(this::getOrCreateTag)
+                    .collect(Collectors.toSet());
+                spec.setTags(tags);
             }
         } catch (OpenAPILoaderException e) {
             String parseErrorMessage = e.getMessage();
@@ -101,6 +112,12 @@ public class SpecSourceResolver {
             spec.setVersion("");
             log.info("Failed to parse OpenAPI for item: {}", spec.getName());
         }
+    }
+
+    @NotNull
+    private Tag getOrCreateTag(io.swagger.v3.oas.models.tags.Tag tag) {
+        return boatTagRepository.findByName(tag.getName())
+            .orElseGet(() -> boatTagRepository.save(new Tag().name(tag.getName()).description(tag.getDescription())));
     }
 
     private void setSpecType(Spec spec) {
@@ -146,16 +163,6 @@ public class SpecSourceResolver {
         }
     }
 
-    private void setProduct(Spec spec, Source source) {
-        if (spec.getProduct() == null || source.isOverwriteChanges()) {
-            String key = SpringExpressionUtils.parseName(source.getProductKeySpEL(), spec, "unknown");
-            Product product = boatProductRepository.findByPortalAndKey(spec.getPortal(), key)
-                .orElseGet(() -> createProductWithKey(spec, key));
-            log.info("Assigning product: {} to spec: {}", product.getName(), spec.getName());
-            spec.setProduct(product);
-        }
-    }
-
     private ServiceDefinition createServiceDefinition(Spec spec, String key) {
         log.info("Creating service: {} for spec: {}", key, spec.getName());
         Optional<String> serviceNameSpEL = Optional.ofNullable(spec.getSource().getServiceNameSpEL());
@@ -167,21 +174,6 @@ public class SpecSourceResolver {
         serviceDefinition.setCreatedOn(Instant.now());
         serviceDefinition.setName(serviceNameSpEL.map(exp -> SpringExpressionUtils.parseName(exp, spec, key)).orElse(key));
         return boatServiceRepository.save(serviceDefinition);
-    }
-
-    private Product createProductWithKey(Spec spec, String key) {
-        log.info("Creating product: {} with spec: {}", key, spec.getName());
-
-        Optional<String> productNameSpEL = Optional.of(spec.getSource().getProductNameSpEL());
-        Product product = new Product();
-        product.setKey(key);
-        product.setPortal(spec.getPortal());
-        product.setCreatedBy(spec.getCreatedBy());
-        product.setCreatedOn(Instant.now());
-        product.setName(productNameSpEL.map(exp -> SpringExpressionUtils.parseName(exp, spec, key)).orElse(key));
-
-        return boatProductRepository.save(product);
-
     }
 
     private Capability createCapabilityForSpecWithKey(Spec spec, String key) {

@@ -63,6 +63,13 @@ public class Portal implements Serializable {
     @Column(name = "created_by")
     private String createdBy;
 
+    @Column(name = "hide")
+    private Boolean hide;
+
+    @OneToMany(mappedBy = "portal")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<ProductRelease> productReleases = new HashSet<>();
+
     @OneToMany(mappedBy = "portal")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Product> products = new HashSet<>();
@@ -223,6 +230,44 @@ public class Portal implements Serializable {
         this.createdBy = createdBy;
     }
 
+    public Boolean isHide() {
+        return hide;
+    }
+
+    public Portal hide(Boolean hide) {
+        this.hide = hide;
+        return this;
+    }
+
+    public void setHide(Boolean hide) {
+        this.hide = hide;
+    }
+
+    public Set<ProductRelease> getProductReleases() {
+        return productReleases;
+    }
+
+    public Portal productReleases(Set<ProductRelease> productReleases) {
+        this.productReleases = productReleases;
+        return this;
+    }
+
+    public Portal addProductRelease(ProductRelease productRelease) {
+        this.productReleases.add(productRelease);
+        productRelease.setPortal(this);
+        return this;
+    }
+
+    public Portal removeProductRelease(ProductRelease productRelease) {
+        this.productReleases.remove(productRelease);
+        productRelease.setPortal(null);
+        return this;
+    }
+
+    public void setProductReleases(Set<ProductRelease> productReleases) {
+        this.productReleases = productReleases;
+    }
+
     public Set<Product> getProducts() {
         return products;
     }
@@ -294,6 +339,7 @@ public class Portal implements Serializable {
             ", content='" + getContent() + "'" +
             ", createdOn='" + getCreatedOn() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
+            ", hide='" + isHide() + "'" +
             "}";
     }
 }

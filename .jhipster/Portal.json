@@ -55,9 +55,19 @@
     {
       "fieldName": "createdBy",
       "fieldType": "String"
+    },
+    {
+      "fieldName": "hide",
+      "fieldType": "Boolean"
     }
   ],
   "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "productRelease",
+      "otherEntityRelationshipName": "portal",
+      "relationshipName": "productRelease"
+    },
     {
       "relationshipType": "one-to-many",
       "otherEntityName": "product",

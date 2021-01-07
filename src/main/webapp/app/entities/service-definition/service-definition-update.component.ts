@@ -30,9 +30,12 @@ export class ServiceDefinitionUpdateComponent implements OnInit {
     title: [],
     subTitle: [],
     navTitle: [],
-    content: [],
+    description: [],
+    icon: [],
+    color: [],
     createdOn: [],
     createdBy: [],
+    hide: [],
     capability: [null, Validators.required],
   });
 
@@ -67,9 +70,12 @@ export class ServiceDefinitionUpdateComponent implements OnInit {
       title: serviceDefinition.title,
       subTitle: serviceDefinition.subTitle,
       navTitle: serviceDefinition.navTitle,
-      content: serviceDefinition.content,
+      description: serviceDefinition.description,
+      icon: serviceDefinition.icon,
+      color: serviceDefinition.color,
       createdOn: serviceDefinition.createdOn ? serviceDefinition.createdOn.format(DATE_TIME_FORMAT) : null,
       createdBy: serviceDefinition.createdBy,
+      hide: serviceDefinition.hide,
       capability: serviceDefinition.capability,
     });
   }
@@ -114,9 +120,12 @@ export class ServiceDefinitionUpdateComponent implements OnInit {
       title: this.editForm.get(['title'])!.value,
       subTitle: this.editForm.get(['subTitle'])!.value,
       navTitle: this.editForm.get(['navTitle'])!.value,
-      content: this.editForm.get(['content'])!.value,
+      description: this.editForm.get(['description'])!.value,
+      icon: this.editForm.get(['icon'])!.value,
+      color: this.editForm.get(['color'])!.value,
       createdOn: this.editForm.get(['createdOn'])!.value ? moment(this.editForm.get(['createdOn'])!.value, DATE_TIME_FORMAT) : undefined,
       createdBy: this.editForm.get(['createdBy'])!.value,
+      hide: this.editForm.get(['hide'])!.value,
       capability: this.editForm.get(['capability'])!.value,
     };
   }

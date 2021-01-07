@@ -1,4 +1,4 @@
-package com.backbase.oss.boat.bay.web.rest;
+package com.backbase.oss.boat.bay.web.utils;
 
 import com.backbase.oss.boat.ExportException;
 import com.backbase.oss.boat.bay.repository.PortalRepository;

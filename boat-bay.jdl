@@ -18,6 +18,12 @@ entity Portal {
     content TextBlob
     createdOn Instant
     createdBy String
+    hide Boolean
+}
+
+entity ProductRelease {
+    key String required
+    name String required
 }
 
 entity Product {
@@ -28,6 +34,7 @@ entity Product {
     content TextBlob
     createdOn Instant
     createdBy String
+    hide Boolean
 }
 
 entity Capability {
@@ -40,8 +47,8 @@ entity Capability {
     content TextBlob
     createdOn Instant
     createdBy String
+    hide Boolean
 }
-
 
 entity ServiceDefinition {
 	key String required
@@ -50,10 +57,13 @@ entity ServiceDefinition {
     title String
     subTitle String
     navTitle String
-    content TextBlob
+    description TextBlob
+    icon String
+    color String
     order Integer
     createdOn Instant
     createdBy String
+    hide Boolean
 }
 
 entity Spec {
@@ -62,7 +72,6 @@ entity Spec {
 	version String required
     title String
     openApi TextBlob required
-    tagsCsv String
     description TextBlob
     createdOn Instant required
     createdBy String required
@@ -72,6 +81,7 @@ entity Spec {
     order Integer
     parseError TextBlob
     externalDocs String
+    hide Boolean
 
     sourcePath String
     sourceName String
@@ -80,6 +90,12 @@ entity Spec {
     sourceCreatedOn Instant
     sourceLastModifiedOn Instant
     sourceLastModifiedBy String
+
+}
+
+entity Tag {
+    name String required unique
+    description String
 }
 
 entity SpecType {
@@ -94,21 +110,21 @@ entity Source {
     type SourceType required
     baseUrl String required
     active Boolean
-    path String
     filter String
     username String
     password String
     cronExpression String
     specFilterSpEL String
-    productKeySpEL String
-    productNameSpEL String
     capabilityKeySpEL String
     capabilityNameSpEL String
     serviceKeySpEL String
     serviceNameSpEL String
-
     versionSpEL String
     overwriteChanges Boolean
+}
+
+entity SourcePath {
+    name String
 }
 
 @readOnly(true)
@@ -174,7 +190,13 @@ enum SourceType {
     GIT JFROG HTTP FILE_SYSTEM BOAT_MAVEN_PLUGIN
 }
 
+relationship ManyToMany {
+    ProductRelease to Spec
+    Spec to Tag
+}
+
 relationship OneToMany {
+    Portal to ProductRelease{portal(name) required}
 	Portal to Product{portal(name) required}
 	Product to Capability{product(name) required}
 	Capability to ServiceDefinition{capability(name) required}
@@ -182,6 +204,7 @@ relationship OneToMany {
 	LintReport to LintRuleViolation{lintReport(name) required}
 	LintRuleSet to LintRule{ruleSet(name) required}
 	PortalLintRuleSet to PortalLintRule{portalRuleSet(name) required}
+	Source to SourcePath{source(name)}
 }
 
 relationship ManyToOne {
@@ -190,23 +213,21 @@ relationship ManyToOne {
     Spec{product(name) required} to Product
     Spec{source(name)} to Source
     Spec{specType(name) required} to SpecType
+
+    Source{portal(name) required} to Portal
+    Source{product(name) required} to Product
+    Source{capability(name)} to Capability
+    Source{serviceDefinition(name)} to ServiceDefinition
+
 }
 
 relationship OneToOne {
     Dashboard{defaultPortal(name) required} to Portal
 	LintReport to Spec
 	LintRuleViolation to LintRule
-	Source{portal(name) required} to Portal
-	Source{capability(name)} to Capability
-	Source{serviceDefinition(name)} to ServiceDefinition
+
 
     PortalLintRuleSet{portal(name) required} to Portal{portalRuleSet(name)}
     PortalLintRuleConfig to PortalLintRule
 
 }
-
-
-
-
-
-

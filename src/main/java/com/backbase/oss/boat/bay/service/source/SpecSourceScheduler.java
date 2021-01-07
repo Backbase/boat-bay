@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
@@ -21,11 +22,13 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.scheduling.support.SimpleTriggerContext;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
-@DependsOn("liquibase")
+@DependsOn({"liquibase","boatBayBootstrap"})
+@ConditionalOnProperty(value = "boat.scheduler.source.scanner.enabled", havingValue = "true")
 public class SpecSourceScheduler {
 
     // Task Scheduler
@@ -37,6 +40,7 @@ public class SpecSourceScheduler {
 
     @EventListener({ContextRefreshedEvent.class, SpecSourceUpdatedEvent.class})
     @Async
+    @Transactional
     public void setupScheduledTasks() {
         log.info("Setting up Scanner Tasks");
         jobsMap.forEach((jobId, job) -> removeTaskFromScheduler(jobId));
@@ -60,6 +64,7 @@ public class SpecSourceScheduler {
     }
 
     @SuppressWarnings({"java:S1301", "SwitchStatementWithTooFewBranches"})
+    @Transactional
     private SpecSourceScanner createScanner(Source source) {
         SpecSourceScanner specSourceScanner;
         switch (source.getType()) {

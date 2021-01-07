@@ -43,6 +43,10 @@
     {
       "fieldName": "createdBy",
       "fieldType": "String"
+    },
+    {
+      "fieldName": "hide",
+      "fieldType": "Boolean"
     }
   ],
   "relationships": [

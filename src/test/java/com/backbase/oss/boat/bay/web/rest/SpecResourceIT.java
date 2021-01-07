@@ -11,9 +11,14 @@ import com.backbase.oss.boat.bay.repository.SpecRepository;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -22,10 +27,12 @@ import org.springframework.util.Base64Utils;
 import javax.persistence.EntityManager;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -33,6 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Integration tests for the {@link SpecResource} REST controller.
  */
 @SpringBootTest(classes = BoatBayApp.class)
+@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 public class SpecResourceIT {
@@ -51,9 +59,6 @@ public class SpecResourceIT {
 
     private static final String DEFAULT_OPEN_API = "AAAAAAAAAA";
     private static final String UPDATED_OPEN_API = "BBBBBBBBBB";
-
-    private static final String DEFAULT_TAGS_CSV = "AAAAAAAAAA";
-    private static final String UPDATED_TAGS_CSV = "BBBBBBBBBB";
 
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
@@ -82,6 +87,9 @@ public class SpecResourceIT {
     private static final String DEFAULT_EXTERNAL_DOCS = "AAAAAAAAAA";
     private static final String UPDATED_EXTERNAL_DOCS = "BBBBBBBBBB";
 
+    private static final Boolean DEFAULT_HIDE = false;
+    private static final Boolean UPDATED_HIDE = true;
+
     private static final String DEFAULT_SOURCE_PATH = "AAAAAAAAAA";
     private static final String UPDATED_SOURCE_PATH = "BBBBBBBBBB";
 
@@ -106,6 +114,9 @@ public class SpecResourceIT {
     @Autowired
     private SpecRepository specRepository;
 
+    @Mock
+    private SpecRepository specRepositoryMock;
+
     @Autowired
     private EntityManager em;
 
@@ -127,7 +138,6 @@ public class SpecResourceIT {
             .version(DEFAULT_VERSION)
             .title(DEFAULT_TITLE)
             .openApi(DEFAULT_OPEN_API)
-            .tagsCsv(DEFAULT_TAGS_CSV)
             .description(DEFAULT_DESCRIPTION)
             .createdOn(DEFAULT_CREATED_ON)
             .createdBy(DEFAULT_CREATED_BY)
@@ -137,6 +147,7 @@ public class SpecResourceIT {
             .order(DEFAULT_ORDER)
             .parseError(DEFAULT_PARSE_ERROR)
             .externalDocs(DEFAULT_EXTERNAL_DOCS)
+            .hide(DEFAULT_HIDE)
             .sourcePath(DEFAULT_SOURCE_PATH)
             .sourceName(DEFAULT_SOURCE_NAME)
             .sourceUrl(DEFAULT_SOURCE_URL)
@@ -209,7 +220,6 @@ public class SpecResourceIT {
             .version(UPDATED_VERSION)
             .title(UPDATED_TITLE)
             .openApi(UPDATED_OPEN_API)
-            .tagsCsv(UPDATED_TAGS_CSV)
             .description(UPDATED_DESCRIPTION)
             .createdOn(UPDATED_CREATED_ON)
             .createdBy(UPDATED_CREATED_BY)
@@ -219,6 +229,7 @@ public class SpecResourceIT {
             .order(UPDATED_ORDER)
             .parseError(UPDATED_PARSE_ERROR)
             .externalDocs(UPDATED_EXTERNAL_DOCS)
+            .hide(UPDATED_HIDE)
             .sourcePath(UPDATED_SOURCE_PATH)
             .sourceName(UPDATED_SOURCE_NAME)
             .sourceUrl(UPDATED_SOURCE_URL)
@@ -303,7 +314,6 @@ public class SpecResourceIT {
         assertThat(testSpec.getVersion()).isEqualTo(DEFAULT_VERSION);
         assertThat(testSpec.getTitle()).isEqualTo(DEFAULT_TITLE);
         assertThat(testSpec.getOpenApi()).isEqualTo(DEFAULT_OPEN_API);
-        assertThat(testSpec.getTagsCsv()).isEqualTo(DEFAULT_TAGS_CSV);
         assertThat(testSpec.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testSpec.getCreatedOn()).isEqualTo(DEFAULT_CREATED_ON);
         assertThat(testSpec.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
@@ -313,6 +323,7 @@ public class SpecResourceIT {
         assertThat(testSpec.getOrder()).isEqualTo(DEFAULT_ORDER);
         assertThat(testSpec.getParseError()).isEqualTo(DEFAULT_PARSE_ERROR);
         assertThat(testSpec.getExternalDocs()).isEqualTo(DEFAULT_EXTERNAL_DOCS);
+        assertThat(testSpec.isHide()).isEqualTo(DEFAULT_HIDE);
         assertThat(testSpec.getSourcePath()).isEqualTo(DEFAULT_SOURCE_PATH);
         assertThat(testSpec.getSourceName()).isEqualTo(DEFAULT_SOURCE_NAME);
         assertThat(testSpec.getSourceUrl()).isEqualTo(DEFAULT_SOURCE_URL);
@@ -510,7 +521,6 @@ public class SpecResourceIT {
             .andExpect(jsonPath("$.[*].version").value(hasItem(DEFAULT_VERSION)))
             .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE)))
             .andExpect(jsonPath("$.[*].openApi").value(hasItem(DEFAULT_OPEN_API.toString())))
-            .andExpect(jsonPath("$.[*].tagsCsv").value(hasItem(DEFAULT_TAGS_CSV)))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
             .andExpect(jsonPath("$.[*].createdOn").value(hasItem(DEFAULT_CREATED_ON.toString())))
             .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
@@ -520,6 +530,7 @@ public class SpecResourceIT {
             .andExpect(jsonPath("$.[*].order").value(hasItem(DEFAULT_ORDER)))
             .andExpect(jsonPath("$.[*].parseError").value(hasItem(DEFAULT_PARSE_ERROR.toString())))
             .andExpect(jsonPath("$.[*].externalDocs").value(hasItem(DEFAULT_EXTERNAL_DOCS)))
+            .andExpect(jsonPath("$.[*].hide").value(hasItem(DEFAULT_HIDE.booleanValue())))
             .andExpect(jsonPath("$.[*].sourcePath").value(hasItem(DEFAULT_SOURCE_PATH)))
             .andExpect(jsonPath("$.[*].sourceName").value(hasItem(DEFAULT_SOURCE_NAME)))
             .andExpect(jsonPath("$.[*].sourceUrl").value(hasItem(DEFAULT_SOURCE_URL)))
@@ -529,6 +540,26 @@ public class SpecResourceIT {
             .andExpect(jsonPath("$.[*].sourceLastModifiedBy").value(hasItem(DEFAULT_SOURCE_LAST_MODIFIED_BY)));
     }
     
+    @SuppressWarnings({"unchecked"})
+    public void getAllSpecsWithEagerRelationshipsIsEnabled() throws Exception {
+        when(specRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restSpecMockMvc.perform(get("/api/specs?eagerload=true"))
+            .andExpect(status().isOk());
+
+        verify(specRepositoryMock, times(1)).findAllWithEagerRelationships(any());
+    }
+
+    @SuppressWarnings({"unchecked"})
+    public void getAllSpecsWithEagerRelationshipsIsNotEnabled() throws Exception {
+        when(specRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restSpecMockMvc.perform(get("/api/specs?eagerload=true"))
+            .andExpect(status().isOk());
+
+        verify(specRepositoryMock, times(1)).findAllWithEagerRelationships(any());
+    }
+
     @Test
     @Transactional
     public void getSpec() throws Exception {
@@ -545,7 +576,6 @@ public class SpecResourceIT {
             .andExpect(jsonPath("$.version").value(DEFAULT_VERSION))
             .andExpect(jsonPath("$.title").value(DEFAULT_TITLE))
             .andExpect(jsonPath("$.openApi").value(DEFAULT_OPEN_API.toString()))
-            .andExpect(jsonPath("$.tagsCsv").value(DEFAULT_TAGS_CSV))
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
             .andExpect(jsonPath("$.createdOn").value(DEFAULT_CREATED_ON.toString()))
             .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
@@ -555,6 +585,7 @@ public class SpecResourceIT {
             .andExpect(jsonPath("$.order").value(DEFAULT_ORDER))
             .andExpect(jsonPath("$.parseError").value(DEFAULT_PARSE_ERROR.toString()))
             .andExpect(jsonPath("$.externalDocs").value(DEFAULT_EXTERNAL_DOCS))
+            .andExpect(jsonPath("$.hide").value(DEFAULT_HIDE.booleanValue()))
             .andExpect(jsonPath("$.sourcePath").value(DEFAULT_SOURCE_PATH))
             .andExpect(jsonPath("$.sourceName").value(DEFAULT_SOURCE_NAME))
             .andExpect(jsonPath("$.sourceUrl").value(DEFAULT_SOURCE_URL))
@@ -589,7 +620,6 @@ public class SpecResourceIT {
             .version(UPDATED_VERSION)
             .title(UPDATED_TITLE)
             .openApi(UPDATED_OPEN_API)
-            .tagsCsv(UPDATED_TAGS_CSV)
             .description(UPDATED_DESCRIPTION)
             .createdOn(UPDATED_CREATED_ON)
             .createdBy(UPDATED_CREATED_BY)
@@ -599,6 +629,7 @@ public class SpecResourceIT {
             .order(UPDATED_ORDER)
             .parseError(UPDATED_PARSE_ERROR)
             .externalDocs(UPDATED_EXTERNAL_DOCS)
+            .hide(UPDATED_HIDE)
             .sourcePath(UPDATED_SOURCE_PATH)
             .sourceName(UPDATED_SOURCE_NAME)
             .sourceUrl(UPDATED_SOURCE_URL)
@@ -621,7 +652,6 @@ public class SpecResourceIT {
         assertThat(testSpec.getVersion()).isEqualTo(UPDATED_VERSION);
         assertThat(testSpec.getTitle()).isEqualTo(UPDATED_TITLE);
         assertThat(testSpec.getOpenApi()).isEqualTo(UPDATED_OPEN_API);
-        assertThat(testSpec.getTagsCsv()).isEqualTo(UPDATED_TAGS_CSV);
         assertThat(testSpec.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testSpec.getCreatedOn()).isEqualTo(UPDATED_CREATED_ON);
         assertThat(testSpec.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
@@ -631,6 +661,7 @@ public class SpecResourceIT {
         assertThat(testSpec.getOrder()).isEqualTo(UPDATED_ORDER);
         assertThat(testSpec.getParseError()).isEqualTo(UPDATED_PARSE_ERROR);
         assertThat(testSpec.getExternalDocs()).isEqualTo(UPDATED_EXTERNAL_DOCS);
+        assertThat(testSpec.isHide()).isEqualTo(UPDATED_HIDE);
         assertThat(testSpec.getSourcePath()).isEqualTo(UPDATED_SOURCE_PATH);
         assertThat(testSpec.getSourceName()).isEqualTo(UPDATED_SOURCE_NAME);
         assertThat(testSpec.getSourceUrl()).isEqualTo(UPDATED_SOURCE_URL);

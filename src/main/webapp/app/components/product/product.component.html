@@ -1,0 +1,40 @@
+<mat-accordion multi>
+  <mat-expansion-panel
+    [attr.data-role]="name + '-category-panel'"
+    [disabled]="!isCollapsible"
+    expanded
+  >
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        <mat-icon class="product-title-icon" mat-card-avatar>folder</mat-icon>
+        <span class="mat-subheading" data-role="product-title"
+          >{{ name | uppercase }}
+          <span>
+            ({{ (apiSpecs$ | async)?.length
+            }}<span *ngIf="hasSearchText$ | async"
+              >/{{ totalApi$ | async }}</span
+            >)
+          </span>
+        </span>
+        <hr />
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <ng-container *ngIf="apiSpecs$ | async as apiSpecs; else loading">
+      <div class="spec-tile" *ngFor="let spec of apiSpecs">
+        <app-spec-tile
+          [spec]="spec"
+          [attr.data-role]="spec.title + '-spec-tile' | lowercase"
+        ></app-spec-tile>
+      </div>
+
+      <app-empty-state *ngIf="apiSpecs.length === 0">
+        No results found
+      </app-empty-state>
+    </ng-container>
+
+    <ng-template #loading>
+      <mat-spinner></mat-spinner>
+    </ng-template>
+  </mat-expansion-panel>
+</mat-accordion>
