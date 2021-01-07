@@ -11,6 +11,7 @@ import com.backbase.oss.boat.bay.service.export.ExportInfo;
 import com.backbase.oss.boat.bay.service.export.ExportOptions;
 import com.backbase.oss.boat.bay.service.export.ExportType;
 import com.backbase.oss.boat.bay.service.export.impl.FileSystemExporter;
+import com.backbase.oss.boat.bay.service.source.scanner.ScanResult;
 import com.backbase.oss.boat.bay.service.source.scanner.impl.FileSystemSourceScanner;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -44,8 +45,8 @@ public class SourceScannerTest {
         Source source = new Source();
         source.addSourcePath(new SourcePath().name("/Users/sophiej/Documents/Projects/opensauce/boat-bay/boat-bay-data/Artifactory"));
         scanner.setSource(source);
-        List<Spec> specs = scanner.scan();
-        Portal portal = portalRepository.getOne(specs.get(0).getPortal().getId());
+        ScanResult specs = scanner.scan();
+        Portal portal = portalRepository.getOne(specs.getSpecs().get(0).getPortal().getId());
 
         ExportInfo export = fileSystemExporter.export(new ExportOptions(portal, ExportType.FILE_SYSTEM, "/target/exporter"));
 

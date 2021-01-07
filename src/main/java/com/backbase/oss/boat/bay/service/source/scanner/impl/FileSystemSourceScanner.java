@@ -144,7 +144,7 @@ public class FileSystemSourceScanner implements SpecSourceScanner {
         try {
             if (capabilityFile.exists()) {
                 capability = objectMapper.readValue(capabilityFile, Capability.class);
-                if (!capabilityRepository.existsById(capability.getId()) && productRepository.existsById(product.getId())) {
+                if (!capabilityRepository.existsById(capability.getId()) ) {
                     capability.setProduct(product);
                     capabilityRepository.save(capability);
                 }
