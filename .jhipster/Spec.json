@@ -27,6 +27,10 @@
       "fieldType": "String"
     },
     {
+      "fieldName": "icon",
+      "fieldType": "String"
+    },
+    {
       "fieldName": "openApi",
       "fieldType": "byte[]",
       "fieldTypeBlobContent": "text",

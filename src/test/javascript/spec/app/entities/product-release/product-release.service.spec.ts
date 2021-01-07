@@ -20,7 +20,7 @@ describe('Service Tests', () => {
       service = injector.get(ProductReleaseService);
       httpMock = injector.get(HttpTestingController);
 
-      elemDefault = new ProductRelease(0, 'AAAAAAA', 'AAAAAAA');
+      elemDefault = new ProductRelease(0, 'AAAAAAA', 'AAAAAAA', false);
     });
 
     describe('Service methods', () => {
@@ -56,6 +56,7 @@ describe('Service Tests', () => {
           {
             key: 'BBBBBB',
             name: 'BBBBBB',
+            hide: true,
           },
           elemDefault
         );
@@ -74,6 +75,7 @@ describe('Service Tests', () => {
           {
             key: 'BBBBBB',
             name: 'BBBBBB',
+            hide: true,
           },
           elemDefault
         );

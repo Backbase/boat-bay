@@ -44,6 +44,9 @@ public class ProductReleaseResourceIT {
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 
+    private static final Boolean DEFAULT_HIDE = false;
+    private static final Boolean UPDATED_HIDE = true;
+
     @Autowired
     private ProductReleaseRepository productReleaseRepository;
 
@@ -67,7 +70,8 @@ public class ProductReleaseResourceIT {
     public static ProductRelease createEntity(EntityManager em) {
         ProductRelease productRelease = new ProductRelease()
             .key(DEFAULT_KEY)
-            .name(DEFAULT_NAME);
+            .name(DEFAULT_NAME)
+            .hide(DEFAULT_HIDE);
         // Add required entity
         Portal portal;
         if (TestUtil.findAll(em, Portal.class).isEmpty()) {
@@ -89,7 +93,8 @@ public class ProductReleaseResourceIT {
     public static ProductRelease createUpdatedEntity(EntityManager em) {
         ProductRelease productRelease = new ProductRelease()
             .key(UPDATED_KEY)
-            .name(UPDATED_NAME);
+            .name(UPDATED_NAME)
+            .hide(UPDATED_HIDE);
         // Add required entity
         Portal portal;
         if (TestUtil.findAll(em, Portal.class).isEmpty()) {
@@ -124,6 +129,7 @@ public class ProductReleaseResourceIT {
         ProductRelease testProductRelease = productReleaseList.get(productReleaseList.size() - 1);
         assertThat(testProductRelease.getKey()).isEqualTo(DEFAULT_KEY);
         assertThat(testProductRelease.getName()).isEqualTo(DEFAULT_NAME);
+        assertThat(testProductRelease.isHide()).isEqualTo(DEFAULT_HIDE);
     }
 
     @Test
@@ -196,7 +202,8 @@ public class ProductReleaseResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(productRelease.getId().intValue())))
             .andExpect(jsonPath("$.[*].key").value(hasItem(DEFAULT_KEY)))
-            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)));
+            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
+            .andExpect(jsonPath("$.[*].hide").value(hasItem(DEFAULT_HIDE.booleanValue())));
     }
     
     @SuppressWarnings({"unchecked"})
@@ -231,7 +238,8 @@ public class ProductReleaseResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(productRelease.getId().intValue()))
             .andExpect(jsonPath("$.key").value(DEFAULT_KEY))
-            .andExpect(jsonPath("$.name").value(DEFAULT_NAME));
+            .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
+            .andExpect(jsonPath("$.hide").value(DEFAULT_HIDE.booleanValue()));
     }
     @Test
     @Transactional
@@ -255,7 +263,8 @@ public class ProductReleaseResourceIT {
         em.detach(updatedProductRelease);
         updatedProductRelease
             .key(UPDATED_KEY)
-            .name(UPDATED_NAME);
+            .name(UPDATED_NAME)
+            .hide(UPDATED_HIDE);
 
         restProductReleaseMockMvc.perform(put("/api/product-releases")
             .contentType(MediaType.APPLICATION_JSON)
@@ -268,6 +277,7 @@ public class ProductReleaseResourceIT {
         ProductRelease testProductRelease = productReleaseList.get(productReleaseList.size() - 1);
         assertThat(testProductRelease.getKey()).isEqualTo(UPDATED_KEY);
         assertThat(testProductRelease.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testProductRelease.isHide()).isEqualTo(UPDATED_HIDE);
     }
 
     @Test

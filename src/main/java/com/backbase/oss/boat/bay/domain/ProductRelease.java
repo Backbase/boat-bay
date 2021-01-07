@@ -33,6 +33,9 @@ public class ProductRelease implements Serializable {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "hide")
+    private Boolean hide;
+
     @ManyToMany
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JoinTable(name = "product_release_spec",
@@ -78,6 +81,19 @@ public class ProductRelease implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Boolean isHide() {
+        return hide;
+    }
+
+    public ProductRelease hide(Boolean hide) {
+        this.hide = hide;
+        return this;
+    }
+
+    public void setHide(Boolean hide) {
+        this.hide = hide;
     }
 
     public Set<Spec> getSpecs() {
@@ -142,6 +158,7 @@ public class ProductRelease implements Serializable {
             "id=" + getId() +
             ", key='" + getKey() + "'" +
             ", name='" + getName() + "'" +
+            ", hide='" + isHide() + "'" +
             "}";
     }
 }

@@ -44,6 +44,10 @@
       "fieldType": "String"
     },
     {
+      "fieldName": "runOnStartup",
+      "fieldType": "Boolean"
+    },
+    {
       "fieldName": "specFilterSpEL",
       "fieldType": "String"
     },
@@ -61,6 +65,10 @@
     },
     {
       "fieldName": "serviceNameSpEL",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "specKeySpEL",
       "fieldType": "String"
     },
     {

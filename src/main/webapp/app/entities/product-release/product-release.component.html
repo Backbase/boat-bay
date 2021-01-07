@@ -25,6 +25,7 @@
                     <th scope="col" ><span>ID</span></th>
                     <th scope="col" ><span>Key</span></th>
                     <th scope="col" ><span>Name</span></th>
+                    <th scope="col" ><span>Hide</span></th>
                     <th scope="col" ><span>Spec</span></th>
                     <th scope="col" ><span>Portal</span></th>
                     <th scope="col"></th>
@@ -35,6 +36,7 @@
                     <td><a [routerLink]="['/product-release', productRelease.id, 'view']">{{ productRelease.id }}</a></td>
                     <td>{{ productRelease.key }}</td>
                     <td>{{ productRelease.name }}</td>
+                    <td>{{ productRelease.hide }}</td>
                     <td>
                         <span *ngFor="let spec of productRelease.specs; let last = last">
                             <a class="form-control-static" [routerLink]="['/spec', spec?.id, 'view']">{{ spec.id }}</a>{{ last ? '' : ', ' }}

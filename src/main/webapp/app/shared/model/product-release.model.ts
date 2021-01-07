@@ -5,10 +5,20 @@ export interface IProductRelease {
   id?: number;
   key?: string;
   name?: string;
+  hide?: boolean;
   specs?: ISpec[];
   portal?: IPortal;
 }
 
 export class ProductRelease implements IProductRelease {
-  constructor(public id?: number, public key?: string, public name?: string, public specs?: ISpec[], public portal?: IPortal) {}
+  constructor(
+    public id?: number,
+    public key?: string,
+    public name?: string,
+    public hide?: boolean,
+    public specs?: ISpec[],
+    public portal?: IPortal
+  ) {
+    this.hide = this.hide || false;
+  }
 }

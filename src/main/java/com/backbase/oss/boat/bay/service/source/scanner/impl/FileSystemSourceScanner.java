@@ -4,6 +4,7 @@ import com.backbase.oss.boat.bay.domain.Source;
 import com.backbase.oss.boat.bay.domain.SourcePath;
 import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.domain.enumeration.SourceType;
+import com.backbase.oss.boat.bay.service.source.scanner.ScanResult;
 import com.backbase.oss.boat.bay.service.source.scanner.SpecSourceScanner;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -28,7 +29,7 @@ public class FileSystemSourceScanner implements SpecSourceScanner {
     @Setter
     private Source source;
 
-    public List<Spec> scan() {
+    public ScanResult scan() {
 
         List<Spec> specs = new ArrayList<>();
         for (SourcePath p : source.getSourcePaths()) {
@@ -46,7 +47,8 @@ public class FileSystemSourceScanner implements SpecSourceScanner {
             }
 
         }
-        return specs;
+
+        return new ScanResult(source, specs);
     }
 
     @NotNull

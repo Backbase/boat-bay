@@ -12,7 +12,7 @@
   <ng-container *ngIf="products$ | async as products">
     <app-product
       *ngFor="let product of products"
-      [name]="product.title"
+      [name]="product.name"
       [isCollapsible]="true"
     ></app-product>
   </ng-container>

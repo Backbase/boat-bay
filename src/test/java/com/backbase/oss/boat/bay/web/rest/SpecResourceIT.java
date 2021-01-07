@@ -57,6 +57,9 @@ public class SpecResourceIT {
     private static final String DEFAULT_TITLE = "AAAAAAAAAA";
     private static final String UPDATED_TITLE = "BBBBBBBBBB";
 
+    private static final String DEFAULT_ICON = "AAAAAAAAAA";
+    private static final String UPDATED_ICON = "BBBBBBBBBB";
+
     private static final String DEFAULT_OPEN_API = "AAAAAAAAAA";
     private static final String UPDATED_OPEN_API = "BBBBBBBBBB";
 
@@ -137,6 +140,7 @@ public class SpecResourceIT {
             .name(DEFAULT_NAME)
             .version(DEFAULT_VERSION)
             .title(DEFAULT_TITLE)
+            .icon(DEFAULT_ICON)
             .openApi(DEFAULT_OPEN_API)
             .description(DEFAULT_DESCRIPTION)
             .createdOn(DEFAULT_CREATED_ON)
@@ -219,6 +223,7 @@ public class SpecResourceIT {
             .name(UPDATED_NAME)
             .version(UPDATED_VERSION)
             .title(UPDATED_TITLE)
+            .icon(UPDATED_ICON)
             .openApi(UPDATED_OPEN_API)
             .description(UPDATED_DESCRIPTION)
             .createdOn(UPDATED_CREATED_ON)
@@ -313,6 +318,7 @@ public class SpecResourceIT {
         assertThat(testSpec.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testSpec.getVersion()).isEqualTo(DEFAULT_VERSION);
         assertThat(testSpec.getTitle()).isEqualTo(DEFAULT_TITLE);
+        assertThat(testSpec.getIcon()).isEqualTo(DEFAULT_ICON);
         assertThat(testSpec.getOpenApi()).isEqualTo(DEFAULT_OPEN_API);
         assertThat(testSpec.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testSpec.getCreatedOn()).isEqualTo(DEFAULT_CREATED_ON);
@@ -520,6 +526,7 @@ public class SpecResourceIT {
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].version").value(hasItem(DEFAULT_VERSION)))
             .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE)))
+            .andExpect(jsonPath("$.[*].icon").value(hasItem(DEFAULT_ICON)))
             .andExpect(jsonPath("$.[*].openApi").value(hasItem(DEFAULT_OPEN_API.toString())))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
             .andExpect(jsonPath("$.[*].createdOn").value(hasItem(DEFAULT_CREATED_ON.toString())))
@@ -575,6 +582,7 @@ public class SpecResourceIT {
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.version").value(DEFAULT_VERSION))
             .andExpect(jsonPath("$.title").value(DEFAULT_TITLE))
+            .andExpect(jsonPath("$.icon").value(DEFAULT_ICON))
             .andExpect(jsonPath("$.openApi").value(DEFAULT_OPEN_API.toString()))
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
             .andExpect(jsonPath("$.createdOn").value(DEFAULT_CREATED_ON.toString()))
@@ -619,6 +627,7 @@ public class SpecResourceIT {
             .name(UPDATED_NAME)
             .version(UPDATED_VERSION)
             .title(UPDATED_TITLE)
+            .icon(UPDATED_ICON)
             .openApi(UPDATED_OPEN_API)
             .description(UPDATED_DESCRIPTION)
             .createdOn(UPDATED_CREATED_ON)
@@ -651,6 +660,7 @@ public class SpecResourceIT {
         assertThat(testSpec.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testSpec.getVersion()).isEqualTo(UPDATED_VERSION);
         assertThat(testSpec.getTitle()).isEqualTo(UPDATED_TITLE);
+        assertThat(testSpec.getIcon()).isEqualTo(UPDATED_ICON);
         assertThat(testSpec.getOpenApi()).isEqualTo(UPDATED_OPEN_API);
         assertThat(testSpec.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testSpec.getCreatedOn()).isEqualTo(UPDATED_CREATED_ON);
