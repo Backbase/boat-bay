@@ -29,10 +29,13 @@ public class SourceScannerTest {
 
     @Autowired
     ProductRepository productRepository;
+
     @Autowired
     CapabilityRepository capabilityRepository;
+
     @Autowired
     ServiceDefinitionRepository serviceDefinitionRepository;
+
     @Autowired
     SpecRepository specRepository;
 
@@ -43,12 +46,12 @@ public class SourceScannerTest {
     public void fileSystemSourceScannerTest() throws ExportException {
         FileSystemSourceScanner scanner =new FileSystemSourceScanner(portalRepository,productRepository,capabilityRepository,serviceDefinitionRepository,specRepository,new ObjectMapper(new YAMLFactory()));
         Source source = new Source();
-        source.addSourcePath(new SourcePath().name("/Users/sophiej/Documents/Projects/opensauce/boat-bay/boat-bay-data/Artifactory"));
+        source.addSourcePath(new SourcePath().name("/Users/sophiej/Documents/Projects/opensauce/boat-bay/boat-bay-data/repo.backbase.com"));
         scanner.setSource(source);
-        ScanResult specs = scanner.scan();
-        Portal portal = portalRepository.getOne(specs.getSpecs().get(0).getPortal().getId());
+        ScanResult result = scanner.scan();
+        Portal portal = result.getSource().getPortal();
 
-        ExportInfo export = fileSystemExporter.export(new ExportOptions(portal, ExportType.FILE_SYSTEM, "/target/exporter"));
+        ExportInfo export = fileSystemExporter.export(new ExportOptions(portal, ExportType.FILE_SYSTEM, "/Users/sophiej/Documents/Projects/opensauce/boat-bay/boat-bay/test-target/exporter"));
 
         assertThat(export.toString().equals(""));
 
