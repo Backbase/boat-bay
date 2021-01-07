@@ -111,6 +111,7 @@ export class ApiSpecsService {
           icon: api['x-icon'] || '',
           version: moduleVersion.version,
           portalPath: moduleVersion.version,
+          specs: Object.values(api.specs),
         });
       }
 

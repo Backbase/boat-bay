@@ -1,3 +1,5 @@
+import { Spec } from 'app/models/spec';
+
 export interface UiApiModule {
   title: string;
   version: string;
@@ -5,4 +7,5 @@ export interface UiApiModule {
   description: string;
   tags: string[];
   icon: string;
+  specs: Spec[];
 }
