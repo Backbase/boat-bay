@@ -8,5 +8,6 @@ public class ProductReleaseDto {
 
     String key;
     String title;
-    Map<String, String> products;
+    Map<String, String> services;
+    Map<String, String> specs;
 }

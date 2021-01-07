@@ -10,6 +10,7 @@ import { ApiSpecsService } from 'app/services/api-specs.service';
   styleUrls: ['./product.component.scss'],
 })
 export class ProductComponent implements OnInit, OnDestroy {
+  @Input() key!: string;
   @Input() name!: string;
   @Input() isCollapsible = false;
   @ViewChild(MatAccordion) accordion!: MatAccordion;
@@ -23,8 +24,8 @@ export class ProductComponent implements OnInit, OnDestroy {
   constructor(private apiSpecsService: ApiSpecsService) {}
 
   ngOnInit(): void {
-    this.apiSpecs$ = this.apiSpecsService.getApiModulesFor(this.name);
-    this.totalApi$ = this.apiSpecsService.getTotalApiPerProduct(this.name);
+    this.apiSpecs$ = this.apiSpecsService.getApiModulesFor(this.key);
+    this.totalApi$ = this.apiSpecsService.getTotalApiPerProduct(this.key);
     this.subscription = this.hasSearchText$.subscribe(value => {
       if (value) this.accordion.openAll();
     });

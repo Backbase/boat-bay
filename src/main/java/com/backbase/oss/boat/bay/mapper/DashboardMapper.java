@@ -15,9 +15,13 @@ import com.backbase.oss.boat.bay.dto.ProductDto;
 import com.backbase.oss.boat.bay.dto.ProductReleaseDto;
 import com.backbase.oss.boat.bay.dto.SpecDto;
 import com.backbase.oss.boat.bay.repository.extended.BoatPortalRepository;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 import org.mapstruct.Mapper;
@@ -46,16 +50,6 @@ public interface DashboardMapper {
     @Mapping(target = "icon", source = "spec.specType.icon")
     SpecDto mapSpec(Spec spec);
 
-    @NotNull
-    private ProductReleaseDto mapProductRelease(ProductRelease productRelease) {
-        ProductReleaseDto pr = new ProductReleaseDto();
-        pr.setKey(productRelease.getKey());
-        pr.setTitle(productRelease.getName());
-        pr.setProducts(productRelease.getSpecs()
-            .stream()
-            .collect(Collectors.toMap(Spec::getKey, Spec::getVersion)));
-        return pr;
-    }
 
     default Map<String, CapabilityDto> mapCapabilities(Portal portal) {
         return portal.getProducts().stream()
@@ -81,12 +75,45 @@ public interface DashboardMapper {
     }
 
 
-    default Map<String, ProductReleaseDto> mapReleases(Portal portal) {
-        return portal.getProductReleases().stream()
-            .map(this::mapProductRelease)
-            .collect(Collectors.toMap(ProductReleaseDto::getKey, productReleaseDto -> productReleaseDto));
+    default Map<String, Map<String, ProductReleaseDto>> mapReleases(Portal portal) {
+        Map<String, Map<String, ProductReleaseDto>> result = new LinkedHashMap<>();
+        portal.getProductReleases()
+            .forEach(productRelease -> result.put(productRelease.getKey(), mapProductRelease(productRelease)));
+        return result;
+
     }
 
+    @NotNull
+    private Map<String, ProductReleaseDto> mapProductRelease(ProductRelease productRelease) {
+        Map<String, ProductReleaseDto> result = new LinkedHashMap<>();
+        productRelease.getSpecs().stream().collect(Collectors.groupingBy(Spec::getProduct)).forEach((product, specs) -> {
+            ProductReleaseDto pr = new ProductReleaseDto();
+            pr.setKey(productRelease.getKey());
+            pr.setTitle(productRelease.getName());
+            pr.setServices(specs.stream().map(Spec::getServiceDefinition)
+                .distinct()
+                .sorted(Comparator.comparing(ServiceDefinition::getName))
+                .collect(toLinkedMap(ServiceDefinition::getKey,ServiceDefinition::getName)));
+            pr.setSpecs(specs.stream()
+                .collect(Collectors.toMap(Spec::getKey, Spec::getVersion)));
+            result.put(product.getKey(), pr);
+        });
+        return result;
+    }
+
+    static <T, K, U> Collector<T, ?, Map<K,U>> toLinkedMap(
+        Function<? super T, ? extends K> keyMapper,
+        Function<? super T, ? extends U> valueMapper)
+    {
+        return Collectors.toMap(
+            keyMapper,
+            valueMapper,
+            (u, v) -> {
+                throw new IllegalStateException(String.format("Duplicate key %s", u));
+            },
+            LinkedHashMap::new
+        );
+    }
 
     default Map<String, ProductDto> mapProducts(Set<Product> products) {
         return products.stream()
