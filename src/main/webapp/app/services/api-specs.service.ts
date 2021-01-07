@@ -89,16 +89,17 @@ export class ApiSpecsService {
   public getApiModulesFor(product: string): Observable<UiApiModule[]> {
     return combineLatest([this.currentReleaseVersion$$, this.releases$, this.filteredApiModules$]).pipe(
       map(([selectedVersion, releases, apiModulesMap]) => {
-        const formattedProductName = product.trim().toLowerCase();
-        const productsForSelectedReleas = releases[selectedVersion];
+        const productsForSelectedRelease = releases[selectedVersion];
+        const productRelease = productsForSelectedRelease[product];
+        const servicesForSelectedProduct = productRelease.services;
 
-        return this.constructApiStructureForModules(productsForSelectedReleas[formattedProductName].modules, apiModulesMap);
+        return this.constructApiStructureForModules(servicesForSelectedProduct, apiModulesMap);
       })
     );
   }
 
-  private constructApiStructureForModules(modulesForSelectedProduct: UiApiModule[], apiModulesMap: Map<String, ApiModule>): UiApiModule[] {
-    const moduleNames = Object.entries(modulesForSelectedProduct);
+  private constructApiStructureForModules(servicesForSelectedProduct: UiApiModule[], apiModulesMap: Map<String, ApiModule>): UiApiModule[] {
+    const moduleNames = Object.entries(servicesForSelectedProduct);
 
     return moduleNames.reduce((listOfApiModules: UiApiModule[], [moduleName, moduleVersion]: [string, UiApiModule]) => {
       const api = apiModulesMap.get(moduleName);
@@ -109,7 +110,7 @@ export class ApiSpecsService {
           tags: api.tags,
           icon: api['x-icon'] || '',
           version: moduleVersion.version,
-          portalPath: api.versions[moduleVersion.version],
+          portalPath: moduleVersion.version,
         });
       }
 
