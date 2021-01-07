@@ -55,6 +55,9 @@ public class Source implements Serializable {
     @Column(name = "cron_expression")
     private String cronExpression;
 
+    @Column(name = "run_on_startup")
+    private Boolean runOnStartup;
+
     @Column(name = "spec_filter_sp_el")
     private String specFilterSpEL;
 
@@ -69,6 +72,9 @@ public class Source implements Serializable {
 
     @Column(name = "service_name_sp_el")
     private String serviceNameSpEL;
+
+    @Column(name = "spec_key_sp_el")
+    private String specKeySpEL;
 
     @Column(name = "version_sp_el")
     private String versionSpEL;
@@ -211,6 +217,19 @@ public class Source implements Serializable {
         this.cronExpression = cronExpression;
     }
 
+    public Boolean isRunOnStartup() {
+        return runOnStartup;
+    }
+
+    public Source runOnStartup(Boolean runOnStartup) {
+        this.runOnStartup = runOnStartup;
+        return this;
+    }
+
+    public void setRunOnStartup(Boolean runOnStartup) {
+        this.runOnStartup = runOnStartup;
+    }
+
     public String getSpecFilterSpEL() {
         return specFilterSpEL;
     }
@@ -274,6 +293,19 @@ public class Source implements Serializable {
 
     public void setServiceNameSpEL(String serviceNameSpEL) {
         this.serviceNameSpEL = serviceNameSpEL;
+    }
+
+    public String getSpecKeySpEL() {
+        return specKeySpEL;
+    }
+
+    public Source specKeySpEL(String specKeySpEL) {
+        this.specKeySpEL = specKeySpEL;
+        return this;
+    }
+
+    public void setSpecKeySpEL(String specKeySpEL) {
+        this.specKeySpEL = specKeySpEL;
     }
 
     public String getVersionSpEL() {
@@ -409,11 +441,13 @@ public class Source implements Serializable {
             ", username='" + getUsername() + "'" +
             ", password='" + getPassword() + "'" +
             ", cronExpression='" + getCronExpression() + "'" +
+            ", runOnStartup='" + isRunOnStartup() + "'" +
             ", specFilterSpEL='" + getSpecFilterSpEL() + "'" +
             ", capabilityKeySpEL='" + getCapabilityKeySpEL() + "'" +
             ", capabilityNameSpEL='" + getCapabilityNameSpEL() + "'" +
             ", serviceKeySpEL='" + getServiceKeySpEL() + "'" +
             ", serviceNameSpEL='" + getServiceNameSpEL() + "'" +
+            ", specKeySpEL='" + getSpecKeySpEL() + "'" +
             ", versionSpEL='" + getVersionSpEL() + "'" +
             ", overwriteChanges='" + isOverwriteChanges() + "'" +
             "}";

@@ -27,6 +27,7 @@ export class ProductReleaseUpdateComponent implements OnInit {
     id: [],
     key: [null, [Validators.required]],
     name: [null, [Validators.required]],
+    hide: [],
     specs: [],
     portal: [null, Validators.required],
   });
@@ -54,6 +55,7 @@ export class ProductReleaseUpdateComponent implements OnInit {
       id: productRelease.id,
       key: productRelease.key,
       name: productRelease.name,
+      hide: productRelease.hide,
       specs: productRelease.specs,
       portal: productRelease.portal,
     });
@@ -79,6 +81,7 @@ export class ProductReleaseUpdateComponent implements OnInit {
       id: this.editForm.get(['id'])!.value,
       key: this.editForm.get(['key'])!.value,
       name: this.editForm.get(['name'])!.value,
+      hide: this.editForm.get(['hide'])!.value,
       specs: this.editForm.get(['specs'])!.value,
       portal: this.editForm.get(['portal'])!.value,
     };

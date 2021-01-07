@@ -4,6 +4,7 @@ import com.backbase.oss.boat.bay.domain.Source;
 import com.backbase.oss.boat.bay.domain.SourcePath;
 import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.domain.enumeration.SourceType;
+import com.backbase.oss.boat.bay.service.source.scanner.ScanResult;
 import com.backbase.oss.boat.bay.service.source.scanner.SpecSourceScanner;
 import com.backbase.oss.boat.bay.util.SpringExpressionUtils;
 import java.io.IOException;
@@ -39,8 +40,9 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
     private Artifactory artifactory;
     private String repository;
     private String baseUrl;
-    private Set<SourcePath> paths = new LinkedHashSet<>();
+    private final Set<SourcePath> paths = new LinkedHashSet<>();
 
+    @SuppressWarnings("UseBulkOperation")
     @Override
     public void setSource(Source source) {
         this.source = source;
@@ -56,9 +58,9 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
         return source;
     }
 
-    public List<Spec> scan() {
+    public ScanResult scan() {
         log.info("Scanning Artifactory Source: {}", source.getName());
-        return getArtifactory().searches()
+        List<Spec> specs = getArtifactory().searches()
             .repositories(repository)
             .artifactsByName(source.getFilter())
             .doSearch()
@@ -70,6 +72,8 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
             .filter(Optional::isPresent)
             .map(Optional::get)
             .collect(Collectors.toList());
+
+        return new ScanResult(source, specs);
     }
 
     private Artifactory getArtifactory() {

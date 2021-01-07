@@ -16,6 +16,10 @@
                 <dd>
                     <span>{{ productRelease.name }}</span>
                 </dd>
+                <dt><span>Hide</span></dt>
+                <dd>
+                    <span>{{ productRelease.hide }}</span>
+                </dd>
                 <dt><span>Spec</span></dt>
                 <dd>
                     <span *ngFor="let spec of productRelease.specs; let last = last">

@@ -15,11 +15,13 @@ export interface ISource {
   username?: string;
   password?: string;
   cronExpression?: string;
+  runOnStartup?: boolean;
   specFilterSpEL?: string;
   capabilityKeySpEL?: string;
   capabilityNameSpEL?: string;
   serviceKeySpEL?: string;
   serviceNameSpEL?: string;
+  specKeySpEL?: string;
   versionSpEL?: string;
   overwriteChanges?: boolean;
   sourcePaths?: ISourcePath[];
@@ -40,11 +42,13 @@ export class Source implements ISource {
     public username?: string,
     public password?: string,
     public cronExpression?: string,
+    public runOnStartup?: boolean,
     public specFilterSpEL?: string,
     public capabilityKeySpEL?: string,
     public capabilityNameSpEL?: string,
     public serviceKeySpEL?: string,
     public serviceNameSpEL?: string,
+    public specKeySpEL?: string,
     public versionSpEL?: string,
     public overwriteChanges?: boolean,
     public sourcePaths?: ISourcePath[],
@@ -54,6 +58,7 @@ export class Source implements ISource {
     public serviceDefinition?: IServiceDefinition
   ) {
     this.active = this.active || false;
+    this.runOnStartup = this.runOnStartup || false;
     this.overwriteChanges = this.overwriteChanges || false;
   }
 }

@@ -1,5 +1,6 @@
 package com.backbase.oss.boat.bay.service.source;
 
+import com.backbase.oss.boat.bay.domain.ProductRelease;
 import com.backbase.oss.boat.bay.domain.Source;
 import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.events.SpecSourceUpdatedEvent;
@@ -38,10 +39,8 @@ public class SpecSourceScheduler {
 
     final Map<Long, ScheduledFuture<?>> jobsMap = new HashMap<>();
 
-    @EventListener({ContextRefreshedEvent.class, SpecSourceUpdatedEvent.class})
-    @Async
-    @Transactional
-    public void setupScheduledTasks() {
+    @EventListener(SpecSourceUpdatedEvent.class)
+    public void scheduleTasks() {
         log.info("Setting up Scanner Tasks");
         jobsMap.forEach((jobId, job) -> removeTaskFromScheduler(jobId));
         boatSourceRepository.findAllByCronExpressionIsNotNullAndActiveIsTrue()
@@ -52,19 +51,30 @@ public class SpecSourceScheduler {
                 log.info("Setup Source Scanner: {} with cron expression: {}. First execution: {}", source.getName(), trigger.getExpression(), trigger.nextExecutionTime(new SimpleTriggerContext()));
                 addTaskToScheduler(source.getId(), job, trigger);
             });
+
+    }
+
+
+    @EventListener({ContextRefreshedEvent.class})
+    @Async
+    @Transactional
+    public void setupScheduledTasks() {
+        scheduleTasks();
+        boatSourceRepository.findAllByActiveIsTrueAndRunOnStartupIsTrue().forEach(source -> {
+            SpecSourceScanner scanner = createScanner(source);
+            specSourceResolver.process(scanner.scan());
+        });
     }
 
     private Runnable setupSpecScannerJob(SpecSourceScanner scanner) {
         return () -> {
             log.info("Executing scheduled scanner: {} with source: {}", scanner.getSourceType(), scanner.getSource());
-            List<Spec> scan = scanner.scan();
-            specSourceResolver.processSpecs(scan);
+            specSourceResolver.process(scanner.scan());
         };
 
     }
 
     @SuppressWarnings({"java:S1301", "SwitchStatementWithTooFewBranches"})
-    @Transactional
     private SpecSourceScanner createScanner(Source source) {
         SpecSourceScanner specSourceScanner;
         switch (source.getType()) {
