@@ -3,7 +3,8 @@ import { Product } from './product';
 
 export interface ProductRelease {
   title: string;
-  modules: { [key: string]: string };
+  services: { [key: string]: string };
+  specs: { [key: string]: string };
 }
 
 export interface PortalView {

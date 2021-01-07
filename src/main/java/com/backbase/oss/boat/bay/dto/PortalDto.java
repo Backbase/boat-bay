@@ -11,7 +11,7 @@ public class PortalDto {
     private String key;
     private String name;
     private String title;
-    private Map<String, ProductReleaseDto> releases = new LinkedHashMap<>();
+    private Map<String, Map<String,ProductReleaseDto>> releases = new LinkedHashMap<>();
     private Map<String, ProductDto> products = new LinkedHashMap<>();
     private Map<String, CapabilityDto> capabilities = new LinkedHashMap<>();
 
