@@ -29,6 +29,7 @@ public class Tag implements Serializable {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
+    @Lob
     @Column(name = "description")
     private String description;
 

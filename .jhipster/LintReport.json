@@ -31,7 +31,7 @@
       "relationshipType": "one-to-many",
       "otherEntityName": "lintRuleViolation",
       "otherEntityRelationshipName": "lintReport",
-      "relationshipName": "lintRuleViolation"
+      "relationshipName": "violations"
     }
   ],
   "changelogDate": "20201223103015",

@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatAccordion } from '@angular/material/expansion';
 import { Observable, Subscription } from 'rxjs';
-import { UiApiModule } from 'app/models';
+import { UiApiModule } from 'app/models/dashboard/v1';
 import { ApiSpecsService } from 'app/services/api-specs.service';
 
 @Component({

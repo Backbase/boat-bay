@@ -1,4 +1,4 @@
-import { Spec } from 'app/models/spec';
+import { Spec } from './';
 
 export interface ApiModule {
   title: string;

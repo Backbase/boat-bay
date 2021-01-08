@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Base64Utils;
 import javax.persistence.EntityManager;
 import java.util.List;
 
@@ -99,7 +100,7 @@ public class LintRuleSetResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(lintRuleSet.getId().intValue())))
             .andExpect(jsonPath("$.[*].ruleSetId").value(hasItem(DEFAULT_RULE_SET_ID)))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
-            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
             .andExpect(jsonPath("$.[*].externalUrl").value(hasItem(DEFAULT_EXTERNAL_URL)));
     }
     
@@ -116,7 +117,7 @@ public class LintRuleSetResourceIT {
             .andExpect(jsonPath("$.id").value(lintRuleSet.getId().intValue()))
             .andExpect(jsonPath("$.ruleSetId").value(DEFAULT_RULE_SET_ID))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
-            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
             .andExpect(jsonPath("$.externalUrl").value(DEFAULT_EXTERNAL_URL));
     }
     @Test

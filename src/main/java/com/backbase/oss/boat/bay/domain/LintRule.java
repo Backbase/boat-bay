@@ -1,6 +1,5 @@
 package com.backbase.oss.boat.bay.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -51,10 +50,6 @@ public class LintRule implements Serializable {
     @NotNull
     @Column(name = "enabled", nullable = false)
     private Boolean enabled;
-
-    @OneToOne(mappedBy = "lintRule")
-    @JsonIgnore
-    private LintRuleViolation lintRuleViolation;
 
     @ManyToOne(optional = false)
     @NotNull
@@ -159,19 +154,6 @@ public class LintRule implements Serializable {
 
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
-    }
-
-    public LintRuleViolation getLintRuleViolation() {
-        return lintRuleViolation;
-    }
-
-    public LintRule lintRuleViolation(LintRuleViolation lintRuleViolation) {
-        this.lintRuleViolation = lintRuleViolation;
-        return this;
-    }
-
-    public void setLintRuleViolation(LintRuleViolation lintRuleViolation) {
-        this.lintRuleViolation = lintRuleViolation;
     }
 
     public LintRuleSet getRuleSet() {

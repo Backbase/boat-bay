@@ -93,6 +93,7 @@ public class CacheConfiguration {
             createCache(cm, com.backbase.oss.boat.bay.domain.Spec.class.getName() + ".tags");
             createCache(cm, com.backbase.oss.boat.bay.domain.Tag.class.getName());
             createCache(cm, com.backbase.oss.boat.bay.domain.Tag.class.getName() + ".specs");
+            createCache(cm, com.backbase.oss.boat.bay.domain.LintReport.class.getName() + ".violations");
             // jhipster-needle-ehcache-add-entry
             createCache(cm, BoatLintRuleValidatorFactory.API_VALIDATORS);
             createCache(cm, BoatLintRuleValidatorFactory.API_RULE_POLICY);

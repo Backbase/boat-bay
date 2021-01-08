@@ -9,7 +9,7 @@ export interface ILintReport {
   passed?: boolean;
   lintedOn?: Moment;
   spec?: ISpec;
-  lintRuleViolations?: ILintRuleViolation[];
+  violations?: ILintRuleViolation[];
 }
 
 export class LintReport implements ILintReport {
@@ -20,7 +20,7 @@ export class LintReport implements ILintReport {
     public passed?: boolean,
     public lintedOn?: Moment,
     public spec?: ISpec,
-    public lintRuleViolations?: ILintRuleViolation[]
+    public violations?: ILintRuleViolation[]
   ) {
     this.passed = this.passed || false;
   }

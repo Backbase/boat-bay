@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable, throwError } from 'rxjs';
 import { catchError, first, map, shareReplay } from 'rxjs/operators';
 
-import { ApiModule, PortalView, Product, UiApiModule } from '../models';
+import { ApiModule, PortalView, Product, UiApiModule } from 'app/models/dashboard/v1';
 import { NAVIGATION_FILE_PATH } from '../tokens';
 import { DashboardViewService } from 'app/services/dashboard.view.service';
 

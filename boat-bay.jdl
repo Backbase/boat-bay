@@ -97,7 +97,7 @@ entity Spec {
 
 entity Tag {
     name String required unique
-    description String
+    description TextBlob
 }
 
 entity SpecType {
@@ -146,7 +146,7 @@ entity LintRule {
 entity LintRuleSet {
     ruleSetId String required unique
     name String required
-    description String
+    description TextBlob
     externalUrl String
 }
 
@@ -174,7 +174,7 @@ entity LintReport {
 
 entity LintRuleViolation {
     name String required
-	description String required
+	description TextBlob required
 	url String
 	severity Severity
     lineStart Integer
@@ -209,7 +209,7 @@ relationship OneToMany {
 	Product to Capability{product(name) required}
 	Capability to ServiceDefinition{capability(name) required}
 	ServiceDefinition to Spec{serviceDefinition(name) required}
-	LintReport to LintRuleViolation{lintReport(name) required}
+	LintReport{violations} to LintRuleViolation{lintReport(name)}
 	LintRuleSet to LintRule{ruleSet(name) required}
 	PortalLintRuleSet to PortalLintRule{portalRuleSet(name) required}
 	Source to SourcePath{source(name)}
@@ -227,14 +227,13 @@ relationship ManyToOne {
     Source{capability(name)} to Capability
     Source{serviceDefinition(name)} to ServiceDefinition
 
+    LintRuleViolation{lintRule(ruleId) required} to LintRule
+
 }
 
 relationship OneToOne {
     Dashboard{defaultPortal(name) required} to Portal
 	LintReport to Spec
-	LintRuleViolation to LintRule
-
-
     PortalLintRuleSet{portal(name) required} to Portal{portalRuleSet(name)}
     PortalLintRuleConfig to PortalLintRule
 

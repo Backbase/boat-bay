@@ -83,6 +83,7 @@ class LegacyPortalDto {
     @Data
     static class SpecDto {
 
+        private String id;
         private String name;
         private String key;
         private String title;

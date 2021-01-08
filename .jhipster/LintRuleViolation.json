@@ -10,7 +10,8 @@
     },
     {
       "fieldName": "description",
-      "fieldType": "String",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text",
       "fieldValidateRules": [
         "required"
       ]
@@ -39,18 +40,17 @@
   ],
   "relationships": [
     {
-      "relationshipType": "one-to-one",
+      "relationshipType": "many-to-one",
       "otherEntityName": "lintRule",
       "otherEntityRelationshipName": "lintRuleViolation",
+      "relationshipValidateRules": "required",
       "relationshipName": "lintRule",
-      "otherEntityField": "id",
-      "ownerSide": true
+      "otherEntityField": "ruleId"
     },
     {
       "relationshipType": "many-to-one",
       "otherEntityName": "lintReport",
-      "otherEntityRelationshipName": "lintRuleViolation",
-      "relationshipValidateRules": "required",
+      "otherEntityRelationshipName": "violations",
       "relationshipName": "lintReport",
       "otherEntityField": "name"
     }

@@ -1,4 +1,3 @@
-import { ILintRuleViolation } from 'app/shared/model/lint-rule-violation.model';
 import { ILintRuleSet } from 'app/shared/model/lint-rule-set.model';
 import { Severity } from 'app/shared/model/enumerations/severity.model';
 
@@ -11,7 +10,6 @@ export interface ILintRule {
   description?: string;
   externalUrl?: string;
   enabled?: boolean;
-  lintRuleViolation?: ILintRuleViolation;
   ruleSet?: ILintRuleSet;
 }
 
@@ -25,7 +23,6 @@ export class LintRule implements ILintRule {
     public description?: string,
     public externalUrl?: string,
     public enabled?: boolean,
-    public lintRuleViolation?: ILintRuleViolation,
     public ruleSet?: ILintRuleSet
   ) {
     this.enabled = this.enabled || false;

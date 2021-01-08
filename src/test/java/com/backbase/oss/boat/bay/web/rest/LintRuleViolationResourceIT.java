@@ -2,7 +2,7 @@ package com.backbase.oss.boat.bay.web.rest;
 
 import com.backbase.oss.boat.bay.BoatBayApp;
 import com.backbase.oss.boat.bay.domain.LintRuleViolation;
-import com.backbase.oss.boat.bay.domain.LintReport;
+import com.backbase.oss.boat.bay.domain.LintRule;
 import com.backbase.oss.boat.bay.repository.LintRuleViolationRepository;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Base64Utils;
 import javax.persistence.EntityManager;
 import java.util.List;
 
@@ -79,15 +80,15 @@ public class LintRuleViolationResourceIT {
             .lineEnd(DEFAULT_LINE_END)
             .jsonPointer(DEFAULT_JSON_POINTER);
         // Add required entity
-        LintReport lintReport;
-        if (TestUtil.findAll(em, LintReport.class).isEmpty()) {
-            lintReport = LintReportResourceIT.createEntity(em);
-            em.persist(lintReport);
+        LintRule lintRule;
+        if (TestUtil.findAll(em, LintRule.class).isEmpty()) {
+            lintRule = LintRuleResourceIT.createEntity(em);
+            em.persist(lintRule);
             em.flush();
         } else {
-            lintReport = TestUtil.findAll(em, LintReport.class).get(0);
+            lintRule = TestUtil.findAll(em, LintRule.class).get(0);
         }
-        lintRuleViolation.setLintReport(lintReport);
+        lintRuleViolation.setLintRule(lintRule);
         return lintRuleViolation;
     }
     /**
@@ -106,15 +107,15 @@ public class LintRuleViolationResourceIT {
             .lineEnd(UPDATED_LINE_END)
             .jsonPointer(UPDATED_JSON_POINTER);
         // Add required entity
-        LintReport lintReport;
-        if (TestUtil.findAll(em, LintReport.class).isEmpty()) {
-            lintReport = LintReportResourceIT.createUpdatedEntity(em);
-            em.persist(lintReport);
+        LintRule lintRule;
+        if (TestUtil.findAll(em, LintRule.class).isEmpty()) {
+            lintRule = LintRuleResourceIT.createUpdatedEntity(em);
+            em.persist(lintRule);
             em.flush();
         } else {
-            lintReport = TestUtil.findAll(em, LintReport.class).get(0);
+            lintRule = TestUtil.findAll(em, LintRule.class).get(0);
         }
-        lintRuleViolation.setLintReport(lintReport);
+        lintRuleViolation.setLintRule(lintRule);
         return lintRuleViolation;
     }
 
@@ -187,25 +188,6 @@ public class LintRuleViolationResourceIT {
 
     @Test
     @Transactional
-    public void checkDescriptionIsRequired() throws Exception {
-        int databaseSizeBeforeTest = lintRuleViolationRepository.findAll().size();
-        // set the field null
-        lintRuleViolation.setDescription(null);
-
-        // Create the LintRuleViolation, which fails.
-
-
-        restLintRuleViolationMockMvc.perform(post("/api/lint-rule-violations")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(lintRuleViolation)))
-            .andExpect(status().isBadRequest());
-
-        List<LintRuleViolation> lintRuleViolationList = lintRuleViolationRepository.findAll();
-        assertThat(lintRuleViolationList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void getAllLintRuleViolations() throws Exception {
         // Initialize the database
         lintRuleViolationRepository.saveAndFlush(lintRuleViolation);
@@ -216,7 +198,7 @@ public class LintRuleViolationResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(lintRuleViolation.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
-            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
             .andExpect(jsonPath("$.[*].url").value(hasItem(DEFAULT_URL)))
             .andExpect(jsonPath("$.[*].severity").value(hasItem(DEFAULT_SEVERITY.toString())))
             .andExpect(jsonPath("$.[*].lineStart").value(hasItem(DEFAULT_LINE_START)))
@@ -236,7 +218,7 @@ public class LintRuleViolationResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(lintRuleViolation.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
-            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
             .andExpect(jsonPath("$.url").value(DEFAULT_URL))
             .andExpect(jsonPath("$.severity").value(DEFAULT_SEVERITY.toString()))
             .andExpect(jsonPath("$.lineStart").value(DEFAULT_LINE_START))

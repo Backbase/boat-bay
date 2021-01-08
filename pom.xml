@@ -418,13 +418,13 @@
         <dependency>
             <groupId>com.backbase.oss</groupId>
             <artifactId>boat-engine</artifactId>
-            <version>0.12.2-SNAPSHOT</version>
+            <version>0.13.0</version>
         </dependency>
 
         <dependency>
             <groupId>com.backbase.oss</groupId>
             <artifactId>boat-quay-lint</artifactId>
-            <version>0.12.2-SNAPSHOT</version>
+            <version>0.13.0</version>
         </dependency>
 
 
