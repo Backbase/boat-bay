@@ -1,3 +1,5 @@
+import { Spec } from 'app/models/spec';
+
 export interface ApiModule {
   title: string;
   versions: { [key: string]: string };
@@ -5,4 +7,5 @@ export interface ApiModule {
   tags: string[];
   id?: number;
   'x-icon'?: string;
+  specs: { [key: string]: Spec };
 }
