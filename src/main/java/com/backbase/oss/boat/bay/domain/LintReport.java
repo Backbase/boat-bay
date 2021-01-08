@@ -42,7 +42,7 @@ public class LintReport implements Serializable {
 
     @OneToMany(mappedBy = "lintReport")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    private Set<LintRuleViolation> lintRuleViolations = new HashSet<>();
+    private Set<LintRuleViolation> violations = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -118,29 +118,29 @@ public class LintReport implements Serializable {
         this.spec = spec;
     }
 
-    public Set<LintRuleViolation> getLintRuleViolations() {
-        return lintRuleViolations;
+    public Set<LintRuleViolation> getViolations() {
+        return violations;
     }
 
-    public LintReport lintRuleViolations(Set<LintRuleViolation> lintRuleViolations) {
-        this.lintRuleViolations = lintRuleViolations;
+    public LintReport violations(Set<LintRuleViolation> lintRuleViolations) {
+        this.violations = lintRuleViolations;
         return this;
     }
 
-    public LintReport addLintRuleViolation(LintRuleViolation lintRuleViolation) {
-        this.lintRuleViolations.add(lintRuleViolation);
+    public LintReport addViolations(LintRuleViolation lintRuleViolation) {
+        this.violations.add(lintRuleViolation);
         lintRuleViolation.setLintReport(this);
         return this;
     }
 
-    public LintReport removeLintRuleViolation(LintRuleViolation lintRuleViolation) {
-        this.lintRuleViolations.remove(lintRuleViolation);
+    public LintReport removeViolations(LintRuleViolation lintRuleViolation) {
+        this.violations.remove(lintRuleViolation);
         lintRuleViolation.setLintReport(null);
         return this;
     }
 
-    public void setLintRuleViolations(Set<LintRuleViolation> lintRuleViolations) {
-        this.lintRuleViolations = lintRuleViolations;
+    public void setViolations(Set<LintRuleViolation> lintRuleViolations) {
+        this.violations = lintRuleViolations;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 

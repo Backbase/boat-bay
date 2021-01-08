@@ -7,7 +7,7 @@ import { PortalView } from 'app/models';
 
 @Injectable({ providedIn: 'root' })
 export class DashboardViewService {
-  public resourceUrl = SERVER_API_URL + 'api/view/dashboard';
+  public resourceUrl = SERVER_API_URL + 'api/v1/dashboard';
 
   constructor(protected http: HttpClient) {}
 

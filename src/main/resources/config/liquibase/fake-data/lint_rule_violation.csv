@@ -1,11 +1,11 @@
-id;name;description;url;severity;line_start;line_end;json_pointer;lint_report_id
-1;Avon Ethiopian Birr;Rial Omani;https://destinee.biz;HINT;85114;70635;Orchestrator;1
-2;Italy;withdrawal Sleek COM;http://nolan.biz;MAY;84553;87795;generating copying;2
-3;bandwidth-monitored;wireless withdrawal Clothing;http://cleveland.com;HINT;46387;81614;program scalable calculating;3
-4;virtual;Checking Account;http://jaqueline.org;MUST;73321;51177;Legacy;4
-5;parsing revolutionize Designer;Lebanon Oklahoma;http://trevor.info;MUST;62282;29777;Awesome Rubber Shirt Auto Loan Account Wisconsin;5
-6;Central Personal Loan Account;niches Credit Card Account Specialist;https://rosendo.name;SHOULD;48381;89487;Industrial;6
-7;Home;Pennsylvania;http://merle.name;MAY;98755;55539;Music Saint Pierre and Miquelon;7
-8;Agent RAM user-facing;Tugrik strategy Program;https://preston.com;HINT;29940;8127;Incredible;8
-9;Cambridgeshire teal;Stravenue Lead synergies;https://javier.name;MUST;177;26929;brand;9
-10;Developer Sleek Fresh Computer payment;front-end;https://art.info;MAY;51275;16929;Bedfordshire HTTP Burkina Faso;10
+id;name;description;url;severity;line_start;line_end;json_pointer;lint_rule_id
+1;Avon Ethiopian Birr;../fake-data/blob/hipster.txt;http://markus.name;SHOULD;89436;85114;Tasty Rubber Chair Italy calculate;1
+2;Sleek;../fake-data/blob/hipster.txt;https://kayley.biz;MUST;38345;74907;XML generating copying;2
+3;bandwidth-monitored;../fake-data/blob/hipster.txt;https://percy.net;MUST;7760;53278;Grass-roots European Unit of Account 17(E.U.A.-17);3
+4;parsing program;../fake-data/blob/hipster.txt;http://avery.org;SHOULD;47325;91371;collaboration;4
+5;firewall;../fake-data/blob/hipster.txt;http://theresia.net;MAY;53402;48961;sensor Group;5
+6;one-to-one;../fake-data/blob/hipster.txt;http://lilyan.biz;SHOULD;92243;49955;Configuration niches;6
+7;Yemeni Rial maximized;../fake-data/blob/hipster.txt;https://lloyd.com;MUST;30902;16473;index firewall;7
+8;transmitter card;../fake-data/blob/hipster.txt;https://xavier.name;MAY;99626;91682;Plastic Metrics Tugrik;8
+9;JSON;../fake-data/blob/hipster.txt;http://orion.net;SHOULD;92076;12050;Texas;9
+10;Rustic;../fake-data/blob/hipster.txt;http://emmett.name;SHOULD;81452;91580;synergies;10

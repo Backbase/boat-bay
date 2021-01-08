@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { environment } from 'app/environments/environment';
-import { UiApiModule } from 'app/models';
+import { UiApiModule } from 'app/models/dashboard/v1';
 import { ApiSpecsService } from 'app/services/api-specs.service';
 
 @Component({

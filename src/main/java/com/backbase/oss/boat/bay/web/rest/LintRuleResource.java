@@ -18,8 +18,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 /**
  * REST controller for managing {@link com.backbase.oss.boat.bay.domain.LintRule}.
@@ -40,18 +38,10 @@ public class LintRuleResource {
     /**
      * {@code GET  /lint-rules} : get all the lintRules.
      *
-     * @param filter the filter of the request.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of lintRules in body.
      */
     @GetMapping("/lint-rules")
-    public List<LintRule> getAllLintRules(@RequestParam(required = false) String filter) {
-        if ("lintruleviolation-is-null".equals(filter)) {
-            log.debug("REST request to get all LintRules where lintRuleViolation is null");
-            return StreamSupport
-                .stream(lintRuleRepository.findAll().spliterator(), false)
-                .filter(lintRule -> lintRule.getLintRuleViolation() == null)
-                .collect(Collectors.toList());
-        }
+    public List<LintRule> getAllLintRules() {
         log.debug("REST request to get all LintRules");
         return lintRuleRepository.findAll();
     }

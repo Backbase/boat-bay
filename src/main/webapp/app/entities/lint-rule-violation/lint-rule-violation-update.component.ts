@@ -4,10 +4,11 @@ import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { JhiDataUtils, JhiFileLoadError, JhiEventManager, JhiEventWithContent } from 'ng-jhipster';
 
 import { ILintRuleViolation, LintRuleViolation } from 'app/shared/model/lint-rule-violation.model';
 import { LintRuleViolationService } from './lint-rule-violation.service';
+import { AlertError } from 'app/shared/alert/alert-error.model';
 import { ILintRule } from 'app/shared/model/lint-rule.model';
 import { LintRuleService } from 'app/entities/lint-rule/lint-rule.service';
 import { ILintReport } from 'app/shared/model/lint-report.model';
@@ -33,11 +34,13 @@ export class LintRuleViolationUpdateComponent implements OnInit {
     lineStart: [],
     lineEnd: [],
     jsonPointer: [],
-    lintRule: [],
-    lintReport: [null, Validators.required],
+    lintRule: [null, Validators.required],
+    lintReport: [],
   });
 
   constructor(
+    protected dataUtils: JhiDataUtils,
+    protected eventManager: JhiEventManager,
     protected lintRuleViolationService: LintRuleViolationService,
     protected lintRuleService: LintRuleService,
     protected lintReportService: LintReportService,
@@ -49,27 +52,7 @@ export class LintRuleViolationUpdateComponent implements OnInit {
     this.activatedRoute.data.subscribe(({ lintRuleViolation }) => {
       this.updateForm(lintRuleViolation);
 
-      this.lintRuleService
-        .query({ filter: 'lintruleviolation-is-null' })
-        .pipe(
-          map((res: HttpResponse<ILintRule[]>) => {
-            return res.body || [];
-          })
-        )
-        .subscribe((resBody: ILintRule[]) => {
-          if (!lintRuleViolation.lintRule || !lintRuleViolation.lintRule.id) {
-            this.lintrules = resBody;
-          } else {
-            this.lintRuleService
-              .find(lintRuleViolation.lintRule.id)
-              .pipe(
-                map((subRes: HttpResponse<ILintRule>) => {
-                  return subRes.body ? [subRes.body].concat(resBody) : resBody;
-                })
-              )
-              .subscribe((concatRes: ILintRule[]) => (this.lintrules = concatRes));
-          }
-        });
+      this.lintRuleService.query().subscribe((res: HttpResponse<ILintRule[]>) => (this.lintrules = res.body || []));
 
       this.lintReportService.query().subscribe((res: HttpResponse<ILintReport[]>) => (this.lintreports = res.body || []));
     });
@@ -87,6 +70,22 @@ export class LintRuleViolationUpdateComponent implements OnInit {
       jsonPointer: lintRuleViolation.jsonPointer,
       lintRule: lintRuleViolation.lintRule,
       lintReport: lintRuleViolation.lintReport,
+    });
+  }
+
+  byteSize(base64String: string): string {
+    return this.dataUtils.byteSize(base64String);
+  }
+
+  openFile(contentType: string, base64String: string): void {
+    this.dataUtils.openFile(contentType, base64String);
+  }
+
+  setFileData(event: any, field: string, isImage: boolean): void {
+    this.dataUtils.loadFileToForm(event, this.editForm, field, isImage).subscribe(null, (err: JhiFileLoadError) => {
+      this.eventManager.broadcast(
+        new JhiEventWithContent<AlertError>('boatBayApp.error', { message: err.message })
+      );
     });
   }
 

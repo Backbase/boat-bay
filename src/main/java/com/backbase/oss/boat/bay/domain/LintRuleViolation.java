@@ -29,7 +29,8 @@ public class LintRuleViolation implements Serializable {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @NotNull
+    
+    @Lob
     @Column(name = "description", nullable = false)
     private String description;
 
@@ -49,13 +50,13 @@ public class LintRuleViolation implements Serializable {
     @Column(name = "json_pointer")
     private String jsonPointer;
 
-    @OneToOne
-    @JoinColumn(unique = true)
-    private LintRule lintRule;
-
     @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties(value = "lintRuleViolations", allowSetters = true)
+    private LintRule lintRule;
+
+    @ManyToOne
+    @JsonIgnoreProperties(value = "violations", allowSetters = true)
     private LintReport lintReport;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

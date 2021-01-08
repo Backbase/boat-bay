@@ -1,4 +1,4 @@
-import { Spec } from 'app/models/spec';
+import { Spec } from './spec';
 
 export interface UiApiModule {
   title: string;
