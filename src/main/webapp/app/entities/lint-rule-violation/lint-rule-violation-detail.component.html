@@ -39,7 +39,7 @@
                 <dt><span>Lint Rule</span></dt>
                 <dd>
                     <div *ngIf="lintRuleViolation.lintRule">
-                        <a [routerLink]="['/lint-rule', lintRuleViolation.lintRule?.id, 'view']">{{ lintRuleViolation.lintRule?.id }}</a>
+                        <a [routerLink]="['/lint-rule', lintRuleViolation.lintRule?.id, 'view']">{{ lintRuleViolation.lintRule?.ruleId }}</a>
                     </div>
                 </dd>
                 <dt><span>Lint Report</span></dt>

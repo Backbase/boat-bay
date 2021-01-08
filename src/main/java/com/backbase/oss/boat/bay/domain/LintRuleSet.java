@@ -32,6 +32,7 @@ public class LintRuleSet implements Serializable {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Lob
     @Column(name = "description")
     private String description;
 

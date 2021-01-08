@@ -46,13 +46,6 @@
   ],
   "relationships": [
     {
-      "relationshipType": "one-to-one",
-      "otherEntityName": "lintRuleViolation",
-      "otherEntityRelationshipName": "lintRule",
-      "relationshipName": "lintRuleViolation",
-      "ownerSide": false
-    },
-    {
       "relationshipType": "many-to-one",
       "otherEntityName": "lintRuleSet",
       "otherEntityRelationshipName": "lintRule",

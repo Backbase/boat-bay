@@ -19,7 +19,7 @@
             <column name="name" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
-            <column name="description" type="varchar(255)">
+            <column name="description" type="${clobType}">
                 <constraints nullable="false" />
             </column>
             <column name="url" type="varchar(255)">
@@ -38,10 +38,10 @@
                 <constraints nullable="true" />
             </column>
             <column name="lint_rule_id" type="bigint">
-                <constraints unique="true" nullable="true" uniqueConstraintName="ux_lint_rule_violation_lint_rule_id" />
+                <constraints nullable="false" />
             </column>
             <column name="lint_report_id" type="bigint">
-                <constraints nullable="false" />
+                <constraints nullable="true" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
@@ -67,13 +67,13 @@
                   tableName="lint_rule_violation">
             <column name="id" type="numeric"/>
             <column name="name" type="string"/>
-            <column name="description" type="string"/>
+            <column name="description" type="clob"/>
             <column name="url" type="string"/>
             <column name="severity" type="string"/>
             <column name="line_start" type="numeric"/>
             <column name="line_end" type="numeric"/>
             <column name="json_pointer" type="string"/>
-            <column name="lint_report_id" type="numeric"/>
+            <column name="lint_rule_id" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

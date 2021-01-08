@@ -2,10 +2,12 @@ package com.backbase.oss.boat.bay.service.lint;
 
 import com.backbase.oss.boat.bay.domain.LintReport;
 import com.backbase.oss.boat.bay.domain.LintRuleViolation;
+import com.backbase.oss.boat.bay.domain.PortalLintRule;
 import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.domain.enumeration.Severity;
 import com.backbase.oss.boat.bay.events.SpecUpdatedEvent;
 import com.backbase.oss.boat.bay.repository.LintReportRepository;
+import com.backbase.oss.boat.bay.repository.extended.BoatLintReportRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatLintRuleRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatLintRuleViolationRepository;
 import java.time.Instant;
@@ -21,6 +23,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.zalando.zally.core.ApiValidator;
 import org.zalando.zally.core.Result;
+import org.zalando.zally.core.RuleDetails;
+import org.zalando.zally.core.RulesManager;
 import org.zalando.zally.core.RulesPolicy;
 
 @Component
@@ -31,31 +35,41 @@ public class BoatSpecLinter {
     private final BoatLintRuleValidatorFactory boatLintRuleValidatorFactory;
     private final BoatLintRuleViolationRepository boatLintRuleViolationRepository;
     private final BoatLintRuleRepository boatLintRuleRepository;
-    private final LintReportRepository lintReportRepository;
+    private final BoatLintReportRepository lintReportRepository;
+    private final RulesManager rulesManager;
 
-    private void lint(Spec spec) {
+    public LintReport lint(Spec spec) {
         log.info("Linting Spec: {}", spec.getName());
-        ApiValidator apiValidator = boatLintRuleValidatorFactory.getApiValidatorFor(spec.getPortal());
-        RulesPolicy rulesPolicy = boatLintRuleValidatorFactory.getRulePolicy(spec.getPortal());
+        ApiValidator apiValidator = getApiValidator(spec);
+        RulesPolicy rulesPolicy = getRulesPolicy(spec);
         List<Result> validate = apiValidator.validate(spec.getOpenApi(), rulesPolicy, null);
 
-        LintReport lintReport = getLintReport(spec);
-
-
-        // Reset Lint Report Violations
-        boatLintRuleViolationRepository.deleteByLintReport(lintReport);
+        LintReport lintReport = lintReportRepository.findBySpec(spec).orElse(new LintReport().spec(spec));
 
         // Collect new Violations
         Set<LintRuleViolation> violations = validate.stream()
             .map(result -> mapResult(lintReport, result))
             .collect(Collectors.toSet());
-
         lintReport.setName("Lint Report " + spec.getName() + "-" + spec.getVersion());
         lintReport.setGrade(calculateGrade(violations));
         lintReport.setLintedOn(Instant.now());
-        lintReport.setLintRuleViolations(violations);
-
         lintReportRepository.save(lintReport);
+        boatLintRuleViolationRepository.deleteByLintReport(lintReport);
+        boatLintRuleViolationRepository.saveAll(violations);
+        return lintReport;
+    }
+
+    public List<RuleDetails> getApplicableRuleDetails(Spec spec) {
+        RulesPolicy rulesPolicy = getRulesPolicy(spec);
+        return rulesManager.rules(rulesPolicy);
+    }
+
+    public RulesPolicy getRulesPolicy(Spec spec) {
+        return boatLintRuleValidatorFactory.getRulePolicy(spec.getPortal());
+    }
+
+    public ApiValidator getApiValidator(Spec spec) {
+        return boatLintRuleValidatorFactory.getApiValidatorFor(spec.getPortal());
     }
 
     private String calculateGrade(Set<LintRuleViolation> violations) {
@@ -96,15 +110,7 @@ public class BoatSpecLinter {
         return lintRuleViolation;
     }
 
-    private LintReport getLintReport(Spec spec) {
-        LintReport specLintReport = new LintReport()
-            .spec(spec);
 
-        LintReport newLintReport = lintReportRepository.findOne(Example.of(specLintReport)).orElseGet(() -> {
-            return lintReportRepository.save(specLintReport);
-        });
-        return newLintReport;
-    }
 
 
     @EventListener(SpecUpdatedEvent.class)

@@ -29,6 +29,8 @@ public class BoatLintConfiguration {
     }
 
 
+
+
     public static Config defaultReference(final ClassLoader loader, String file) {
         return ConfigImpl.computeCachedConfig(loader, "boatReference", () -> {
             Config unresolvedResources = Parseable
