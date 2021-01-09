@@ -13,13 +13,12 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.backbase.oss.boat.bay.service.source.scanner.ScanResult;
 
 import java.io.*;
+import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.io.IOException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -29,9 +28,14 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import javax.persistence.Entity;
 
 
 /**
@@ -51,7 +55,12 @@ public class FileSystemSourceScanner implements SpecSourceScanner {
     private final ServiceDefinitionRepository serviceDefinitionRepository;
     @Autowired
     private final SpecRepository specRepository;
-
+    @Autowired
+    private final ProductReleaseRepository productReleaseRepository;
+    @Autowired
+    private final SpecTypeRepository specTypeRepository;
+    @Autowired
+    private final TagRepository tagRepository;
     @Getter
     @Setter
     private Source source;
@@ -70,9 +79,15 @@ public class FileSystemSourceScanner implements SpecSourceScanner {
         List<Spec> specs = new ArrayList<>();
 
         for (SourcePath p : source.getSourcePaths()) {
-            Path scanPath = Path.of(p.getName());
+            Path scanPath;
 
             try {
+
+                if (p.getName().endsWith(".git")){
+                    scanPath = scanGitRepo(p.getName());
+                }else {
+                    scanPath= Path.of(p.getName());
+                }
 
                 List<Portal> portalsScanned = Files.walk(scanPath)
                     .filter(Files::isRegularFile)
@@ -81,30 +96,50 @@ public class FileSystemSourceScanner implements SpecSourceScanner {
                     .filter(Optional::isPresent)
                     .map(Optional::get)
                     .collect(Collectors.toList());
+
                 source.setPortal(portalsScanned.get(0));
+
                 specs.addAll(portalsScanned.stream().flatMap(portal -> portal.getProducts().stream())
                     .flatMap(product -> product.getCapabilities().stream())
                     .flatMap(capability -> capability.getServiceDefinitions().stream())
                     .flatMap(serviceDefinition -> serviceDefinition.getSpecs().stream()).collect(Collectors.toList()));
 
             } catch (IOException e) {
-                log.error("Failed to scan path: {}", scanPath, e);
+                log.error("Failed to scan path: {}", p.getName(), e);
             }
         }
 
-
         return new ScanResult(source, specs);
+    }
+
+    private Path scanGitRepo(String path) throws IOException {
+        Repository existingRepo = new FileRepositoryBuilder()
+            .setGitDir(new File(path))
+            .build();
+        return existingRepo.getDirectory().toPath();
     }
 
     private Optional<Portal> mapPortal(Path scanPath, Path path) {
 
         Portal portal;
+        List<ProductRelease> productReleases = new ArrayList<>();
 
         try {
 
             File portalFile = new File(path.toString());
-            portal = objectMapper.readValue(portalFile, Portal.class);
 
+            portal = objectMapper.readValue(portalFile, Portal.class);
+            productReleases.addAll(portal.getProductReleases());
+            portal.setProductReleases(new HashSet<>());
+            portalRepository.save(portal);
+
+            for (ProductRelease p : productReleases){
+
+                p.setPortal(portal);
+                productReleaseRepository.save(p);
+                portal.addProductRelease(p);
+
+            }
             portalRepository.save(portal);
 
 
@@ -228,7 +263,7 @@ public class FileSystemSourceScanner implements SpecSourceScanner {
             service.setSpecs(Files.walk(path.getParent())
                 .filter(Files::isRegularFile)
                 .filter(capPath -> capPath.endsWith("spec.yaml"))
-                .map(specPath -> mapSpec(scanPath, specPath))
+                .map(specPath -> mapSpec(scanPath, specPath, service))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toSet()));
@@ -243,7 +278,7 @@ public class FileSystemSourceScanner implements SpecSourceScanner {
     }
 
     @NotNull
-    private Optional<Spec> mapSpec(Path scanPath, Path path) {
+    private Optional<Spec> mapSpec(Path scanPath, Path path, ServiceDefinition serviceDefinition) {
 
         Spec spec;
 
@@ -251,16 +286,58 @@ public class FileSystemSourceScanner implements SpecSourceScanner {
 
             spec = objectMapper.readValue(new File(path.toString()), Spec.class);
 
+
+            spec.setId(null);
+            specRepository.findOne(Example.of(spec)).ifPresent(s -> spec.setId(s.getId()));
+
+            SpecType specType = spec.getSpecType();
+            specType.setId(null);
+            specTypeRepository.findOne(Example.of(specType)).ifPresent(s -> specType.setId(s.getId()));
+            specTypeRepository.save(specType);
+            specType.setId(specTypeRepository.findOne(Example.of(specType)).get().getId());
+
+
+            spec.setSpecType(specType);
+            spec.setServiceDefinition(serviceDefinition);
+            spec.setCapability(serviceDefinition.getCapability());
+            spec.setProduct(serviceDefinition.getCapability().getProduct());
+            spec.setPortal(serviceDefinition.getCapability().getProduct().getPortal());
+            String openapi = Files.readString(path.getParent().resolve(spec.getFilename()));
+            spec.setOpenApi(openapi);
+
+
+            List<Tag> tags = new ArrayList<>();
+            tags.addAll(spec.getTags());
+
+            for (Tag t : tags){
+                spec.removeTag(t);
+
+                t.setId(null);
+                tagRepository.findOne(Example.of(t)).ifPresent(tag -> t.setId(tag.getId()));
+                tagRepository.save(t);
+                t.setId(tagRepository.findOne(Example.of(t)).get().getId());
+
+                spec.addTag(t);
+
+            }
+
+
         } catch (IOException e) {
             return Optional.empty();
         }
 
         log.debug("Scanned spec {}", spec);
-
         specRepository.save(spec);
+        spec.setId(specRepository.findOne(Example.of(spec)).get().getId());
+
 
         return Optional.of(spec);
     }
+
+//    private void save(JpaRepository repo, Object entity ){
+//
+//
+//    }
 
 
     @Override

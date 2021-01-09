@@ -415,6 +415,13 @@
 
     <dependencies>
 
+        <!-- https://mvnrepository.com/artifact/org.eclipse.jgit/org.eclipse.jgit -->
+        <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit</artifactId>
+            <version>5.10.0.202012080955-r</version>
+        </dependency>
+
         <dependency>
             <groupId>com.backbase.oss</groupId>
             <artifactId>boat-engine</artifactId>

@@ -40,13 +40,38 @@ public class SourceScannerTest {
     SpecRepository specRepository;
 
     @Autowired
+    ProductReleaseRepository productReleaseRepository;
+
+    @Autowired
+    SpecTypeRepository specTypeRepository;
+
+    @Autowired
+    TagRepository tagRepository;
+
+    @Autowired
     FileSystemExporter fileSystemExporter;
 
     @Test
     public void fileSystemSourceScannerTest() throws ExportException {
-        FileSystemSourceScanner scanner =new FileSystemSourceScanner(portalRepository,productRepository,capabilityRepository,serviceDefinitionRepository,specRepository,new ObjectMapper(new YAMLFactory()));
+        FileSystemSourceScanner scanner =new FileSystemSourceScanner(portalRepository,productRepository,capabilityRepository,serviceDefinitionRepository,specRepository,productReleaseRepository, specTypeRepository,tagRepository,new ObjectMapper(new YAMLFactory()));
         Source source = new Source();
         source.addSourcePath(new SourcePath().name("/Users/sophiej/Documents/Projects/opensauce/boat-bay/boat-bay-data/repo.backbase.com"));
+        scanner.setSource(source);
+        ScanResult result = scanner.scan();
+        Portal portal = result.getSource().getPortal();
+
+        ExportInfo export = fileSystemExporter.export(new ExportOptions(portal, ExportType.FILE_SYSTEM, "/Users/sophiej/Documents/Projects/opensauce/boat-bay/boat-bay/test-target/exporter"));
+
+        assertThat(export.toString().equals(""));
+
+
+    }
+
+    @Test
+    public void fileSystemSourceScannerGithubInputTest() throws ExportException {
+        FileSystemSourceScanner scanner =new FileSystemSourceScanner(portalRepository,productRepository,capabilityRepository,serviceDefinitionRepository,specRepository,productReleaseRepository, specTypeRepository,tagRepository,new ObjectMapper(new YAMLFactory()));
+        Source source = new Source();
+        source.addSourcePath(new SourcePath().name("https://github.com/Backbase/boat-bay.git"));
         scanner.setSource(source);
         ScanResult result = scanner.scan();
         Portal portal = result.getSource().getPortal();
