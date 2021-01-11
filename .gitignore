@@ -148,3 +148,4 @@ Desktop.ini
 .eslintcache
 
 /src/main/resources/config/liquibase/backbase/
+JFrogSpecSourceIT.java

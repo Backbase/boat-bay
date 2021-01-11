@@ -92,13 +92,18 @@ export class ApiSpecsService {
         const productsForSelectedRelease = releases[selectedVersion];
         const productRelease = productsForSelectedRelease[product];
         const servicesForSelectedProduct = productRelease.services;
+        const specsForSelectedProduct = productRelease.specs;
 
-        return this.constructApiStructureForModules(servicesForSelectedProduct, apiModulesMap);
+        return this.constructApiStructureForModules(servicesForSelectedProduct, specsForSelectedProduct, apiModulesMap);
       })
     );
   }
 
-  private constructApiStructureForModules(servicesForSelectedProduct: UiApiModule[], apiModulesMap: Map<String, ApiModule>): UiApiModule[] {
+  private constructApiStructureForModules(
+    servicesForSelectedProduct: UiApiModule[],
+    specsForSelectedProduct: { [key: string]: string },
+    apiModulesMap: Map<String, ApiModule>
+  ): UiApiModule[] {
     const moduleNames = Object.entries(servicesForSelectedProduct);
 
     return moduleNames.reduce((listOfApiModules: UiApiModule[], [moduleName, moduleVersion]: [string, UiApiModule]) => {
@@ -111,7 +116,7 @@ export class ApiSpecsService {
           icon: api['x-icon'] || '',
           version: moduleVersion.version,
           portalPath: moduleVersion.version,
-          specs: Object.values(api.specs),
+          specs: Object.values(api.specs).filter(spec => spec.version === specsForSelectedProduct[spec.key]),
         });
       }
 

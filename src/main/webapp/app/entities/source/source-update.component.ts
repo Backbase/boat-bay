@@ -28,6 +28,7 @@ export class SourceUpdateComponent implements OnInit {
   products: IProduct[] = [];
   capabilities: ICapability[] = [];
   servicedefinitions: IServiceDefinition[] = [];
+  filterArtifactsCreatedSinceDp: any;
 
   editForm = this.fb.group({
     id: [],
@@ -35,7 +36,8 @@ export class SourceUpdateComponent implements OnInit {
     type: [null, [Validators.required]],
     baseUrl: [null, [Validators.required]],
     active: [],
-    filter: [],
+    filterArtifactsName: [],
+    filterArtifactsCreatedSince: [],
     username: [],
     password: [],
     cronExpression: [],
@@ -87,7 +89,8 @@ export class SourceUpdateComponent implements OnInit {
       type: source.type,
       baseUrl: source.baseUrl,
       active: source.active,
-      filter: source.filter,
+      filterArtifactsName: source.filterArtifactsName,
+      filterArtifactsCreatedSince: source.filterArtifactsCreatedSince,
       username: source.username,
       password: source.password,
       cronExpression: source.cronExpression,
@@ -129,7 +132,8 @@ export class SourceUpdateComponent implements OnInit {
       type: this.editForm.get(['type'])!.value,
       baseUrl: this.editForm.get(['baseUrl'])!.value,
       active: this.editForm.get(['active'])!.value,
-      filter: this.editForm.get(['filter'])!.value,
+      filterArtifactsName: this.editForm.get(['filterArtifactsName'])!.value,
+      filterArtifactsCreatedSince: this.editForm.get(['filterArtifactsCreatedSince'])!.value,
       username: this.editForm.get(['username'])!.value,
       password: this.editForm.get(['password'])!.value,
       cronExpression: this.editForm.get(['cronExpression'])!.value,

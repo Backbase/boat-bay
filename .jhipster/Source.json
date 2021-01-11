@@ -28,8 +28,12 @@
       "fieldType": "Boolean"
     },
     {
-      "fieldName": "filter",
+      "fieldName": "filterArtifactsName",
       "fieldType": "String"
+    },
+    {
+      "fieldName": "filterArtifactsCreatedSince",
+      "fieldType": "LocalDate"
     },
     {
       "fieldName": "username",

@@ -7,7 +7,6 @@ export interface IPortal {
   id?: number;
   key?: string;
   name?: string;
-  version?: string;
   title?: string;
   subTitle?: string;
   navTitle?: string;
@@ -27,7 +26,6 @@ export class Portal implements IPortal {
     public id?: number,
     public key?: string,
     public name?: string,
-    public version?: string,
     public title?: string,
     public subTitle?: string,
     public navTitle?: string,

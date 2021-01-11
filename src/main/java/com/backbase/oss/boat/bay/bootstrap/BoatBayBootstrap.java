@@ -1,17 +1,22 @@
 package com.backbase.oss.boat.bay.bootstrap;
 
 import com.backbase.oss.boat.bay.domain.Dashboard;
+import com.backbase.oss.boat.bay.domain.LintRule;
+import com.backbase.oss.boat.bay.domain.LintRuleSet;
 import com.backbase.oss.boat.bay.domain.Portal;
 import com.backbase.oss.boat.bay.domain.Product;
 import com.backbase.oss.boat.bay.domain.Source;
 import com.backbase.oss.boat.bay.domain.SourcePath;
 import com.backbase.oss.boat.bay.domain.SpecType;
+import com.backbase.oss.boat.bay.domain.enumeration.Severity;
 import com.backbase.oss.boat.bay.exceptions.BootstrapException;
 import com.backbase.oss.boat.bay.repository.ProductRepository;
 import com.backbase.oss.boat.bay.repository.SourcePathRepository;
 import com.backbase.oss.boat.bay.repository.SourceRepository;
 import com.backbase.oss.boat.bay.repository.SpecTypeRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatDashboardRepository;
+import com.backbase.oss.boat.bay.repository.extended.BoatLintRuleRepository;
+import com.backbase.oss.boat.bay.repository.extended.BoatLintRuleSetRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatPortalRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatSourcePathRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +38,9 @@ import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Example;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.zalando.zally.core.RuleDetails;
+import org.zalando.zally.core.RulesManager;
+import org.zalando.zally.rule.api.Rule;
 
 @Component
 @Slf4j
@@ -49,6 +58,9 @@ public class BoatBayBootstrap {
     private final BoatDashboardRepository dashboardRepository;
     private final SpecTypeRepository specTypeRepository;
     private final BoatSourcePathRepository sourcePathRepository;
+    private final RulesManager rulesManager;
+    private final BoatLintRuleSetRepository lintRuleSetRepository;
+    private final BoatLintRuleRepository lintRuleRepository;
 
     @PostConstruct
     public void loadBootstrapFile() {
@@ -59,7 +71,7 @@ public class BoatBayBootstrap {
             bootstrap.getPortals().forEach(portal -> {
                 Optional<Portal> existingPortal = portalRepository.findOne(Example.of(portal));
                 if (existingPortal.isEmpty()) {
-                    log.info("Bootstrapping portal: {}-{}", portal.getName(), portal.getVersion());
+                    log.info("Bootstrapping portal: {}", portal.getName());
                     portalRepository.save(portal);
                 }
             });
@@ -125,6 +137,57 @@ public class BoatBayBootstrap {
         private List<Source> sources;
         private Dashboard dashboard;
         private List<SpecType> specTypes;
+    }
+
+    @EventListener({ContextRefreshedEvent.class})
+    @Async
+    public void setupDefaultRules() {
+        log.info("Loading Default BOAT Linting Rules");
+
+        rulesManager.getRules().stream()
+            .collect(Collectors.groupingBy(RuleDetails::getRuleSet))
+            .forEach((ruleSet, rules) -> {
+
+                LintRuleSet lintRuleSet = lintRuleSetRepository.findByRuleSetId(ruleSet.getId())
+                    .map(rs -> {
+                        log.debug("Rule Set: {} already exists.", rs.getName());
+                        return rs;
+                    })
+                    .orElseGet(() -> {
+                        LintRuleSet newLintRuleSet = new LintRuleSet();
+                        newLintRuleSet.setRuleSetId(ruleSet.getId());
+                        newLintRuleSet.setExternalUrl(ruleSet.getUrl().toString());
+                        newLintRuleSet.setName(ruleSet.getId());
+                        log.debug("Created new Rule Set: {}", ruleSet.getId());
+                        return lintRuleSetRepository.save(newLintRuleSet);
+                    });
+                log.info("Loaded Rule Set: {}", lintRuleSet.getName());
+
+                rules.forEach(ruleDetails -> {
+                    Rule rule = ruleDetails.getRule();
+                    LintRule lintRule = lintRuleRepository.findByRuleId(rule.id())
+                        .map(lr -> {
+                            log.debug("Rule {} already exists", lr.getTitle());
+                            return lr;
+                        })
+                        .orElseGet(() -> {
+                            LintRule newLintRule = new LintRule();
+                            newLintRule.setRuleSet(lintRuleSet);
+                            newLintRule.setRuleId(rule.id());
+                            newLintRule.setExternalUrl(ruleSet.url(rule).toString());
+                            newLintRule.setTitle(rule.title());
+                            newLintRule.setSeverity(Severity.valueOf(rule.severity().name()));
+                            newLintRule.setEnabled(true);
+                            newLintRule.setSummary("");
+                            newLintRule.setDescription("");
+                            log.debug("Created new Rule: {} for Rule Set: {}", newLintRule.getRuleId(), ruleSet.getId());
+                            return lintRuleRepository.save(newLintRule);
+                        });
+                });
+
+
+            });
+        log.info("Finished Default BOAT Linting Rules");
     }
 
 }

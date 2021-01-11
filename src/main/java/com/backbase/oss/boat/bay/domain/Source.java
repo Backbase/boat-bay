@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -43,8 +44,11 @@ public class Source implements Serializable {
     @Column(name = "active")
     private Boolean active;
 
-    @Column(name = "filter")
-    private String filter;
+    @Column(name = "filter_artifacts_name")
+    private String filterArtifactsName;
+
+    @Column(name = "filter_artifacts_created_since")
+    private LocalDate filterArtifactsCreatedSince;
 
     @Column(name = "username")
     private String username;
@@ -165,17 +169,30 @@ public class Source implements Serializable {
         this.active = active;
     }
 
-    public String getFilter() {
-        return filter;
+    public String getFilterArtifactsName() {
+        return filterArtifactsName;
     }
 
-    public Source filter(String filter) {
-        this.filter = filter;
+    public Source filterArtifactsName(String filterArtifactsName) {
+        this.filterArtifactsName = filterArtifactsName;
         return this;
     }
 
-    public void setFilter(String filter) {
-        this.filter = filter;
+    public void setFilterArtifactsName(String filterArtifactsName) {
+        this.filterArtifactsName = filterArtifactsName;
+    }
+
+    public LocalDate getFilterArtifactsCreatedSince() {
+        return filterArtifactsCreatedSince;
+    }
+
+    public Source filterArtifactsCreatedSince(LocalDate filterArtifactsCreatedSince) {
+        this.filterArtifactsCreatedSince = filterArtifactsCreatedSince;
+        return this;
+    }
+
+    public void setFilterArtifactsCreatedSince(LocalDate filterArtifactsCreatedSince) {
+        this.filterArtifactsCreatedSince = filterArtifactsCreatedSince;
     }
 
     public String getUsername() {
@@ -437,7 +454,8 @@ public class Source implements Serializable {
             ", type='" + getType() + "'" +
             ", baseUrl='" + getBaseUrl() + "'" +
             ", active='" + isActive() + "'" +
-            ", filter='" + getFilter() + "'" +
+            ", filterArtifactsName='" + getFilterArtifactsName() + "'" +
+            ", filterArtifactsCreatedSince='" + getFilterArtifactsCreatedSince() + "'" +
             ", username='" + getUsername() + "'" +
             ", password='" + getPassword() + "'" +
             ", cronExpression='" + getCronExpression() + "'" +

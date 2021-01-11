@@ -16,6 +16,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,8 +46,11 @@ public class SourceResourceIT {
     private static final Boolean DEFAULT_ACTIVE = false;
     private static final Boolean UPDATED_ACTIVE = true;
 
-    private static final String DEFAULT_FILTER = "AAAAAAAAAA";
-    private static final String UPDATED_FILTER = "BBBBBBBBBB";
+    private static final String DEFAULT_FILTER_ARTIFACTS_NAME = "AAAAAAAAAA";
+    private static final String UPDATED_FILTER_ARTIFACTS_NAME = "BBBBBBBBBB";
+
+    private static final LocalDate DEFAULT_FILTER_ARTIFACTS_CREATED_SINCE = LocalDate.ofEpochDay(0L);
+    private static final LocalDate UPDATED_FILTER_ARTIFACTS_CREATED_SINCE = LocalDate.now(ZoneId.systemDefault());
 
     private static final String DEFAULT_USERNAME = "AAAAAAAAAA";
     private static final String UPDATED_USERNAME = "BBBBBBBBBB";
@@ -106,7 +111,8 @@ public class SourceResourceIT {
             .type(DEFAULT_TYPE)
             .baseUrl(DEFAULT_BASE_URL)
             .active(DEFAULT_ACTIVE)
-            .filter(DEFAULT_FILTER)
+            .filterArtifactsName(DEFAULT_FILTER_ARTIFACTS_NAME)
+            .filterArtifactsCreatedSince(DEFAULT_FILTER_ARTIFACTS_CREATED_SINCE)
             .username(DEFAULT_USERNAME)
             .password(DEFAULT_PASSWORD)
             .cronExpression(DEFAULT_CRON_EXPRESSION)
@@ -153,7 +159,8 @@ public class SourceResourceIT {
             .type(UPDATED_TYPE)
             .baseUrl(UPDATED_BASE_URL)
             .active(UPDATED_ACTIVE)
-            .filter(UPDATED_FILTER)
+            .filterArtifactsName(UPDATED_FILTER_ARTIFACTS_NAME)
+            .filterArtifactsCreatedSince(UPDATED_FILTER_ARTIFACTS_CREATED_SINCE)
             .username(UPDATED_USERNAME)
             .password(UPDATED_PASSWORD)
             .cronExpression(UPDATED_CRON_EXPRESSION)
@@ -212,7 +219,8 @@ public class SourceResourceIT {
         assertThat(testSource.getType()).isEqualTo(DEFAULT_TYPE);
         assertThat(testSource.getBaseUrl()).isEqualTo(DEFAULT_BASE_URL);
         assertThat(testSource.isActive()).isEqualTo(DEFAULT_ACTIVE);
-        assertThat(testSource.getFilter()).isEqualTo(DEFAULT_FILTER);
+        assertThat(testSource.getFilterArtifactsName()).isEqualTo(DEFAULT_FILTER_ARTIFACTS_NAME);
+        assertThat(testSource.getFilterArtifactsCreatedSince()).isEqualTo(DEFAULT_FILTER_ARTIFACTS_CREATED_SINCE);
         assertThat(testSource.getUsername()).isEqualTo(DEFAULT_USERNAME);
         assertThat(testSource.getPassword()).isEqualTo(DEFAULT_PASSWORD);
         assertThat(testSource.getCronExpression()).isEqualTo(DEFAULT_CRON_EXPRESSION);
@@ -319,7 +327,8 @@ public class SourceResourceIT {
             .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())))
             .andExpect(jsonPath("$.[*].baseUrl").value(hasItem(DEFAULT_BASE_URL)))
             .andExpect(jsonPath("$.[*].active").value(hasItem(DEFAULT_ACTIVE.booleanValue())))
-            .andExpect(jsonPath("$.[*].filter").value(hasItem(DEFAULT_FILTER)))
+            .andExpect(jsonPath("$.[*].filterArtifactsName").value(hasItem(DEFAULT_FILTER_ARTIFACTS_NAME)))
+            .andExpect(jsonPath("$.[*].filterArtifactsCreatedSince").value(hasItem(DEFAULT_FILTER_ARTIFACTS_CREATED_SINCE.toString())))
             .andExpect(jsonPath("$.[*].username").value(hasItem(DEFAULT_USERNAME)))
             .andExpect(jsonPath("$.[*].password").value(hasItem(DEFAULT_PASSWORD)))
             .andExpect(jsonPath("$.[*].cronExpression").value(hasItem(DEFAULT_CRON_EXPRESSION)))
@@ -349,7 +358,8 @@ public class SourceResourceIT {
             .andExpect(jsonPath("$.type").value(DEFAULT_TYPE.toString()))
             .andExpect(jsonPath("$.baseUrl").value(DEFAULT_BASE_URL))
             .andExpect(jsonPath("$.active").value(DEFAULT_ACTIVE.booleanValue()))
-            .andExpect(jsonPath("$.filter").value(DEFAULT_FILTER))
+            .andExpect(jsonPath("$.filterArtifactsName").value(DEFAULT_FILTER_ARTIFACTS_NAME))
+            .andExpect(jsonPath("$.filterArtifactsCreatedSince").value(DEFAULT_FILTER_ARTIFACTS_CREATED_SINCE.toString()))
             .andExpect(jsonPath("$.username").value(DEFAULT_USERNAME))
             .andExpect(jsonPath("$.password").value(DEFAULT_PASSWORD))
             .andExpect(jsonPath("$.cronExpression").value(DEFAULT_CRON_EXPRESSION))
@@ -388,7 +398,8 @@ public class SourceResourceIT {
             .type(UPDATED_TYPE)
             .baseUrl(UPDATED_BASE_URL)
             .active(UPDATED_ACTIVE)
-            .filter(UPDATED_FILTER)
+            .filterArtifactsName(UPDATED_FILTER_ARTIFACTS_NAME)
+            .filterArtifactsCreatedSince(UPDATED_FILTER_ARTIFACTS_CREATED_SINCE)
             .username(UPDATED_USERNAME)
             .password(UPDATED_PASSWORD)
             .cronExpression(UPDATED_CRON_EXPRESSION)
@@ -415,7 +426,8 @@ public class SourceResourceIT {
         assertThat(testSource.getType()).isEqualTo(UPDATED_TYPE);
         assertThat(testSource.getBaseUrl()).isEqualTo(UPDATED_BASE_URL);
         assertThat(testSource.isActive()).isEqualTo(UPDATED_ACTIVE);
-        assertThat(testSource.getFilter()).isEqualTo(UPDATED_FILTER);
+        assertThat(testSource.getFilterArtifactsName()).isEqualTo(UPDATED_FILTER_ARTIFACTS_NAME);
+        assertThat(testSource.getFilterArtifactsCreatedSince()).isEqualTo(UPDATED_FILTER_ARTIFACTS_CREATED_SINCE);
         assertThat(testSource.getUsername()).isEqualTo(UPDATED_USERNAME);
         assertThat(testSource.getPassword()).isEqualTo(UPDATED_PASSWORD);
         assertThat(testSource.getCronExpression()).isEqualTo(UPDATED_CRON_EXPRESSION);

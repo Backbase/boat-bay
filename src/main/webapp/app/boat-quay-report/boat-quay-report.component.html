@@ -1,0 +1,22 @@
+
+<ng-container *ngIf="lintReport$ | async as lintReport">
+
+    <h1>{{lintReport.title}}</h1>
+    <p>file: {{lintReport.filePath}} version: {{lintReport.version}}</p>
+    <div class="lint-report-wrapper">
+        <div class="openapi-editor">
+            <jhi-ace-editor [contents]="lintReport.openApi" [highlight]="highlight" ></jhi-ace-editor></div>
+        <div class="violations">
+            <mat-card *ngFor="let violation of lintReport.violations">
+                <mat-card-title><span class="ruleId">{{violation.rule.id}}</span>  {{violation.rule.title}}</mat-card-title>
+                <mat-card-subtitle>{{violation.rule.ruleSet}}</mat-card-subtitle>
+                <mat-card-content>{{violation.description}}</mat-card-content>
+                <mat-card-actions>
+                    <button mat-button  (click)="mark(violation)">
+                        highlight &gt; {{violation.pointer.matchingProperty }}
+                    </button>
+                </mat-card-actions>
+            </mat-card>
+        </div>
+    </div>
+</ng-container>

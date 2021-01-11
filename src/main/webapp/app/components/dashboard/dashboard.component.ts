@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Product } from 'app/models';
+import { Product } from 'app/models/dashboard/v1';
 import { ApiSpecsService } from 'app/services/api-specs.service';
 
 @Component({

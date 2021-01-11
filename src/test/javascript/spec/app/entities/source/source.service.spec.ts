@@ -1,5 +1,7 @@
 import { TestBed, getTestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import * as moment from 'moment';
+import { DATE_FORMAT } from 'app/shared/constants/input.constants';
 import { SourceService } from 'app/entities/source/source.service';
 import { ISource, Source } from 'app/shared/model/source.model';
 import { SourceType } from 'app/shared/model/enumerations/source-type.model';
@@ -11,6 +13,7 @@ describe('Service Tests', () => {
     let httpMock: HttpTestingController;
     let elemDefault: ISource;
     let expectedResult: ISource | ISource[] | boolean | null;
+    let currentDate: moment.Moment;
 
     beforeEach(() => {
       TestBed.configureTestingModule({
@@ -20,6 +23,7 @@ describe('Service Tests', () => {
       injector = getTestBed();
       service = injector.get(SourceService);
       httpMock = injector.get(HttpTestingController);
+      currentDate = moment();
 
       elemDefault = new Source(
         0,
@@ -28,6 +32,7 @@ describe('Service Tests', () => {
         'AAAAAAA',
         false,
         'AAAAAAA',
+        currentDate,
         'AAAAAAA',
         'AAAAAAA',
         'AAAAAAA',
@@ -45,7 +50,12 @@ describe('Service Tests', () => {
 
     describe('Service methods', () => {
       it('should find an element', () => {
-        const returnedFromService = Object.assign({}, elemDefault);
+        const returnedFromService = Object.assign(
+          {
+            filterArtifactsCreatedSince: currentDate.format(DATE_FORMAT),
+          },
+          elemDefault
+        );
 
         service.find(123).subscribe(resp => (expectedResult = resp.body));
 
@@ -58,11 +68,17 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             id: 0,
+            filterArtifactsCreatedSince: currentDate.format(DATE_FORMAT),
           },
           elemDefault
         );
 
-        const expected = Object.assign({}, returnedFromService);
+        const expected = Object.assign(
+          {
+            filterArtifactsCreatedSince: currentDate,
+          },
+          returnedFromService
+        );
 
         service.create(new Source()).subscribe(resp => (expectedResult = resp.body));
 
@@ -78,7 +94,8 @@ describe('Service Tests', () => {
             type: 'BBBBBB',
             baseUrl: 'BBBBBB',
             active: true,
-            filter: 'BBBBBB',
+            filterArtifactsName: 'BBBBBB',
+            filterArtifactsCreatedSince: currentDate.format(DATE_FORMAT),
             username: 'BBBBBB',
             password: 'BBBBBB',
             cronExpression: 'BBBBBB',
@@ -95,7 +112,12 @@ describe('Service Tests', () => {
           elemDefault
         );
 
-        const expected = Object.assign({}, returnedFromService);
+        const expected = Object.assign(
+          {
+            filterArtifactsCreatedSince: currentDate,
+          },
+          returnedFromService
+        );
 
         service.update(expected).subscribe(resp => (expectedResult = resp.body));
 
@@ -111,7 +133,8 @@ describe('Service Tests', () => {
             type: 'BBBBBB',
             baseUrl: 'BBBBBB',
             active: true,
-            filter: 'BBBBBB',
+            filterArtifactsName: 'BBBBBB',
+            filterArtifactsCreatedSince: currentDate.format(DATE_FORMAT),
             username: 'BBBBBB',
             password: 'BBBBBB',
             cronExpression: 'BBBBBB',
@@ -128,7 +151,12 @@ describe('Service Tests', () => {
           elemDefault
         );
 
-        const expected = Object.assign({}, returnedFromService);
+        const expected = Object.assign(
+          {
+            filterArtifactsCreatedSince: currentDate,
+          },
+          returnedFromService
+        );
 
         service.query().subscribe(resp => (expectedResult = resp.body));
 

@@ -115,3 +115,8 @@ jhipster:
 # ===================================================================
 
 # application:
+logging:
+  level:
+    root: debug
+    jdk: off
+    org.jfrog: debug
