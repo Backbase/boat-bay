@@ -83,6 +83,12 @@ public class Source implements Serializable {
     @Column(name = "version_sp_el")
     private String versionSpEL;
 
+    @Column(name = "product_release_sp_el")
+    private String productReleaseSpEL;
+
+    @Column(name = "item_limit")
+    private Integer itemLimit;
+
     @Column(name = "overwrite_changes")
     private Boolean overwriteChanges;
 
@@ -338,6 +344,32 @@ public class Source implements Serializable {
         this.versionSpEL = versionSpEL;
     }
 
+    public String getProductReleaseSpEL() {
+        return productReleaseSpEL;
+    }
+
+    public Source productReleaseSpEL(String productReleaseSpEL) {
+        this.productReleaseSpEL = productReleaseSpEL;
+        return this;
+    }
+
+    public void setProductReleaseSpEL(String productReleaseSpEL) {
+        this.productReleaseSpEL = productReleaseSpEL;
+    }
+
+    public Integer getItemLimit() {
+        return itemLimit;
+    }
+
+    public Source itemLimit(Integer itemLimit) {
+        this.itemLimit = itemLimit;
+        return this;
+    }
+
+    public void setItemLimit(Integer itemLimit) {
+        this.itemLimit = itemLimit;
+    }
+
     public Boolean isOverwriteChanges() {
         return overwriteChanges;
     }
@@ -467,6 +499,8 @@ public class Source implements Serializable {
             ", serviceNameSpEL='" + getServiceNameSpEL() + "'" +
             ", specKeySpEL='" + getSpecKeySpEL() + "'" +
             ", versionSpEL='" + getVersionSpEL() + "'" +
+            ", productReleaseSpEL='" + getProductReleaseSpEL() + "'" +
+            ", itemLimit=" + getItemLimit() +
             ", overwriteChanges='" + isOverwriteChanges() + "'" +
             "}";
     }

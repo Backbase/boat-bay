@@ -80,6 +80,14 @@
       "fieldType": "String"
     },
     {
+      "fieldName": "productReleaseSpEL",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "itemLimit",
+      "fieldType": "Integer"
+    },
+    {
       "fieldName": "overwriteChanges",
       "fieldType": "Boolean"
     }

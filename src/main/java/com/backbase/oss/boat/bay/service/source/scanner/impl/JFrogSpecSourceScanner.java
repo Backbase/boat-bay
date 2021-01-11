@@ -5,6 +5,7 @@ import com.backbase.oss.boat.bay.domain.Source;
 import com.backbase.oss.boat.bay.domain.SourcePath;
 import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.domain.enumeration.SourceType;
+import com.backbase.oss.boat.bay.repository.extended.BoatSourceRepository;
 import com.backbase.oss.boat.bay.service.source.scanner.ScanResult;
 import com.backbase.oss.boat.bay.service.source.scanner.SpecSourceScanner;
 import com.backbase.oss.boat.bay.util.SpringExpressionUtils;
@@ -17,9 +18,13 @@ import java.nio.charset.Charset;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
@@ -35,6 +40,7 @@ import org.jfrog.artifactory.client.ItemHandle;
 import org.jfrog.artifactory.client.Searches;
 import org.jfrog.artifactory.client.model.File;
 import org.jfrog.artifactory.client.model.RepoPath;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Slf4j
@@ -52,9 +58,9 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
 
     @SuppressWarnings("UseBulkOperation")
     @Override
+    @Transactional
     public void setSource(Source source) {
         this.source = source;
-
         URI uri = URI.create(source.getBaseUrl());
         this.baseUrl = uri.getScheme() + "://" + uri.getHost() + (uri.getPort() != -1 ? ":" + uri.getPort() : "");
         this.repository = uri.getPath().substring(1);
@@ -68,7 +74,7 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
 
     public ScanResult scan() {
 
-        ScanResult scanResult = new ScanResult();
+        ScanResult scanResult = new ScanResult(source);
 
         log.info("Scanning Artifactory Source: {}", source.getName());
         Searches searchQuery = getArtifactory().searches()
@@ -79,13 +85,24 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
 
         List<RepoPath> repoPaths = searchQuery
             .doSearch();
-        repoPaths
+
+        log.info("Found: {} items from artifactory", repoPaths.size());
+
+        Comparator<ItemHandle> comparing = Comparator.comparing(ih -> ih.info().getLastModified());
+        List<ItemHandle> items = repoPaths
             .stream()
-            .parallel()
             .map(this::getItem)
             .filter(this::isFileAndInSourcePaths)
             .filter(itemHandle -> isCreatedAfter(itemHandle, source))
-            .forEach(itemHandle -> process(itemHandle, scanResult));
+            .sorted(comparing.reversed())
+            .collect(Collectors.toList());
+
+        if(source.getItemLimit() != null) {
+            items = items.subList(0, source.getItemLimit());
+        }
+        log.info("Processing  items: {}", items.size());
+
+        items.forEach(itemHandle -> process(itemHandle, scanResult));
         return scanResult;
     }
 
@@ -147,12 +164,28 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
                 scanResult.getSpecs().add(spec);
 
             } else if (item.info().getName().endsWith(".zip")) {
+                log.info("Downloading zip file: {}", item.info().getName());
                 ZipInputStream zipInputStream = downloadZipFile(item);
                 ZipEntry zipEntry = zipInputStream.getNextEntry();
+                Set<Spec> specsInZip = new HashSet<>();
+
                 while(zipEntry != null) {
-                    process(item, zipInputStream, zipEntry, scanResult);
+                    Optional<Spec> spec = process(item, zipInputStream, zipEntry);
+                    spec.ifPresent(specsInZip::add);
                     zipEntry = zipInputStream.getNextEntry();
                 }
+                zipInputStream.close();
+
+                if(!specsInZip.isEmpty()) {
+                    ProductRelease productRelease = new ProductRelease();
+                    productRelease.setName(SpringExpressionUtils.parseName(source.getProductReleaseSpEL(), item, item.info().getName()));
+                    productRelease.setSpecs(specsInZip);
+                    log.info("Adding {} to release named: {}", specsInZip.size(), productRelease.getName());
+                    scanResult.addProductRelease(productRelease);
+                }
+
+                scanResult.getSpecs().addAll(specsInZip);
+
             } else {
                 log.error("Item: {} not supported", item.info().getPath());
             }
@@ -161,11 +194,11 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
         }
     }
 
-    private void process(ItemHandle item, ZipInputStream stream, ZipEntry zipEntry, ScanResult scanResult) throws IOException {
+    private Optional<Spec> process(ItemHandle item, ZipInputStream stream, ZipEntry zipEntry) throws IOException {
         File file = item.info();
 
         if(!zipEntry.isDirectory() && zipEntry.getName().endsWith(".yaml")) {
-            log.info("Trying to parse: {}", zipEntry.getName());
+            log.info("Creating spec from zip entry: ", zipEntry.getName());
             String openApi = getOpenApiFromZipStream(stream);
 
             String filename = StringUtils.substringAfter(zipEntry.getName(), "/");
@@ -179,6 +212,7 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
             spec.setName(filename);
             spec.setCreatedBy(JFrogSpecSourceScanner.class.getSimpleName());
             spec.setCreatedOn(Instant.now());
+            spec.setOpenApi(openApi);
 
             spec.setFilename(filename);
             spec.setSourcePath(zipEntry.getName());
@@ -188,12 +222,11 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
             spec.setSourceCreatedOn(file.getCreated().toInstant());
             spec.setSourceLastModifiedBy(file.getModifiedBy());
             spec.setSourceLastModifiedOn(file.getLastModified().toInstant());
-            log.info(openApi);
-
-            scanResult.getSpecs().add(spec);
+            return Optional.of(spec);
         } else {
             log.info("Ignoring {}", zipEntry.getName());
         }
+        return Optional.empty();
 
     }
 
