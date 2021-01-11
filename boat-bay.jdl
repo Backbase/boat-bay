@@ -124,6 +124,8 @@ entity Source {
     serviceNameSpEL String
     specKeySpEL String
     versionSpEL String
+    productReleaseSpEL String
+    itemLimit Integer
     overwriteChanges Boolean
 }
 

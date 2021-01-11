@@ -67,6 +67,7 @@ class JFrogSpecSourceIT {
             .product(product)
             .filterArtifactsName("banking-services-bom-*-api.zip")
             .filterArtifactsCreatedSince(LocalDate.parse("2021-01-01"))
+            .productReleaseSpEL("info.name.replaceAll('banking-services-bom-', '').replaceAll('-api.zip', '')")
             .portal(artifactory);
         source.getSourcePaths().add(new SourcePath().name("/com/backbase/dbs/banking-services-bom"));
         this.source = sourceRepository.save(source);

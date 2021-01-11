@@ -44,6 +44,8 @@ describe('Service Tests', () => {
         'AAAAAAA',
         'AAAAAAA',
         'AAAAAAA',
+        'AAAAAAA',
+        0,
         false
       );
     });
@@ -107,6 +109,8 @@ describe('Service Tests', () => {
             serviceNameSpEL: 'BBBBBB',
             specKeySpEL: 'BBBBBB',
             versionSpEL: 'BBBBBB',
+            productReleaseSpEL: 'BBBBBB',
+            itemLimit: 1,
             overwriteChanges: true,
           },
           elemDefault
@@ -146,6 +150,8 @@ describe('Service Tests', () => {
             serviceNameSpEL: 'BBBBBB',
             specKeySpEL: 'BBBBBB',
             versionSpEL: 'BBBBBB',
+            productReleaseSpEL: 'BBBBBB',
+            itemLimit: 1,
             overwriteChanges: true,
           },
           elemDefault

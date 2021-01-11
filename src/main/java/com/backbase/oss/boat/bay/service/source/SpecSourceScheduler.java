@@ -75,7 +75,7 @@ public class SpecSourceScheduler {
     }
 
     @SuppressWarnings({"java:S1301", "SwitchStatementWithTooFewBranches"})
-    private SpecSourceScanner createScanner(Source source) {
+    public SpecSourceScanner createScanner(Source source) {
         SpecSourceScanner specSourceScanner;
         switch (source.getType()) {
             case JFROG:

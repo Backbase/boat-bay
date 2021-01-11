@@ -10,18 +10,24 @@ import lombok.Data;
 @Data
 public class ScanResult {
 
-    private Source source;
-    private List<Spec> specs;
-    private List<ProductRelease> productReleases;
+    private final Source source;
+    private final List<Spec> specs;
+    private final List<ProductRelease> productReleases;
 
-    public ScanResult() {
+    public ScanResult(Source source) {
+        this.source = source;
         this.specs = new ArrayList<>();
         this.productReleases = new ArrayList<>();
+
     }
 
     public ScanResult(Source source, List<Spec> specs) {
         this.source = source;
         this.specs = specs;
+        this.productReleases = new ArrayList<>();
     }
 
+    public void addProductRelease(ProductRelease productRelease) {
+        this.productReleases.add(productRelease);
+    }
 }

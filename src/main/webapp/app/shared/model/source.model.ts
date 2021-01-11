@@ -25,6 +25,8 @@ export interface ISource {
   serviceNameSpEL?: string;
   specKeySpEL?: string;
   versionSpEL?: string;
+  productReleaseSpEL?: string;
+  itemLimit?: number;
   overwriteChanges?: boolean;
   sourcePaths?: ISourcePath[];
   portal?: IPortal;
@@ -53,6 +55,8 @@ export class Source implements ISource {
     public serviceNameSpEL?: string,
     public specKeySpEL?: string,
     public versionSpEL?: string,
+    public productReleaseSpEL?: string,
+    public itemLimit?: number,
     public overwriteChanges?: boolean,
     public sourcePaths?: ISourcePath[],
     public portal?: IPortal,

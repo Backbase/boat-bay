@@ -19,8 +19,13 @@ import com.backbase.oss.boat.bay.repository.extended.BoatLintRuleRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatLintRuleSetRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatPortalRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatSourcePathRepository;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -62,10 +67,18 @@ public class BoatBayBootstrap {
     private final BoatLintRuleSetRepository lintRuleSetRepository;
     private final BoatLintRuleRepository lintRuleRepository;
 
+    private final JavaTimeModule javaTimeModule;
+    private final Jdk8Module jdk8Module;
+
     @PostConstruct
     public void loadBootstrapFile() {
         log.info("Loading bootstrap from: {}", bootstrapFile);
         ObjectMapper objectMapper = new ObjectMapper(YAMLFactory.builder().build());
+        objectMapper.registerModule(javaTimeModule);
+        objectMapper.registerModule(jdk8Module);
+        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
         try {
             Bootstrap bootstrap = objectMapper.readValue(bootstrapFile, Bootstrap.class);
             bootstrap.getPortals().forEach(portal -> {

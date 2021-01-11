@@ -34,6 +34,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
 @Service
@@ -53,21 +54,30 @@ public class SpecSourceResolver {
     private final ProductReleaseRepository productReleaseRepository;
 
 
+    @Transactional
     public void process(ScanResult scan) {
         Source source = scan.getSource();
-        List<Spec> processedSpecs = scan.getSpecs().stream().map(this::processSpec).collect(Collectors.toList());
+        List<Spec> processedSpecs = scan.getSpecs().stream()
+            .map(this::processSpec)
+            .collect(Collectors.toList());
 
-        if (scan.getProductReleases() == null) {
+        if (scan.getProductReleases().isEmpty()) {
 
             ProductRelease latest = new ProductRelease().key("latest").portal(source.getPortal());
-            ProductRelease productRelease = productReleaseRepository.findOne(Example.of(latest)).orElseGet(() -> productReleaseRepository.save(latest.name("Latest")));
+            ProductRelease productRelease = productReleaseRepository.findOne(Example.of(latest)).orElseGet(() -> productReleaseRepository.save(latest.name("Latest").key("latest")));
 
             processedSpecs.stream()
                 .collect(Collectors.toMap(Spec::getKey, spec -> spec, this::compareVersion))
                 .forEach((s, spec) -> productRelease.addSpec(spec));
             productReleaseRepository.save(productRelease);
+        } else {
+            scan.getProductReleases().forEach(pr -> {
+                if(!productReleaseRepository.exists(Example.of(new ProductRelease().portal(source.getPortal()).key(pr.getKey()))))  {
+                    log.info("Create Product Release: {} for Portal: {}", pr.getName(), source.getPortal());
+                    productReleaseRepository.save(pr);
+                }
+            });
         }
-
     }
 
     @NotNull
@@ -91,7 +101,8 @@ public class SpecSourceResolver {
 
         if (existingSpec.isPresent() && !source.isOverwriteChanges()) {
             log.info("Spec: {}  already exists for source: {}", existingSpec.get().getName(), source.getName());
-            return existingSpec.get();
+             spec.setId(existingSpec.get().getId());
+             return spec;
         } else if (existingSpec.isPresent() && source.isOverwriteChanges()) {
             log.info("Updating spec: {}", spec.getName());
             spec.setId(existingSpec.get().getId());
@@ -103,7 +114,6 @@ public class SpecSourceResolver {
         setCapability(spec, source);
         setServiceDefinition(spec, source);
         setSpecType(spec);
-
 
         log.info("Storing spec: {}", spec.getName());
         return specRepository.save(spec);
