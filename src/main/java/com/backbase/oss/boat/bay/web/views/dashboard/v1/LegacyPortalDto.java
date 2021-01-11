@@ -41,7 +41,6 @@ class LegacyPortalDto {
     static class PortalVersionDto {
         private Long id;
         private String name;
-        private String version;
 
     }
 

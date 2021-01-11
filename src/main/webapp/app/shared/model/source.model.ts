@@ -1,3 +1,4 @@
+import { Moment } from 'moment';
 import { ISourcePath } from 'app/shared/model/source-path.model';
 import { IPortal } from 'app/shared/model/portal.model';
 import { IProduct } from 'app/shared/model/product.model';
@@ -11,7 +12,8 @@ export interface ISource {
   type?: SourceType;
   baseUrl?: string;
   active?: boolean;
-  filter?: string;
+  filterArtifactsName?: string;
+  filterArtifactsCreatedSince?: Moment;
   username?: string;
   password?: string;
   cronExpression?: string;
@@ -38,7 +40,8 @@ export class Source implements ISource {
     public type?: SourceType,
     public baseUrl?: string,
     public active?: boolean,
-    public filter?: string,
+    public filterArtifactsName?: string,
+    public filterArtifactsCreatedSince?: Moment,
     public username?: string,
     public password?: string,
     public cronExpression?: string,

@@ -34,10 +34,6 @@ public class Portal implements Serializable {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @NotNull
-    @Column(name = "version", nullable = false)
-    private String version;
-
     @Column(name = "title")
     private String title;
 
@@ -111,19 +107,6 @@ public class Portal implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    public Portal version(String version) {
-        this.version = version;
-        return this;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
     }
 
     public String getTitle() {
@@ -330,7 +313,6 @@ public class Portal implements Serializable {
             "id=" + getId() +
             ", key='" + getKey() + "'" +
             ", name='" + getName() + "'" +
-            ", version='" + getVersion() + "'" +
             ", title='" + getTitle() + "'" +
             ", subTitle='" + getSubTitle() + "'" +
             ", navTitle='" + getNavTitle() + "'" +

@@ -32,7 +32,7 @@ public interface DashboardMapper {
     @Mapping(target = "modules", source = "serviceDefinitions")
     LegacyPortalDto.CapabilityDto mapCapability(Capability capability);
 
-    LegacyPortalDto.PortalVersionDto mapPortalVersion(BoatPortalRepository.PortalVersion portalVersion);
+    LegacyPortalDto.PortalVersionDto mapPortalVersion(Portal portal);
 
     @Mapping(target = "XIcon", source = "icon")
     @Mapping(target = "versions", ignore = true)
