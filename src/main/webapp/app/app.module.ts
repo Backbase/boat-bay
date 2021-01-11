@@ -18,6 +18,7 @@ import { environment } from 'app/environments/environment';
 import { MatMenuModule } from '@angular/material/menu';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDividerModule } from '@angular/material/divider';
+import { BoatQuayModule } from 'app/boat-quay/boat-quay.module';
 
 @NgModule({
   imports: [
@@ -29,6 +30,7 @@ import { MatDividerModule } from '@angular/material/divider';
     // jhipster-needle-angular-add-module JHipster will add new module here
     BoatBayEntityModule,
     BoatBayAppRoutingModule,
+    BoatQuayModule,
     MatMenuModule,
     BrowserAnimationsModule,
     MatDividerModule,

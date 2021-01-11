@@ -8,6 +8,7 @@ import com.backbase.oss.boat.quay.model.BoatViolation;
 import com.fasterxml.jackson.core.JsonPointer;
 import kotlin.ranges.IntRange;
 import org.mapstruct.Mapper;
+import org.mapstruct.MapperConfig;
 import org.mapstruct.Mapping;
 import org.zalando.zally.rule.api.RuleSet;
 
@@ -15,11 +16,19 @@ import org.zalando.zally.rule.api.RuleSet;
 public interface LintReportMapper {
 
     @Mapping(target = "availableRules", ignore = true)
-    @Mapping(target = "version", source = "specReport.spec.version")
-    @Mapping(target = "title", source = "specReport.name")
-    @Mapping(target = "openApi", source = "specReport.spec.openApi")
-    @Mapping(target = "filePath", source = "specReport.spec.filename")
+    @Mapping(target = "version", source = "spec.version")
+    @Mapping(target = "title", source = "name")
+    @Mapping(target = "openApi", source = "spec.openApi")
+    @Mapping(target = "filePath", source = "spec.filename")
     BoatLintReport mapReport(LintReport specReport);
+
+    @Mapping(target = "availableRules", ignore = true)
+    @Mapping(target = "version", source = "spec.version")
+    @Mapping(target = "title", source = "name")
+    @Mapping(target = "filePath", source = "spec.filename")
+    @Mapping(target = "openApi", ignore = true)
+    @Mapping(target = "violations",ignore = true)
+    BoatLintReport mapReportWithoutViolations(LintReport lintReport);
 
     @Mapping(target = "lines", expression = "java(mapRange(lintRuleViolation))")
     @Mapping(target = "rule", source = "lintRule")
@@ -41,5 +50,7 @@ public interface LintReportMapper {
     default JsonPointer map(String value) {
         return JsonPointer.valueOf(value);
     }
+
+
 
 }

@@ -27,7 +27,8 @@
                     <th scope="col" ><span>Type</span></th>
                     <th scope="col" ><span>Base Url</span></th>
                     <th scope="col" ><span>Active</span></th>
-                    <th scope="col" ><span>Filter</span></th>
+                    <th scope="col" ><span>Filter Artifacts Name</span></th>
+                    <th scope="col" ><span>Filter Artifacts Created Since</span></th>
                     <th scope="col" ><span>Username</span></th>
                     <th scope="col" ><span>Password</span></th>
                     <th scope="col" ><span>Cron Expression</span></th>
@@ -54,7 +55,8 @@
                     <td>{{ source.type }}</td>
                     <td>{{ source.baseUrl }}</td>
                     <td>{{ source.active }}</td>
-                    <td>{{ source.filter }}</td>
+                    <td>{{ source.filterArtifactsName }}</td>
+                    <td>{{ source.filterArtifactsCreatedSince | date:'mediumDate' }}</td>
                     <td>{{ source.username }}</td>
                     <td>{{ source.password }}</td>
                     <td>{{ source.cronExpression }}</td>

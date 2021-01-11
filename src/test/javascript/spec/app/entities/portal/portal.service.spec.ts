@@ -34,7 +34,6 @@ describe('Service Tests', () => {
         'AAAAAAA',
         'AAAAAAA',
         'AAAAAAA',
-        'AAAAAAA',
         currentDate,
         'AAAAAAA',
         false
@@ -85,7 +84,6 @@ describe('Service Tests', () => {
           {
             key: 'BBBBBB',
             name: 'BBBBBB',
-            version: 'BBBBBB',
             title: 'BBBBBB',
             subTitle: 'BBBBBB',
             navTitle: 'BBBBBB',
@@ -118,7 +116,6 @@ describe('Service Tests', () => {
           {
             key: 'BBBBBB',
             name: 'BBBBBB',
-            version: 'BBBBBB',
             title: 'BBBBBB',
             subTitle: 'BBBBBB',
             navTitle: 'BBBBBB',

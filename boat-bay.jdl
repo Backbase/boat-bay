@@ -9,7 +9,6 @@ entity Dashboard {
 entity Portal {
 	key String required unique
 	name String required
-	version String required
     title String
     subTitle String
     navTitle String
@@ -112,7 +111,8 @@ entity Source {
     type SourceType required
     baseUrl String required
     active Boolean
-    filter String
+    filterArtifactsName String
+    filterArtifactsCreatedSince LocalDate
     username String
     password String
     cronExpression String
