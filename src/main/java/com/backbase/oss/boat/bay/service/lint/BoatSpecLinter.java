@@ -13,6 +13,7 @@ import com.backbase.oss.boat.bay.repository.extended.BoatLintRuleViolationReposi
 import java.time.Instant;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +22,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Example;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.zalando.zally.core.ApiValidator;
 import org.zalando.zally.core.Result;
 import org.zalando.zally.core.RuleDetails;
@@ -38,6 +40,7 @@ public class BoatSpecLinter {
     private final BoatLintReportRepository lintReportRepository;
     private final RulesManager rulesManager;
 
+    @Transactional
     public LintReport lint(Spec spec) {
         log.info("Linting Spec: {}", spec.getName());
         ApiValidator apiValidator = getApiValidator(spec);
@@ -110,15 +113,12 @@ public class BoatSpecLinter {
         return lintRuleViolation;
     }
 
-
-
-
-    @EventListener(SpecUpdatedEvent.class)
-    @Async
-    public void handleSpecUpdated(SpecUpdatedEvent event) {
-        lint(event.getSpec());
-
-    }
+//    @EventListener(SpecUpdatedEvent.class)
+//    @Async
+//    public void handleSpecUpdated(SpecUpdatedEvent event) {
+//        lint(event.getSpec());
+//
+//    }
 
 
 }
