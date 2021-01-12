@@ -1,11 +1,11 @@
-id;name;portal_rule_set_id
-1;Configurable 1080p Representative;1
-2;Assistant global Wyoming;2
-3;protocol Forint;3
-4;Macao wireless;4
-5;digital Identity;5
-6;Officer;6
-7;Avon;7
-8;Configuration Seamless;8
-9;Chicken United Arab Emirates;9
-10;stable invoice Field;10
+id;rule_id;enabled;lint_rule_id;portal_id
+1;Configurable 1080p Representative;true;1;1
+2;compressing interfaces Orchestrator;true;2;2
+3;Forint;true;3;3
+4;Sao Tome and Principe Won;true;4;4
+5;Identity;false;5;5
+6;Bike Avon Views;true;6;6
+7;multi-byte;false;7;7
+8;United Arab Emirates Product quantifying;true;8;8
+9;sky blue Borders;true;9;9
+10;Chips;true;10;10

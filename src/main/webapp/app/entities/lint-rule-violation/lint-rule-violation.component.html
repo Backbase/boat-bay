@@ -47,7 +47,7 @@
                     <td>{{ lintRuleViolation.jsonPointer }}</td>
                     <td>
                         <div *ngIf="lintRuleViolation.lintRule">
-                            <a [routerLink]="['/lint-rule', lintRuleViolation.lintRule?.id, 'view']" >{{ lintRuleViolation.lintRule?.ruleId }}</a>
+                            <a [routerLink]="['/lint-rule', lintRuleViolation.lintRule?.id, 'view']" >{{ lintRuleViolation.lintRule?.title }}</a>
                         </div>
                     </td>
                     <td>

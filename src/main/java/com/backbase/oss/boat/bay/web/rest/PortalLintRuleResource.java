@@ -18,8 +18,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 /**
  * REST controller for managing {@link com.backbase.oss.boat.bay.domain.PortalLintRule}.
@@ -85,18 +83,10 @@ public class PortalLintRuleResource {
     /**
      * {@code GET  /portal-lint-rules} : get all the portalLintRules.
      *
-     * @param filter the filter of the request.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of portalLintRules in body.
      */
     @GetMapping("/portal-lint-rules")
-    public List<PortalLintRule> getAllPortalLintRules(@RequestParam(required = false) String filter) {
-        if ("portallintruleconfig-is-null".equals(filter)) {
-            log.debug("REST request to get all PortalLintRules where portalLintRuleConfig is null");
-            return StreamSupport
-                .stream(portalLintRuleRepository.findAll().spliterator(), false)
-                .filter(portalLintRule -> portalLintRule.getPortalLintRuleConfig() == null)
-                .collect(Collectors.toList());
-        }
+    public List<PortalLintRule> getAllPortalLintRules() {
         log.debug("REST request to get all PortalLintRules");
         return portalLintRuleRepository.findAll();
     }

@@ -45,7 +45,7 @@
       "otherEntityRelationshipName": "lintRuleViolation",
       "relationshipValidateRules": "required",
       "relationshipName": "lintRule",
-      "otherEntityField": "ruleId"
+      "otherEntityField": "title"
     },
     {
       "relationshipType": "many-to-one",

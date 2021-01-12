@@ -1,18 +1,16 @@
-import { IPortalLintRuleConfig } from 'app/shared/model/portal-lint-rule-config.model';
-import { IPortalLintRuleSet } from 'app/shared/model/portal-lint-rule-set.model';
+import { ILintRule } from 'app/shared/model/lint-rule.model';
+import { IPortal } from 'app/shared/model/portal.model';
 
 export interface IPortalLintRule {
   id?: number;
-  name?: string;
-  portalLintRuleConfig?: IPortalLintRuleConfig;
-  portalRuleSet?: IPortalLintRuleSet;
+  ruleId?: string;
+  enabled?: boolean;
+  lintRule?: ILintRule;
+  portal?: IPortal;
 }
 
 export class PortalLintRule implements IPortalLintRule {
-  constructor(
-    public id?: number,
-    public name?: string,
-    public portalLintRuleConfig?: IPortalLintRuleConfig,
-    public portalRuleSet?: IPortalLintRuleSet
-  ) {}
+  constructor(public id?: number, public ruleId?: string, public enabled?: boolean, public lintRule?: ILintRule, public portal?: IPortal) {
+    this.enabled = this.enabled || false;
+  }
 }
