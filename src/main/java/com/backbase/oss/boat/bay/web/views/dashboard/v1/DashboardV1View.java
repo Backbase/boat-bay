@@ -2,6 +2,7 @@ package com.backbase.oss.boat.bay.web.views.dashboard.v1;
 
 import com.backbase.oss.boat.bay.domain.Dashboard;
 import com.backbase.oss.boat.bay.domain.Portal;
+import com.backbase.oss.boat.bay.domain.ProductRelease;
 import com.backbase.oss.boat.bay.repository.extended.BoatDashboardRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatPortalRepository;
 import java.util.stream.Collectors;
@@ -35,6 +36,7 @@ public class DashboardV1View {
         Portal portal = dashboard.getDefaultPortal();
         // Only list products with capabilities...
         portal.setProducts(portal.getProducts().stream().filter(product -> !product.getCapabilities().isEmpty()).collect(Collectors.toSet()));
+
 
         LegacyPortalDto portalDto = dashboardMapper.mapPortal(portal);
         portalDto.setReleases(dashboardMapper.mapReleases(portal));

@@ -2,24 +2,24 @@ package com.backbase.oss.boat.bay.service.lint;
 
 import com.backbase.oss.boat.bay.domain.LintReport;
 import com.backbase.oss.boat.bay.domain.LintRuleViolation;
-import com.backbase.oss.boat.bay.domain.PortalLintRule;
 import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.domain.enumeration.Severity;
 import com.backbase.oss.boat.bay.events.SpecUpdatedEvent;
-import com.backbase.oss.boat.bay.repository.LintReportRepository;
+import com.backbase.oss.boat.bay.repository.SpecRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatLintReportRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatLintRuleRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatLintRuleViolationRepository;
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.context.event.EventListener;
-import org.springframework.data.domain.Example;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +39,15 @@ public class BoatSpecLinter {
     private final BoatLintRuleRepository boatLintRuleRepository;
     private final BoatLintReportRepository lintReportRepository;
     private final RulesManager rulesManager;
+    private final SpecRepository specRepository;
+
+    private final ExecutorService executorService = Executors.newFixedThreadPool(1);
+
+
+    public void lint(Long id) {
+        Optional<Spec> byId = specRepository.findById(id);
+        byId.ifPresent(this::lint);
+    }
 
     @Transactional
     public LintReport lint(Spec spec) {
@@ -113,12 +122,11 @@ public class BoatSpecLinter {
         return lintRuleViolation;
     }
 
-//    @EventListener(SpecUpdatedEvent.class)
-//    @Async
-//    public void handleSpecUpdated(SpecUpdatedEvent event) {
-//        lint(event.getSpec());
-//
-//    }
-
+    @EventListener(SpecUpdatedEvent.class)
+    @Async
+    public void handleSpecUpdated(SpecUpdatedEvent event) {
+        Long id = event.getSpec().getId();
+        executorService.submit(() -> lint(id));
+    }
 
 }
