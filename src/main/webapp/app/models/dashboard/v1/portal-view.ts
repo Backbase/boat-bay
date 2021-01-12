@@ -4,7 +4,7 @@ import { Product } from './product';
 export interface ProductRelease {
   title: string;
   services: { [key: string]: string };
-  specs: { [key: string]: string };
+  specs: number[];
 }
 
 export interface PortalView {

@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -178,7 +179,9 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
 
                 if(!specsInZip.isEmpty()) {
                     ProductRelease productRelease = new ProductRelease();
-                    productRelease.setName(SpringExpressionUtils.parseName(source.getProductReleaseSpEL(), item, item.info().getName()));
+                    String name = SpringExpressionUtils.parseName(source.getProductReleaseSpEL(), item, item.info().getName());
+                    productRelease.setKey(name.toLowerCase(Locale.ROOT));
+                    productRelease.setName(name);
                     productRelease.setSpecs(specsInZip);
                     log.info("Adding {} to release named: {}", specsInZip.size(), productRelease.getName());
                     scanResult.addProductRelease(productRelease);
@@ -198,7 +201,7 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
         File file = item.info();
 
         if(!zipEntry.isDirectory() && zipEntry.getName().endsWith(".yaml")) {
-            log.info("Creating spec from zip entry: ", zipEntry.getName());
+            log.info("Creating spec from zip entry: {}", zipEntry.getName());
             String openApi = getOpenApiFromZipStream(stream);
 
             String filename = StringUtils.substringAfter(zipEntry.getName(), "/");
@@ -217,14 +220,14 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
             spec.setFilename(filename);
             spec.setSourcePath(zipEntry.getName());
             spec.setSourceUrl(file.getDownloadUri());
-            spec.setSourceName(file.getName());
+            spec.setSourceName(filename);
             spec.setSourceCreatedBy(file.getCreatedBy());
             spec.setSourceCreatedOn(file.getCreated().toInstant());
             spec.setSourceLastModifiedBy(file.getModifiedBy());
             spec.setSourceLastModifiedOn(file.getLastModified().toInstant());
             return Optional.of(spec);
         } else {
-            log.info("Ignoring {}", zipEntry.getName());
+            log.debug("Ignoring {}", zipEntry.getName());
         }
         return Optional.empty();
 
