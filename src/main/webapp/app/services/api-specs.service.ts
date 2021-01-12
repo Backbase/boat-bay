@@ -101,7 +101,7 @@ export class ApiSpecsService {
 
   private constructApiStructureForModules(
     servicesForSelectedProduct: UiApiModule[],
-    specsForSelectedProduct: { [key: string]: string },
+    specsForSelectedProduct: number[],
     apiModulesMap: Map<String, ApiModule>
   ): UiApiModule[] {
     const moduleNames = Object.entries(servicesForSelectedProduct);
@@ -116,7 +116,7 @@ export class ApiSpecsService {
           icon: api['x-icon'] || '',
           version: moduleVersion.version,
           portalPath: moduleVersion.version,
-          specs: Object.values(api.specs).filter(spec => spec.version === specsForSelectedProduct[spec.key]),
+          specs: Object.values(api.specs).filter(spec => specsForSelectedProduct.includes(spec.id)),
         });
       }
 

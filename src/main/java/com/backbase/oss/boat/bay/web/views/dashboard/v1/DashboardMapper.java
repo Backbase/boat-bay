@@ -7,13 +7,14 @@ import com.backbase.oss.boat.bay.domain.ProductRelease;
 import com.backbase.oss.boat.bay.domain.ServiceDefinition;
 import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.domain.Tag;
-import com.backbase.oss.boat.bay.repository.extended.BoatPortalRepository;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
@@ -64,10 +65,10 @@ public interface DashboardMapper {
     }
 
 
-    default Map<String, LegacyPortalDto.SpecDto> map(Set<Spec> specs) {
+    default Map<Long, LegacyPortalDto.SpecDto> map(Set<Spec> specs) {
         return specs.stream()
             .map(this::mapSpec)
-            .collect(Collectors.toMap(LegacyPortalDto.SpecDto::getName, specDto -> specDto));
+            .collect(Collectors.toMap(LegacyPortalDto.SpecDto::getId, specDto -> specDto));
     }
 
 
@@ -87,14 +88,18 @@ public interface DashboardMapper {
             pr.setKey(productRelease.getKey());
             pr.setTitle(productRelease.getName());
             pr.setServices(specs.stream().map(Spec::getServiceDefinition)
-                .distinct()
                 .sorted(Comparator.comparing(ServiceDefinition::getName))
+                .filter(distinctByKey(ServiceDefinition::getKey))
                 .collect(toLinkedMap(ServiceDefinition::getKey, ServiceDefinition::getName)));
-            pr.setSpecs(specs.stream()
-                .collect(Collectors.toMap(Spec::getKey, Spec::getVersion)));
+            pr.setSpecs(specs.stream().map(Spec::getId).collect(Collectors.toSet()));
             result.put(product.getKey(), pr);
         });
         return result;
+    }
+
+    static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+        Set<Object> seen = ConcurrentHashMap.newKeySet();
+        return t -> seen.add(keyExtractor.apply(t));
     }
 
     static <T, K, U> Collector<T, ?, Map<K, U>> toLinkedMap(

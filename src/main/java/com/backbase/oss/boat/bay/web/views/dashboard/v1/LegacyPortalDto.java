@@ -23,7 +23,7 @@ class LegacyPortalDto {
         String key;
         String title;
         Map<String, String> services;
-        Map<String, String> specs;
+        Set<Long> specs;
     }
 
     @Data
@@ -55,16 +55,14 @@ class LegacyPortalDto {
 
     @Data
     static class ModuleDto {
-
         private String key;
-        private Long id;
         private String title;
-        private Map<String, String> versions;
+        private Map<String, Long> versions;
         private String description;
         private Set<String> tags;
         @JsonProperty("x-icon")
         private String xIcon;
-        private Map<String, SpecDto> specs;
+        private Map<Long, SpecDto> specs;
     }
 
     @Data
@@ -82,7 +80,7 @@ class LegacyPortalDto {
     @Data
     static class SpecDto {
 
-        private String id;
+        private Long id;
         private String name;
         private String key;
         private String title;

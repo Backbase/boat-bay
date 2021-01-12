@@ -24,8 +24,8 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -72,8 +72,12 @@ public class SpecSourceResolver {
             productReleaseRepository.save(productRelease);
         } else {
             scan.getProductReleases().forEach(pr -> {
-                if(!productReleaseRepository.exists(Example.of(new ProductRelease().portal(source.getPortal()).key(pr.getKey()))))  {
+                if (!productReleaseRepository.exists(Example.of(new ProductRelease().portal(source.getPortal()).key(pr.getKey())))) {
                     log.info("Create Product Release: {} for Portal: {}", pr.getName(), source.getPortal());
+                    pr.setPortal(source.getPortal());
+                    if (pr.getKey() == null && pr.getName() != null) {
+                        pr.setKey(pr.getName().toLowerCase(Locale.ROOT));
+                    }
                     productReleaseRepository.save(pr);
                 }
             });
@@ -96,13 +100,14 @@ public class SpecSourceResolver {
         String md5 = spec.getChecksum();
         if (md5 == null) {
             md5 = DigestUtils.md5DigestAsHex(spec.getOpenApi().getBytes(StandardCharsets.UTF_8));
+            spec.setChecksum(md5);
         }
         Optional<Spec> existingSpec = boatSpecRepository.findByChecksumAndSource(md5, source);
 
         if (existingSpec.isPresent() && !source.isOverwriteChanges()) {
             log.info("Spec: {}  already exists for source: {}", existingSpec.get().getName(), source.getName());
-             spec.setId(existingSpec.get().getId());
-             return spec;
+            spec.setId(existingSpec.get().getId());
+            return spec;
         } else if (existingSpec.isPresent() && source.isOverwriteChanges()) {
             log.info("Updating spec: {}", spec.getName());
             spec.setId(existingSpec.get().getId());

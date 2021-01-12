@@ -7,5 +7,5 @@ export interface ApiModule {
   tags: string[];
   id?: number;
   'x-icon'?: string;
-  specs: { [key: string]: Spec };
+  specs: { [key: number]: Spec };
 }
