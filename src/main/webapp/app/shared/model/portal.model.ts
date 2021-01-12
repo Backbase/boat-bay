@@ -1,7 +1,7 @@
 import { Moment } from 'moment';
 import { IProductRelease } from 'app/shared/model/product-release.model';
 import { IProduct } from 'app/shared/model/product.model';
-import { IPortalLintRuleSet } from 'app/shared/model/portal-lint-rule-set.model';
+import { IPortalLintRule } from 'app/shared/model/portal-lint-rule.model';
 
 export interface IPortal {
   id?: number;
@@ -18,7 +18,7 @@ export interface IPortal {
   hide?: boolean;
   productReleases?: IProductRelease[];
   products?: IProduct[];
-  portalRuleSet?: IPortalLintRuleSet;
+  portalLintRules?: IPortalLintRule[];
 }
 
 export class Portal implements IPortal {
@@ -37,7 +37,7 @@ export class Portal implements IPortal {
     public hide?: boolean,
     public productReleases?: IProductRelease[],
     public products?: IProduct[],
-    public portalRuleSet?: IPortalLintRuleSet
+    public portalLintRules?: IPortalLintRule[]
   ) {
     this.hide = this.hide || false;
   }

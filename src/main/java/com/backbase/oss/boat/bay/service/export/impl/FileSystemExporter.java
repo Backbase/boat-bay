@@ -3,7 +3,6 @@ package com.backbase.oss.boat.bay.service.export.impl;
 import com.backbase.oss.boat.ExportException;
 import com.backbase.oss.boat.bay.domain.Capability;
 import com.backbase.oss.boat.bay.domain.Portal;
-import com.backbase.oss.boat.bay.domain.PortalLintRuleSet;
 import com.backbase.oss.boat.bay.domain.Product;
 import com.backbase.oss.boat.bay.domain.ProductRelease;
 import com.backbase.oss.boat.bay.domain.ServiceDefinition;
@@ -14,7 +13,6 @@ import com.backbase.oss.boat.bay.service.export.ExportInfo;
 import com.backbase.oss.boat.bay.service.export.ExportOptions;
 import com.backbase.oss.boat.bay.service.export.ExportType;
 import com.backbase.oss.boat.bay.service.export.Exporter;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -52,7 +50,6 @@ public class FileSystemExporter implements Exporter {
         objectMapper.addMixIn(Spec.class, MixInSpec.class);
         objectMapper.addMixIn(ProductRelease.class, MixInProductRelease.class);
         objectMapper.addMixIn(Tag.class, MixIn.class);
-        objectMapper.addMixIn(PortalLintRuleSet.class, MixInPortalLintRuleSet.class);
     }
 
     @Override

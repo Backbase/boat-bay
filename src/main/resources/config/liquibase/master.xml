@@ -24,9 +24,7 @@
     <include file="config/liquibase/changelog/20201223122159_added_entity_Source.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201223102815_added_entity_LintRule.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201223102915_added_entity_LintRuleSet.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20201229100359_added_entity_PortalLintRuleSet.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201229100459_added_entity_PortalLintRule.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20201229100559_added_entity_PortalLintRuleConfig.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201223103015_added_entity_LintReport.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201223103115_added_entity_LintRuleViolation.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210105091636_added_entity_ProductRelease.xml" relativeToChangelogFile="false"/>
@@ -40,9 +38,7 @@
     <include file="config/liquibase/changelog/20201223102615_added_entity_constraints_Spec.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201223122159_added_entity_constraints_Source.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201223102815_added_entity_constraints_LintRule.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20201229100359_added_entity_constraints_PortalLintRuleSet.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201229100459_added_entity_constraints_PortalLintRule.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20201229100559_added_entity_constraints_PortalLintRuleConfig.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201223103115_added_entity_constraints_LintRuleViolation.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20201223103015_added_entity_constraints_LintReport.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20210105091636_added_entity_constraints_ProductRelease.xml" relativeToChangelogFile="false"/>

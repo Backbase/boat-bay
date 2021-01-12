@@ -20,7 +20,7 @@ describe('Service Tests', () => {
       service = injector.get(PortalLintRuleService);
       httpMock = injector.get(HttpTestingController);
 
-      elemDefault = new PortalLintRule(0, 'AAAAAAA');
+      elemDefault = new PortalLintRule(0, 'AAAAAAA', false);
     });
 
     describe('Service methods', () => {
@@ -54,7 +54,8 @@ describe('Service Tests', () => {
       it('should update a PortalLintRule', () => {
         const returnedFromService = Object.assign(
           {
-            name: 'BBBBBB',
+            ruleId: 'BBBBBB',
+            enabled: true,
           },
           elemDefault
         );
@@ -71,7 +72,8 @@ describe('Service Tests', () => {
       it('should return a list of PortalLintRule', () => {
         const returnedFromService = Object.assign(
           {
-            name: 'BBBBBB',
+            ruleId: 'BBBBBB',
+            enabled: true,
           },
           elemDefault
         );

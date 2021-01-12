@@ -39,9 +39,8 @@
     </mat-card-content>
 
     <mat-card-footer>
-        <a mat-icon-button
-           matTooltipPosition="above"  *ngFor="let spec of service.specs || []" [routerLink]="['/quay/report/', spec.id]" [matTooltip]="spec.title">
-            <mat-icon>{{spec.icon || 'extension'}}</mat-icon><br/><span class="version">{{spec.version}}</span>
+        <a mat-icon-button *ngFor="let spec of service.specs || []" [routerLink]="['/quay/report/', spec.id]">
+            <mat-icon [matTooltip]="spec.title" matTooltipClass="spec-tooltip" matTooltipPosition="above">{{spec.icon || 'extension'}}</mat-icon><div class="version">{{spec.version}}</div>
         </a>
     </mat-card-footer>
   </mat-card>

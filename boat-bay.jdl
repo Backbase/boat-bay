@@ -152,19 +152,9 @@ entity LintRuleSet {
     externalUrl String
 }
 
-
-entity PortalLintRuleSet {
-    name String required
-}
-
 entity PortalLintRule {
-    name String required
-}
-
-entity PortalLintRuleConfig {
-    path String required
-    type String required
-    value TextBlob required
+    ruleId String required
+    enabled Boolean required
 }
 
 entity LintReport {
@@ -203,6 +193,7 @@ enum DescriptionResolveStrategy {
 relationship ManyToMany {
     ProductRelease to Spec
     Spec to Tag
+
 }
 
 relationship OneToMany {
@@ -213,8 +204,9 @@ relationship OneToMany {
 	ServiceDefinition to Spec{serviceDefinition(name) required}
 	LintReport{violations} to LintRuleViolation{lintReport(name)}
 	LintRuleSet to LintRule{ruleSet(name) required}
-	PortalLintRuleSet to PortalLintRule{portalRuleSet(name) required}
+	Portal to PortalLintRule{portal(name) required}
 	Source to SourcePath{source(name)}
+
 }
 
 relationship ManyToOne {
@@ -229,14 +221,13 @@ relationship ManyToOne {
     Source{capability(name)} to Capability
     Source{serviceDefinition(name)} to ServiceDefinition
 
-    LintRuleViolation{lintRule(ruleId) required} to LintRule
+    LintRuleViolation{lintRule(title) required} to LintRule
+
+    PortalLintRule{lintRule(title) required} to LintRule
 
 }
 
 relationship OneToOne {
     Dashboard{defaultPortal(name) required} to Portal
 	LintReport to Spec
-    PortalLintRuleSet{portal(name) required} to Portal{portalRuleSet(name)}
-    PortalLintRuleConfig to PortalLintRule
-
 }

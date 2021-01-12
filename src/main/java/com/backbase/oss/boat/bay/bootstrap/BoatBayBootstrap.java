@@ -72,6 +72,9 @@ public class BoatBayBootstrap {
 
     @PostConstruct
     public void loadBootstrapFile() {
+
+        setupDefaultRules();
+
         log.info("Loading bootstrap from: {}", bootstrapFile);
         ObjectMapper objectMapper = new ObjectMapper(YAMLFactory.builder().build());
         objectMapper.registerModule(javaTimeModule);
@@ -152,8 +155,6 @@ public class BoatBayBootstrap {
         private List<SpecType> specTypes;
     }
 
-    @EventListener({ContextRefreshedEvent.class})
-    @Async
     public void setupDefaultRules() {
         log.info("Loading Default BOAT Linting Rules");
 

@@ -2,7 +2,8 @@ package com.backbase.oss.boat.bay.web.rest;
 
 import com.backbase.oss.boat.bay.BoatBayApp;
 import com.backbase.oss.boat.bay.domain.PortalLintRule;
-import com.backbase.oss.boat.bay.domain.PortalLintRuleSet;
+import com.backbase.oss.boat.bay.domain.LintRule;
+import com.backbase.oss.boat.bay.domain.Portal;
 import com.backbase.oss.boat.bay.repository.PortalLintRuleRepository;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -30,8 +31,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WithMockUser
 public class PortalLintRuleResourceIT {
 
-    private static final String DEFAULT_NAME = "AAAAAAAAAA";
-    private static final String UPDATED_NAME = "BBBBBBBBBB";
+    private static final String DEFAULT_RULE_ID = "AAAAAAAAAA";
+    private static final String UPDATED_RULE_ID = "BBBBBBBBBB";
+
+    private static final Boolean DEFAULT_ENABLED = false;
+    private static final Boolean UPDATED_ENABLED = true;
 
     @Autowired
     private PortalLintRuleRepository portalLintRuleRepository;
@@ -52,17 +56,28 @@ public class PortalLintRuleResourceIT {
      */
     public static PortalLintRule createEntity(EntityManager em) {
         PortalLintRule portalLintRule = new PortalLintRule()
-            .name(DEFAULT_NAME);
+            .ruleId(DEFAULT_RULE_ID)
+            .enabled(DEFAULT_ENABLED);
         // Add required entity
-        PortalLintRuleSet portalLintRuleSet;
-        if (TestUtil.findAll(em, PortalLintRuleSet.class).isEmpty()) {
-            portalLintRuleSet = PortalLintRuleSetResourceIT.createEntity(em);
-            em.persist(portalLintRuleSet);
+        LintRule lintRule;
+        if (TestUtil.findAll(em, LintRule.class).isEmpty()) {
+            lintRule = LintRuleResourceIT.createEntity(em);
+            em.persist(lintRule);
             em.flush();
         } else {
-            portalLintRuleSet = TestUtil.findAll(em, PortalLintRuleSet.class).get(0);
+            lintRule = TestUtil.findAll(em, LintRule.class).get(0);
         }
-        portalLintRule.setPortalRuleSet(portalLintRuleSet);
+        portalLintRule.setLintRule(lintRule);
+        // Add required entity
+        Portal portal;
+        if (TestUtil.findAll(em, Portal.class).isEmpty()) {
+            portal = PortalResourceIT.createEntity(em);
+            em.persist(portal);
+            em.flush();
+        } else {
+            portal = TestUtil.findAll(em, Portal.class).get(0);
+        }
+        portalLintRule.setPortal(portal);
         return portalLintRule;
     }
     /**
@@ -73,17 +88,28 @@ public class PortalLintRuleResourceIT {
      */
     public static PortalLintRule createUpdatedEntity(EntityManager em) {
         PortalLintRule portalLintRule = new PortalLintRule()
-            .name(UPDATED_NAME);
+            .ruleId(UPDATED_RULE_ID)
+            .enabled(UPDATED_ENABLED);
         // Add required entity
-        PortalLintRuleSet portalLintRuleSet;
-        if (TestUtil.findAll(em, PortalLintRuleSet.class).isEmpty()) {
-            portalLintRuleSet = PortalLintRuleSetResourceIT.createUpdatedEntity(em);
-            em.persist(portalLintRuleSet);
+        LintRule lintRule;
+        if (TestUtil.findAll(em, LintRule.class).isEmpty()) {
+            lintRule = LintRuleResourceIT.createUpdatedEntity(em);
+            em.persist(lintRule);
             em.flush();
         } else {
-            portalLintRuleSet = TestUtil.findAll(em, PortalLintRuleSet.class).get(0);
+            lintRule = TestUtil.findAll(em, LintRule.class).get(0);
         }
-        portalLintRule.setPortalRuleSet(portalLintRuleSet);
+        portalLintRule.setLintRule(lintRule);
+        // Add required entity
+        Portal portal;
+        if (TestUtil.findAll(em, Portal.class).isEmpty()) {
+            portal = PortalResourceIT.createUpdatedEntity(em);
+            em.persist(portal);
+            em.flush();
+        } else {
+            portal = TestUtil.findAll(em, Portal.class).get(0);
+        }
+        portalLintRule.setPortal(portal);
         return portalLintRule;
     }
 
@@ -106,7 +132,8 @@ public class PortalLintRuleResourceIT {
         List<PortalLintRule> portalLintRuleList = portalLintRuleRepository.findAll();
         assertThat(portalLintRuleList).hasSize(databaseSizeBeforeCreate + 1);
         PortalLintRule testPortalLintRule = portalLintRuleList.get(portalLintRuleList.size() - 1);
-        assertThat(testPortalLintRule.getName()).isEqualTo(DEFAULT_NAME);
+        assertThat(testPortalLintRule.getRuleId()).isEqualTo(DEFAULT_RULE_ID);
+        assertThat(testPortalLintRule.isEnabled()).isEqualTo(DEFAULT_ENABLED);
     }
 
     @Test
@@ -131,10 +158,29 @@ public class PortalLintRuleResourceIT {
 
     @Test
     @Transactional
-    public void checkNameIsRequired() throws Exception {
+    public void checkRuleIdIsRequired() throws Exception {
         int databaseSizeBeforeTest = portalLintRuleRepository.findAll().size();
         // set the field null
-        portalLintRule.setName(null);
+        portalLintRule.setRuleId(null);
+
+        // Create the PortalLintRule, which fails.
+
+
+        restPortalLintRuleMockMvc.perform(post("/api/portal-lint-rules")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(portalLintRule)))
+            .andExpect(status().isBadRequest());
+
+        List<PortalLintRule> portalLintRuleList = portalLintRuleRepository.findAll();
+        assertThat(portalLintRuleList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    public void checkEnabledIsRequired() throws Exception {
+        int databaseSizeBeforeTest = portalLintRuleRepository.findAll().size();
+        // set the field null
+        portalLintRule.setEnabled(null);
 
         // Create the PortalLintRule, which fails.
 
@@ -159,7 +205,8 @@ public class PortalLintRuleResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(portalLintRule.getId().intValue())))
-            .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)));
+            .andExpect(jsonPath("$.[*].ruleId").value(hasItem(DEFAULT_RULE_ID)))
+            .andExpect(jsonPath("$.[*].enabled").value(hasItem(DEFAULT_ENABLED.booleanValue())));
     }
     
     @Test
@@ -173,7 +220,8 @@ public class PortalLintRuleResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(portalLintRule.getId().intValue()))
-            .andExpect(jsonPath("$.name").value(DEFAULT_NAME));
+            .andExpect(jsonPath("$.ruleId").value(DEFAULT_RULE_ID))
+            .andExpect(jsonPath("$.enabled").value(DEFAULT_ENABLED.booleanValue()));
     }
     @Test
     @Transactional
@@ -196,7 +244,8 @@ public class PortalLintRuleResourceIT {
         // Disconnect from session so that the updates on updatedPortalLintRule are not directly saved in db
         em.detach(updatedPortalLintRule);
         updatedPortalLintRule
-            .name(UPDATED_NAME);
+            .ruleId(UPDATED_RULE_ID)
+            .enabled(UPDATED_ENABLED);
 
         restPortalLintRuleMockMvc.perform(put("/api/portal-lint-rules")
             .contentType(MediaType.APPLICATION_JSON)
@@ -207,7 +256,8 @@ public class PortalLintRuleResourceIT {
         List<PortalLintRule> portalLintRuleList = portalLintRuleRepository.findAll();
         assertThat(portalLintRuleList).hasSize(databaseSizeBeforeUpdate);
         PortalLintRule testPortalLintRule = portalLintRuleList.get(portalLintRuleList.size() - 1);
-        assertThat(testPortalLintRule.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testPortalLintRule.getRuleId()).isEqualTo(UPDATED_RULE_ID);
+        assertThat(testPortalLintRule.isEnabled()).isEqualTo(UPDATED_ENABLED);
     }
 
     @Test
