@@ -71,10 +71,13 @@ public class SourceScannerTest {
     public void fileSystemSourceScannerGithubInputTest() throws ExportException {
         FileSystemSourceScanner scanner =new FileSystemSourceScanner(portalRepository,productRepository,capabilityRepository,serviceDefinitionRepository,specRepository,productReleaseRepository, specTypeRepository,tagRepository,new ObjectMapper(new YAMLFactory()));
         Source source = new Source();
-        source.addSourcePath(new SourcePath().name("https://github.com/Backbase/boat-bay.git"));
+        source.addSourcePath(new SourcePath().name("https://stash.backbase.com/scm/~bartv/boat-bay-data.git"));
         scanner.setSource(source);
         ScanResult result = scanner.scan();
         Portal portal = result.getSource().getPortal();
+        // check out repo locally and update
+        // create a controller were boat mvn plug push specs on validate and lint
+
 
         ExportInfo export = fileSystemExporter.export(new ExportOptions(portal, ExportType.FILE_SYSTEM, "/Users/sophiej/Documents/Projects/opensauce/boat-bay/boat-bay/test-target/exporter"));
 
