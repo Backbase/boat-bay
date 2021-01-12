@@ -24,22 +24,12 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import liquibase.pro.packaged.F;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.InvalidRemoteException;
-import org.eclipse.jgit.api.errors.TransportException;
-import org.eclipse.jgit.lib.*;
-import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.RevTree;
-import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
-import org.eclipse.jgit.treewalk.TreeWalk;
-import org.eclipse.jgit.treewalk.filter.PathFilter;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -51,7 +41,6 @@ import javax.persistence.Entity;
 /**
  * Walks over a directory structure and based on directory names and depths, import specs
  */
-// annotate with bundler
 @Slf4j
 @RequiredArgsConstructor
 public class FileSystemSourceScanner implements SpecSourceScanner {
@@ -93,12 +82,8 @@ public class FileSystemSourceScanner implements SpecSourceScanner {
             Path scanPath;
 
             try {
+                    scanPath= Path.of(p.getName());
 
-                if (p.getName().endsWith(".git")) {
-                    scanPath = scanGitRepo(p.getName());
-                } else {
-                    scanPath = Path.of(p.getName());
-                }
 
                 List<Portal> portalsScanned = Files.walk(scanPath)
                     .filter(Files::isRegularFile)
@@ -124,63 +109,7 @@ public class FileSystemSourceScanner implements SpecSourceScanner {
 
     }
 
-    private Path scanGitRepo(String path) throws IOException {
 
-      //  File repoDir = new File(path);
-
-        // now open the resulting repository with a FileRepositoryBuilder
-        File localPath = new File("/Users/sophiej/Documents/Projects/opensauce/boat-bay/boat-bay/test-target");
-        if(!localPath.delete()) {
-            throw new IOException("Could not delete temporary file " + localPath);
-        }
-
-        // then clone
-        System.out.println("Cloning from " + path + " to " + localPath);
-        try (Git result = Git.cloneRepository()
-            .setURI(path)
-            .setDirectory(localPath)
-            .setProgressMonitor(new SimpleProgressMonitor())
-            .call()) {
-            // Note: the call() returns an opened repository already which needs to be closed to avoid file handle leaks!
-            System.out.println("Having repository: " + result.getRepository().getDirectory());
-        } catch (InvalidRemoteException e) {
-            e.printStackTrace();
-        } catch (TransportException e) {
-            e.printStackTrace();
-        } catch (GitAPIException e) {
-            e.printStackTrace();
-        }
-
-//        // a RevWalk allows to walk over commits based on some filtering that is defined
-//        try (RevWalk revWalk = new RevWalk(existingRepo)) {
-//            RevCommit commit = revWalk.parseCommit(head);
-//            // and using commit's tree find the path
-//            RevTree tree = commit.getTree();
-//            System.out.println("Having tree: " + tree);
-//
-//            // now try to find a specific file
-//            try (TreeWalk treeWalk = new TreeWalk(existingRepo)) {
-//                treeWalk.addTree(tree);
-//                treeWalk.setRecursive(true);
-//                treeWalk.setFilter(PathFilter.create("portal.yaml"));
-//                if (!treeWalk.next()) {
-//                    throw new IllegalStateException("Did not find expected file 'portal.yaml'");
-//                }
-//
-//                ObjectId objectId = treeWalk.getObjectId(0);
-//                ObjectLoader loader = existingRepo.open(objectId);
-//
-//                objectMapper.readValue(loader.openStream(), Portal.class);
-//
-//                // and then one can the loader to read the file
-//                //loader.copyTo();
-//            }
-//
-//            revWalk.dispose();
-//        }
-//        return existingRepo.getDirectory().toPath();
-        return null;
-    }
 
     private Optional<Portal> mapPortal(Path scanPath, Path path) {
 
@@ -196,7 +125,7 @@ public class FileSystemSourceScanner implements SpecSourceScanner {
             portal.setProductReleases(new HashSet<>());
             portalRepository.save(portal);
 
-            for (ProductRelease p : productReleases) {
+            for (ProductRelease p : productReleases){
 
                 p.setPortal(portal);
                 productReleaseRepository.save(p);
@@ -238,7 +167,7 @@ public class FileSystemSourceScanner implements SpecSourceScanner {
                 product.setId(null);
                 productRepository.save(product);
                 product.setId(productRepository.findOne(Example.of(product)).get().getId());
-            } else {
+            }else {
                 productRepository.save(product);
             }
 
@@ -278,7 +207,7 @@ public class FileSystemSourceScanner implements SpecSourceScanner {
                 capability.setId(null);
                 capabilityRepository.save(capability);
                 capability.setId(capabilityRepository.findOne(Example.of(capability)).get().getId());
-            } else {
+            }else {
                 capabilityRepository.save(capability);
             }
 
@@ -319,7 +248,7 @@ public class FileSystemSourceScanner implements SpecSourceScanner {
                 service.setId(null);
                 serviceDefinitionRepository.save(service);
                 service.setId(serviceDefinitionRepository.findOne(Example.of(service)).get().getId());
-            } else {
+            }else {
                 serviceDefinitionRepository.save(service);
             }
 
@@ -372,7 +301,7 @@ public class FileSystemSourceScanner implements SpecSourceScanner {
             List<Tag> tags = new ArrayList<>();
             tags.addAll(spec.getTags());
 
-            for (Tag t : tags) {
+            for (Tag t : tags){
                 spec.removeTag(t);
 
                 t.setId(null);
@@ -406,32 +335,6 @@ public class FileSystemSourceScanner implements SpecSourceScanner {
     @Override
     public SourceType getSourceType() {
         return SourceType.FILE_SYSTEM;
-    }
-    private static class SimpleProgressMonitor implements ProgressMonitor {
-        @Override
-        public void start(int totalTasks) {
-            System.out.println("Starting work on " + totalTasks + " tasks");
-        }
-
-        @Override
-        public void beginTask(String title, int totalWork) {
-            System.out.println("Start " + title + ": " + totalWork);
-        }
-
-        @Override
-        public void update(int completed) {
-            System.out.print(completed + "-");
-        }
-
-        @Override
-        public void endTask() {
-            System.out.println("Done");
-        }
-
-        @Override
-        public boolean isCancelled() {
-            return false;
-        }
     }
 
 
