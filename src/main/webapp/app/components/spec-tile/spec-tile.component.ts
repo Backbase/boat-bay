@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { environment } from 'app/environments/environment';
 import { UiApiModule } from 'app/models/dashboard/v1';
-import { ApiSpecsService } from 'app/services/api-specs.service';
+import { ApiSpecsService } from 'app/components/api-specs.service';
 
 @Component({
   selector: 'app-spec-tile',
@@ -19,5 +19,16 @@ export class SpecTileComponent implements OnInit {
 
   ngOnInit(): void {
     this.tileColor = this.apiSpecsService.getSpecColorAsPerTags(this.service.tags);
+  }
+
+  hideTag(service: UiApiModule, tag: string): void {
+    this.apiSpecsService.hideTag(tag).subscribe(response => {
+      if (response.ok) {
+        const index: number = service.tags.indexOf(tag);
+        if (index !== -1) {
+          service.tags.splice(index, 1);
+        }
+      }
+    });
   }
 }

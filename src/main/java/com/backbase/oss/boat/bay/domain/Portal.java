@@ -33,14 +33,8 @@ public class Portal implements Serializable {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "title")
-    private String title;
-
     @Column(name = "sub_title")
     private String subTitle;
-
-    @Column(name = "nav_title")
-    private String navTitle;
 
     @Column(name = "logo_url")
     private String logoUrl;
@@ -108,19 +102,6 @@ public class Portal implements Serializable {
         this.name = name;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public Portal title(String title) {
-        this.title = title;
-        return this;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getSubTitle() {
         return subTitle;
     }
@@ -132,19 +113,6 @@ public class Portal implements Serializable {
 
     public void setSubTitle(String subTitle) {
         this.subTitle = subTitle;
-    }
-
-    public String getNavTitle() {
-        return navTitle;
-    }
-
-    public Portal navTitle(String navTitle) {
-        this.navTitle = navTitle;
-        return this;
-    }
-
-    public void setNavTitle(String navTitle) {
-        this.navTitle = navTitle;
     }
 
     public String getLogoUrl() {
@@ -324,9 +292,7 @@ public class Portal implements Serializable {
             "id=" + getId() +
             ", key='" + getKey() + "'" +
             ", name='" + getName() + "'" +
-            ", title='" + getTitle() + "'" +
             ", subTitle='" + getSubTitle() + "'" +
-            ", navTitle='" + getNavTitle() + "'" +
             ", logoUrl='" + getLogoUrl() + "'" +
             ", logoLink='" + getLogoLink() + "'" +
             ", content='" + getContent() + "'" +

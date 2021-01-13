@@ -1,5 +1,5 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { ApiSpecsService } from 'app/services/api-specs.service';
+import { ApiSpecsService } from 'app/components/api-specs.service';
 
 @Component({
   selector: 'app-specs-filter',

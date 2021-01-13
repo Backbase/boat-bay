@@ -7,9 +7,7 @@ export interface IServiceDefinition {
   key?: string;
   name?: string;
   order?: number;
-  title?: string;
   subTitle?: string;
-  navTitle?: string;
   description?: any;
   icon?: string;
   color?: string;
@@ -26,9 +24,7 @@ export class ServiceDefinition implements IServiceDefinition {
     public key?: string,
     public name?: string,
     public order?: number,
-    public title?: string,
     public subTitle?: string,
-    public navTitle?: string,
     public description?: any,
     public icon?: string,
     public color?: string,

@@ -13,6 +13,10 @@
       "fieldName": "description",
       "fieldType": "byte[]",
       "fieldTypeBlobContent": "text"
+    },
+    {
+      "fieldName": "hide",
+      "fieldType": "Boolean"
     }
   ],
   "relationships": [

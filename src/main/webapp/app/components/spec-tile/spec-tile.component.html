@@ -1,38 +1,43 @@
-<a [href]="service.portalPath">
-  <mat-card [attr.aria-label]="service.title + '-tile'" [ngClass]="tileColor">
+<mat-card [attr.aria-label]="service.key + '-tile'" [ngClass]="tileColor">
     <mat-card-header>
-      <mat-icon mat-card-avatar class="tile-icon">{{
-        service.icon || 'extension'
-      }}</mat-icon>
-      <mat-card-title
-        data-role="title"
-        [innerHTML]="
-          service.title
+        <mat-icon mat-card-avatar class="tile-icon">{{
+            service.icon || 'extension'
+            }}</mat-icon>
+        <mat-card-title
+            data-role="title"
+            [innerHTML]="
+          service.name
             | ellipsis: titleLength
             | titlecase
             | highlight: (searchableString | async)
         "
-      >
-      </mat-card-title>
-<!--      <mat-card-subtitle>-->
+        >
+        </mat-card-title>
+        <mat-card-subtitle>
+          <mat-chip-list aria-label="Tags" selectable="fa;se">
+              <mat-chip color="primary" *ngFor="let tag of service.tags || [];" >
+                  {{tag}}
+                  <mat-icon matChipRemove (click)="hideTag(service, tag)">cancel</mat-icon>
+              </mat-chip>
+          </mat-chip-list>
+
 <!--        <span-->
-<!--          data-role="tag"-->
-<!--          *ngFor="let tag of service.tags || []; let isLast = last"-->
-<!--          class="tag"-->
-<!--          [innerHTML]="-->
+<!--            data-role="tag"-->
+<!--            *ngFor="let tag of service.tags || []; let isLast = last"-->
+<!--            class="tag"-->
+<!--            [innerHTML]="-->
 <!--            tag + (isLast ? '' : ', ')-->
 <!--              | titlecase-->
 <!--              | highlight: (searchableString | async)-->
 <!--          "-->
 <!--        >-->
 <!--        </span>-->
-<!--      </mat-card-subtitle>-->
+        </mat-card-subtitle>
     </mat-card-header>
     <mat-card-content
-      data-role="description"
-      [innerHTML]="
+        data-role="description"
+        [innerHTML]="
         service.description
-        | linkReplacer
         | ellipsis: descriptionLength
       "
     >
@@ -40,8 +45,9 @@
 
     <mat-card-footer>
         <a mat-icon-button *ngFor="let spec of service.specs || []" [routerLink]="['/quay/report/', spec.id]">
-            <mat-icon [matTooltip]="spec.title" matTooltipClass="spec-tooltip" matTooltipPosition="above">{{spec.icon || 'extension'}}</mat-icon><div class="version">{{spec.version}}</div>
+            <mat-icon [matTooltip]="spec.title" matTooltipClass="spec-tooltip"
+                      matTooltipPosition="above">{{spec.icon || 'extension'}}</mat-icon>
+            <div class="version">{{spec.version}}</div>
         </a>
     </mat-card-footer>
-  </mat-card>
-</a>
+</mat-card>

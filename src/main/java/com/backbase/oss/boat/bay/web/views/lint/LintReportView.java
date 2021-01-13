@@ -1,12 +1,10 @@
-package com.backbase.oss.boat.bay.web.views.lint.v1;
+package com.backbase.oss.boat.bay.web.views.lint;
 
 import com.backbase.oss.boat.bay.domain.LintReport;
 import com.backbase.oss.boat.bay.domain.Spec;
-import com.backbase.oss.boat.bay.repository.LintReportRepository;
 import com.backbase.oss.boat.bay.repository.SpecRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatLintReportRepository;
 import com.backbase.oss.boat.bay.service.lint.BoatSpecLinter;
-import com.backbase.oss.boat.quay.model.BoatLintReport;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

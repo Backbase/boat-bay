@@ -18,11 +18,13 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { BbDashboardComponent } from 'app/bb-dashboard/bb-dashboard.component';
+import { MatChipsModule } from '@angular/material/chips';
 
 @NgModule({
   imports: [
     BoatBaySharedModule,
-    RouterModule.forChild([HOME_ROUTE]),
+    RouterModule.forChild(HOME_ROUTE),
     MatExpansionModule,
     MatIconModule,
     MatProgressSpinnerModule,
@@ -32,7 +34,16 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatInputModule,
     MatButtonModule,
     MatTooltipModule,
+    MatChipsModule,
   ],
-  declarations: [HomeComponent, DashboardComponent, ProductComponent, SpecTileComponent, ReleaseSelectorComponent, SpecsFilterComponent],
+  declarations: [
+    HomeComponent,
+    DashboardComponent,
+    ProductComponent,
+    SpecTileComponent,
+    ReleaseSelectorComponent,
+    SpecsFilterComponent,
+    BbDashboardComponent,
+  ],
 })
 export class BoatBayHomeModule {}

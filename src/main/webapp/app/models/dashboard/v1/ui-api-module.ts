@@ -1,7 +1,8 @@
 import { Spec } from './spec';
 
 export interface UiApiModule {
-  title: string;
+  key: string;
+  name: string;
   version: string;
   portalPath: string;
   description: string;

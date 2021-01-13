@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatAccordion } from '@angular/material/expansion';
 import { Observable, Subscription } from 'rxjs';
 import { UiApiModule } from 'app/models/dashboard/v1';
-import { ApiSpecsService } from 'app/services/api-specs.service';
+import { ApiSpecsService } from 'app/components/api-specs.service';
 
 @Component({
   selector: 'app-product',

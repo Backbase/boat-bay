@@ -20,15 +20,7 @@
       "fieldType": "Integer"
     },
     {
-      "fieldName": "title",
-      "fieldType": "String"
-    },
-    {
       "fieldName": "subTitle",
-      "fieldType": "String"
-    },
-    {
-      "fieldName": "navTitle",
       "fieldType": "String"
     },
     {

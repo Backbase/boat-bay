@@ -9,9 +9,7 @@ entity Dashboard {
 entity Portal {
 	key String required unique
 	name String required
-    title String
     subTitle String
-    navTitle String
     logoUrl String
     logoLink String
     content TextBlob
@@ -30,7 +28,6 @@ entity Product {
     key String required
 	name String required
 	order Integer
-    title String
     content TextBlob
     createdOn Instant
     createdBy String
@@ -41,9 +38,7 @@ entity Capability {
 	key String required
     name String required
     order Integer
-    title String
     subTitle String
-    navTitle String
     content TextBlob
     createdOn Instant
     createdBy String
@@ -54,9 +49,7 @@ entity ServiceDefinition {
 	key String required
 	name String required
 	order Integer
-    title String
     subTitle String
-    navTitle String
     description TextBlob
     icon String
     color String
@@ -97,6 +90,7 @@ entity Spec {
 entity Tag {
     name String required unique
     description TextBlob
+    hide Boolean
 }
 
 entity SpecType {

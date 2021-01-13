@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, Routes } from '@angular/router';
 import { LintReport } from '../models/lint-report';
 import { EMPTY, Observable, of } from 'rxjs';
-import { BoatQuayService } from '../services/boat-quay.service';
+import { BoatLintReportService } from '../services/boat-lint-report.service';
 import { flatMap } from 'rxjs/operators';
 import { HttpResponse } from '@angular/common/http';
 import { Authority } from '../shared/constants/authority.constants';
@@ -12,7 +12,7 @@ import { BoatQuayDashboardComponent } from 'app/boat-quay-dashboard/boat-quay-da
 
 @Injectable({ providedIn: 'root' })
 export class BoatQuayReportResolve implements Resolve<LintReport> {
-  constructor(private service: BoatQuayService, private router: Router) {}
+  constructor(private service: BoatLintReportService, private router: Router) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<LintReport> | Promise<LintReport> | LintReport {
     const id = route.params['id'];

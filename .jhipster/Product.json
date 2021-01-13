@@ -20,10 +20,6 @@
       "fieldType": "Integer"
     },
     {
-      "fieldName": "title",
-      "fieldType": "String"
-    },
-    {
       "fieldName": "content",
       "fieldType": "byte[]",
       "fieldTypeBlobContent": "text"

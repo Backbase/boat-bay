@@ -49,7 +49,7 @@ spring:
       enabled: false
   jpa:
     database-platform: io.github.jhipster.domain.util.FixedH2Dialect
-    show-sql: false
+    show-sql: true
   liquibase:
     # Remove 'faker' if you do not want the sample data to be loaded automatically
     contexts: dev
