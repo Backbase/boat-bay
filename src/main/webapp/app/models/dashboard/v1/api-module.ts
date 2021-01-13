@@ -1,7 +1,8 @@
 import { Spec } from './';
 
 export interface ApiModule {
-  title: string;
+  key: string;
+  name: string;
   versions: { [key: string]: string };
   description: string;
   tags: string[];

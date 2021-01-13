@@ -37,9 +37,6 @@ public class Product implements Serializable {
     @Column(name = "jhi_order")
     private Integer order;
 
-    @Column(name = "title")
-    private String title;
-
     @Lob
     @Column(name = "content")
     private String content;
@@ -108,19 +105,6 @@ public class Product implements Serializable {
 
     public void setOrder(Integer order) {
         this.order = order;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public Product title(String title) {
-        this.title = title;
-        return this;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getContent() {
@@ -238,7 +222,6 @@ public class Product implements Serializable {
             ", key='" + getKey() + "'" +
             ", name='" + getName() + "'" +
             ", order=" + getOrder() +
-            ", title='" + getTitle() + "'" +
             ", content='" + getContent() + "'" +
             ", createdOn='" + getCreatedOn() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +

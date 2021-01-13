@@ -7,7 +7,7 @@ import { LintReport } from '../models/lint-report';
 @Injectable({
   providedIn: 'root',
 })
-export class BoatQuayService {
+export class BoatLintReportService {
   public resourceUrl = SERVER_API_URL + 'api/v1/lint';
 
   constructor(protected http: HttpClient) {}

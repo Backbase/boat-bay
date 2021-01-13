@@ -7,7 +7,7 @@
     <mat-expansion-panel-header>
       <mat-panel-title>
         <mat-icon class="product-title-icon" mat-card-avatar>folder</mat-icon>
-        <span class="mat-subheading" data-role="product-title"
+        <span class="mat-subheading" data-role="product-key"
           >{{ name | uppercase }}
           <span>
             ({{ (apiSpecs$ | async)?.length
@@ -24,7 +24,7 @@
       <div class="spec-tile" *ngFor="let spec of apiSpecs">
         <app-spec-tile
             [service]="spec"
-          [attr.data-role]="spec.title + '-spec-tile' | lowercase"
+          [attr.data-role]="spec.name + '-spec-tile' | lowercase"
         ></app-spec-tile>
       </div>
 

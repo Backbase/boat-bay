@@ -657,6 +657,12 @@
             <artifactId>lombok</artifactId>
         </dependency>
 
+<!--        <dependency>-->
+<!--            <groupId>org.jobrunr</groupId>-->
+<!--            <artifactId>jobrunr-spring-boot-starter</artifactId>-->
+<!--            <version>1.2.3</version>-->
+<!--        </dependency>-->
+
 
         <dependency>
             <groupId>io.undertow</groupId>

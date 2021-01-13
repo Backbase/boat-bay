@@ -42,14 +42,8 @@ public class ServiceDefinitionResourceIT {
     private static final Integer DEFAULT_ORDER = 1;
     private static final Integer UPDATED_ORDER = 2;
 
-    private static final String DEFAULT_TITLE = "AAAAAAAAAA";
-    private static final String UPDATED_TITLE = "BBBBBBBBBB";
-
     private static final String DEFAULT_SUB_TITLE = "AAAAAAAAAA";
     private static final String UPDATED_SUB_TITLE = "BBBBBBBBBB";
-
-    private static final String DEFAULT_NAV_TITLE = "AAAAAAAAAA";
-    private static final String UPDATED_NAV_TITLE = "BBBBBBBBBB";
 
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
@@ -91,9 +85,7 @@ public class ServiceDefinitionResourceIT {
             .key(DEFAULT_KEY)
             .name(DEFAULT_NAME)
             .order(DEFAULT_ORDER)
-            .title(DEFAULT_TITLE)
             .subTitle(DEFAULT_SUB_TITLE)
-            .navTitle(DEFAULT_NAV_TITLE)
             .description(DEFAULT_DESCRIPTION)
             .icon(DEFAULT_ICON)
             .color(DEFAULT_COLOR)
@@ -123,9 +115,7 @@ public class ServiceDefinitionResourceIT {
             .key(UPDATED_KEY)
             .name(UPDATED_NAME)
             .order(UPDATED_ORDER)
-            .title(UPDATED_TITLE)
             .subTitle(UPDATED_SUB_TITLE)
-            .navTitle(UPDATED_NAV_TITLE)
             .description(UPDATED_DESCRIPTION)
             .icon(UPDATED_ICON)
             .color(UPDATED_COLOR)
@@ -167,9 +157,7 @@ public class ServiceDefinitionResourceIT {
         assertThat(testServiceDefinition.getKey()).isEqualTo(DEFAULT_KEY);
         assertThat(testServiceDefinition.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testServiceDefinition.getOrder()).isEqualTo(DEFAULT_ORDER);
-        assertThat(testServiceDefinition.getTitle()).isEqualTo(DEFAULT_TITLE);
         assertThat(testServiceDefinition.getSubTitle()).isEqualTo(DEFAULT_SUB_TITLE);
-        assertThat(testServiceDefinition.getNavTitle()).isEqualTo(DEFAULT_NAV_TITLE);
         assertThat(testServiceDefinition.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testServiceDefinition.getIcon()).isEqualTo(DEFAULT_ICON);
         assertThat(testServiceDefinition.getColor()).isEqualTo(DEFAULT_COLOR);
@@ -250,9 +238,7 @@ public class ServiceDefinitionResourceIT {
             .andExpect(jsonPath("$.[*].key").value(hasItem(DEFAULT_KEY)))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].order").value(hasItem(DEFAULT_ORDER)))
-            .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE)))
             .andExpect(jsonPath("$.[*].subTitle").value(hasItem(DEFAULT_SUB_TITLE)))
-            .andExpect(jsonPath("$.[*].navTitle").value(hasItem(DEFAULT_NAV_TITLE)))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
             .andExpect(jsonPath("$.[*].icon").value(hasItem(DEFAULT_ICON)))
             .andExpect(jsonPath("$.[*].color").value(hasItem(DEFAULT_COLOR)))
@@ -275,9 +261,7 @@ public class ServiceDefinitionResourceIT {
             .andExpect(jsonPath("$.key").value(DEFAULT_KEY))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.order").value(DEFAULT_ORDER))
-            .andExpect(jsonPath("$.title").value(DEFAULT_TITLE))
             .andExpect(jsonPath("$.subTitle").value(DEFAULT_SUB_TITLE))
-            .andExpect(jsonPath("$.navTitle").value(DEFAULT_NAV_TITLE))
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
             .andExpect(jsonPath("$.icon").value(DEFAULT_ICON))
             .andExpect(jsonPath("$.color").value(DEFAULT_COLOR))
@@ -309,9 +293,7 @@ public class ServiceDefinitionResourceIT {
             .key(UPDATED_KEY)
             .name(UPDATED_NAME)
             .order(UPDATED_ORDER)
-            .title(UPDATED_TITLE)
             .subTitle(UPDATED_SUB_TITLE)
-            .navTitle(UPDATED_NAV_TITLE)
             .description(UPDATED_DESCRIPTION)
             .icon(UPDATED_ICON)
             .color(UPDATED_COLOR)
@@ -331,9 +313,7 @@ public class ServiceDefinitionResourceIT {
         assertThat(testServiceDefinition.getKey()).isEqualTo(UPDATED_KEY);
         assertThat(testServiceDefinition.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testServiceDefinition.getOrder()).isEqualTo(UPDATED_ORDER);
-        assertThat(testServiceDefinition.getTitle()).isEqualTo(UPDATED_TITLE);
         assertThat(testServiceDefinition.getSubTitle()).isEqualTo(UPDATED_SUB_TITLE);
-        assertThat(testServiceDefinition.getNavTitle()).isEqualTo(UPDATED_NAV_TITLE);
         assertThat(testServiceDefinition.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testServiceDefinition.getIcon()).isEqualTo(UPDATED_ICON);
         assertThat(testServiceDefinition.getColor()).isEqualTo(UPDATED_COLOR);

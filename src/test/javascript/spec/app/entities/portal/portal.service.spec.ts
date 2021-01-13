@@ -24,20 +24,7 @@ describe('Service Tests', () => {
       httpMock = injector.get(HttpTestingController);
       currentDate = moment();
 
-      elemDefault = new Portal(
-        0,
-        'AAAAAAA',
-        'AAAAAAA',
-        'AAAAAAA',
-        'AAAAAAA',
-        'AAAAAAA',
-        'AAAAAAA',
-        'AAAAAAA',
-        'AAAAAAA',
-        currentDate,
-        'AAAAAAA',
-        false
-      );
+      elemDefault = new Portal(0, 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', currentDate, 'AAAAAAA', false);
     });
 
     describe('Service methods', () => {
@@ -84,9 +71,7 @@ describe('Service Tests', () => {
           {
             key: 'BBBBBB',
             name: 'BBBBBB',
-            title: 'BBBBBB',
             subTitle: 'BBBBBB',
-            navTitle: 'BBBBBB',
             logoUrl: 'BBBBBB',
             logoLink: 'BBBBBB',
             content: 'BBBBBB',
@@ -116,9 +101,7 @@ describe('Service Tests', () => {
           {
             key: 'BBBBBB',
             name: 'BBBBBB',
-            title: 'BBBBBB',
             subTitle: 'BBBBBB',
-            navTitle: 'BBBBBB',
             logoUrl: 'BBBBBB',
             logoLink: 'BBBBBB',
             content: 'BBBBBB',

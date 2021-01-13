@@ -1,0 +1,16 @@
+<h1>Available Portals</h1>
+<a *ngFor="let portal of portals" [routerLink]="['/dashboard/', portal.key]">
+    <mat-card>
+        <mat-card-title>{{portal.name}}</mat-card-title>
+        <mat-card-subtitle>{{portal.subTitle}}</mat-card-subtitle>
+        <mat-card-content><p class="portal-content">{{portal.content}}</p>
+            <dl>
+                <dt *ngIf="portal.createdBy">Created By</dt>
+                <dd *ngIf="portal.createdBy">{{portal.createdBy}}</dd>
+                <dt *ngIf="portal.createdOn">Created On</dt>
+                <dd *ngIf="portal.createdOn">{{portal.createdOn}}</dd>
+            </dl>
+        </mat-card-content>
+    </mat-card>
+</a>
+

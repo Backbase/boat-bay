@@ -4,7 +4,9 @@ import { catchError, first, map, shareReplay } from 'rxjs/operators';
 
 import { ApiModule, PortalView, Product, UiApiModule } from 'app/models/dashboard/v1';
 import { NAVIGATION_FILE_PATH } from '../tokens';
-import { DashboardViewService } from 'app/services/dashboard.view.service';
+import { BoatDashboardService } from 'app/services/boat-dashboard.service';
+import { BoatTagManagerService } from 'app/services/boat-tag-manager.service';
+import { HttpResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
@@ -46,8 +48,8 @@ export class ApiSpecsService {
     map(([apiModules, searchQuery]: [[string, ApiModule][], string]) => {
       const formattedSearchQuery = searchQuery.trim().toLowerCase();
 
-      const filteredApiModules: [string, ApiModule][] = apiModules.filter(([, { title, tags }]) => {
-        const isTitleMathSearchQuery = title.toLowerCase().includes(formattedSearchQuery);
+      const filteredApiModules: [string, ApiModule][] = apiModules.filter(([, { name, tags }]) => {
+        const isTitleMathSearchQuery = name.toLowerCase().includes(formattedSearchQuery);
         const isTagsMatchSearchQuery = tags.some(tag => tag.toLowerCase().includes(formattedSearchQuery));
 
         return isTitleMathSearchQuery || isTagsMatchSearchQuery;
@@ -69,7 +71,11 @@ export class ApiSpecsService {
     })
   );
 
-  constructor(@Inject(NAVIGATION_FILE_PATH) private navigationFilePath: string, private dashboardViewService: DashboardViewService) {
+  constructor(
+    @Inject(NAVIGATION_FILE_PATH) private navigationFilePath: string,
+    private dashboardViewService: BoatDashboardService,
+    private tagService: BoatTagManagerService
+  ) {
     this.availableReleaseVersions$.pipe(first()).subscribe(releaseVersions => this.selectCurrentReleaseVersion(releaseVersions[0]));
   }
 
@@ -110,7 +116,8 @@ export class ApiSpecsService {
       const api = apiModulesMap.get(moduleName);
       if (api) {
         listOfApiModules.push({
-          title: api.title,
+          key: api.key,
+          name: api.name,
           description: api.description,
           tags: api.tags,
           icon: api['x-icon'] || '',
@@ -139,5 +146,9 @@ export class ApiSpecsService {
 
   public selectCurrentReleaseVersion(version: string): void {
     this.currentReleaseVersion$$.next(version);
+  }
+
+  public hideTag(tag: string): Observable<HttpResponse<any>> {
+    return this.tagService.hide(tag);
   }
 }

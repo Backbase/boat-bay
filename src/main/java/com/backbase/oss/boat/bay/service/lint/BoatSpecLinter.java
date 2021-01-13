@@ -4,13 +4,10 @@ import com.backbase.oss.boat.bay.domain.LintReport;
 import com.backbase.oss.boat.bay.domain.LintRuleViolation;
 import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.domain.enumeration.Severity;
-import com.backbase.oss.boat.bay.events.SpecUpdatedEvent;
-import com.backbase.oss.boat.bay.repository.SpecRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatLintReportRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatLintRuleRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatLintRuleViolationRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatSpecRepository;
-import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -21,8 +18,6 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.context.event.EventListener;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,12 +40,6 @@ public class BoatSpecLinter {
     private final BoatSpecRepository specRepository;
 
     private final ExecutorService executorService = Executors.newFixedThreadPool(4);
-
-    @EventListener(SpecUpdatedEvent.class)
-    @Async
-    public void handleSpecUpdated(SpecUpdatedEvent event) {
-        scheduleLintJob(event.getSpec());
-    }
 
 
     @Scheduled(fixedRate = 3600000)
@@ -139,7 +128,6 @@ public class BoatSpecLinter {
         lintRuleViolation.setUrl(result.getUrl().toString());
         return lintRuleViolation;
     }
-
 
 
 }

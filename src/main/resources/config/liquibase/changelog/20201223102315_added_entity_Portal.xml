@@ -22,13 +22,7 @@
             <column name="name" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
-            <column name="title" type="varchar(255)">
-                <constraints nullable="true" />
-            </column>
             <column name="sub_title" type="varchar(255)">
-                <constraints nullable="true" />
-            </column>
-            <column name="nav_title" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
             <column name="logo_url" type="varchar(255)">
@@ -75,9 +69,7 @@
             <column name="id" type="numeric"/>
             <column name="jhi_key" type="string"/>
             <column name="name" type="string"/>
-            <column name="title" type="string"/>
             <column name="sub_title" type="string"/>
-            <column name="nav_title" type="string"/>
             <column name="logo_url" type="string"/>
             <column name="logo_link" type="string"/>
             <column name="content" type="clob"/>

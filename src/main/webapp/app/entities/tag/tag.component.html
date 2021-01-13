@@ -25,6 +25,7 @@
                     <th scope="col" ><span>ID</span></th>
                     <th scope="col" ><span>Name</span></th>
                     <th scope="col" ><span>Description</span></th>
+                    <th scope="col" ><span>Hide</span></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -33,6 +34,7 @@
                     <td><a [routerLink]="['/tag', tag.id, 'view']">{{ tag.id }}</a></td>
                     <td>{{ tag.name }}</td>
                     <td>{{ tag.description }}</td>
+                    <td>{{ tag.hide }}</td>
                     <td class="text-right">
                         <div class="btn-group">
                             <button type="submit"

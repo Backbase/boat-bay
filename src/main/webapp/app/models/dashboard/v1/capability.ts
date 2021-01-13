@@ -1,5 +1,5 @@
 import { Modules } from './modules';
 export interface Capability {
-  title: string;
+  name: string;
   modules: Modules;
 }

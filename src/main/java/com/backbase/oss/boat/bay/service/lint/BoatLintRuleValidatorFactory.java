@@ -60,7 +60,7 @@ public class BoatLintRuleValidatorFactory {
         return apiValidator;
     }
 
-    private void prepareLintRules(Portal portal) {
+    private synchronized void prepareLintRules(Portal portal) {
         if(!portalLintRuleRepository.existsAllByPortal(portal)) {
             portalLintRuleRepository.saveAll(lintRuleRepository.findAll().stream().map(lintRule ->
                 new PortalLintRule()

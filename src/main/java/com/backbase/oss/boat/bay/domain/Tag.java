@@ -33,6 +33,9 @@ public class Tag implements Serializable {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "hide")
+    private Boolean hide;
+
     @ManyToMany(mappedBy = "tags")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
@@ -71,6 +74,19 @@ public class Tag implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Boolean isHide() {
+        return hide;
+    }
+
+    public Tag hide(Boolean hide) {
+        this.hide = hide;
+        return this;
+    }
+
+    public void setHide(Boolean hide) {
+        this.hide = hide;
     }
 
     public Set<Spec> getSpecs() {
@@ -122,6 +138,7 @@ public class Tag implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
+            ", hide='" + isHide() + "'" +
             "}";
     }
 }
