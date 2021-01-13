@@ -18,8 +18,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 /**
  * REST controller for managing {@link com.backbase.oss.boat.bay.domain.Portal}.
@@ -85,18 +83,10 @@ public class PortalResource {
     /**
      * {@code GET  /portals} : get all the portals.
      *
-     * @param filter the filter of the request.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of portals in body.
      */
     @GetMapping("/portals")
-    public List<Portal> getAllPortals(@RequestParam(required = false) String filter) {
-        if ("portalruleset-is-null".equals(filter)) {
-            log.debug("REST request to get all Portals where portalRuleSet is null");
-            return StreamSupport
-                .stream(portalRepository.findAll().spliterator(), false)
-                .filter(portal -> portal.getPortalRuleSet() == null)
-                .collect(Collectors.toList());
-        }
+    public List<Portal> getAllPortals() {
         log.debug("REST request to get all Portals");
         return portalRepository.findAll();
     }

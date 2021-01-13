@@ -15,6 +15,7 @@ $tile-colors: (
 @each $tag, $tag-color in $tile-colors {
   .#{$tag} {
     border-top: 4px solid $tag-color;
+
     .tile-icon {
       color: $tag-color;
     }
@@ -25,9 +26,9 @@ a {
   text-decoration: none;
 }
 
-mat-card {
-  width: 300px;
-  height: 268px;
+mat-card.legacy-portal {
+  width: 400px;
+  min-height: 300px;
   display: flex;
   flex-direction: column;
   padding: 25px 16px 16px 16px;

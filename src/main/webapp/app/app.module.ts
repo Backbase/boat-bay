@@ -19,6 +19,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDividerModule } from '@angular/material/divider';
 import { BoatQuayModule } from 'app/boat-quay/boat-quay.module';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   imports: [
@@ -33,6 +34,7 @@ import { BoatQuayModule } from 'app/boat-quay/boat-quay.module';
     BoatQuayModule,
     MatMenuModule,
     BrowserAnimationsModule,
+    MatTooltipModule,
     MatDividerModule,
   ],
   providers: [...environment.providers],

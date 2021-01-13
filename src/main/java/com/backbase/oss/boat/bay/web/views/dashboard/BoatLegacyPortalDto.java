@@ -1,4 +1,4 @@
-package com.backbase.oss.boat.bay.web.views.dashboard.v1;
+package com.backbase.oss.boat.bay.web.views.dashboard;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.LinkedHashMap;
@@ -8,12 +8,11 @@ import java.util.Set;
 import lombok.Data;
 
 @Data
-class LegacyPortalDto {
+public class BoatLegacyPortalDto {
 
     private Long id;
     private String key;
     private String name;
-    private String title;
     private Map<String, Map<String,ProductReleaseDto>> releases = new LinkedHashMap<>();
     private Map<String, ProductDto> products = new LinkedHashMap<>();
     private Map<String, CapabilityDto> capabilities = new LinkedHashMap<>();
@@ -30,7 +29,6 @@ class LegacyPortalDto {
     static class ProductDto {
 
         private Long id;
-        private String title;
         private String key;
         private String name;
         private List<String> capabilities;
@@ -48,7 +46,7 @@ class LegacyPortalDto {
     static class CapabilityDto {
 
         private String key;
-        private String title;
+        private String name;
         private Map<String, ModuleDto> modules;
 
     }
@@ -56,8 +54,7 @@ class LegacyPortalDto {
     @Data
     static class ModuleDto {
         private String key;
-        private String title;
-        private Map<String, Long> versions;
+        private String name;
         private String description;
         private Set<String> tags;
         @JsonProperty("x-icon")
@@ -67,7 +64,7 @@ class LegacyPortalDto {
 
     @Data
     static class ServiceDto {
-        private String title;
+        private String name;
         private String description;
         private List<String> versions;
         private List<String> tags;

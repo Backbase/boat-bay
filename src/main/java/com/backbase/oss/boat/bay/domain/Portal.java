@@ -1,6 +1,5 @@
 package com.backbase.oss.boat.bay.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -34,14 +33,8 @@ public class Portal implements Serializable {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "title")
-    private String title;
-
     @Column(name = "sub_title")
     private String subTitle;
-
-    @Column(name = "nav_title")
-    private String navTitle;
 
     @Column(name = "logo_url")
     private String logoUrl;
@@ -70,9 +63,9 @@ public class Portal implements Serializable {
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Product> products = new HashSet<>();
 
-    @OneToOne(mappedBy = "portal")
-    @JsonIgnore
-    private PortalLintRuleSet portalRuleSet;
+    @OneToMany(mappedBy = "portal")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<PortalLintRule> portalLintRules = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -109,19 +102,6 @@ public class Portal implements Serializable {
         this.name = name;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public Portal title(String title) {
-        this.title = title;
-        return this;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getSubTitle() {
         return subTitle;
     }
@@ -133,19 +113,6 @@ public class Portal implements Serializable {
 
     public void setSubTitle(String subTitle) {
         this.subTitle = subTitle;
-    }
-
-    public String getNavTitle() {
-        return navTitle;
-    }
-
-    public Portal navTitle(String navTitle) {
-        this.navTitle = navTitle;
-        return this;
-    }
-
-    public void setNavTitle(String navTitle) {
-        this.navTitle = navTitle;
     }
 
     public String getLogoUrl() {
@@ -276,17 +243,29 @@ public class Portal implements Serializable {
         this.products = products;
     }
 
-    public PortalLintRuleSet getPortalRuleSet() {
-        return portalRuleSet;
+    public Set<PortalLintRule> getPortalLintRules() {
+        return portalLintRules;
     }
 
-    public Portal portalRuleSet(PortalLintRuleSet portalLintRuleSet) {
-        this.portalRuleSet = portalLintRuleSet;
+    public Portal portalLintRules(Set<PortalLintRule> portalLintRules) {
+        this.portalLintRules = portalLintRules;
         return this;
     }
 
-    public void setPortalRuleSet(PortalLintRuleSet portalLintRuleSet) {
-        this.portalRuleSet = portalLintRuleSet;
+    public Portal addPortalLintRule(PortalLintRule portalLintRule) {
+        this.portalLintRules.add(portalLintRule);
+        portalLintRule.setPortal(this);
+        return this;
+    }
+
+    public Portal removePortalLintRule(PortalLintRule portalLintRule) {
+        this.portalLintRules.remove(portalLintRule);
+        portalLintRule.setPortal(null);
+        return this;
+    }
+
+    public void setPortalLintRules(Set<PortalLintRule> portalLintRules) {
+        this.portalLintRules = portalLintRules;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
@@ -313,9 +292,7 @@ public class Portal implements Serializable {
             "id=" + getId() +
             ", key='" + getKey() + "'" +
             ", name='" + getName() + "'" +
-            ", title='" + getTitle() + "'" +
             ", subTitle='" + getSubTitle() + "'" +
-            ", navTitle='" + getNavTitle() + "'" +
             ", logoUrl='" + getLogoUrl() + "'" +
             ", logoLink='" + getLogoLink() + "'" +
             ", content='" + getContent() + "'" +

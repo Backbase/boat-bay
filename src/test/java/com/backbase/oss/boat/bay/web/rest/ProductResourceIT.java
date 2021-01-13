@@ -42,9 +42,6 @@ public class ProductResourceIT {
     private static final Integer DEFAULT_ORDER = 1;
     private static final Integer UPDATED_ORDER = 2;
 
-    private static final String DEFAULT_TITLE = "AAAAAAAAAA";
-    private static final String UPDATED_TITLE = "BBBBBBBBBB";
-
     private static final String DEFAULT_CONTENT = "AAAAAAAAAA";
     private static final String UPDATED_CONTENT = "BBBBBBBBBB";
 
@@ -79,7 +76,6 @@ public class ProductResourceIT {
             .key(DEFAULT_KEY)
             .name(DEFAULT_NAME)
             .order(DEFAULT_ORDER)
-            .title(DEFAULT_TITLE)
             .content(DEFAULT_CONTENT)
             .createdOn(DEFAULT_CREATED_ON)
             .createdBy(DEFAULT_CREATED_BY)
@@ -107,7 +103,6 @@ public class ProductResourceIT {
             .key(UPDATED_KEY)
             .name(UPDATED_NAME)
             .order(UPDATED_ORDER)
-            .title(UPDATED_TITLE)
             .content(UPDATED_CONTENT)
             .createdOn(UPDATED_CREATED_ON)
             .createdBy(UPDATED_CREATED_BY)
@@ -147,7 +142,6 @@ public class ProductResourceIT {
         assertThat(testProduct.getKey()).isEqualTo(DEFAULT_KEY);
         assertThat(testProduct.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testProduct.getOrder()).isEqualTo(DEFAULT_ORDER);
-        assertThat(testProduct.getTitle()).isEqualTo(DEFAULT_TITLE);
         assertThat(testProduct.getContent()).isEqualTo(DEFAULT_CONTENT);
         assertThat(testProduct.getCreatedOn()).isEqualTo(DEFAULT_CREATED_ON);
         assertThat(testProduct.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
@@ -226,7 +220,6 @@ public class ProductResourceIT {
             .andExpect(jsonPath("$.[*].key").value(hasItem(DEFAULT_KEY)))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].order").value(hasItem(DEFAULT_ORDER)))
-            .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE)))
             .andExpect(jsonPath("$.[*].content").value(hasItem(DEFAULT_CONTENT.toString())))
             .andExpect(jsonPath("$.[*].createdOn").value(hasItem(DEFAULT_CREATED_ON.toString())))
             .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
@@ -247,7 +240,6 @@ public class ProductResourceIT {
             .andExpect(jsonPath("$.key").value(DEFAULT_KEY))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.order").value(DEFAULT_ORDER))
-            .andExpect(jsonPath("$.title").value(DEFAULT_TITLE))
             .andExpect(jsonPath("$.content").value(DEFAULT_CONTENT.toString()))
             .andExpect(jsonPath("$.createdOn").value(DEFAULT_CREATED_ON.toString()))
             .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
@@ -277,7 +269,6 @@ public class ProductResourceIT {
             .key(UPDATED_KEY)
             .name(UPDATED_NAME)
             .order(UPDATED_ORDER)
-            .title(UPDATED_TITLE)
             .content(UPDATED_CONTENT)
             .createdOn(UPDATED_CREATED_ON)
             .createdBy(UPDATED_CREATED_BY)
@@ -295,7 +286,6 @@ public class ProductResourceIT {
         assertThat(testProduct.getKey()).isEqualTo(UPDATED_KEY);
         assertThat(testProduct.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testProduct.getOrder()).isEqualTo(UPDATED_ORDER);
-        assertThat(testProduct.getTitle()).isEqualTo(UPDATED_TITLE);
         assertThat(testProduct.getContent()).isEqualTo(UPDATED_CONTENT);
         assertThat(testProduct.getCreatedOn()).isEqualTo(UPDATED_CREATED_ON);
         assertThat(testProduct.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);

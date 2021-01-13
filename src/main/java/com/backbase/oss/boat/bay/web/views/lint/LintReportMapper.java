@@ -1,31 +1,22 @@
-package com.backbase.oss.boat.bay.web.views.lint.v1;
+package com.backbase.oss.boat.bay.web.views.lint;
 
 import com.backbase.oss.boat.bay.domain.LintReport;
 import com.backbase.oss.boat.bay.domain.LintRuleSet;
 import com.backbase.oss.boat.bay.domain.LintRuleViolation;
-import com.backbase.oss.boat.quay.model.BoatLintReport;
-import com.backbase.oss.boat.quay.model.BoatViolation;
 import com.fasterxml.jackson.core.JsonPointer;
 import kotlin.ranges.IntRange;
 import org.mapstruct.Mapper;
-import org.mapstruct.MapperConfig;
 import org.mapstruct.Mapping;
 import org.zalando.zally.rule.api.RuleSet;
 
 @Mapper(componentModel = "spring")
 public interface LintReportMapper {
 
-    @Mapping(target = "availableRules", ignore = true)
     @Mapping(target = "version", source = "spec.version")
-    @Mapping(target = "title", source = "name")
     @Mapping(target = "openApi", source = "spec.openApi")
-    @Mapping(target = "filePath", source = "spec.filename")
     BoatLintReport mapReport(LintReport specReport);
 
-    @Mapping(target = "availableRules", ignore = true)
     @Mapping(target = "version", source = "spec.version")
-    @Mapping(target = "title", source = "name")
-    @Mapping(target = "filePath", source = "spec.filename")
     @Mapping(target = "openApi", ignore = true)
     @Mapping(target = "violations",ignore = true)
     BoatLintReport mapReportWithoutViolations(LintReport lintReport);

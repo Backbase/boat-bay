@@ -1,6 +1,5 @@
 package com.backbase.oss.boat.bay.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -25,17 +24,22 @@ public class PortalLintRule implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "name", nullable = false)
-    private String name;
+    @Column(name = "rule_id", nullable = false)
+    private String ruleId;
 
-    @OneToOne(mappedBy = "portalLintRule")
-    @JsonIgnore
-    private PortalLintRuleConfig portalLintRuleConfig;
+    @NotNull
+    @Column(name = "enabled", nullable = false)
+    private Boolean enabled;
 
     @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties(value = "portalLintRules", allowSetters = true)
-    private PortalLintRuleSet portalRuleSet;
+    private LintRule lintRule;
+
+    @ManyToOne(optional = false)
+    @NotNull
+    @JsonIgnoreProperties(value = "portalLintRules", allowSetters = true)
+    private Portal portal;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -46,43 +50,56 @@ public class PortalLintRule implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getRuleId() {
+        return ruleId;
     }
 
-    public PortalLintRule name(String name) {
-        this.name = name;
+    public PortalLintRule ruleId(String ruleId) {
+        this.ruleId = ruleId;
         return this;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setRuleId(String ruleId) {
+        this.ruleId = ruleId;
     }
 
-    public PortalLintRuleConfig getPortalLintRuleConfig() {
-        return portalLintRuleConfig;
+    public Boolean isEnabled() {
+        return enabled;
     }
 
-    public PortalLintRule portalLintRuleConfig(PortalLintRuleConfig portalLintRuleConfig) {
-        this.portalLintRuleConfig = portalLintRuleConfig;
+    public PortalLintRule enabled(Boolean enabled) {
+        this.enabled = enabled;
         return this;
     }
 
-    public void setPortalLintRuleConfig(PortalLintRuleConfig portalLintRuleConfig) {
-        this.portalLintRuleConfig = portalLintRuleConfig;
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 
-    public PortalLintRuleSet getPortalRuleSet() {
-        return portalRuleSet;
+    public LintRule getLintRule() {
+        return lintRule;
     }
 
-    public PortalLintRule portalRuleSet(PortalLintRuleSet portalLintRuleSet) {
-        this.portalRuleSet = portalLintRuleSet;
+    public PortalLintRule lintRule(LintRule lintRule) {
+        this.lintRule = lintRule;
         return this;
     }
 
-    public void setPortalRuleSet(PortalLintRuleSet portalLintRuleSet) {
-        this.portalRuleSet = portalLintRuleSet;
+    public void setLintRule(LintRule lintRule) {
+        this.lintRule = lintRule;
+    }
+
+    public Portal getPortal() {
+        return portal;
+    }
+
+    public PortalLintRule portal(Portal portal) {
+        this.portal = portal;
+        return this;
+    }
+
+    public void setPortal(Portal portal) {
+        this.portal = portal;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
@@ -107,7 +124,8 @@ public class PortalLintRule implements Serializable {
     public String toString() {
         return "PortalLintRule{" +
             "id=" + getId() +
-            ", name='" + getName() + "'" +
+            ", ruleId='" + getRuleId() + "'" +
+            ", enabled='" + isEnabled() + "'" +
             "}";
     }
 }

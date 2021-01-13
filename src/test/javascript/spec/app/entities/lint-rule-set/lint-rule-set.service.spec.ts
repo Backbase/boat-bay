@@ -34,6 +34,43 @@ describe('Service Tests', () => {
         expect(expectedResult).toMatchObject(elemDefault);
       });
 
+      it('should create a LintRuleSet', () => {
+        const returnedFromService = Object.assign(
+          {
+            id: 0,
+          },
+          elemDefault
+        );
+
+        const expected = Object.assign({}, returnedFromService);
+
+        service.create(new LintRuleSet()).subscribe(resp => (expectedResult = resp.body));
+
+        const req = httpMock.expectOne({ method: 'POST' });
+        req.flush(returnedFromService);
+        expect(expectedResult).toMatchObject(expected);
+      });
+
+      it('should update a LintRuleSet', () => {
+        const returnedFromService = Object.assign(
+          {
+            ruleSetId: 'BBBBBB',
+            name: 'BBBBBB',
+            description: 'BBBBBB',
+            externalUrl: 'BBBBBB',
+          },
+          elemDefault
+        );
+
+        const expected = Object.assign({}, returnedFromService);
+
+        service.update(expected).subscribe(resp => (expectedResult = resp.body));
+
+        const req = httpMock.expectOne({ method: 'PUT' });
+        req.flush(returnedFromService);
+        expect(expectedResult).toMatchObject(expected);
+      });
+
       it('should return a list of LintRuleSet', () => {
         const returnedFromService = Object.assign(
           {
@@ -53,6 +90,14 @@ describe('Service Tests', () => {
         req.flush([returnedFromService]);
         httpMock.verify();
         expect(expectedResult).toContainEqual(expected);
+      });
+
+      it('should delete a LintRuleSet', () => {
+        service.delete(123).subscribe(resp => (expectedResult = resp.ok));
+
+        const req = httpMock.expectOne({ method: 'DELETE' });
+        req.flush({ status: 200 });
+        expect(expectedResult);
       });
     });
 

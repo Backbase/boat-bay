@@ -1,15 +1,13 @@
 import { Moment } from 'moment';
 import { IProductRelease } from 'app/shared/model/product-release.model';
 import { IProduct } from 'app/shared/model/product.model';
-import { IPortalLintRuleSet } from 'app/shared/model/portal-lint-rule-set.model';
+import { IPortalLintRule } from 'app/shared/model/portal-lint-rule.model';
 
 export interface IPortal {
   id?: number;
   key?: string;
   name?: string;
-  title?: string;
   subTitle?: string;
-  navTitle?: string;
   logoUrl?: string;
   logoLink?: string;
   content?: any;
@@ -18,7 +16,7 @@ export interface IPortal {
   hide?: boolean;
   productReleases?: IProductRelease[];
   products?: IProduct[];
-  portalRuleSet?: IPortalLintRuleSet;
+  portalLintRules?: IPortalLintRule[];
 }
 
 export class Portal implements IPortal {
@@ -26,9 +24,7 @@ export class Portal implements IPortal {
     public id?: number,
     public key?: string,
     public name?: string,
-    public title?: string,
     public subTitle?: string,
-    public navTitle?: string,
     public logoUrl?: string,
     public logoLink?: string,
     public content?: any,
@@ -37,7 +33,7 @@ export class Portal implements IPortal {
     public hide?: boolean,
     public productReleases?: IProductRelease[],
     public products?: IProduct[],
-    public portalRuleSet?: IPortalLintRuleSet
+    public portalLintRules?: IPortalLintRule[]
   ) {
     this.hide = this.hide || false;
   }

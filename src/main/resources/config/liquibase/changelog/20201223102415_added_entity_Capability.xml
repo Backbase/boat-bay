@@ -25,13 +25,7 @@
             <column name="jhi_order" type="integer">
                 <constraints nullable="true" />
             </column>
-            <column name="title" type="varchar(255)">
-                <constraints nullable="true" />
-            </column>
             <column name="sub_title" type="varchar(255)">
-                <constraints nullable="true" />
-            </column>
-            <column name="nav_title" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
             <column name="content" type="${clobType}">
@@ -76,9 +70,7 @@
             <column name="jhi_key" type="string"/>
             <column name="name" type="string"/>
             <column name="jhi_order" type="numeric"/>
-            <column name="title" type="string"/>
             <column name="sub_title" type="string"/>
-            <column name="nav_title" type="string"/>
             <column name="content" type="clob"/>
             <column name="created_on" type="datetime"/>
             <column name="created_by" type="string"/>

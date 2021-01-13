@@ -7,7 +7,7 @@ export interface ProductRelease {
   specs: number[];
 }
 
-export interface PortalView {
+export interface LegacyPortalView {
   capabilities: { [key: string]: Capability };
   releases: { [key: string]: ProductRelease };
   products: { [key: string]: Product };

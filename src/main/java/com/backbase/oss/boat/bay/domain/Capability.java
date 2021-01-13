@@ -37,14 +37,8 @@ public class Capability implements Serializable {
     @Column(name = "jhi_order")
     private Integer order;
 
-    @Column(name = "title")
-    private String title;
-
     @Column(name = "sub_title")
     private String subTitle;
-
-    @Column(name = "nav_title")
-    private String navTitle;
 
     @Lob
     @Column(name = "content")
@@ -116,19 +110,6 @@ public class Capability implements Serializable {
         this.order = order;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public Capability title(String title) {
-        this.title = title;
-        return this;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getSubTitle() {
         return subTitle;
     }
@@ -140,19 +121,6 @@ public class Capability implements Serializable {
 
     public void setSubTitle(String subTitle) {
         this.subTitle = subTitle;
-    }
-
-    public String getNavTitle() {
-        return navTitle;
-    }
-
-    public Capability navTitle(String navTitle) {
-        this.navTitle = navTitle;
-        return this;
-    }
-
-    public void setNavTitle(String navTitle) {
-        this.navTitle = navTitle;
     }
 
     public String getContent() {
@@ -270,9 +238,7 @@ public class Capability implements Serializable {
             ", key='" + getKey() + "'" +
             ", name='" + getName() + "'" +
             ", order=" + getOrder() +
-            ", title='" + getTitle() + "'" +
             ", subTitle='" + getSubTitle() + "'" +
-            ", navTitle='" + getNavTitle() + "'" +
             ", content='" + getContent() + "'" +
             ", createdOn='" + getCreatedOn() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +

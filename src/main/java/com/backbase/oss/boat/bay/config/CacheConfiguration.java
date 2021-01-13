@@ -1,7 +1,7 @@
 package com.backbase.oss.boat.bay.config;
 
 import com.backbase.oss.boat.bay.service.lint.BoatLintRuleValidatorFactory;
-import com.backbase.oss.boat.bay.web.views.dashboard.v1.DashboardV1View;
+import com.backbase.oss.boat.bay.web.views.dashboard.BoatDashboardResource;
 import io.github.jhipster.config.JHipsterProperties;
 import io.github.jhipster.config.cache.PrefixedKeyGenerator;
 import java.time.Duration;
@@ -70,10 +70,7 @@ public class CacheConfiguration {
             createCache(cm, com.backbase.oss.boat.bay.domain.Capability.class.getName() + ".serviceDefinitions");
             createCache(cm, com.backbase.oss.boat.bay.domain.ServiceDefinition.class.getName());
             createCache(cm, com.backbase.oss.boat.bay.domain.LintRuleSet.class.getName() + ".lintRules");
-            createCache(cm, com.backbase.oss.boat.bay.domain.PortalLintRuleSet.class.getName());
-            createCache(cm, com.backbase.oss.boat.bay.domain.PortalLintRuleSet.class.getName() + ".portalLintRules");
             createCache(cm, com.backbase.oss.boat.bay.domain.PortalLintRule.class.getName());
-            createCache(cm, com.backbase.oss.boat.bay.domain.PortalLintRuleConfig.class.getName());
             createCache(cm, com.backbase.oss.boat.bay.domain.Portal.class.getName() + ".products");
             createCache(cm, com.backbase.oss.boat.bay.domain.Product.class.getName());
             createCache(cm, com.backbase.oss.boat.bay.domain.Product.class.getName() + ".capabilities");
@@ -94,10 +91,11 @@ public class CacheConfiguration {
             createCache(cm, com.backbase.oss.boat.bay.domain.Tag.class.getName());
             createCache(cm, com.backbase.oss.boat.bay.domain.Tag.class.getName() + ".specs");
             createCache(cm, com.backbase.oss.boat.bay.domain.LintReport.class.getName() + ".violations");
+            createCache(cm, com.backbase.oss.boat.bay.domain.Portal.class.getName() + ".portalLintRules");
             // jhipster-needle-ehcache-add-entry
             createCache(cm, BoatLintRuleValidatorFactory.API_VALIDATORS);
             createCache(cm, BoatLintRuleValidatorFactory.API_RULE_POLICY);
-            createCache(cm, DashboardV1View.VIEWS);
+            createCache(cm, BoatDashboardResource.VIEWS);
         };
     }
 

@@ -4,5 +4,5 @@ export * from './capability';
 export * from './modules';
 export * from './product';
 export * from './ui-api-module';
-export * from './portal-view';
+export * from './legacy-portal-view';
 export * from './spec';

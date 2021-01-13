@@ -12,27 +12,53 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-control-label" for="field_name">Name</label>
-                    <input type="text" class="form-control" name="name" id="field_name"
-                           formControlName="name"/>
-                    <div *ngIf="editForm.get('name')!.invalid && (editForm.get('name')!.dirty || editForm.get('name')!.touched)">
+                    <label class="form-control-label" for="field_ruleId">Rule Id</label>
+                    <input type="text" class="form-control" name="ruleId" id="field_ruleId"
+                           formControlName="ruleId"/>
+                    <div *ngIf="editForm.get('ruleId')!.invalid && (editForm.get('ruleId')!.dirty || editForm.get('ruleId')!.touched)">
                         <small class="form-text text-danger"
-                               *ngIf="editForm.get('name')?.errors?.required">
+                               *ngIf="editForm.get('ruleId')?.errors?.required">
                         This field is required.
                         </small>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-control-label" for="field_portalRuleSet">Portal Rule Set</label>
-                    <select class="form-control" id="field_portalRuleSet" name="portalRuleSet" formControlName="portalRuleSet">
-                        <option *ngIf="!editForm.get('portalRuleSet')!.value" [ngValue]="null" selected></option>
-                        <option [ngValue]="portalLintRuleSetOption.id === editForm.get('portalRuleSet')!.value?.id ? editForm.get('portalRuleSet')!.value : portalLintRuleSetOption" *ngFor="let portalLintRuleSetOption of portallintrulesets; trackBy: trackById">{{ portalLintRuleSetOption.name }}</option>
+                    <label class="form-control-label" for="field_enabled">Enabled</label>
+                    <input type="checkbox" class="form-control" name="enabled" id="field_enabled"
+                           formControlName="enabled"/>
+                    <div *ngIf="editForm.get('enabled')!.invalid && (editForm.get('enabled')!.dirty || editForm.get('enabled')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('enabled')?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_lintRule">Lint Rule</label>
+                    <select class="form-control" id="field_lintRule" name="lintRule" formControlName="lintRule">
+                        <option *ngIf="!editForm.get('lintRule')!.value" [ngValue]="null" selected></option>
+                        <option [ngValue]="lintRuleOption.id === editForm.get('lintRule')!.value?.id ? editForm.get('lintRule')!.value : lintRuleOption" *ngFor="let lintRuleOption of lintrules; trackBy: trackById">{{ lintRuleOption.title }}</option>
                     </select>
                 </div>
-                <div *ngIf="editForm.get('portalRuleSet')!.invalid && (editForm.get('portalRuleSet')!.dirty || editForm.get('portalRuleSet')!.touched)">
+                <div *ngIf="editForm.get('lintRule')!.invalid && (editForm.get('lintRule')!.dirty || editForm.get('lintRule')!.touched)">
                     <small class="form-text text-danger"
-                           *ngIf="editForm.get('portalRuleSet')?.errors?.required">
+                           *ngIf="editForm.get('lintRule')?.errors?.required">
+                        This field is required.
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_portal">Portal</label>
+                    <select class="form-control" id="field_portal" name="portal" formControlName="portal">
+                        <option *ngIf="!editForm.get('portal')!.value" [ngValue]="null" selected></option>
+                        <option [ngValue]="portalOption.id === editForm.get('portal')!.value?.id ? editForm.get('portal')!.value : portalOption" *ngFor="let portalOption of portals; trackBy: trackById">{{ portalOption.name }}</option>
+                    </select>
+                </div>
+                <div *ngIf="editForm.get('portal')!.invalid && (editForm.get('portal')!.dirty || editForm.get('portal')!.touched)">
+                    <small class="form-text text-danger"
+                           *ngIf="editForm.get('portal')?.errors?.required">
                         This field is required.
                     </small>
                 </div>

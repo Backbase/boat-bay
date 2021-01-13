@@ -17,15 +17,7 @@
       ]
     },
     {
-      "fieldName": "title",
-      "fieldType": "String"
-    },
-    {
       "fieldName": "subTitle",
-      "fieldType": "String"
-    },
-    {
-      "fieldName": "navTitle",
       "fieldType": "String"
     },
     {
@@ -68,11 +60,10 @@
       "relationshipName": "product"
     },
     {
-      "relationshipType": "one-to-one",
-      "otherEntityName": "portalLintRuleSet",
+      "relationshipType": "one-to-many",
+      "otherEntityName": "portalLintRule",
       "otherEntityRelationshipName": "portal",
-      "relationshipName": "portalRuleSet",
-      "ownerSide": false
+      "relationshipName": "portalLintRule"
     }
   ],
   "changelogDate": "20201223102315",

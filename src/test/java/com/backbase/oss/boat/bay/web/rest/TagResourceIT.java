@@ -36,6 +36,9 @@ public class TagResourceIT {
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
+    private static final Boolean DEFAULT_HIDE = false;
+    private static final Boolean UPDATED_HIDE = true;
+
     @Autowired
     private TagRepository tagRepository;
 
@@ -56,7 +59,8 @@ public class TagResourceIT {
     public static Tag createEntity(EntityManager em) {
         Tag tag = new Tag()
             .name(DEFAULT_NAME)
-            .description(DEFAULT_DESCRIPTION);
+            .description(DEFAULT_DESCRIPTION)
+            .hide(DEFAULT_HIDE);
         return tag;
     }
     /**
@@ -68,7 +72,8 @@ public class TagResourceIT {
     public static Tag createUpdatedEntity(EntityManager em) {
         Tag tag = new Tag()
             .name(UPDATED_NAME)
-            .description(UPDATED_DESCRIPTION);
+            .description(UPDATED_DESCRIPTION)
+            .hide(UPDATED_HIDE);
         return tag;
     }
 
@@ -93,6 +98,7 @@ public class TagResourceIT {
         Tag testTag = tagList.get(tagList.size() - 1);
         assertThat(testTag.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testTag.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
+        assertThat(testTag.isHide()).isEqualTo(DEFAULT_HIDE);
     }
 
     @Test
@@ -146,7 +152,8 @@ public class TagResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(tag.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
-            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())));
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
+            .andExpect(jsonPath("$.[*].hide").value(hasItem(DEFAULT_HIDE.booleanValue())));
     }
     
     @Test
@@ -161,7 +168,8 @@ public class TagResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(tag.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
-            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()));
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
+            .andExpect(jsonPath("$.hide").value(DEFAULT_HIDE.booleanValue()));
     }
     @Test
     @Transactional
@@ -185,7 +193,8 @@ public class TagResourceIT {
         em.detach(updatedTag);
         updatedTag
             .name(UPDATED_NAME)
-            .description(UPDATED_DESCRIPTION);
+            .description(UPDATED_DESCRIPTION)
+            .hide(UPDATED_HIDE);
 
         restTagMockMvc.perform(put("/api/tags")
             .contentType(MediaType.APPLICATION_JSON)
@@ -198,6 +207,7 @@ public class TagResourceIT {
         Tag testTag = tagList.get(tagList.size() - 1);
         assertThat(testTag.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testTag.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+        assertThat(testTag.isHide()).isEqualTo(UPDATED_HIDE);
     }
 
     @Test

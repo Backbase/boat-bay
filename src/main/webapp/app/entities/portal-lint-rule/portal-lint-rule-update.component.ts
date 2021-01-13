@@ -7,8 +7,12 @@ import { Observable } from 'rxjs';
 
 import { IPortalLintRule, PortalLintRule } from 'app/shared/model/portal-lint-rule.model';
 import { PortalLintRuleService } from './portal-lint-rule.service';
-import { IPortalLintRuleSet } from 'app/shared/model/portal-lint-rule-set.model';
-import { PortalLintRuleSetService } from 'app/entities/portal-lint-rule-set/portal-lint-rule-set.service';
+import { ILintRule } from 'app/shared/model/lint-rule.model';
+import { LintRuleService } from 'app/entities/lint-rule/lint-rule.service';
+import { IPortal } from 'app/shared/model/portal.model';
+import { PortalService } from 'app/entities/portal/portal.service';
+
+type SelectableEntity = ILintRule | IPortal;
 
 @Component({
   selector: 'jhi-portal-lint-rule-update',
@@ -16,17 +20,21 @@ import { PortalLintRuleSetService } from 'app/entities/portal-lint-rule-set/port
 })
 export class PortalLintRuleUpdateComponent implements OnInit {
   isSaving = false;
-  portallintrulesets: IPortalLintRuleSet[] = [];
+  lintrules: ILintRule[] = [];
+  portals: IPortal[] = [];
 
   editForm = this.fb.group({
     id: [],
-    name: [null, [Validators.required]],
-    portalRuleSet: [null, Validators.required],
+    ruleId: [null, [Validators.required]],
+    enabled: [null, [Validators.required]],
+    lintRule: [null, Validators.required],
+    portal: [null, Validators.required],
   });
 
   constructor(
     protected portalLintRuleService: PortalLintRuleService,
-    protected portalLintRuleSetService: PortalLintRuleSetService,
+    protected lintRuleService: LintRuleService,
+    protected portalService: PortalService,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
   ) {}
@@ -35,17 +43,19 @@ export class PortalLintRuleUpdateComponent implements OnInit {
     this.activatedRoute.data.subscribe(({ portalLintRule }) => {
       this.updateForm(portalLintRule);
 
-      this.portalLintRuleSetService
-        .query()
-        .subscribe((res: HttpResponse<IPortalLintRuleSet[]>) => (this.portallintrulesets = res.body || []));
+      this.lintRuleService.query().subscribe((res: HttpResponse<ILintRule[]>) => (this.lintrules = res.body || []));
+
+      this.portalService.query().subscribe((res: HttpResponse<IPortal[]>) => (this.portals = res.body || []));
     });
   }
 
   updateForm(portalLintRule: IPortalLintRule): void {
     this.editForm.patchValue({
       id: portalLintRule.id,
-      name: portalLintRule.name,
-      portalRuleSet: portalLintRule.portalRuleSet,
+      ruleId: portalLintRule.ruleId,
+      enabled: portalLintRule.enabled,
+      lintRule: portalLintRule.lintRule,
+      portal: portalLintRule.portal,
     });
   }
 
@@ -67,8 +77,10 @@ export class PortalLintRuleUpdateComponent implements OnInit {
     return {
       ...new PortalLintRule(),
       id: this.editForm.get(['id'])!.value,
-      name: this.editForm.get(['name'])!.value,
-      portalRuleSet: this.editForm.get(['portalRuleSet'])!.value,
+      ruleId: this.editForm.get(['ruleId'])!.value,
+      enabled: this.editForm.get(['enabled'])!.value,
+      lintRule: this.editForm.get(['lintRule'])!.value,
+      portal: this.editForm.get(['portal'])!.value,
     };
   }
 
@@ -88,7 +100,7 @@ export class PortalLintRuleUpdateComponent implements OnInit {
     this.isSaving = false;
   }
 
-  trackById(index: number, item: IPortalLintRuleSet): any {
+  trackById(index: number, item: SelectableEntity): any {
     return item.id;
   }
 }

@@ -7,9 +7,7 @@ export interface ICapability {
   key?: string;
   name?: string;
   order?: number;
-  title?: string;
   subTitle?: string;
-  navTitle?: string;
   content?: any;
   createdOn?: Moment;
   createdBy?: string;
@@ -24,9 +22,7 @@ export class Capability implements ICapability {
     public key?: string,
     public name?: string,
     public order?: number,
-    public title?: string,
     public subTitle?: string,
-    public navTitle?: string,
     public content?: any,
     public createdOn?: Moment,
     public createdBy?: string,

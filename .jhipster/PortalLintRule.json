@@ -2,8 +2,15 @@
   "name": "PortalLintRule",
   "fields": [
     {
-      "fieldName": "name",
+      "fieldName": "ruleId",
       "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "enabled",
+      "fieldType": "Boolean",
       "fieldValidateRules": [
         "required"
       ]
@@ -11,18 +18,19 @@
   ],
   "relationships": [
     {
-      "relationshipType": "one-to-one",
-      "otherEntityName": "portalLintRuleConfig",
+      "relationshipType": "many-to-one",
+      "otherEntityName": "lintRule",
       "otherEntityRelationshipName": "portalLintRule",
-      "relationshipName": "portalLintRuleConfig",
-      "ownerSide": false
+      "relationshipValidateRules": "required",
+      "relationshipName": "lintRule",
+      "otherEntityField": "title"
     },
     {
       "relationshipType": "many-to-one",
-      "otherEntityName": "portalLintRuleSet",
+      "otherEntityName": "portal",
       "otherEntityRelationshipName": "portalLintRule",
       "relationshipValidateRules": "required",
-      "relationshipName": "portalRuleSet",
+      "relationshipName": "portal",
       "otherEntityField": "name"
     }
   ],

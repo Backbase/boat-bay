@@ -38,14 +38,8 @@ public class PortalResourceIT {
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 
-    private static final String DEFAULT_TITLE = "AAAAAAAAAA";
-    private static final String UPDATED_TITLE = "BBBBBBBBBB";
-
     private static final String DEFAULT_SUB_TITLE = "AAAAAAAAAA";
     private static final String UPDATED_SUB_TITLE = "BBBBBBBBBB";
-
-    private static final String DEFAULT_NAV_TITLE = "AAAAAAAAAA";
-    private static final String UPDATED_NAV_TITLE = "BBBBBBBBBB";
 
     private static final String DEFAULT_LOGO_URL = "AAAAAAAAAA";
     private static final String UPDATED_LOGO_URL = "BBBBBBBBBB";
@@ -86,9 +80,7 @@ public class PortalResourceIT {
         Portal portal = new Portal()
             .key(DEFAULT_KEY)
             .name(DEFAULT_NAME)
-            .title(DEFAULT_TITLE)
             .subTitle(DEFAULT_SUB_TITLE)
-            .navTitle(DEFAULT_NAV_TITLE)
             .logoUrl(DEFAULT_LOGO_URL)
             .logoLink(DEFAULT_LOGO_LINK)
             .content(DEFAULT_CONTENT)
@@ -107,9 +99,7 @@ public class PortalResourceIT {
         Portal portal = new Portal()
             .key(UPDATED_KEY)
             .name(UPDATED_NAME)
-            .title(UPDATED_TITLE)
             .subTitle(UPDATED_SUB_TITLE)
-            .navTitle(UPDATED_NAV_TITLE)
             .logoUrl(UPDATED_LOGO_URL)
             .logoLink(UPDATED_LOGO_LINK)
             .content(UPDATED_CONTENT)
@@ -140,9 +130,7 @@ public class PortalResourceIT {
         Portal testPortal = portalList.get(portalList.size() - 1);
         assertThat(testPortal.getKey()).isEqualTo(DEFAULT_KEY);
         assertThat(testPortal.getName()).isEqualTo(DEFAULT_NAME);
-        assertThat(testPortal.getTitle()).isEqualTo(DEFAULT_TITLE);
         assertThat(testPortal.getSubTitle()).isEqualTo(DEFAULT_SUB_TITLE);
-        assertThat(testPortal.getNavTitle()).isEqualTo(DEFAULT_NAV_TITLE);
         assertThat(testPortal.getLogoUrl()).isEqualTo(DEFAULT_LOGO_URL);
         assertThat(testPortal.getLogoLink()).isEqualTo(DEFAULT_LOGO_LINK);
         assertThat(testPortal.getContent()).isEqualTo(DEFAULT_CONTENT);
@@ -222,9 +210,7 @@ public class PortalResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(portal.getId().intValue())))
             .andExpect(jsonPath("$.[*].key").value(hasItem(DEFAULT_KEY)))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
-            .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE)))
             .andExpect(jsonPath("$.[*].subTitle").value(hasItem(DEFAULT_SUB_TITLE)))
-            .andExpect(jsonPath("$.[*].navTitle").value(hasItem(DEFAULT_NAV_TITLE)))
             .andExpect(jsonPath("$.[*].logoUrl").value(hasItem(DEFAULT_LOGO_URL)))
             .andExpect(jsonPath("$.[*].logoLink").value(hasItem(DEFAULT_LOGO_LINK)))
             .andExpect(jsonPath("$.[*].content").value(hasItem(DEFAULT_CONTENT.toString())))
@@ -246,9 +232,7 @@ public class PortalResourceIT {
             .andExpect(jsonPath("$.id").value(portal.getId().intValue()))
             .andExpect(jsonPath("$.key").value(DEFAULT_KEY))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
-            .andExpect(jsonPath("$.title").value(DEFAULT_TITLE))
             .andExpect(jsonPath("$.subTitle").value(DEFAULT_SUB_TITLE))
-            .andExpect(jsonPath("$.navTitle").value(DEFAULT_NAV_TITLE))
             .andExpect(jsonPath("$.logoUrl").value(DEFAULT_LOGO_URL))
             .andExpect(jsonPath("$.logoLink").value(DEFAULT_LOGO_LINK))
             .andExpect(jsonPath("$.content").value(DEFAULT_CONTENT.toString()))
@@ -279,9 +263,7 @@ public class PortalResourceIT {
         updatedPortal
             .key(UPDATED_KEY)
             .name(UPDATED_NAME)
-            .title(UPDATED_TITLE)
             .subTitle(UPDATED_SUB_TITLE)
-            .navTitle(UPDATED_NAV_TITLE)
             .logoUrl(UPDATED_LOGO_URL)
             .logoLink(UPDATED_LOGO_LINK)
             .content(UPDATED_CONTENT)
@@ -300,9 +282,7 @@ public class PortalResourceIT {
         Portal testPortal = portalList.get(portalList.size() - 1);
         assertThat(testPortal.getKey()).isEqualTo(UPDATED_KEY);
         assertThat(testPortal.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testPortal.getTitle()).isEqualTo(UPDATED_TITLE);
         assertThat(testPortal.getSubTitle()).isEqualTo(UPDATED_SUB_TITLE);
-        assertThat(testPortal.getNavTitle()).isEqualTo(UPDATED_NAV_TITLE);
         assertThat(testPortal.getLogoUrl()).isEqualTo(UPDATED_LOGO_URL);
         assertThat(testPortal.getLogoLink()).isEqualTo(UPDATED_LOGO_LINK);
         assertThat(testPortal.getContent()).isEqualTo(UPDATED_CONTENT);

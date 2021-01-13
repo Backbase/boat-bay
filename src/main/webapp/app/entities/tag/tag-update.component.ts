@@ -21,6 +21,7 @@ export class TagUpdateComponent implements OnInit {
     id: [],
     name: [null, [Validators.required]],
     description: [],
+    hide: [],
   });
 
   constructor(
@@ -42,6 +43,7 @@ export class TagUpdateComponent implements OnInit {
       id: tag.id,
       name: tag.name,
       description: tag.description,
+      hide: tag.hide,
     });
   }
 
@@ -81,6 +83,7 @@ export class TagUpdateComponent implements OnInit {
       id: this.editForm.get(['id'])!.value,
       name: this.editForm.get(['name'])!.value,
       description: this.editForm.get(['description'])!.value,
+      hide: this.editForm.get(['hide'])!.value,
     };
   }
 

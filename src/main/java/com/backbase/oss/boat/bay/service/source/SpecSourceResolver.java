@@ -36,6 +36,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
+import org.springframework.util.StringUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -167,7 +168,7 @@ public class SpecSourceResolver {
     @NotNull
     private Tag getOrCreateTag(io.swagger.v3.oas.models.tags.Tag tag) {
         return boatTagRepository.findByName(tag.getName())
-            .orElseGet(() -> boatTagRepository.save(new Tag().name(tag.getName()).description(tag.getDescription())));
+            .orElseGet(() -> boatTagRepository.save(new Tag().name(tag.getName()).description(tag.getDescription()).hide(false)));
     }
 
     private void setSpecType(Spec spec) {
@@ -222,9 +223,8 @@ public class SpecSourceResolver {
         serviceDefinition.setKey(key);
         serviceDefinition.setCreatedBy(spec.getCreatedBy());
         serviceDefinition.setCreatedOn(Instant.now());
-        serviceDefinition.setTitle(spec.getTitle());
+        serviceDefinition.setName(StringUtils.capitalize(serviceNameSpEL.map(exp -> SpringExpressionUtils.parseName(exp, spec, key)).orElse(key)).replaceAll("-", " "));
         serviceDefinition.setDescription(spec.getDescription());
-        serviceDefinition.setName(serviceNameSpEL.map(exp -> SpringExpressionUtils.parseName(exp, spec, key)).orElse(key));
         return boatServiceRepository.save(serviceDefinition);
     }
 
@@ -240,7 +240,6 @@ public class SpecSourceResolver {
         capability.setCreatedOn(Instant.now());
 
         capability.setName(capabilityNameSpEL.map(exp -> SpringExpressionUtils.parseName(exp, spec, key)).orElse(key));
-        capability.setTitle(key);
         return capabilityRepository.save(capability);
     }
 

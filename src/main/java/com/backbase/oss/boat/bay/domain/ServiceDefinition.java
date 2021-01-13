@@ -37,14 +37,8 @@ public class ServiceDefinition implements Serializable {
     @Column(name = "jhi_order")
     private Integer order;
 
-    @Column(name = "title")
-    private String title;
-
     @Column(name = "sub_title")
     private String subTitle;
-
-    @Column(name = "nav_title")
-    private String navTitle;
 
     @Lob
     @Column(name = "description")
@@ -122,19 +116,6 @@ public class ServiceDefinition implements Serializable {
         this.order = order;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public ServiceDefinition title(String title) {
-        this.title = title;
-        return this;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getSubTitle() {
         return subTitle;
     }
@@ -146,19 +127,6 @@ public class ServiceDefinition implements Serializable {
 
     public void setSubTitle(String subTitle) {
         this.subTitle = subTitle;
-    }
-
-    public String getNavTitle() {
-        return navTitle;
-    }
-
-    public ServiceDefinition navTitle(String navTitle) {
-        this.navTitle = navTitle;
-        return this;
-    }
-
-    public void setNavTitle(String navTitle) {
-        this.navTitle = navTitle;
     }
 
     public String getDescription() {
@@ -302,9 +270,7 @@ public class ServiceDefinition implements Serializable {
             ", key='" + getKey() + "'" +
             ", name='" + getName() + "'" +
             ", order=" + getOrder() +
-            ", title='" + getTitle() + "'" +
             ", subTitle='" + getSubTitle() + "'" +
-            ", navTitle='" + getNavTitle() + "'" +
             ", description='" + getDescription() + "'" +
             ", icon='" + getIcon() + "'" +
             ", color='" + getColor() + "'" +
