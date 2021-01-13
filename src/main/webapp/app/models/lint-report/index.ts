@@ -1,1 +1,1 @@
-export * from './lint-report';
+export * from './boat-lint-report';

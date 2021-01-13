@@ -11,9 +11,7 @@ import com.backbase.oss.boat.bay.repository.extended.BoatLintRuleViolationReposi
 import com.backbase.oss.boat.bay.repository.extended.BoatPortalRepository;
 import com.backbase.oss.boat.bay.web.views.lint.LintReportMapper;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -43,15 +41,14 @@ public class BoatDashboardResource {
     private final LintReportMapper lintReportMapper;
     private final TagRepository tagRepository;
 
-
     public List<String> getAllEnabledTags() {
         return tagRepository.findAll(Example.of(new Tag().hide(false))).stream()
             .map(Tag::getName)
             .collect(Collectors.toList());
     }
 
-
     @GetMapping("legacy-dashboard")
+    @Cacheable(VIEWS)
     public ResponseEntity<BoatLegacyPortalDto> getDefaultPortal() {
 
         List<String> allEnabledTags = getAllEnabledTags();
@@ -71,7 +68,6 @@ public class BoatDashboardResource {
         return ResponseEntity.ok(portalDto);
     }
 
-
     @GetMapping("dashboard")
     public ResponseEntity<List<BoatPortalDto>> getPortals() {
 
@@ -83,7 +79,6 @@ public class BoatDashboardResource {
         return ResponseEntity.ok(portals);
     }
 
-
     @NotNull
     private BoatPortalDto enrichPortalDto(com.backbase.oss.boat.bay.domain.Portal portal, com.backbase.oss.boat.bay.domain.Product product) {
         BoatPortalDto portalDto = dashboardMapper.mapPortal(portal, product);
@@ -91,16 +86,14 @@ public class BoatDashboardResource {
         boatLintReportRepository.findDistinctFirstBySpec_ProductOrderByLintedOn(product)
             .ifPresent(lintReport -> portalDto.setLastLintReport(lintReportMapper.mapReportWithoutViolations(lintReport)));
 
-        Map<Severity, Long> issues = new LinkedHashMap<>();
-        Arrays.stream(Severity.values()).forEach(s -> {
-            long l = boatLintRuleViolationRepository.countBySeverityAndLintReport_Spec_Product(s, product);
-            issues.put(s, l);
-        });
-
-        portalDto.setIssues(issues);
+        portalDto.setIssues(Arrays.stream(Severity.values()).map(s -> {
+            BoatPortalDto.IssueCount issueCount = new BoatPortalDto.IssueCount();
+            issueCount.setNumberOfIssues(boatLintRuleViolationRepository.countBySeverityAndLintReport_Spec_Product(s, product));
+            issueCount.setSeverity(s.name());
+            return issueCount;
+        }).collect(Collectors.toList()));
 
         return portalDto;
     }
-
 
 }

@@ -1,16 +1,45 @@
-<h1>Available Portals</h1>
-<a *ngFor="let portal of portals" [routerLink]="['/dashboard/', portal.key]">
-    <mat-card>
-        <mat-card-title>{{portal.name}}</mat-card-title>
-        <mat-card-subtitle>{{portal.subTitle}}</mat-card-subtitle>
-        <mat-card-content><p class="portal-content">{{portal.content}}</p>
-            <dl>
-                <dt *ngIf="portal.createdBy">Created By</dt>
-                <dd *ngIf="portal.createdBy">{{portal.createdBy}}</dd>
-                <dt *ngIf="portal.createdOn">Created On</dt>
-                <dd *ngIf="portal.createdOn">{{portal.createdOn}}</dd>
-            </dl>
-        </mat-card-content>
-    </mat-card>
-</a>
+<mat-tab-group *ngIf="boatPortals$ | async as boatPortals">
+
+    <mat-tab label="Projects">
+
+        <mat-card *ngFor="let portal of boatPortals ">
+            <mat-card-title><a
+                [routerLink]="['/dashboard/', portal.portalKey, portal.productKey]"> {{portal.portalName}}
+                / {{portal.productName}}</a></mat-card-title>
+            <mat-card-subtitle *ngIf="portal.lastLintReport">Last linted
+                Spec: {{portal.lastLintReport.name}} {{portal.lastLintReport.version}}
+                on: {{portal.lastLintReport.lintedOn}}</mat-card-subtitle>
+            <mat-card-content>
+                <div class="issue-count" *ngFor="let issueCount of portal.issues">
+                    <div class="issue-count-severity">Severity {{issueCount.severity}}
+                        : {{issueCount.numberOfIssues}}</div>
+                </div>
+            </mat-card-content>
+            <mat-card-actions>
+                <button mat-button (click)="analyse(portal)">LINT</button>
+            </mat-card-actions>
+        </mat-card>
+
+    </mat-tab>
+
+    <mat-tab label="Global">
+        <ng-container *ngIf="lintRules$ | async as lintRules">
+            <h1>Global Rules</h1>
+
+            <mat-card *ngFor="let rule of lintRules">
+                <mat-card-title>{{rule.id}} - {{rule.severity}} - {{rule.title}}</mat-card-title>
+                <mat-card-subtitle>{{rule.ruleSet?.name}}</mat-card-subtitle>
+                <mat-card-content>{{rule.description}}</mat-card-content>
+                <mat-card-actions>
+                    <mat-slide-toggle [(ngModel)]="rule.enabled" (change)="toggleRule(rule)">Enabled</mat-slide-toggle>
+                </mat-card-actions>
+            </mat-card>
+
+        </ng-container>
+
+    </mat-tab>
+
+
+</mat-tab-group>
+
 

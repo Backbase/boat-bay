@@ -1,3 +1,5 @@
+import { Moment } from 'moment';
+
 interface Rule {
   id: number;
   ruleSet: string;
@@ -18,7 +20,7 @@ interface Pointer {
   matchingProperty: string;
 }
 
-export interface Violation {
+export interface BoatViolation {
   rule: Rule;
   description: string;
   severity: string;
@@ -26,10 +28,14 @@ export interface Violation {
   pointer: Pointer;
 }
 
-export interface LintReport {
-  title: string;
+export interface BoatLintReport {
+  id: number;
+  name: string;
+  grade: string;
+  passed: boolean;
+  lintedOn: Moment;
   version: string;
-  filePath: string;
   openApi: string;
-  violations: Violation[];
+
+  violations: BoatViolation[];
 }

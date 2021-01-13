@@ -38,8 +38,6 @@ public class BoatLintRuleValidatorFactory {
     private final BoatPortalLintRuleRepository portalLintRuleRepository;
 
 
-    @Cacheable(API_VALIDATORS)
-    @Transactional
     public ApiValidator getApiValidatorFor(Portal portal) {
 
         prepareLintRules(portal);
@@ -55,9 +53,7 @@ public class BoatLintRuleValidatorFactory {
         DefaultContextFactory defaultContextFactory = new DefaultContextFactory();
         ContextRulesValidator contextRulesValidator = new ContextRulesValidator(portalRuleManager, defaultContextFactory);
         JsonRulesValidator jsonRulesValidator = new JsonRulesValidator(portalRuleManager);
-        ApiValidator apiValidator = new CompositeRulesValidator(contextRulesValidator, jsonRulesValidator);
-        log.info("Created new API Validator for Portal: {}", portal.getName());
-        return apiValidator;
+        return new CompositeRulesValidator(contextRulesValidator, jsonRulesValidator);
     }
 
     private synchronized void prepareLintRules(Portal portal) {

@@ -1,8 +1,7 @@
 package com.backbase.oss.boat.bay.web.views.dashboard;
 
-import com.backbase.oss.boat.bay.domain.enumeration.Severity;
 import com.backbase.oss.boat.bay.web.views.lint.BoatLintReport;
-import java.util.Map;
+import java.util.List;
 import lombok.Data;
 
 @Data
@@ -16,9 +15,17 @@ public class BoatPortalDto {
     private String productKey;
     private String productName;
 
+    private String productDescription;
+
     private BoatLintReport lastLintReport;
 
-    private Map<Severity, Long> issues;
+    private List<IssueCount> issues;
 
+    @Data
+    protected static class IssueCount {
+        private String severity;
+        private Long numberOfIssues;
+
+    }
 }
 

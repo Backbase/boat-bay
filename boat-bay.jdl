@@ -127,7 +127,6 @@ entity SourcePath {
     name String
 }
 
-@readOnly(true)
 entity LintRule {
     ruleId String required unique
     title String required
@@ -138,7 +137,6 @@ entity LintRule {
     enabled Boolean required
 }
 
-@readOnly(true)
 entity LintRuleSet {
     ruleSetId String required unique
     name String required

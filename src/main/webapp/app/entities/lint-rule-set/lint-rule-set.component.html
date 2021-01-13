@@ -1,6 +1,13 @@
 <div>
     <h2 id="page-heading">
         <span>Lint Rule Sets</span>
+
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-lint-rule-set" [routerLink]="['/lint-rule-set/new']">
+            <fa-icon icon="plus"></fa-icon>
+            <span>
+            Create a new Lint Rule Set
+            </span>
+        </button>
     </h2>
 
     <jhi-alert-error></jhi-alert-error>
@@ -37,6 +44,19 @@
                                     class="btn btn-info btn-sm">
                                 <fa-icon icon="eye"></fa-icon>
                                 <span class="d-none d-md-inline">View</span>
+                            </button>
+
+                            <button type="submit"
+                                    [routerLink]="['/lint-rule-set', lintRuleSet.id, 'edit']"
+                                    class="btn btn-primary btn-sm">
+                                <fa-icon icon="pencil-alt"></fa-icon>
+                                <span class="d-none d-md-inline">Edit</span>
+                            </button>
+
+                            <button type="submit" (click)="delete(lintRuleSet)"
+                                    class="btn btn-danger btn-sm">
+                                <fa-icon icon="times"></fa-icon>
+                                <span class="d-none d-md-inline">Delete</span>
                             </button>
                         </div>
                     </td>
