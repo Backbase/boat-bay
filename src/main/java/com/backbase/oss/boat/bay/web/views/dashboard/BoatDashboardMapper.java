@@ -49,6 +49,7 @@ public interface BoatDashboardMapper {
     @Mapping(target = "productId", source = "product.id")
     @Mapping(target = "productKey", source = "product.key")
     @Mapping(target = "productName", source = "product.name")
+    @Mapping(target = "productDescription", source = "product.content")
     @Mapping(target = "lastLintReport", ignore = true)
     @Mapping(target = "issues", ignore = true)
     BoatPortalDto mapPortal(Portal portal, Product product);

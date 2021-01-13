@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { LintReport, Violation } from 'app/models/lint-report';
+import { BoatLintReport, BoatViolation } from 'app/models/lint-report';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Range } from 'app/ace-editor/ace-editor.component';
@@ -11,7 +11,7 @@ import { Range } from 'app/ace-editor/ace-editor.component';
   styleUrls: ['./boat-quay-report.component.scss'],
 })
 export class BoatQuayReportComponent implements OnInit {
-  lintReport$: Observable<LintReport>;
+  lintReport$: Observable<BoatLintReport>;
   @Output() highlight = new EventEmitter<Range>();
 
   constructor(protected activatedRoute: ActivatedRoute) {
@@ -20,7 +20,7 @@ export class BoatQuayReportComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  mark(violation: Violation): void {
+  mark(violation: BoatViolation): void {
     const range: Range = {
       start: violation.lines.start,
       end: violation.lines.end,

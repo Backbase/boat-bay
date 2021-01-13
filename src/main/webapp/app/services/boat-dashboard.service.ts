@@ -3,7 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { SERVER_API_URL } from 'app/app.constants';
-import { PortalView } from 'app/models/dashboard/v1';
+import { LegacyPortalView } from 'app/models/dashboard/v1';
+import { BoatPortal } from 'app/models/dashboard/boat-portal';
 
 @Injectable({ providedIn: 'root' })
 export class BoatDashboardService {
@@ -11,7 +12,11 @@ export class BoatDashboardService {
 
   constructor(protected http: HttpClient) {}
 
-  get(): Observable<PortalView> {
-    return this.http.get<PortalView>(`${this.resourceUrl}/legacy-dashboard`);
+  getLegacyPortalView(): Observable<LegacyPortalView> {
+    return this.http.get<LegacyPortalView>(`${this.resourceUrl}/legacy-dashboard`);
+  }
+
+  getBoatPortalView(): Observable<BoatPortal[]> {
+    return this.http.get<BoatPortal[]>(`${this.resourceUrl}/dashboard`);
   }
 }

@@ -1,8 +1,8 @@
 
 <ng-container *ngIf="lintReport$ | async as lintReport">
 
-    <h1>{{lintReport.title}}</h1>
-    <p>file: {{lintReport.filePath}} version: {{lintReport.version}}</p>
+    <h1>{{lintReport.name}}</h1>
+    <p>version: {{lintReport.version}}</p>
     <div class="lint-report-wrapper">
         <div class="openapi-editor">
             <jhi-ace-editor [contents]="lintReport.openApi" [highlight]="highlight" ></jhi-ace-editor></div>

@@ -49,6 +49,12 @@
                     class="btn btn-info">
                 <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
             </button>
+
+            <button type="button"
+                    [routerLink]="['/lint-rule', lintRule.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+            </button>
         </div>
     </div>
 </div>

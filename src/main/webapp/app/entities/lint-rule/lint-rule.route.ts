@@ -10,6 +10,7 @@ import { ILintRule, LintRule } from 'app/shared/model/lint-rule.model';
 import { LintRuleService } from './lint-rule.service';
 import { LintRuleComponent } from './lint-rule.component';
 import { LintRuleDetailComponent } from './lint-rule-detail.component';
+import { LintRuleUpdateComponent } from './lint-rule-update.component';
 
 @Injectable({ providedIn: 'root' })
 export class LintRuleResolve implements Resolve<ILintRule> {
@@ -46,6 +47,30 @@ export const lintRuleRoute: Routes = [
   {
     path: ':id/view',
     component: LintRuleDetailComponent,
+    resolve: {
+      lintRule: LintRuleResolve,
+    },
+    data: {
+      authorities: [Authority.USER],
+      pageTitle: 'LintRules',
+    },
+    canActivate: [UserRouteAccessService],
+  },
+  {
+    path: 'new',
+    component: LintRuleUpdateComponent,
+    resolve: {
+      lintRule: LintRuleResolve,
+    },
+    data: {
+      authorities: [Authority.USER],
+      pageTitle: 'LintRules',
+    },
+    canActivate: [UserRouteAccessService],
+  },
+  {
+    path: ':id/edit',
+    component: LintRuleUpdateComponent,
     resolve: {
       lintRule: LintRuleResolve,
     },

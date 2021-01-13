@@ -20,6 +20,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { BbDashboardComponent } from 'app/bb-dashboard/bb-dashboard.component';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   imports: [
@@ -35,6 +37,8 @@ import { MatChipsModule } from '@angular/material/chips';
     MatButtonModule,
     MatTooltipModule,
     MatChipsModule,
+    MatTabsModule,
+    MatSlideToggleModule,
   ],
   declarations: [
     HomeComponent,

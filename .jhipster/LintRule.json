@@ -61,7 +61,7 @@
   "service": "no",
   "jpaMetamodelFiltering": false,
   "fluentMethods": true,
-  "readOnly": true,
+  "readOnly": false,
   "embedded": false,
   "clientRootFolder": "",
   "applications": "*"

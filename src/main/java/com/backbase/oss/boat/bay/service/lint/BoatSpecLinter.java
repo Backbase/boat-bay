@@ -10,7 +10,6 @@ import com.backbase.oss.boat.bay.repository.extended.BoatLintRuleViolationReposi
 import com.backbase.oss.boat.bay.repository.extended.BoatSpecRepository;
 import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -18,6 +17,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,16 +47,14 @@ public class BoatSpecLinter {
         specRepository.findAllByLintReportIsNull().forEach(this::scheduleLintJob);
     }
 
-    private void scheduleLintJob(Spec spec) {
-        Long id = spec.getId();
+    @Async
+    @Transactional
+    public void scheduleLintJob(Spec spec) {
         log.info("Scheduling linting of spec: {}", spec.getTitle());
-        executorService.execute(() -> {
-            Optional<Spec> byId = specRepository.findById(id);
-            byId.ifPresent(this::lint);
-        });
+        lint(spec);
     }
 
-    @Transactional
+
     public LintReport lint(Spec spec) {
         log.info("Linting Spec: {}", spec.getName());
         ApiValidator apiValidator = getApiValidator(spec);

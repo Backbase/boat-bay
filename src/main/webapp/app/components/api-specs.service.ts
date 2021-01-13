@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable, throwError } from 'rxjs';
 import { catchError, first, map, shareReplay } from 'rxjs/operators';
 
-import { ApiModule, PortalView, Product, UiApiModule } from 'app/models/dashboard/v1';
+import { ApiModule, LegacyPortalView, Product, UiApiModule } from 'app/models/dashboard/v1';
 import { NAVIGATION_FILE_PATH } from '../tokens';
 import { BoatDashboardService } from 'app/services/boat-dashboard.service';
 import { BoatTagManagerService } from 'app/services/boat-tag-manager.service';
@@ -22,7 +22,7 @@ export class ApiSpecsService {
 
   private readonly productTags = ['retail', 'business', 'wealth', 'foundation', 'identity', 'flow', 'basic support'];
 
-  private readonly dashboardView = this.dashboardViewService.get().pipe(
+  private readonly dashboardView = this.dashboardViewService.getLegacyPortalView().pipe(
     shareReplay({
       bufferSize: 1,
       refCount: true,
@@ -31,7 +31,7 @@ export class ApiSpecsService {
   );
 
   private readonly apiModules$: Observable<[string, ApiModule][]> = this.dashboardView.pipe(
-    map((value: PortalView) => {
+    map((value: LegacyPortalView) => {
       return Object.values(value.capabilities)
         .map(({ modules }) => Object.entries(modules))
         .flat();
@@ -39,7 +39,7 @@ export class ApiSpecsService {
   );
 
   private readonly releases$ = this.dashboardView.pipe(
-    map((value: PortalView) => {
+    map((value: LegacyPortalView) => {
       return value.releases;
     })
   );
@@ -60,13 +60,13 @@ export class ApiSpecsService {
   );
 
   public readonly products$: Observable<Product[]> = this.dashboardView.pipe(
-    map((value: PortalView) => {
+    map((value: LegacyPortalView) => {
       return Object.values(value.products);
     })
   );
 
   public readonly availableReleaseVersions$: Observable<string[]> = this.dashboardView.pipe(
-    map((value: PortalView) => {
+    map((value: LegacyPortalView) => {
       return Object.keys(value.releases);
     })
   );
