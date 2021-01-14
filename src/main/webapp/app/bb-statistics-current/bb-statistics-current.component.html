@@ -1,0 +1,5 @@
+<p>Last Updated: {{statistics.updatedOn}}</p>
+<div class="issue-count" *ngFor="let issueCount of statistics.issues">
+    <div class="issue-count-severity">Severity {{issueCount.severity}}
+        : {{issueCount.numberOfIssues}}</div>
+</div>

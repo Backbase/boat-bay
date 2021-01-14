@@ -9,5 +9,5 @@ import java.util.Optional;
 
 public interface BoatProductRepository extends ProductRepository {
 
-    Optional<Product> findByPortalAndKey(Portal portal, String key);
+    Optional<Product> findByKeyAndPortalKey(String productKey, String portalKey);
 }

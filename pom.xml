@@ -669,6 +669,12 @@
             <artifactId>undertow-servlet</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>io.prometheus</groupId>
+            <artifactId>simpleclient_pushgateway</artifactId>
+            <version>0.9.0</version>
+        </dependency>
     </dependencies>
 
     <build>

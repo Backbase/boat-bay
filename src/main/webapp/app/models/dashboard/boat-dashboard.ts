@@ -5,13 +5,20 @@ interface IssueCount {
   numberOfIssues: number;
 }
 
-export interface BoatPortal {
+export interface BoatStatistics {
+  updatedOn: Date;
+  issues: IssueCount[];
+}
+
+export interface BoatDashboard {
   portalId: number;
   portalKey: string;
   portalName: string;
   productId: number;
   productKey: string;
   productName: string;
+  numberOfServices: number;
+  numberOfCapabilities: number;
   lastLintReport: BoatLintReport;
-  issues: IssueCount[];
+  statistics: BoatStatistics;
 }

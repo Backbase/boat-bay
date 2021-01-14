@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface BoatCapabilityRepository extends CapabilityRepository {
 
     Optional<Capability> findByProductAndKey(Product product, String key);
+
+    long countByProduct(Product product);
 }

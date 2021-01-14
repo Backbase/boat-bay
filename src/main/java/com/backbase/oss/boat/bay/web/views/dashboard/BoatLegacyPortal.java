@@ -8,7 +8,7 @@ import java.util.Set;
 import lombok.Data;
 
 @Data
-public class BoatLegacyPortalDto {
+public class BoatLegacyPortal {
 
     private Long id;
     private String key;
