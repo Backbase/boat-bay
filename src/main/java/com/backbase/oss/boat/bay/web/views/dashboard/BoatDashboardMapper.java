@@ -147,7 +147,7 @@ public interface BoatDashboardMapper {
 
     @Mapping(target = "statistics", ignore = true)
     @Mapping(target = "lastLintReport", ignore = true)
-    @Mapping(target = "boatCapabilities", ignore = true)
+    @Mapping(target = "capabilities", ignore = true)
     BoatProductDashboard mapBoatProduct(Product byKeyAndPortalKey);
 
     @Mapping(target = "statistics", ignore = true)
