@@ -28,8 +28,13 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.*;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevTree;
+import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+import org.eclipse.jgit.treewalk.TreeWalk;
+import org.eclipse.jgit.treewalk.filter.PathFilter;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -61,6 +66,7 @@ public class FileSystemSourceScanner implements SpecSourceScanner {
     private final SpecTypeRepository specTypeRepository;
     @Autowired
     private final TagRepository tagRepository;
+
     @Getter
     @Setter
     private Source source;
@@ -109,7 +115,48 @@ public class FileSystemSourceScanner implements SpecSourceScanner {
 
     }
 
+    private Path scanGitRepo(String path) throws IOException {
+        FileRepositoryBuilder repositoryBuilder = new FileRepositoryBuilder();
+        Repository existingRepo = repositoryBuilder.setGitDir(new File("/path/to/repo/.git"))
+            .readEnvironment() // scan environment GIT_* variables
+            .findGitDir() // scan up the file system tree
+            .setMustExist(true)
+            .build();
+//        Git.open(new File("/path/to/repo/.git"))
+//            .checkout();
+//        Repository repository = git.getRepository();
+        ObjectId lastCommitId = existingRepo.resolve(Constants.HEAD);
 
+        // a RevWalk allows to walk over commits based on some filtering that is defined
+        try (RevWalk revWalk = new RevWalk(existingRepo)) {
+            RevCommit commit = revWalk.parseCommit(lastCommitId);
+            // and using commit's tree find the path
+            RevTree tree = commit.getTree();
+            System.out.println("Having tree: " + tree);
+
+            // now try to find a specific file
+            try (TreeWalk treeWalk = new TreeWalk(existingRepo)) {
+                treeWalk.addTree(tree);
+                treeWalk.setRecursive(true);
+                treeWalk.setFilter(PathFilter.create("portal.yaml"));
+                if (!treeWalk.next()) {
+                    throw new IllegalStateException("Did not find expected file 'portal.yaml'");
+                }
+
+                ObjectId objectId = treeWalk.getObjectId(0);
+                ObjectLoader loader = existingRepo.open(objectId);
+
+                Portal portal = objectMapper.readValue(loader.openStream(), Portal.class);
+
+                // and then one can the loader to read the file
+                //loader.copyTo();
+            }
+
+            revWalk.dispose();
+        }
+
+        return null;
+    }
 
     private Optional<Portal> mapPortal(Path scanPath, Path path) {
 
@@ -335,6 +382,32 @@ public class FileSystemSourceScanner implements SpecSourceScanner {
     @Override
     public SourceType getSourceType() {
         return SourceType.FILE_SYSTEM;
+    }
+    private static class SimpleProgressMonitor implements ProgressMonitor {
+        @Override
+        public void start(int totalTasks) {
+            System.out.println("Starting work on " + totalTasks + " tasks");
+        }
+
+        @Override
+        public void beginTask(String title, int totalWork) {
+            System.out.println("Start " + title + ": " + totalWork);
+        }
+
+        @Override
+        public void update(int completed) {
+            System.out.print(completed + "-");
+        }
+
+        @Override
+        public void endTask() {
+            System.out.println("Done");
+        }
+
+        @Override
+        public boolean isCancelled() {
+            return false;
+        }
     }
 
 

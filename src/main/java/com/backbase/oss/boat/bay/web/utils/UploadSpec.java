@@ -1,0 +1,119 @@
+package com.backbase.oss.boat.bay.web.utils;
+
+import com.backbase.oss.boat.ExportException;
+import com.backbase.oss.boat.bay.domain.*;
+import com.backbase.oss.boat.bay.repository.SourceRepository;
+import com.backbase.oss.boat.bay.repository.SpecRepository;
+import com.backbase.oss.boat.bay.service.export.ExportOptions;
+import com.backbase.oss.boat.bay.service.export.ExportType;
+import com.backbase.oss.boat.bay.service.export.impl.FileSystemExporter;
+import com.backbase.oss.boat.bay.service.lint.BoatSpecLinter;
+import com.backbase.oss.boat.bay.service.source.SpecSourceResolver;
+import com.backbase.oss.boat.bay.service.source.scanner.ScanResult;
+import com.backbase.oss.boat.bay.web.rest.SpecResource;
+import com.backbase.oss.boat.bay.web.rest.errors.BadRequestAlertException;
+import io.github.jhipster.web.util.HeaderUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Example;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static com.backbase.oss.boat.bay.domain.enumeration.SourceType.BOAT_MAVEN_PLUGIN;
+
+@RestController
+@RequestMapping("/api")
+@Transactional
+public class UploadSpec {
+    private final Logger log = LoggerFactory.getLogger(SpecResource.class);
+    private final SourceRepository sourceRepository;
+    private final SpecSourceResolver specSourceResolver;
+    private final FileSystemExporter fileSystemExporter;
+    private final SpecRepository specRepository;
+    private final BoatSpecLinter boatSpecLinter;
+    @Value("${jhipster.clientApp.name}")
+    private String applicationName;
+    private static final String ENTITY_NAME = "spec";
+    // service optional
+    // capability optional
+    // portal must
+    // product must
+    // openapi must
+    // assume source is already there
+
+    public UploadSpec(SpecRepository specRepository, SourceRepository sourceRepository, SpecSourceResolver specSourceResolver, FileSystemExporter fileSystemExporter, BoatSpecLinter boatSpecLinter) {
+        this.sourceRepository = sourceRepository;
+        this.specRepository = specRepository;
+        this.specSourceResolver = specSourceResolver;
+        this.fileSystemExporter = fileSystemExporter;
+        this.boatSpecLinter = boatSpecLinter;
+    }
+
+    @PutMapping("boat-maven-plugin/{sourceId}/upload")
+    public ResponseEntity<List<LintReport>> uploadSpec(@Valid @RequestBody UploadRequestBody requestBody, @PathVariable Long sourceId) throws URISyntaxException, ExportException {
+        //log.debug("REST request to upload : {}", spec.getKey());
+        Source source = sourceRepository.findById(sourceId).orElseThrow(()->new BadRequestAlertException("Invalid source, source Id does not exist", "SOURCE", "sourceIdInvalid"));
+        List<Spec> requestSpecs = requestBody.getSpecs();
+        for (Spec spec: requestSpecs) {
+
+            log.debug("REST request to upload : {}", spec.getKey());
+
+            if (spec.getOpenApi().isEmpty()
+                || spec.getPortal().getKey().isEmpty()
+                || spec.getProduct().getKey().isEmpty()
+                || spec.getFilename().isEmpty()) {
+                throw new BadRequestAlertException("Invalid spec with and empty path, api, product, or file name", ENTITY_NAME, "attributeempty");
+            }
+            spec.getSource().setType(BOAT_MAVEN_PLUGIN);
+
+//            Optional<SourcePath> location = source.getSourcePaths().stream()
+//                .filter(sourcePath -> sourcePath.getName()
+//                    .contains(spec.getFilename())).findFirst();
+            Spec match = new Spec().key(spec.getKey()).name(spec.getName()).version(spec.getVersion());
+            Optional<Spec> duplicate = specRepository.findOne(Example.of(match));
+            if (duplicate.isPresent()){
+                spec.capability(duplicate.get().getCapability());
+                spec.serviceDefinition(duplicate.get().getServiceDefinition());
+                spec.setSource(source);
+                specRepository.save(spec);
+                requestSpecs.remove(spec);
+            }
+        }
+
+
+
+        List specs = requestBody.getSpecs();
+
+        ScanResult scanResult = new ScanResult(source,specs);
+        specSourceResolver.process(scanResult);
+
+        String location = (requestBody.getProjectId()).concat("/"+requestBody.getArtifactId()).concat("/"+source.getPortal().getName());
+
+
+        ExportOptions exportSpec = new ExportOptions();
+        exportSpec.setLocation(location);
+        exportSpec.setPortal(source.getPortal());
+        exportSpec.setExportType(ExportType.FILE_SYSTEM);
+        fileSystemExporter.export(exportSpec);
+
+
+
+
+        List<Spec> specsProcessed= specRepository.findAll().stream().filter(spec -> spec.getSource().getId().equals(sourceId)).collect(Collectors.toList());
+        List<LintReport> lintReports= specsProcessed.stream().map(spec->boatSpecLinter.lint(spec)).collect(Collectors.toList());
+
+
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, "SOURCE", source.getId().toString()))
+            .body(lintReports);
+    }
+
+}
