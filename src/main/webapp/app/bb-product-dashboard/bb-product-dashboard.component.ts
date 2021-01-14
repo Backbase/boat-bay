@@ -27,7 +27,7 @@ export class BbProductDashboardComponent implements OnInit {
   // analyse(portal: BoatDashboard): void {
   //   this.boatLintReportService.postLintProduct(portal.productId).subscribe();
   // }
-  analyse(capability: BoatCapability) {
+  analyse(capability: BoatCapability): void {
     this.boatLintReportService.postLintCapability(capability.id).subscribe();
   }
 }
