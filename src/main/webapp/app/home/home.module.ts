@@ -22,6 +22,8 @@ import { BbDashboardComponent } from 'app/bb-dashboard/bb-dashboard.component';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { BbStatisticsCurrentComponent } from 'app/bb-statistics-current/bb-statistics-current.component';
+import { BbProductDashboardComponent } from 'app/bb-product-dashboard/bb-product-dashboard.component';
 
 @NgModule({
   imports: [
@@ -48,6 +50,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     ReleaseSelectorComponent,
     SpecsFilterComponent,
     BbDashboardComponent,
+    BbProductDashboardComponent,
+    BbStatisticsCurrentComponent,
   ],
 })
 export class BoatBayHomeModule {}

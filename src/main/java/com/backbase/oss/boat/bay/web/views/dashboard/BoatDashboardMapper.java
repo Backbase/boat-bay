@@ -7,6 +7,9 @@ import com.backbase.oss.boat.bay.domain.ProductRelease;
 import com.backbase.oss.boat.bay.domain.ServiceDefinition;
 import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.domain.Tag;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -26,23 +29,25 @@ public interface BoatDashboardMapper {
 
     @Mapping(target = "releases", ignore = true)
     @Mapping(target = "capabilities", ignore = true)
-    BoatLegacyPortalDto mapPortal(Portal portal);
+    BoatLegacyPortal mapPortal(Portal portal);
 
-    BoatLegacyPortalDto.ProductDto mapProduct(Product product);
+    BoatLegacyPortal.ProductDto mapProduct(Product product);
 
     @Mapping(target = "modules", source = "serviceDefinitions")
-    BoatLegacyPortalDto.CapabilityDto mapCapability(Capability capability);
+    BoatLegacyPortal.CapabilityDto mapCapability(Capability capability);
 
-    BoatLegacyPortalDto.PortalVersionDto mapPortalVersion(Portal portal);
+    BoatLegacyPortal.PortalVersionDto mapPortalVersion(Portal portal);
 
     @Mapping(target = "XIcon", source = "icon")
     @Mapping(target = "tags", ignore = true)
-    BoatLegacyPortalDto.ModuleDto mapModule(ServiceDefinition serviceDefinition);
+    BoatLegacyPortal.ModuleDto mapModule(ServiceDefinition serviceDefinition);
 
     @Mapping(target = "grade", source = "spec.lintReport.grade")
     @Mapping(target = "icon", source = "spec.specType.icon")
-    BoatLegacyPortalDto.SpecDto mapSpec(Spec spec);
+    BoatLegacyPortal.SpecDto mapSpec(Spec spec);
 
+    @Mapping(target = "numberOfServices", ignore = true)
+    @Mapping(target = "numberOfCapabilities", ignore = true)
     @Mapping(target = "portalId", source = "portal.id")
     @Mapping(target = "portalKey", source = "portal.key")
     @Mapping(target = "portalName", source = "portal.name")
@@ -51,43 +56,43 @@ public interface BoatDashboardMapper {
     @Mapping(target = "productName", source = "product.name")
     @Mapping(target = "productDescription", source = "product.content")
     @Mapping(target = "lastLintReport", ignore = true)
-    @Mapping(target = "issues", ignore = true)
-    BoatPortalDto mapPortal(Portal portal, Product product);
+    @Mapping(target = "statistics", ignore = true)
+    BoatPortalDashboard mapPortal(Portal portal, Product product);
 
 
-    default Map<String, BoatLegacyPortalDto.CapabilityDto> mapCapabilities(Portal portal, List<String> allEnabledTags) {
+    default Map<String, BoatLegacyPortal.CapabilityDto> mapCapabilities(Portal portal, List<String> allEnabledTags) {
         return portal.getProducts().stream()
             .flatMap(p -> p.getCapabilities().stream())
             .map(capability -> {
-                BoatLegacyPortalDto.CapabilityDto capabilityDto1 = mapCapability(capability);
+                BoatLegacyPortal.CapabilityDto capabilityDto1 = mapCapability(capability);
                 capabilityDto1.getModules().values().forEach(moduleDto -> moduleDto.setTags(moduleDto.getTags().stream().filter(allEnabledTags::contains).collect(Collectors.toSet())));
                 return capabilityDto1;
             })
-            .collect(Collectors.toMap(BoatLegacyPortalDto.CapabilityDto::getKey, capabilityDto -> capabilityDto));
+            .collect(Collectors.toMap(BoatLegacyPortal.CapabilityDto::getKey, capabilityDto -> capabilityDto));
     }
 
-    default Map<String, BoatLegacyPortalDto.ModuleDto> mapModules(Set<ServiceDefinition> serviceDefinitions) {
+    default Map<String, BoatLegacyPortal.ModuleDto> mapModules(Set<ServiceDefinition> serviceDefinitions) {
         Set<String> tags = serviceDefinitions.stream().flatMap(sd -> sd.getSpecs().stream()).flatMap(spec -> spec.getTags().stream()).map(Tag::getName).collect(Collectors.toSet());
 
         return serviceDefinitions.stream()
             .map(serviceDefinition -> {
-                BoatLegacyPortalDto.ModuleDto moduleDto = mapModule(serviceDefinition);
+                BoatLegacyPortal.ModuleDto moduleDto = mapModule(serviceDefinition);
                 moduleDto.setTags(tags);
                 return moduleDto;
             })
-            .collect(Collectors.toMap(BoatLegacyPortalDto.ModuleDto::getKey, moduleDto -> moduleDto));
+            .collect(Collectors.toMap(BoatLegacyPortal.ModuleDto::getKey, moduleDto -> moduleDto));
     }
 
 
-    default Map<Long, BoatLegacyPortalDto.SpecDto> map(Set<Spec> specs) {
+    default Map<Long, BoatLegacyPortal.SpecDto> map(Set<Spec> specs) {
         return specs.stream()
             .map(this::mapSpec)
-            .collect(Collectors.toMap(BoatLegacyPortalDto.SpecDto::getId, specDto -> specDto));
+            .collect(Collectors.toMap(BoatLegacyPortal.SpecDto::getId, specDto -> specDto));
     }
 
 
-    default Map<String, Map<String, BoatLegacyPortalDto.ProductReleaseDto>> mapReleases(Portal portal) {
-        Map<String, Map<String, BoatLegacyPortalDto.ProductReleaseDto>> result = new LinkedHashMap<>();
+    default Map<String, Map<String, BoatLegacyPortal.ProductReleaseDto>> mapReleases(Portal portal) {
+        Map<String, Map<String, BoatLegacyPortal.ProductReleaseDto>> result = new LinkedHashMap<>();
         portal.getProductReleases()
             .forEach(productRelease -> result.put(productRelease.getKey(), mapProductRelease(productRelease)));
         return result;
@@ -95,10 +100,10 @@ public interface BoatDashboardMapper {
     }
 
     @NotNull
-    private Map<String, BoatLegacyPortalDto.ProductReleaseDto> mapProductRelease(ProductRelease productRelease) {
-        Map<String, BoatLegacyPortalDto.ProductReleaseDto> result = new LinkedHashMap<>();
+    private Map<String, BoatLegacyPortal.ProductReleaseDto> mapProductRelease(ProductRelease productRelease) {
+        Map<String, BoatLegacyPortal.ProductReleaseDto> result = new LinkedHashMap<>();
         productRelease.getSpecs().stream().collect(Collectors.groupingBy(Spec::getProduct)).forEach((product, specs) -> {
-            BoatLegacyPortalDto.ProductReleaseDto pr = new BoatLegacyPortalDto.ProductReleaseDto();
+            BoatLegacyPortal.ProductReleaseDto pr = new BoatLegacyPortal.ProductReleaseDto();
             pr.setKey(productRelease.getKey());
             pr.setTitle(productRelease.getName());
             pr.setServices(specs.stream().map(Spec::getServiceDefinition)
@@ -129,7 +134,7 @@ public interface BoatDashboardMapper {
         );
     }
 
-    default Map<String, BoatLegacyPortalDto.ProductDto> mapProducts(Set<Product> products) {
+    default Map<String, BoatLegacyPortal.ProductDto> mapProducts(Set<Product> products) {
         return products.stream()
             .collect(Collectors.toMap(Product::getKey, this::mapProduct));
     }
@@ -140,5 +145,20 @@ public interface BoatDashboardMapper {
             .collect(Collectors.toList());
     }
 
+    @Mapping(target = "statistics", ignore = true)
+    @Mapping(target = "lastLintReport", ignore = true)
+    @Mapping(target = "boatCapabilities", ignore = true)
+    BoatProductDashboard mapBoatProduct(Product byKeyAndPortalKey);
 
+    @Mapping(target = "statistics", ignore = true)
+    @Mapping(target = "services", ignore = true)
+    @Mapping(target = "lastLintReport", ignore = true)
+    BoatCapability mapBoatCapability(Capability capability);
+
+    default LocalDateTime map(Instant value) {
+        if(value == null) {
+            return null;
+        }
+        return LocalDateTime.ofInstant(value, ZoneId.systemDefault());
+    }
 }

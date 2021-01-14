@@ -1,9 +1,12 @@
 package com.backbase.oss.boat.bay.service.lint;
 
+import com.backbase.oss.boat.bay.bootstrap.BoatBayBootstrap;
 import com.backbase.oss.boat.bay.domain.LintReport;
 import com.backbase.oss.boat.bay.domain.LintRuleViolation;
 import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.domain.enumeration.Severity;
+import com.backbase.oss.boat.bay.events.RuleUpdatedEvent;
+import com.backbase.oss.boat.bay.repository.PortalLintRuleRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatLintReportRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatLintRuleRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatLintRuleViolationRepository;
@@ -17,6 +20,10 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Required;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -30,10 +37,12 @@ import org.zalando.zally.core.RulesPolicy;
 @Component
 @RequiredArgsConstructor
 @Slf4j
+//@DependsOn("boatBayBootstrap")
 public class BoatSpecLinter {
 
     private final BoatLintRuleValidatorFactory boatLintRuleValidatorFactory;
     private final BoatLintRuleViolationRepository boatLintRuleViolationRepository;
+
     private final BoatLintRuleRepository boatLintRuleRepository;
     private final BoatLintReportRepository lintReportRepository;
     private final RulesManager rulesManager;
@@ -53,6 +62,8 @@ public class BoatSpecLinter {
         log.info("Scheduling linting of spec: {}", spec.getTitle());
         lint(spec);
     }
+
+
 
 
     public LintReport lint(Spec spec) {

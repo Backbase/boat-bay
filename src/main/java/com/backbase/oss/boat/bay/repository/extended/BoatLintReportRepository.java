@@ -1,6 +1,7 @@
 package com.backbase.oss.boat.bay.repository.extended;
 
 
+import com.backbase.oss.boat.bay.domain.Capability;
 import com.backbase.oss.boat.bay.domain.LintReport;
 import com.backbase.oss.boat.bay.domain.Product;
 import com.backbase.oss.boat.bay.domain.Spec;
@@ -13,7 +14,9 @@ public interface BoatLintReportRepository extends LintReportRepository  {
     Optional<LintReport> findBySpec(Spec spec);
 
 
-    Optional<LintReport> findDistinctFirstBySpec_ProductOrderByLintedOn(Product product);
+    Optional<LintReport> findDistinctFirstBySpecProductOrderByLintedOn(Product product);
+
+    Optional<LintReport> findDistinctFirstBySpecServiceDefinitionCapability(Capability capability);
 
 
 

@@ -23,4 +23,8 @@ export class BoatLintReportService {
   postLintProduct(productId: number): Observable<void> {
     return this.http.post<void>(`${this.resourceUrl}/product`, productId);
   }
+
+  postLintCapability(id: number): Observable<void> {
+    return this.http.post<void>(`${this.resourceUrl}/capability`, id);
+  }
 }

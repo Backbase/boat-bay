@@ -1,7 +1,9 @@
 package com.backbase.oss.boat.bay.aop.spec;
 
+import com.backbase.oss.boat.bay.domain.LintRule;
 import com.backbase.oss.boat.bay.domain.Source;
 import com.backbase.oss.boat.bay.domain.Spec;
+import com.backbase.oss.boat.bay.events.RuleUpdatedEvent;
 import com.backbase.oss.boat.bay.events.SpecSourceUpdatedEvent;
 import com.backbase.oss.boat.bay.events.SpecUpdatedEvent;
 import lombok.RequiredArgsConstructor;
@@ -39,13 +41,14 @@ public class SpecRepositoryAspect {
 
         if (joinPoint.getArgs().length == 1 && joinPoint.getArgs()[0] instanceof Spec) {
             Spec spec = (Spec) result;
-            if(spec.getId() != null) {
-                log.info("Publishing Spec Updated Event for Spec: {}", spec.getName());
-                publisher.publishEvent(new SpecUpdatedEvent(this, spec));
-            } else {
-                log.info("Spec is not stored somehow...");
-            }
+            log.info("Publishing Spec Updated Event for Spec: {}", spec.getName());
+            publisher.publishEvent(new SpecUpdatedEvent(this, spec));
+        }
 
+        if (joinPoint.getArgs().length == 1 && joinPoint.getArgs()[0] instanceof LintRule) {
+            LintRule lintRule = ((LintRule) result);
+                log.info("Publishing Rule Updated Event for Rule: {}", lintRule.getRuleId());
+                publisher.publishEvent(new RuleUpdatedEvent(this, lintRule));
         }
 
         return result;

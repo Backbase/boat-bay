@@ -1,7 +1,9 @@
 package com.backbase.oss.boat.bay.repository.extended;
 
+import com.backbase.oss.boat.bay.domain.Capability;
 import com.backbase.oss.boat.bay.domain.LintReport;
 import com.backbase.oss.boat.bay.domain.Product;
+import com.backbase.oss.boat.bay.domain.ServiceDefinition;
 import com.backbase.oss.boat.bay.domain.enumeration.Severity;
 import com.backbase.oss.boat.bay.repository.LintRuleViolationRepository;
 
@@ -10,8 +12,10 @@ public interface BoatLintRuleViolationRepository extends LintRuleViolationReposi
 
     void deleteByLintReport(LintReport lintReport);
 
+    long countBySeverityAndLintReportSpecServiceDefinition(Severity severity, ServiceDefinition serviceDefinition);
 
+    long countBySeverityAndLintReportSpecCapability(Severity severity, Capability capability);
 
-    long countBySeverityAndLintReport_Spec_Product(Severity severity, Product product);
+    long countBySeverityAndLintReportSpecProduct(Severity severity, Product product);
 
 }

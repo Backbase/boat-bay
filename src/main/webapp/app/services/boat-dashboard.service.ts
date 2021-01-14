@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { SERVER_API_URL } from 'app/app.constants';
 import { LegacyPortalView } from 'app/models/dashboard/v1';
-import { BoatPortal } from 'app/models/dashboard/boat-portal';
+import { BoatDashboard } from 'app/models/dashboard/boat-dashboard';
+import { BoatProductDashboard } from 'app/models/dashboard/boat-product-dashboard';
 
 @Injectable({ providedIn: 'root' })
 export class BoatDashboardService {
@@ -16,7 +17,11 @@ export class BoatDashboardService {
     return this.http.get<LegacyPortalView>(`${this.resourceUrl}/legacy-dashboard`);
   }
 
-  getBoatPortalView(): Observable<BoatPortal[]> {
-    return this.http.get<BoatPortal[]>(`${this.resourceUrl}/dashboard`);
+  getBoatPortalView(): Observable<BoatDashboard[]> {
+    return this.http.get<BoatDashboard[]>(`${this.resourceUrl}/dashboard`);
+  }
+
+  getBoatProductDashboardView(portalKey: string, productKey: string): Observable<HttpResponse<BoatProductDashboard>> {
+    return this.http.get<BoatProductDashboard>(`${this.resourceUrl}/dashboard/${portalKey}/${productKey}`, { observe: 'response' });
   }
 }
