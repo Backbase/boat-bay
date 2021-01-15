@@ -29,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = BoatBayApp.class)
 @AutoConfigureMockMvc
 @WithMockUser
+
 public class DashboardResourceIT {
 
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
@@ -190,7 +191,7 @@ public class DashboardResourceIT {
             .andExpect(jsonPath("$.[*].navTitle").value(hasItem(DEFAULT_NAV_TITLE)))
             .andExpect(jsonPath("$.[*].content").value(hasItem(DEFAULT_CONTENT.toString())));
     }
-    
+
     @Test
     @Transactional
     public void getDashboard() throws Exception {

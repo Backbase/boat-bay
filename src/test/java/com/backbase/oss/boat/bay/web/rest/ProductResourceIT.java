@@ -31,6 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = BoatBayApp.class)
 @AutoConfigureMockMvc
 @WithMockUser
+
 public class ProductResourceIT {
 
     private static final String DEFAULT_KEY = "AAAAAAAAAA";
@@ -225,7 +226,7 @@ public class ProductResourceIT {
             .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
             .andExpect(jsonPath("$.[*].hide").value(hasItem(DEFAULT_HIDE.booleanValue())));
     }
-    
+
     @Test
     @Transactional
     public void getProduct() throws Exception {

@@ -29,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = BoatBayApp.class)
 @AutoConfigureMockMvc
 @WithMockUser
+
 public class LintReportResourceIT {
 
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
@@ -144,7 +145,7 @@ public class LintReportResourceIT {
             .andExpect(jsonPath("$.[*].passed").value(hasItem(DEFAULT_PASSED.booleanValue())))
             .andExpect(jsonPath("$.[*].lintedOn").value(hasItem(DEFAULT_LINTED_ON.toString())));
     }
-    
+
     @Test
     @Transactional
     public void getLintReport() throws Exception {

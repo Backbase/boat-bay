@@ -29,6 +29,7 @@ import com.backbase.oss.boat.bay.domain.enumeration.Severity;
 @SpringBootTest(classes = BoatBayApp.class)
 @AutoConfigureMockMvc
 @WithMockUser
+
 public class LintRuleResourceIT {
 
     private static final String DEFAULT_RULE_ID = "AAAAAAAAAA";
@@ -261,7 +262,7 @@ public class LintRuleResourceIT {
             .andExpect(jsonPath("$.[*].externalUrl").value(hasItem(DEFAULT_EXTERNAL_URL)))
             .andExpect(jsonPath("$.[*].enabled").value(hasItem(DEFAULT_ENABLED.booleanValue())));
     }
-    
+
     @Test
     @Transactional
     public void getLintRule() throws Exception {

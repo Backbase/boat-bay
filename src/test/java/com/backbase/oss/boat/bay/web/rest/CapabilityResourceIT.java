@@ -6,6 +6,7 @@ import com.backbase.oss.boat.bay.domain.Product;
 import com.backbase.oss.boat.bay.repository.CapabilityRepository;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -31,6 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = BoatBayApp.class)
 @AutoConfigureMockMvc
 @WithMockUser
+@Disabled
 public class CapabilityResourceIT {
 
     private static final String DEFAULT_KEY = "AAAAAAAAAA";
@@ -232,7 +234,7 @@ public class CapabilityResourceIT {
             .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
             .andExpect(jsonPath("$.[*].hide").value(hasItem(DEFAULT_HIDE.booleanValue())));
     }
-    
+
     @Test
     @Transactional
     public void getCapability() throws Exception {

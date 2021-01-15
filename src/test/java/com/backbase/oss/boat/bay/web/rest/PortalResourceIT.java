@@ -30,6 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = BoatBayApp.class)
 @AutoConfigureMockMvc
 @WithMockUser
+
 public class PortalResourceIT {
 
     private static final String DEFAULT_KEY = "AAAAAAAAAA";
@@ -218,7 +219,7 @@ public class PortalResourceIT {
             .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
             .andExpect(jsonPath("$.[*].hide").value(hasItem(DEFAULT_HIDE.booleanValue())));
     }
-    
+
     @Test
     @Transactional
     public void getPortal() throws Exception {

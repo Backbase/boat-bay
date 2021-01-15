@@ -36,6 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
+
 public class ProductReleaseResourceIT {
 
     private static final String DEFAULT_KEY = "AAAAAAAAAA";
@@ -205,7 +206,7 @@ public class ProductReleaseResourceIT {
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].hide").value(hasItem(DEFAULT_HIDE.booleanValue())));
     }
-    
+
     @SuppressWarnings({"unchecked"})
     public void getAllProductReleasesWithEagerRelationshipsIsEnabled() throws Exception {
         when(productReleaseRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));

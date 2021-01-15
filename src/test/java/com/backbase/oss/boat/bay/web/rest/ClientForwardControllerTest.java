@@ -17,6 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Unit tests for the {@link ClientForwardController} REST controller.
  */
+
 public class ClientForwardControllerTest {
 
     private MockMvc restMockMvc;

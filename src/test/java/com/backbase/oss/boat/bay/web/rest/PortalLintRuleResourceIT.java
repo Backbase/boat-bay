@@ -29,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = BoatBayApp.class)
 @AutoConfigureMockMvc
 @WithMockUser
+
 public class PortalLintRuleResourceIT {
 
     private static final String DEFAULT_RULE_ID = "AAAAAAAAAA";
@@ -208,7 +209,7 @@ public class PortalLintRuleResourceIT {
             .andExpect(jsonPath("$.[*].ruleId").value(hasItem(DEFAULT_RULE_ID)))
             .andExpect(jsonPath("$.[*].enabled").value(hasItem(DEFAULT_ENABLED.booleanValue())));
     }
-    
+
     @Test
     @Transactional
     public void getPortalLintRule() throws Exception {

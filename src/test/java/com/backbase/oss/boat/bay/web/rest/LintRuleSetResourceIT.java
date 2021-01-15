@@ -28,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = BoatBayApp.class)
 @AutoConfigureMockMvc
 @WithMockUser
+
 public class LintRuleSetResourceIT {
 
     private static final String DEFAULT_RULE_SET_ID = "AAAAAAAAAA";
@@ -181,7 +182,7 @@ public class LintRuleSetResourceIT {
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
             .andExpect(jsonPath("$.[*].externalUrl").value(hasItem(DEFAULT_EXTERNAL_URL)));
     }
-    
+
     @Test
     @Transactional
     public void getLintRuleSet() throws Exception {

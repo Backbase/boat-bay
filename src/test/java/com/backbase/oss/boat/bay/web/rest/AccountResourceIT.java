@@ -38,6 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @WithMockUser(value = TEST_USER_LOGIN)
 @SpringBootTest(classes = BoatBayApp.class)
+
 public class AccountResourceIT {
     static final String TEST_USER_LOGIN = "test";
 

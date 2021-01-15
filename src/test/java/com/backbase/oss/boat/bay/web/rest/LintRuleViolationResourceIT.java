@@ -30,6 +30,7 @@ import com.backbase.oss.boat.bay.domain.enumeration.Severity;
 @SpringBootTest(classes = BoatBayApp.class)
 @AutoConfigureMockMvc
 @WithMockUser
+
 public class LintRuleViolationResourceIT {
 
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
@@ -205,7 +206,7 @@ public class LintRuleViolationResourceIT {
             .andExpect(jsonPath("$.[*].lineEnd").value(hasItem(DEFAULT_LINE_END)))
             .andExpect(jsonPath("$.[*].jsonPointer").value(hasItem(DEFAULT_JSON_POINTER)));
     }
-    
+
     @Test
     @Transactional
     public void getLintRuleViolation() throws Exception {
