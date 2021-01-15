@@ -15,8 +15,6 @@ import java.util.List;
 @AllArgsConstructor
 public class UploadRequestBody {
     private List<Spec> specs;
-//    private Portal portal;
-//    private Product product;
     private String location;
-    private String projectId, artifactId;
+    private String projectId, artifactId, version;
 }

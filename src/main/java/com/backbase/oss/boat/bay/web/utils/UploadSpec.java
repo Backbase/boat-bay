@@ -2,6 +2,8 @@ package com.backbase.oss.boat.bay.web.utils;
 
 import com.backbase.oss.boat.ExportException;
 import com.backbase.oss.boat.bay.domain.*;
+import com.backbase.oss.boat.bay.repository.PortalRepository;
+import com.backbase.oss.boat.bay.repository.ProductRepository;
 import com.backbase.oss.boat.bay.repository.SourceRepository;
 import com.backbase.oss.boat.bay.repository.SpecRepository;
 import com.backbase.oss.boat.bay.service.export.ExportOptions;
@@ -27,8 +29,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.backbase.oss.boat.bay.domain.enumeration.SourceType.BOAT_MAVEN_PLUGIN;
-
 @RestController
 @RequestMapping("/api")
 @Transactional
@@ -39,6 +39,8 @@ public class UploadSpec {
     private final FileSystemExporter fileSystemExporter;
     private final SpecRepository specRepository;
     private final BoatSpecLinter boatSpecLinter;
+    private final PortalRepository portalRepository;
+    private final ProductRepository productRepository;
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
     private static final String ENTITY_NAME = "spec";
@@ -49,53 +51,73 @@ public class UploadSpec {
     // openapi must
     // assume source is already there
 
-    public UploadSpec(SpecRepository specRepository, SourceRepository sourceRepository, SpecSourceResolver specSourceResolver, FileSystemExporter fileSystemExporter, BoatSpecLinter boatSpecLinter) {
+    public UploadSpec(SpecRepository specRepository, SourceRepository sourceRepository, SpecSourceResolver specSourceResolver, FileSystemExporter fileSystemExporter, BoatSpecLinter boatSpecLinter, PortalRepository portalRepository, ProductRepository productRepository) {
         this.sourceRepository = sourceRepository;
         this.specRepository = specRepository;
         this.specSourceResolver = specSourceResolver;
         this.fileSystemExporter = fileSystemExporter;
         this.boatSpecLinter = boatSpecLinter;
+        this.portalRepository = portalRepository;
+        this.productRepository = productRepository;
     }
 
     @PutMapping("boat-maven-plugin/{sourceId}/upload")
-    public ResponseEntity<List<LintReport>> uploadSpec(@Valid @RequestBody UploadRequestBody requestBody, @PathVariable Long sourceId) throws URISyntaxException, ExportException {
+    public ResponseEntity<List<LintReport>> uploadSpec(@Valid @RequestBody UploadRequestBody requestBody, @PathVariable String sourceId) throws URISyntaxException, ExportException {
         //log.debug("REST request to upload : {}", spec.getKey());
-        Source source = sourceRepository.findById(sourceId).orElseThrow(()->new BadRequestAlertException("Invalid source, source Id does not exist", "SOURCE", "sourceIdInvalid"));
+        Source source = sourceRepository.findById(Long.parseLong(sourceId)).orElseThrow(() -> new BadRequestAlertException("Invalid source, source Id does not exist", "SOURCE", "sourceIdInvalid"));
         List<Spec> requestSpecs = requestBody.getSpecs();
-        for (Spec spec: requestSpecs) {
+        if (requestBody.getProjectId().isEmpty()
+            || requestBody.getVersion().isEmpty()
+            || requestBody.getArtifactId().isEmpty()) {
+            throw new BadRequestAlertException("Invalid Request body missing attributes", ENTITY_NAME, "attributeempty");
+        }
+        portalRepository.save(source.getPortal());
+        productRepository.save(source.getProduct());
+        for (Spec spec : requestSpecs) {
 
             log.debug("REST request to upload : {}", spec.getKey());
+
 
             if (spec.getOpenApi().isEmpty()
                 || spec.getPortal().getKey().isEmpty()
                 || spec.getProduct().getKey().isEmpty()
                 || spec.getFilename().isEmpty()) {
-                throw new BadRequestAlertException("Invalid spec with and empty path, api, product, or file name", ENTITY_NAME, "attributeempty");
+                throw new BadRequestAlertException("Invalid spec with an empty path, api, product, or file name", ENTITY_NAME, "attributeempty");
             }
-            spec.getSource().setType(BOAT_MAVEN_PLUGIN);
+            if (spec.getFilename().isEmpty()) {
+                spec.setFilename(requestBody.getArtifactId() + "-api-v" + requestBody.getVersion() + ".yaml");
+            }
+            spec.setVersion(requestBody.getVersion().replaceAll("(\\.|-)(\\w{2,})+" , ""));
+            spec.setSource(source);
+            spec.setSourceName(spec.getFilename());
+            spec.setSourcePath("/" +
+                requestBody.getProjectId().substring(
+                    requestBody.getProjectId().lastIndexOf(".")+1)
+                + "/" +
+                spec.getFilename());
+
 
 //            Optional<SourcePath> location = source.getSourcePaths().stream()
 //                .filter(sourcePath -> sourcePath.getName()
 //                    .contains(spec.getFilename())).findFirst();
             Spec match = new Spec().key(spec.getKey()).name(spec.getName()).version(spec.getVersion());
             Optional<Spec> duplicate = specRepository.findOne(Example.of(match));
-            if (duplicate.isPresent()){
+            if (duplicate.isPresent()) {
                 spec.capability(duplicate.get().getCapability());
                 spec.serviceDefinition(duplicate.get().getServiceDefinition());
-                spec.setSource(source);
                 specRepository.save(spec);
                 requestSpecs.remove(spec);
             }
-        }
 
+        }
 
 
         List specs = requestBody.getSpecs();
 
-        ScanResult scanResult = new ScanResult(source,specs);
+        ScanResult scanResult = new ScanResult(source, specs);
         specSourceResolver.process(scanResult);
 
-        String location = (requestBody.getProjectId()).concat("/"+requestBody.getArtifactId()).concat("/"+source.getPortal().getName());
+        String location = (requestBody.getProjectId()).concat("/" + requestBody.getArtifactId()).concat("/" + source.getPortal().getName());
 
 
         ExportOptions exportSpec = new ExportOptions();
@@ -105,10 +127,8 @@ public class UploadSpec {
         fileSystemExporter.export(exportSpec);
 
 
-
-
-        List<Spec> specsProcessed= specRepository.findAll().stream().filter(spec -> spec.getSource().getId().equals(sourceId)).collect(Collectors.toList());
-        List<LintReport> lintReports= specsProcessed.stream().map(spec->boatSpecLinter.lint(spec)).collect(Collectors.toList());
+        List<Spec> specsProcessed = specRepository.findAll().stream().filter(spec -> spec.getSource().getId().equals(sourceId)).collect(Collectors.toList());
+        List<LintReport> lintReports = specsProcessed.stream().map(spec -> boatSpecLinter.lint(spec)).collect(Collectors.toList());
 
 
         return ResponseEntity.ok()
