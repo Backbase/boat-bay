@@ -1,22 +1,19 @@
 package com.backbase.oss.boat.bay.web.views.dashboard;
 
-import com.backbase.oss.boat.bay.service.statistics.BoatStatistics;
+import io.micrometer.core.instrument.Statistic;
 import java.time.LocalDateTime;
 import lombok.Data;
 
 @Data
-public class BoatService {
+public class BoatPortal {
 
-
+    private String id;
     private String key;
     private String name;
-    private String description;
-    private String icon;
-    private String color;
+    private String content;
+
     private LocalDateTime createdOn;
     private String createdBy;
-
-    private BoatStatistics statistics;
 
 }
 

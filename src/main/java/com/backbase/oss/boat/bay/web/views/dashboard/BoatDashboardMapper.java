@@ -147,7 +147,6 @@ public interface BoatDashboardMapper {
 
     @Mapping(target = "statistics", ignore = true)
     @Mapping(target = "lastLintReport", ignore = true)
-    @Mapping(target = "capabilities", ignore = true)
     BoatProductDashboard mapBoatProduct(Product byKeyAndPortalKey);
 
     @Mapping(target = "statistics", ignore = true)
@@ -161,4 +160,12 @@ public interface BoatDashboardMapper {
         }
         return LocalDateTime.ofInstant(value, ZoneId.systemDefault());
     }
+
+    BoatPortal mapBoatPortal(Portal portal);
+
+    @Mapping(target = "statistics", ignore = true)
+    BoatService mapBoatService(ServiceDefinition serviceDefinition);
+
+    @Mapping(target = "statistics", ignore = true)
+    BoatSpec mapBoatSpec(Spec spec);
 }

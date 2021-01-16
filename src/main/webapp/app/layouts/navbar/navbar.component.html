@@ -1,85 +1,3 @@
-<mat-toolbar
-    class="fixed-top"
-    [ngClass]="{ scrolling: isScrolling }"
-    (window:scroll)="onWindowScroll($event)"
-    data-role="top-navigation-container"
->
-
-    <header>
-        <div class="header-row">
-
-            <div class="bb-brand" >
-                <a href="/">
-                <img
-                    class="bb-brand-logo"
-                    [src]="imageAssetsPath + 'logo-emblem.svg'"
-                    alt="Backbase Logo"
-                />
-                <img
-                    class="bb-brand-logo-full"
-                    [src]="imageAssetsPath + 'backbase-logo.png'"
-                    alt="Backbase Logo with text"
-                />
-
-                <span class="bb-brand-spacer">/</span>
-                <span class="bb-brand-text">BOAT 🚢 BAY 🏝</span>
-                </a>
-            </div>
-
-
-            <div class="bb-brand-community" [ngSwitch]="isAuthenticated()" >
-
-                <button class="bb-brand-community-link" *ngSwitchCase="true" mat-menu-item [mat-menu-trigger-for]="entities">Entities</button>
-                <button class="bb-brand-community-link" *jhiHasAnyAuthority="'ROLE_ADMIN'" mat-menu-item [mat-menu-trigger-for]="administration">Administration</button>
-                <button class="bb-brand-community-link" mat-menu-item [mat-menu-trigger-for]="account">Account</button>
-
-                <mat-menu #entities>
-                    <a routerLink="entities/portal" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Portal</a>
-                    <a routerLink="entities/product" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Products</a>
-                    <a routerLink="entities/capability" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Capability</a>
-                    <a routerLink="entities/service-definition" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>ServiceDefinition</a>
-                    <a routerLink="entities/spec" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Spec</a>
-                    <a routerLink="entities/lint-report" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Lint Report</a>
-                    <mat-divider></mat-divider>
-                    <a routerLink="entities/source" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Source</a>
-                    <mat-divider></mat-divider>
-                    <a routerLink="entities/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Dashboard</a>
-                    <a routerLink="entities/spec-type" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Spec Types</a>
-                    <mat-divider></mat-divider>
-                    <a routerLink="entities/lint-rule-set" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Lint Rule Set</a>
-                    <a routerLink="entities/lint-rule" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Lint Rule</a>
-                    <a routerLink="entities/portal-lint-rule" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Portal Lint Rule</a>
-                    <mat-divider></mat-divider>
-
-                </mat-menu>
-                <mat-menu #administration>
-                    <a routerLink="admin/user-management" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>User management</a>
-                    <a routerLink="admin/metrics" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Metrics</a>
-                    <a routerLink="admin/configuration" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Configuration</a>
-                    <a routerLink="admin/audits" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Audits</a>
-                    <a routerLink="admin/logs" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Logs</a>
-                </mat-menu>
-
-                <mat-menu #account >
-                    <a *ngSwitchCase="true" routerLink="account/settings" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Settings</a>
-                    <a *ngSwitchCase="true" routerLink="account/password" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Password</a>
-                    <a *ngSwitchCase="true" (click)="logout()" mat-menu-item>Logout</a>
-                    <a *ngSwitchCase="false" (click)="login()"  mat-menu-item>Login</a>
-                    <a *ngSwitchCase="false" routerLink="account/register" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" mat-menu-item>Register</a>
-                </mat-menu>
-<!--                <a-->
-<!--                    class="bb-brand-community-link"-->
-<!--                    href="https://community.backbase.com/"-->
-<!--                    target="_blank"-->
-<!--                >Community</a-->
-<!--                >-->
-
-
-            </div>
-        </div>
-    </header>
-</mat-toolbar>
-<!--
 <nav class="navbar navbar-dark navbar-expand-md bg-dark">
     <a class="navbar-brand logo" routerLink="/" (click)="collapseNavbar()">
         <span class="logo-img"></span>
@@ -97,9 +15,8 @@
                         <span>Home</span>
                     </span>
                 </a>
-            </li>-->
+            </li>
             <!-- jhipster-needle-add-element-to-menu - JHipster will add new menu items here -->
-<!--
             <li *ngSwitchCase="true" ngbDropdown class="nav-item dropdown pointer" display="dynamic" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
                 <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="entity-menu">
                     <span>
@@ -111,165 +28,15 @@
                 </a>
                 <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="entity-menu">
                     <li>
-                        <a class="dropdown-item" routerLink="portal" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
-                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-                            <span>Portal</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="capability" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
-                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-                            <span>Capability</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="spec" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
-                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-                            <span>Spec</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="lint-rule" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
-                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-                            <span>Lint Rule</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="lint-rule-set" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
-                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-                            <span>Lint Rule Set</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="lint-report" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
-                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-                            <span>Lint Report</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="lint-rule-violation" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
-                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-                            <span>Lint Rule Violation</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="source" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
-                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-                            <span>Source</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="service-definition" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
-                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-                            <span>Service Definition</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="portal-lint-rule-set" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
-                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-                            <span>Portal Lint Rule Set</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="portal-lint-rule" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
-                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-                            <span>Portal Lint Rule</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" routerLink="portal-lint-rule-config" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
-                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-                            <span>Portal Lint Rule Config</span>
-                        </a>
-                    </li>
-<li>
-                        <a class="dropdown-item" routerLink="portal" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
-                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-                            <span>Portal</span>
-                        </a>
-                    </li>
-<li>
-                        <a class="dropdown-item" routerLink="product" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
-                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-                            <span>Product</span>
-                        </a>
-                    </li>
-<li>
-                        <a class="dropdown-item" routerLink="capability" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
-                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-                            <span>Capability</span>
-                        </a>
-                    </li>
-<li>
-                        <a class="dropdown-item" routerLink="service-definition" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
-                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-                            <span>Service Definition</span>
-                        </a>
-                    </li>
-<li>
-                        <a class="dropdown-item" routerLink="spec" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
-                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-                            <span>Spec</span>
-                        </a>
-                    </li>
-<li>
-                        <a class="dropdown-item" routerLink="source" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
-                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-                            <span>Source</span>
-                        </a>
-                    </li>
-<li>
-                        <a class="dropdown-item" routerLink="lint-rule" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
-                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-                            <span>Lint Rule</span>
-                        </a>
-                    </li>
-<li>
-                        <a class="dropdown-item" routerLink="lint-rule-set" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
-                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-                            <span>Lint Rule Set</span>
-                        </a>
-                    </li>
-<li>
-                        <a class="dropdown-item" routerLink="portal-lint-rule-set" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
-                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-                            <span>Portal Lint Rule Set</span>
-                        </a>
-                    </li>
-<li>
-                        <a class="dropdown-item" routerLink="portal-lint-rule" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
-                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-                            <span>Portal Lint Rule</span>
-                        </a>
-                    </li>
-<li>
-                        <a class="dropdown-item" routerLink="portal-lint-rule-config" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
-                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-                            <span>Portal Lint Rule Config</span>
-                        </a>
-                    </li>
-<li>
-                        <a class="dropdown-item" routerLink="lint-report" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
-                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-                            <span>Lint Report</span>
-                        </a>
-                    </li>
-<li>
-                        <a class="dropdown-item" routerLink="lint-rule-violation" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
-                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-                            <span>Lint Rule Violation</span>
-                        </a>
-                    </li>
-                    <li>
                         <a class="dropdown-item" routerLink="dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
                             <span>Dashboard</span>
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="spec-type" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="portal" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-                            <span>Spec Type</span>
+                            <span>Portal</span>
                         </a>
                     </li>
                     <li>
@@ -279,9 +46,27 @@
                         </a>
                     </li>
                     <li>
-                        <a class="dropdown-item" routerLink="source-path" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                        <a class="dropdown-item" routerLink="product" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
                             <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
-                            <span>Source Path</span>
+                            <span>Product</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="capability" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Capability</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="service-definition" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Service Definition</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="spec" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Spec</span>
                         </a>
                     </li>
                     <li>
@@ -289,11 +74,57 @@
                             <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
                             <span>Tag</span>
                         </a>
-                    </li>-->
-
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="spec-type" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Spec Type</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="source" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Source</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="source-path" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Source Path</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="lint-rule" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Lint Rule</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="lint-rule-set" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Lint Rule Set</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="portal-lint-rule" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Portal Lint Rule</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="lint-report" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Lint Report</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="lint-rule-violation" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" [fixedWidth]="true"></fa-icon>
+                            <span>Lint Rule Violation</span>
+                        </a>
+                    </li>
                     <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
-<!--
-</ul>
+                </ul>
             </li>
             <li *jhiHasAnyAuthority="'ROLE_ADMIN'" ngbDropdown class="nav-item dropdown pointer" display="dynamic" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
                 <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="admin-menu">
@@ -345,7 +176,7 @@
                             <span>API</span>
                         </a>
                     </li>
-                     jhipster-needle-add-element-to-admin-menu - JHipster will add entities to the admin menu here
+                    <!-- jhipster-needle-add-element-to-admin-menu - JHipster will add entities to the admin menu here -->
                     <li *ngIf="!inProduction">
                         <a class="dropdown-item" href='./h2-console' target="_tab" (click)="collapseNavbar()">
                             <fa-icon icon="hdd" [fixedWidth]="true"></fa-icon>
@@ -402,4 +233,3 @@
         </ul>
     </div>
 </nav>
--->
