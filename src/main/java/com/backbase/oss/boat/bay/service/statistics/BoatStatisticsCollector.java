@@ -70,16 +70,13 @@ public class BoatStatisticsCollector {
 
     @CachePut(STATISTICS)
     public BoatStatistics performCollect(Product product) {
-        log.info("Collecting statistics for product: {}", product.getName());
         BoatStatistics statistics = new BoatStatistics();
         statistics.setUpdatedOn(LocalDateTime.now());
 
-        for (Severity severity : Severity.values()) {
-            BoatIssueCount issueCount = new BoatIssueCount();
-            issueCount.setNumberOfIssues(boatLintRuleViolationRepository.countBySeverityAndLintReportSpecProduct(severity, product));
-            issueCount.setSeverity(severity);
-            statistics.getIssues().add(issueCount);
-        }
+        statistics.setMustViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpecProduct(Severity.MUST, product));
+        statistics.setShouldViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpecProduct(Severity.SHOULD, product));
+        statistics.setMayViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpecProduct(Severity.MAY, product));
+        statistics.setHintViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpecProduct(Severity.HINT, product));
 
         return statistics;
     }
@@ -95,12 +92,10 @@ public class BoatStatisticsCollector {
         BoatStatistics statistics = new BoatStatistics();
         statistics.setUpdatedOn(LocalDateTime.now());
 
-        for (Severity severity : Severity.values()) {
-            BoatIssueCount issueCount = new BoatIssueCount();
-            issueCount.setNumberOfIssues(boatLintRuleViolationRepository.countBySeverityAndLintReportSpecCapability(severity, capability));
-            issueCount.setSeverity(severity);
-            statistics.getIssues().add(issueCount);
-        }
+        statistics.setMustViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpecCapability(Severity.MUST, capability));
+        statistics.setShouldViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpecCapability(Severity.SHOULD, capability));
+        statistics.setMayViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpecCapability(Severity.MAY, capability));
+        statistics.setHintViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpecCapability(Severity.HINT, capability));
 
         return statistics;
     }
@@ -116,12 +111,10 @@ public class BoatStatisticsCollector {
         BoatStatistics statistics = new BoatStatistics();
         statistics.setUpdatedOn(LocalDateTime.now());
 
-        for (Severity severity : Severity.values()) {
-            BoatIssueCount issueCount = new BoatIssueCount();
-            issueCount.setNumberOfIssues(boatLintRuleViolationRepository.countBySeverityAndLintReportSpecServiceDefinition(severity, serviceDefinition));
-            issueCount.setSeverity(severity);
-            statistics.getIssues().add(issueCount);
-        }
+        statistics.setMustViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpecServiceDefinition(Severity.MUST, serviceDefinition));
+        statistics.setShouldViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpecServiceDefinition(Severity.SHOULD, serviceDefinition));
+        statistics.setMayViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpecServiceDefinition(Severity.MAY, serviceDefinition));
+        statistics.setHintViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpecServiceDefinition(Severity.HINT, serviceDefinition));
 
         return statistics;
     }

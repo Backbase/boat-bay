@@ -4,6 +4,7 @@ import com.backbase.oss.boat.bay.config.PrometheusConfiguration;
 import com.backbase.oss.boat.bay.domain.Capability;
 import com.backbase.oss.boat.bay.domain.Product;
 import com.backbase.oss.boat.bay.domain.ServiceDefinition;
+import com.backbase.oss.boat.bay.domain.enumeration.Severity;
 import com.backbase.oss.boat.bay.service.statistics.BoatStatistics;
 import com.backbase.oss.boat.bay.service.statistics.BoatStatisticsPublisher;
 import io.prometheus.client.CollectorRegistry;
@@ -68,9 +69,10 @@ public class BoatStatisticsPublisherPrometheus implements BoatStatisticsPublishe
 
     private void push(BoatStatistics boatStatistics, CollectorRegistry registry, Gauge productGauge) {
         productGauge.setToCurrentTime();
-        boatStatistics.getIssues().forEach(boatIssueCount -> {
-            productGauge.labels(boatIssueCount.getSeverity().name()).set(boatIssueCount.getNumberOfIssues().doubleValue());
-        });
+        productGauge.labels(Severity.MUST.name()).set(boatStatistics.getMustViolationsCount());
+        productGauge.labels(Severity.SHOULD.name()).set(boatStatistics.getShouldViolationsCount());
+        productGauge.labels(Severity.MAY.name()).set(boatStatistics.getMayViolationsCount());
+        productGauge.labels(Severity.HINT.name()).set(boatStatistics.getHintViolationsCount());
 
         try {
             pushGateway.pushAdd(registry, "boat");

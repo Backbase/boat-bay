@@ -223,3 +223,7 @@ relationship OneToOne {
     Dashboard{defaultPortal(name) required} to Portal
 	LintReport to Spec
 }
+
+
+paginate Capability with infinite-scroll
+paginate Capability with pagination

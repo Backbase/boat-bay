@@ -8,6 +8,8 @@ import com.backbase.oss.boat.bay.repository.SpecRepository;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.cache.annotation.CachePut;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface BoatSpecRepository extends SpecRepository {
 
@@ -18,5 +20,7 @@ public interface BoatSpecRepository extends SpecRepository {
     List<Spec> findAllByCapabilityProduct(Product product);
 
     List<Spec> findAllByCapability(Capability capability);
+
+    Page<Spec> findAllByCapabilityProduct(Product product, Pageable pageable);
 
 }

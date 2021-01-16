@@ -2,7 +2,7 @@ package com.backbase.oss.boat.bay.config;
 
 import com.backbase.oss.boat.bay.service.lint.BoatLintRuleValidatorFactory;
 import static com.backbase.oss.boat.bay.service.statistics.BoatStatisticsCollector.STATISTICS;
-import com.backbase.oss.boat.bay.web.views.dashboard.BoatDashboardResource;
+import com.backbase.oss.boat.bay.web.views.dashboard.BoatDashboardController;
 import io.github.jhipster.config.JHipsterProperties;
 import io.github.jhipster.config.cache.PrefixedKeyGenerator;
 import java.time.Duration;
@@ -96,7 +96,7 @@ public class CacheConfiguration {
             // jhipster-needle-ehcache-add-entry
             createCache(cm, BoatLintRuleValidatorFactory.API_VALIDATORS);
             createCache(cm, BoatLintRuleValidatorFactory.API_RULE_POLICY);
-            createCache(cm, BoatDashboardResource.VIEWS);
+            createCache(cm, BoatDashboardController.VIEWS);
             createCache(cm, STATISTICS);
         };
     }

@@ -1,5 +1,6 @@
 package com.backbase.oss.boat.bay.service.statistics;
 
+import com.backbase.oss.boat.bay.domain.enumeration.Severity;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,9 @@ public class BoatStatistics {
 
     private LocalDateTime updatedOn;
 
-    private List<BoatIssueCount> issues = new ArrayList<>();
+    private long mustViolationsCount;
+    private long shouldViolationsCount;
+    private long mayViolationsCount;
+    private long hintViolationsCount;
 
 }

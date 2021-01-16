@@ -13,13 +13,6 @@ import { NavbarComponent } from './layouts/navbar/navbar.component';
 import { FooterComponent } from './layouts/footer/footer.component';
 import { PageRibbonComponent } from './layouts/profiles/page-ribbon.component';
 import { ErrorComponent } from './layouts/error/error.component';
-import { AngularMaterialModule } from 'app/angular-material.module';
-import { environment } from 'app/environments/environment';
-import { MatMenuModule } from '@angular/material/menu';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatDividerModule } from '@angular/material/divider';
-import { BoatQuayModule } from 'app/boat-quay/boat-quay.module';
-import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   imports: [
@@ -27,19 +20,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     BoatBaySharedModule,
     BoatBayCoreModule,
     BoatBayHomeModule,
-    AngularMaterialModule,
     // jhipster-needle-angular-add-module JHipster will add new module here
     BoatBayEntityModule,
     BoatBayAppRoutingModule,
-    BoatQuayModule,
-    MatMenuModule,
-    BrowserAnimationsModule,
-    MatTooltipModule,
-    MatDividerModule,
   ],
-  providers: [...environment.providers],
   declarations: [MainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, FooterComponent],
   bootstrap: [MainComponent],
-  exports: [],
 })
 export class BoatBayAppModule {}

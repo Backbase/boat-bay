@@ -25,10 +25,6 @@ const LAYOUT_ROUTES = [navbarRoute, ...errorRoute];
           path: 'account',
           loadChildren: () => import('./account/account.module').then(m => m.AccountModule),
         },
-        {
-          path: 'quay',
-          loadChildren: () => import('./boat-quay/boat-quay.module').then(m => m.BoatQuayModule),
-        },
         ...LAYOUT_ROUTES,
       ],
       { enableTracing: DEBUG_INFO_ENABLED }
