@@ -1,0 +1,217 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+            <h2 id="jhi-source-heading">Create or edit a Source</h2>
+
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+
+                <div class="form-group" [hidden]="!editForm.get('id')!.value">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_name">Name</label>
+                    <input type="text" class="form-control" name="name" id="field_name"
+                           formControlName="name"/>
+                    <div *ngIf="editForm.get('name')!.invalid && (editForm.get('name')!.dirty || editForm.get('name')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('name')?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_type">Type</label>
+                    <select class="form-control" name="type" formControlName="type" id="field_type">
+                        <option value="GIT">GIT</option>
+                        <option value="JFROG">JFROG</option>
+                        <option value="HTTP">HTTP</option>
+                        <option value="FILE_SYSTEM">FILE_SYSTEM</option>
+                        <option value="BOAT_MAVEN_PLUGIN">BOAT_MAVEN_PLUGIN</option>
+                    </select>
+                    <div *ngIf="editForm.get('type')!.invalid && (editForm.get('type')!.dirty || editForm.get('type')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('type')?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_baseUrl">Base Url</label>
+                    <input type="text" class="form-control" name="baseUrl" id="field_baseUrl"
+                           formControlName="baseUrl"/>
+                    <div *ngIf="editForm.get('baseUrl')!.invalid && (editForm.get('baseUrl')!.dirty || editForm.get('baseUrl')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('baseUrl')?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_active">Active</label>
+                    <input type="checkbox" class="form-control" name="active" id="field_active"
+                           formControlName="active"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_filterArtifactsName">Filter Artifacts Name</label>
+                    <input type="text" class="form-control" name="filterArtifactsName" id="field_filterArtifactsName"
+                           formControlName="filterArtifactsName"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_filterArtifactsCreatedSince">Filter Artifacts Created Since</label>
+                    <div class="input-group">
+                        <input id="field_filterArtifactsCreatedSince" type="text" class="form-control" name="filterArtifactsCreatedSince" ngbDatepicker #filterArtifactsCreatedSinceDp="ngbDatepicker" formControlName="filterArtifactsCreatedSince"/>
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="filterArtifactsCreatedSinceDp.toggle()"><fa-icon icon="calendar-alt"></fa-icon></button>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_username">Username</label>
+                    <input type="text" class="form-control" name="username" id="field_username"
+                           formControlName="username"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_password">Password</label>
+                    <input type="text" class="form-control" name="password" id="field_password"
+                           formControlName="password"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_cronExpression">Cron Expression</label>
+                    <input type="text" class="form-control" name="cronExpression" id="field_cronExpression"
+                           formControlName="cronExpression"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_runOnStartup">Run On Startup</label>
+                    <input type="checkbox" class="form-control" name="runOnStartup" id="field_runOnStartup"
+                           formControlName="runOnStartup"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_specFilterSpEL">Spec Filter Sp EL</label>
+                    <input type="text" class="form-control" name="specFilterSpEL" id="field_specFilterSpEL"
+                           formControlName="specFilterSpEL"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_capabilityKeySpEL">Capability Key Sp EL</label>
+                    <input type="text" class="form-control" name="capabilityKeySpEL" id="field_capabilityKeySpEL"
+                           formControlName="capabilityKeySpEL"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_capabilityNameSpEL">Capability Name Sp EL</label>
+                    <input type="text" class="form-control" name="capabilityNameSpEL" id="field_capabilityNameSpEL"
+                           formControlName="capabilityNameSpEL"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_serviceKeySpEL">Service Key Sp EL</label>
+                    <input type="text" class="form-control" name="serviceKeySpEL" id="field_serviceKeySpEL"
+                           formControlName="serviceKeySpEL"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_serviceNameSpEL">Service Name Sp EL</label>
+                    <input type="text" class="form-control" name="serviceNameSpEL" id="field_serviceNameSpEL"
+                           formControlName="serviceNameSpEL"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_specKeySpEL">Spec Key Sp EL</label>
+                    <input type="text" class="form-control" name="specKeySpEL" id="field_specKeySpEL"
+                           formControlName="specKeySpEL"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_versionSpEL">Version Sp EL</label>
+                    <input type="text" class="form-control" name="versionSpEL" id="field_versionSpEL"
+                           formControlName="versionSpEL"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_productReleaseSpEL">Product Release Sp EL</label>
+                    <input type="text" class="form-control" name="productReleaseSpEL" id="field_productReleaseSpEL"
+                           formControlName="productReleaseSpEL"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_itemLimit">Item Limit</label>
+                    <input type="number" class="form-control" name="itemLimit" id="field_itemLimit"
+                           formControlName="itemLimit"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_overwriteChanges">Overwrite Changes</label>
+                    <input type="checkbox" class="form-control" name="overwriteChanges" id="field_overwriteChanges"
+                           formControlName="overwriteChanges"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_portal">Portal</label>
+                    <select class="form-control" id="field_portal" name="portal" formControlName="portal">
+                        <option *ngIf="!editForm.get('portal')!.value" [ngValue]="null" selected></option>
+                        <option [ngValue]="portalOption.id === editForm.get('portal')!.value?.id ? editForm.get('portal')!.value : portalOption" *ngFor="let portalOption of portals; trackBy: trackById">{{ portalOption.name }}</option>
+                    </select>
+                </div>
+                <div *ngIf="editForm.get('portal')!.invalid && (editForm.get('portal')!.dirty || editForm.get('portal')!.touched)">
+                    <small class="form-text text-danger"
+                           *ngIf="editForm.get('portal')?.errors?.required">
+                        This field is required.
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_product">Product</label>
+                    <select class="form-control" id="field_product" name="product" formControlName="product">
+                        <option *ngIf="!editForm.get('product')!.value" [ngValue]="null" selected></option>
+                        <option [ngValue]="productOption.id === editForm.get('product')!.value?.id ? editForm.get('product')!.value : productOption" *ngFor="let productOption of products; trackBy: trackById">{{ productOption.name }}</option>
+                    </select>
+                </div>
+                <div *ngIf="editForm.get('product')!.invalid && (editForm.get('product')!.dirty || editForm.get('product')!.touched)">
+                    <small class="form-text text-danger"
+                           *ngIf="editForm.get('product')?.errors?.required">
+                        This field is required.
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_capability">Capability</label>
+                    <select class="form-control" id="field_capability" name="capability" formControlName="capability">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="capabilityOption.id === editForm.get('capability')!.value?.id ? editForm.get('capability')!.value : capabilityOption" *ngFor="let capabilityOption of capabilities; trackBy: trackById">{{ capabilityOption.name }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_serviceDefinition">Service Definition</label>
+                    <select class="form-control" id="field_serviceDefinition" name="serviceDefinition" formControlName="serviceDefinition">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="serviceDefinitionOption.id === editForm.get('serviceDefinition')!.value?.id ? editForm.get('serviceDefinition')!.value : serviceDefinitionOption" *ngFor="let serviceDefinitionOption of servicedefinitions; trackBy: trackById">{{ serviceDefinitionOption.name }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+                    <fa-icon icon="ban"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon icon="save"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
