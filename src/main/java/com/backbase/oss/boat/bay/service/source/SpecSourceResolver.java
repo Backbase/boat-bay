@@ -16,6 +16,8 @@ import com.backbase.oss.boat.bay.repository.extended.BoatProductRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatServiceRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatSpecRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatTagRepository;
+import com.backbase.oss.boat.bay.service.backwardscompatible.BoatBackwardsCompatibleChecker;
+import com.backbase.oss.boat.bay.service.lint.BoatSpecLinter;
 import com.backbase.oss.boat.bay.service.source.scanner.ScanResult;
 import com.backbase.oss.boat.bay.util.SpringExpressionUtils;
 import com.backbase.oss.boat.loader.OpenAPILoader;
@@ -54,14 +56,30 @@ public class SpecSourceResolver {
     private final BoatTagRepository boatTagRepository;
     private final ProductReleaseRepository productReleaseRepository;
 
+    private final BoatSpecLinter boatSpecLinter;
+    private final BoatBackwardsCompatibleChecker boatBackwardsCompatibleChecker;
 
-    @Transactional
     public void process(ScanResult scan) {
         Source source = scan.getSource();
-        List<Spec> processedSpecs = scan.getSpecs().stream()
-            .map(this::processSpec)
-            .collect(Collectors.toList());
+        List<Spec> processedSpecs = processSpecs(scan);
+        processReleases(scan, source, processedSpecs);
+        lintSpecs(processedSpecs, scan);
+        checkBackwardsCompatibility(processedSpecs, scan);
+    }
 
+    private void checkBackwardsCompatibility(List<Spec> processedSpecs, ScanResult scan) {
+        log.info("Checking backwards compatibility for {} specs from scan result from source: {}", processedSpecs.size(), scan.getSource().getName());
+        processedSpecs.forEach(boatBackwardsCompatibleChecker::scheduleBackwardsCompatibleCheck);
+    }
+
+    private void lintSpecs(List<Spec> processedSpecs, ScanResult scan) {
+        log.info("Linting {} specs from scan result from source: {}", processedSpecs.size(), scan.getSource().getName());
+        processedSpecs.forEach(boatSpecLinter::scheduleLintJob);
+    }
+
+    @Transactional
+    public void processReleases(ScanResult scan, Source source, List<Spec> processedSpecs) {
+        log.info("Processing {} releases from scan result from source: {}", scan.getProductReleases().size(), scan.getSource().getName());
         if (scan.getProductReleases().isEmpty()) {
 
             ProductRelease latest = new ProductRelease().key("latest").portal(source.getPortal());
@@ -83,6 +101,17 @@ public class SpecSourceResolver {
                 }
             });
         }
+    }
+
+    @NotNull
+    @Transactional
+    public List<Spec> processSpecs(ScanResult scan) {
+        log.info("Processing {} specs from scan result from source: {}", scan.getSpecs().size(), scan.getSource().getName());
+
+        List<Spec> processedSpecs = scan.getSpecs().stream()
+            .map(this::processSpec)
+            .collect(Collectors.toList());
+        return processedSpecs;
     }
 
     @NotNull

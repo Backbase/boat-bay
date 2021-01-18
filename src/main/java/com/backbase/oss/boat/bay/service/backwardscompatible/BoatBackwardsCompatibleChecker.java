@@ -32,7 +32,6 @@ public class BoatBackwardsCompatibleChecker {
     @Async
     @Transactional
     public void scheduleBackwardsCompatibleCheck(Spec spec) {
-        log.info("Scheduling linting of spec: {}", spec.getTitle());
         checkBackwardsCompatibility(spec);
     }
 
@@ -40,7 +39,7 @@ public class BoatBackwardsCompatibleChecker {
         List<Spec> specs = specRepository.findAllByNameAndServiceDefinitionAndVersionIsNotNull(spec.getName(), spec.getServiceDefinition());
 
         if (specs.size() == 1 && specs.get(0).getId().equals(spec.getId())) {
-            setBackbwardsCompatible(spec, true);
+            setBackwardsCompatible(spec, true);
         } else if (specs.size() > 1) {
             Optional<Spec> first = specs.stream()
                 .filter(s -> !s.equals(spec))
@@ -54,15 +53,16 @@ public class BoatBackwardsCompatibleChecker {
                 String currentOpenAPI = spec.getOpenApi();
                 String previousOpenAPI = first.get().getOpenApi();
                 ChangedOpenApi diff = OpenApiCompare.fromContents(previousOpenAPI, currentOpenAPI);
-                setBackbwardsCompatible(spec, diff.isCompatible());
+
                 spec.setChanged(diff.isDifferent());
+                setBackwardsCompatible(spec, diff.isCompatible());
             }
         }
 
 
     }
 
-    private void setBackbwardsCompatible(Spec spec, boolean backwardsCompatible) {
+    private void setBackwardsCompatible(Spec spec, boolean backwardsCompatible) {
         spec.setBackwardsCompatible(backwardsCompatible);
         specRepository.save(spec);
     }

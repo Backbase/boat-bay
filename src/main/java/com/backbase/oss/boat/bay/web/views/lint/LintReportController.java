@@ -25,10 +25,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
-@RequestMapping("/api/v1/lint/")
+@RequestMapping("/api/boat/lint")
 @Transactional
 @RequiredArgsConstructor
-public class LintReportView {
+public class LintReportController {
 
     private final ProductRepository productRepository;
     private final CapabilityRepository capabilityRepository;
@@ -63,17 +63,6 @@ public class LintReportView {
         return ResponseEntity.ok(reports);
     }
 
-    @GetMapping("/report/spec/{id}")
-    public ResponseEntity<BoatLintReport> getLintReportForSpec(@PathVariable Long id) {
 
-        Spec spec = specRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-
-        LintReport specReport = Optional.ofNullable(spec.getLintReport()).orElseGet(() -> boatSpecLinter.lint(spec));
-        boatSpecLinter.getApiValidator(spec);
-
-        BoatLintReport lintReport = lintReportMapper.mapReport(specReport);
-
-        return ResponseEntity.ok(lintReport);
-    }
 
 }
