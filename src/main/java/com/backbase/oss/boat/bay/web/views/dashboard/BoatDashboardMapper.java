@@ -166,6 +166,7 @@ public interface BoatDashboardMapper {
     @Mapping(target = "statistics", ignore = true)
     BoatService mapBoatService(ServiceDefinition serviceDefinition);
 
+    @Mapping(target = "grade", ignore = true)
     @Mapping(target = "statistics", ignore = true)
     BoatSpec mapBoatSpec(Spec spec);
 }

@@ -37,7 +37,7 @@ import org.zalando.zally.core.RulesPolicy;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-//@DependsOn("boatBayBootstrap")
+@DependsOn("boatBayBootstrap")
 public class BoatSpecLinter {
 
     private final BoatLintRuleValidatorFactory boatLintRuleValidatorFactory;
@@ -47,9 +47,6 @@ public class BoatSpecLinter {
     private final BoatLintReportRepository lintReportRepository;
     private final RulesManager rulesManager;
     private final BoatSpecRepository specRepository;
-
-    private final ExecutorService executorService = Executors.newFixedThreadPool(4);
-
 
     @Scheduled(fixedRate = 3600000)
     public void checkSpecsToLint() {
@@ -62,8 +59,6 @@ public class BoatSpecLinter {
         log.info("Scheduling linting of spec: {}", spec.getTitle());
         lint(spec);
     }
-
-
 
 
     public LintReport lint(Spec spec) {
@@ -79,11 +74,16 @@ public class BoatSpecLinter {
             .map(result -> mapResult(lintReport, result))
             .collect(Collectors.toSet());
         lintReport.setName("Lint Report " + spec.getName() + "-" + spec.getVersion());
-        lintReport.setGrade(calculateGrade(violations));
+        String grade = calculateGrade(violations);
+        lintReport.setGrade(grade);
         lintReport.setLintedOn(Instant.now());
         lintReportRepository.save(lintReport);
         boatLintRuleViolationRepository.deleteByLintReport(lintReport);
         boatLintRuleViolationRepository.saveAll(violations);
+
+        spec.setGrade(grade);
+        specRepository.save(spec);
+
         return lintReport;
     }
 

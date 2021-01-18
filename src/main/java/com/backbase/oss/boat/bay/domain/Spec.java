@@ -87,6 +87,15 @@ public class Spec implements Serializable {
     @Column(name = "hide")
     private Boolean hide;
 
+    @Column(name = "grade")
+    private String grade;
+
+    @Column(name = "backwards_compatible")
+    private Boolean backwardsCompatible;
+
+    @Column(name = "changed")
+    private Boolean changed;
+
     @Column(name = "source_path")
     private String sourcePath;
 
@@ -370,6 +379,45 @@ public class Spec implements Serializable {
         this.hide = hide;
     }
 
+    public String getGrade() {
+        return grade;
+    }
+
+    public Spec grade(String grade) {
+        this.grade = grade;
+        return this;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
+    }
+
+    public Boolean isBackwardsCompatible() {
+        return backwardsCompatible;
+    }
+
+    public Spec backwardsCompatible(Boolean backwardsCompatible) {
+        this.backwardsCompatible = backwardsCompatible;
+        return this;
+    }
+
+    public void setBackwardsCompatible(Boolean backwardsCompatible) {
+        this.backwardsCompatible = backwardsCompatible;
+    }
+
+    public Boolean isChanged() {
+        return changed;
+    }
+
+    public Spec changed(Boolean changed) {
+        this.changed = changed;
+        return this;
+    }
+
+    public void setChanged(Boolean changed) {
+        this.changed = changed;
+    }
+
     public String getSourcePath() {
         return sourcePath;
     }
@@ -640,6 +688,9 @@ public class Spec implements Serializable {
             ", parseError='" + getParseError() + "'" +
             ", externalDocs='" + getExternalDocs() + "'" +
             ", hide='" + isHide() + "'" +
+            ", grade='" + getGrade() + "'" +
+            ", backwardsCompatible='" + isBackwardsCompatible() + "'" +
+            ", changed='" + isChanged() + "'" +
             ", sourcePath='" + getSourcePath() + "'" +
             ", sourceName='" + getSourceName() + "'" +
             ", sourceUrl='" + getSourceUrl() + "'" +
