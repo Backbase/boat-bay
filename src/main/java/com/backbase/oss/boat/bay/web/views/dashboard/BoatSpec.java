@@ -9,6 +9,8 @@ public class BoatSpec {
 
     private String key;
     private String name;
+    private String title;
+    private String grade;
     private String version;
     private String description;
     private String icon;
