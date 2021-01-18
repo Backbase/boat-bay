@@ -5,10 +5,16 @@ import com.backbase.oss.boat.bay.repository.SpecRepository;
 import com.backbase.oss.boat.bay.web.rest.errors.BadRequestAlertException;
 
 import io.github.jhipster.web.util.HeaderUtil;
+import io.github.jhipster.web.util.PaginationUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -85,21 +91,29 @@ public class SpecResource {
     /**
      * {@code GET  /specs} : get all the specs.
      *
+     * @param pageable the pagination information.
      * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
      * @param filter the filter of the request.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of specs in body.
      */
     @GetMapping("/specs")
-    public List<Spec> getAllSpecs(@RequestParam(required = false) String filter,@RequestParam(required = false, defaultValue = "false") boolean eagerload) {
+    public ResponseEntity<List<Spec>> getAllSpecs(Pageable pageable, @RequestParam(required = false) String filter, @RequestParam(required = false, defaultValue = "false") boolean eagerload) {
         if ("lintreport-is-null".equals(filter)) {
             log.debug("REST request to get all Specs where lintReport is null");
-            return StreamSupport
+            return new ResponseEntity<>(StreamSupport
                 .stream(specRepository.findAll().spliterator(), false)
                 .filter(spec -> spec.getLintReport() == null)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()), HttpStatus.OK);
         }
-        log.debug("REST request to get all Specs");
-        return specRepository.findAllWithEagerRelationships();
+        log.debug("REST request to get a page of Specs");
+        Page<Spec> page;
+        if (eagerload) {
+            page = specRepository.findAllWithEagerRelationships(pageable);
+        } else {
+            page = specRepository.findAll(pageable);
+        }
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**

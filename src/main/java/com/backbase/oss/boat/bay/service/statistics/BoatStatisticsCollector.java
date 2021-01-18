@@ -3,10 +3,12 @@ package com.backbase.oss.boat.bay.service.statistics;
 import com.backbase.oss.boat.bay.domain.Capability;
 import com.backbase.oss.boat.bay.domain.Product;
 import com.backbase.oss.boat.bay.domain.ServiceDefinition;
+import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.domain.enumeration.Severity;
 import com.backbase.oss.boat.bay.repository.CapabilityRepository;
 import com.backbase.oss.boat.bay.repository.ProductRepository;
 import com.backbase.oss.boat.bay.repository.ServiceDefinitionRepository;
+import com.backbase.oss.boat.bay.repository.SpecRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatLintRuleViolationRepository;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,6 +32,7 @@ public class BoatStatisticsCollector {
     private final ProductRepository productRepository;
     private final CapabilityRepository capabilityRepository;
     private final ServiceDefinitionRepository serviceDefinitionRepository;
+    private final SpecRepository specRepository;
 
     @Scheduled(fixedRateString = "PT15M")
     @Transactional
@@ -37,7 +40,7 @@ public class BoatStatisticsCollector {
         productRepository.findAll().forEach(this::publish);
         capabilityRepository.findAll().forEach(this::publish);
         serviceDefinitionRepository.findAll().forEach(this::publish);
-
+        specRepository.findAll().forEach(this::performCollect);
     }
 
     private void publish(ServiceDefinition serviceDefinition) {
@@ -102,7 +105,6 @@ public class BoatStatisticsCollector {
 
     @Cacheable(STATISTICS)
     public BoatStatistics collect(ServiceDefinition serviceDefinition) {
-
         return performCollect(serviceDefinition);
     }
 
@@ -115,7 +117,23 @@ public class BoatStatisticsCollector {
         statistics.setShouldViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpecServiceDefinition(Severity.SHOULD, serviceDefinition));
         statistics.setMayViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpecServiceDefinition(Severity.MAY, serviceDefinition));
         statistics.setHintViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpecServiceDefinition(Severity.HINT, serviceDefinition));
+        return statistics;
+    }
 
+    @Cacheable(STATISTICS)
+    public BoatStatistics collect(Spec spec) {
+        return performCollect(spec);
+    }
+
+    @CachePut(STATISTICS)
+    public BoatStatistics performCollect(Spec spec) {
+        BoatStatistics statistics = new BoatStatistics();
+        statistics.setUpdatedOn(LocalDateTime.now());
+
+        statistics.setMustViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpec(Severity.MUST, spec));
+        statistics.setShouldViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpec(Severity.SHOULD, spec));
+        statistics.setMayViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpec(Severity.MAY, spec));
+        statistics.setHintViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpec(Severity.HINT, spec));
         return statistics;
     }
 
