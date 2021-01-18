@@ -3,6 +3,7 @@ package com.backbase.oss.boat.bay.service.statistics.impl;
 import com.backbase.oss.boat.bay.domain.Capability;
 import com.backbase.oss.boat.bay.domain.Product;
 import com.backbase.oss.boat.bay.domain.ServiceDefinition;
+import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.domain.enumeration.Severity;
 import com.backbase.oss.boat.bay.service.statistics.BoatStatistics;
 import com.backbase.oss.boat.bay.service.statistics.BoatStatisticsPublisher;

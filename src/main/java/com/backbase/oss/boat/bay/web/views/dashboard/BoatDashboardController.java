@@ -18,6 +18,7 @@ import com.backbase.oss.boat.bay.repository.extended.BoatServiceRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatSpecRepository;
 import com.backbase.oss.boat.bay.service.statistics.BoatStatisticsCollector;
 import com.backbase.oss.boat.bay.web.views.lint.LintReportMapper;
+import io.github.jhipster.web.util.PaginationUtil;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +37,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 
 @RestController
@@ -112,43 +115,49 @@ public class BoatDashboardController {
 
 
     @GetMapping("/portals/{portalKey}/products/{productKey}/capabilities")
-    public ResponseEntity<Page<BoatCapability>> getPortalProducts(@PathVariable String portalKey, @PathVariable String productKey, Pageable pageable) {
+    public ResponseEntity<List<BoatCapability>> getPortalProducts(@PathVariable String portalKey, @PathVariable String productKey, Pageable pageable) {
 
         Product product = boatProductRepository.findByKeyAndPortalKey(productKey, portalKey)
             .orElseThrow((() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
 
         Page<Capability> capabilities  = boatCapabilityRepository.findByProduct(product, pageable);
-        Page<BoatCapability> map = capabilities.map(this::mapCapability);
+        Page<BoatCapability> page = capabilities.map(this::mapCapability);
 
-        return ResponseEntity.ok(map);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     @GetMapping("/portals/{portalKey}/products/{productKey}/services")
-    public ResponseEntity<Page<BoatService>> getPortalServices(@PathVariable String portalKey, @PathVariable String productKey, Pageable pageable) {
+    public ResponseEntity<List<BoatService>> getPortalServices(@PathVariable String portalKey, @PathVariable String productKey, Pageable pageable) {
         Product product = boatProductRepository.findByKeyAndPortalKey(productKey, portalKey)
             .orElseThrow((() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
 
         Page<ServiceDefinition> services = boatServiceRepository.findByCapabilityProduct(product, pageable);
 
-        Page<BoatService> boatServices = services.map(this::mapService);
+        Page<BoatService> page = services.map(this::mapService);
 
-        return ResponseEntity.ok(boatServices);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     @GetMapping("/portals/{portalKey}/products/{productKey}/specs")
-    public ResponseEntity<Page<BoatSpec>> getPortalSpecs(@PathVariable String portalKey, @PathVariable String productKey, Pageable pageable) {
+    public ResponseEntity<List<BoatSpec>> getPortalSpecs(@PathVariable String portalKey, @PathVariable String productKey, Pageable pageable) {
         Product product = boatProductRepository.findByKeyAndPortalKey(productKey, portalKey)
             .orElseThrow((() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
 
         Page<Spec> services = boatSpecRepository.findAllByCapabilityProduct(product, pageable);
 
-        Page<BoatSpec> boatServices = services.map(this::mapSpec);
+        Page<BoatSpec> page = services.map(this::mapSpec);
 
-        return ResponseEntity.ok(boatServices);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     private BoatSpec mapSpec(Spec spec) {
-        return dashboardMapper.mapBoatSpec(spec);
+        BoatSpec boatSpec = dashboardMapper.mapBoatSpec(spec);
+        boatSpec.setStatistics(boatStatisticsCollector.collect(spec));
+        return boatSpec;
+
     }
 
     private BoatService mapService(ServiceDefinition serviceDefinition) {

@@ -227,3 +227,6 @@ relationship OneToOne {
 
 paginate Capability with infinite-scroll
 paginate Capability with pagination
+
+paginate Spec with infinite-scroll
+paginate Spec with pagination
