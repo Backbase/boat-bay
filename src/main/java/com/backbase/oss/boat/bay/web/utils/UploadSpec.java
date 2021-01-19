@@ -14,6 +14,8 @@ import com.backbase.oss.boat.bay.service.source.SpecSourceResolver;
 import com.backbase.oss.boat.bay.service.source.scanner.ScanResult;
 import com.backbase.oss.boat.bay.web.rest.SpecResource;
 import com.backbase.oss.boat.bay.web.rest.errors.BadRequestAlertException;
+import com.backbase.oss.boat.bay.web.views.lint.BoatLintReport;
+import com.backbase.oss.boat.bay.web.views.lint.LintReportMapper;
 import io.github.jhipster.web.util.HeaderUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +44,7 @@ public class UploadSpec {
     private final FileSystemExporter fileSystemExporter;
     private final SpecRepository specRepository;
     private final BoatSpecLinter boatSpecLinter;
+    private final LintReportMapper lintReportMapper;
 
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
@@ -49,18 +52,19 @@ public class UploadSpec {
     private static final String SPEC_CREATOR= "MavenPluginUpload";
 
 
-    public UploadSpec(SpecRepository specRepository, SourceRepository sourceRepository, SpecSourceResolver specSourceResolver, FileSystemExporter fileSystemExporter, BoatSpecLinter boatSpecLinter) {
+    public UploadSpec(SpecRepository specRepository, SourceRepository sourceRepository, SpecSourceResolver specSourceResolver, FileSystemExporter fileSystemExporter, BoatSpecLinter boatSpecLinter, LintReportMapper lintReportMapper) {
         this.sourceRepository = sourceRepository;
         this.specRepository = specRepository;
         this.specSourceResolver = specSourceResolver;
         this.fileSystemExporter = fileSystemExporter;
         this.boatSpecLinter = boatSpecLinter;
+        this.lintReportMapper = lintReportMapper;
     }
 
 
 
     @PutMapping("boat-maven-plugin/{sourceId}/upload")
-    public ResponseEntity<List<LintReport>> uploadSpec(@Valid @RequestBody UploadRequestBody requestBody, @PathVariable String sourceId) throws URISyntaxException, ExportException {
+    public ResponseEntity<List<BoatLintReport>> uploadSpec(@Valid @RequestBody UploadRequestBody requestBody, @PathVariable String sourceId) throws URISyntaxException, ExportException {
 
         Source source = sourceRepository.findById(Long.parseLong(sourceId)).orElseThrow(() -> new BadRequestAlertException("Invalid source, source Id does not exist", "SOURCE", "sourceIdInvalid"));
 
@@ -120,7 +124,7 @@ public class UploadSpec {
         fileSystemExporter.export(exportSpec);
 
         List<Spec> specsProcessed = specRepository.findAll().stream().filter(spec -> spec.getSource().getId().equals(sourceId)).collect(Collectors.toList());
-        List<LintReport> lintReports = specsProcessed.stream().map(spec -> boatSpecLinter.lint(spec)).collect(Collectors.toList());
+        List<BoatLintReport> lintReports = specsProcessed.stream().map(spec -> boatSpecLinter.lint(spec)).map(lintReport -> lintReportMapper.mapReport(lintReport)).collect(Collectors.toList());
 
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, "SOURCE", source.getId().toString()))
