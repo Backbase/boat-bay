@@ -1,0 +1,79 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import '~material-design-lite/src/material-design-lite.scss';
+
+@import "./styles/settings";
+@import "./styles/components";
+@import "./settings/theme";
+
+body {
+  background-color: #fafafa;
+}
+
+$grade-radius: 20px;
+
+.grade {
+  border-radius: $grade-radius;
+  text-align: center;
+  padding: 6px 10px;
+}
+
+.grade-A {
+  background-color: $rating-A;
+}
+
+.grade-B {
+  background-color: $rating-B;
+}
+
+.grade-C {
+  background-color: $rating-C;
+}
+
+.grade-D {
+  background-color: $rating-D;
+}
+
+.grade-E,
+.grade-F {
+  background-color: $rating-E;
+  color: white;
+}
+
+.backwards-compatible {
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 4px;
+  padding: 4px 10px;
+}
+
+.backwards-compatible-true {
+
+  background-color: $rating-A;;
+  color: white;
+  border-color: #006600;
+}
+
+.backwards-compatible-false {
+  background-color: $rating-E;
+  color: white;
+  border-color: #7c080f;
+}
+
+.changed {
+  padding: 4px 10px;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 4px;
+}
+
+.changed-true {
+  background-color: #616161;
+  color: white;
+}
+
+.changed {
+  background-color: #a2a2a2;
+  color: black;
+}

@@ -1,0 +1,19 @@
+@mixin mat-table-overrides($theme) {
+  table.mat-table {
+    background: $color-text;
+  }
+
+  table th.mat-header-cell {
+    color: $color-bg;
+    font-size: 14px;
+    letter-spacing: 0.1px;
+    line-height: 24px;
+    border-bottom-color: $main-color-lighter;
+  }
+
+
+  table tbody tr:hover {
+    cursor: pointer;
+    background: #b4b4b433;
+  }
+}

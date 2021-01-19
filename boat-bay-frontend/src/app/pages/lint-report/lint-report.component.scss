@@ -1,0 +1,63 @@
+@import "settings/theme/palettes";
+
+.openapi-editor {
+  height: 900px;
+  width: 100%;
+  display: block;
+}
+
+.violations {
+  display: block;
+  overflow: auto;
+  height: 900px;
+  width: 100%;
+}
+
+
+.violation-card {
+  border-top: 3px solid;
+}
+
+.violation-card.MUST {
+  border-top-color: $must;
+}
+
+.violation-card.SHOULD {
+  border-top-color: $should;
+}
+
+.violation-card.MAY {
+  border-top-color: $may
+}
+
+.violation-card.HINT {
+  border-top-color: $hint
+}
+
+.lint-report-info {
+  dl {margin-block-start: 0;}
+  dt, dd { display: block; float: left; margin-top: 10px; }
+  dd { float:right; padding-right: 10px;}
+  dt { clear: both;  }
+  .info {
+    display: inline-block;
+  }
+}
+
+.info-container {
+  display: flex;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.info {
+  flex-grow: 1;
+
+}
+
+
+
+
+
+
+

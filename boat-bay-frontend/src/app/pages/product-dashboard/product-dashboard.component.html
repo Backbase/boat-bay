@@ -1,0 +1,58 @@
+<div class="mdl-grid mdl-cell mdl-cell--12-col mdl-cell--top">
+
+    <ng-container *ngIf="product$ | async as product">
+
+        <div class="mdl-cell mdl-cell--2-col-desktop">
+
+            <mat-card class="mat-elevation-z8">
+                <mat-card-title>Filter</mat-card-title>
+                <mat-card-content>
+                    <app-spec-filter></app-spec-filter>
+                </mat-card-content>
+            </mat-card>
+
+        </div>
+
+        <div class="mdl-cell mdl-cell--10-col-desktop">
+            <mat-card class="mat-elevation-z8">
+                <mat-card-title>API Specs for {{product.name}}</mat-card-title>
+                <mat-card-content>
+                    <specs-table [product]="product"></specs-table>
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+<!--        <div class=" mdl-cell mdl-cell&#45;&#45;6-col">-->
+<!--            <mat-card class="mat-elevation-z8">-->
+<!--                <mat-card-title>Capabilities for {{product.name}}</mat-card-title>-->
+<!--                <mat-card-content>-->
+<!--                    <capability-table [product]="product"></capability-table>-->
+<!--                </mat-card-content>-->
+<!--            </mat-card>-->
+<!--        </div>-->
+
+<!--&lt;!&ndash;        <div class="mdl-cell mdl-cell&#45;&#45;4-col-desktop">&ndash;&gt;-->
+<!--&lt;!&ndash;            <mat-card class="mat-elevation-z8">&ndash;&gt;-->
+<!--&lt;!&ndash;                <mat-card-title>{{product.name}}</mat-card-title>&ndash;&gt;-->
+<!--&lt;!&ndash;                <mat-card-content>{{product.content}}&ndash;&gt;-->
+<!--&lt;!&ndash;                    <current-violations [statistics]="product.statistics"></current-violations>&ndash;&gt;-->
+<!--&lt;!&ndash;                </mat-card-content>&ndash;&gt;-->
+<!--&lt;!&ndash;                <mat-card-actions>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <button mat-button>Configure rules</button>&ndash;&gt;-->
+<!--&lt;!&ndash;                </mat-card-actions>&ndash;&gt;-->
+<!--&lt;!&ndash;            </mat-card>&ndash;&gt;-->
+<!--&lt;!&ndash;        </div>&ndash;&gt;-->
+
+<!--        <div class=" mdl-cell mdl-cell&#45;&#45;6-col-desktop">-->
+<!--            <mat-card class="mat-elevation-z8">-->
+<!--                <mat-card-title>Services for {{product.name}}</mat-card-title>-->
+<!--                <mat-card-content>-->
+<!--                    <service-definition-table [product]="product"></service-definition-table>-->
+<!--                </mat-card-content>-->
+<!--            </mat-card>-->
+<!--        </div>-->
+
+    </ng-container>
+
+
+</div>
