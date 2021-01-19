@@ -11,6 +11,7 @@ export interface IProduct {
   createdOn?: Moment;
   createdBy?: string;
   hide?: boolean;
+  jiraProjectId?: string;
   capabilities?: ICapability[];
   portal?: IPortal;
 }
@@ -25,6 +26,7 @@ export class Product implements IProduct {
     public createdOn?: Moment,
     public createdBy?: string,
     public hide?: boolean,
+    public jiraProjectId?: string,
     public capabilities?: ICapability[],
     public portal?: IPortal
   ) {

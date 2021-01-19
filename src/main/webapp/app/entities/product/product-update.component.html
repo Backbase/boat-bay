@@ -67,6 +67,12 @@
                 </div>
 
                 <div class="form-group">
+                    <label class="form-control-label" for="field_jiraProjectId">Jira Project Id</label>
+                    <input type="text" class="form-control" name="jiraProjectId" id="field_jiraProjectId"
+                           formControlName="jiraProjectId"/>
+                </div>
+
+                <div class="form-group">
                     <label class="form-control-label" for="field_portal">Portal</label>
                     <select class="form-control" id="field_portal" name="portal" formControlName="portal">
                         <option *ngIf="!editForm.get('portal')!.value" [ngValue]="null" selected></option>

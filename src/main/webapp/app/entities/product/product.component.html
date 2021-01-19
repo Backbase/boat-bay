@@ -30,6 +30,7 @@
                     <th scope="col" ><span>Created On</span></th>
                     <th scope="col" ><span>Created By</span></th>
                     <th scope="col" ><span>Hide</span></th>
+                    <th scope="col" ><span>Jira Project Id</span></th>
                     <th scope="col" ><span>Portal</span></th>
                     <th scope="col"></th>
                 </tr>
@@ -44,6 +45,7 @@
                     <td>{{ product.createdOn | date:'medium' }}</td>
                     <td>{{ product.createdBy }}</td>
                     <td>{{ product.hide }}</td>
+                    <td>{{ product.jiraProjectId }}</td>
                     <td>
                         <div *ngIf="product.portal">
                             <a [routerLink]="['/portal', product.portal?.id, 'view']" >{{ product.portal?.name }}</a>

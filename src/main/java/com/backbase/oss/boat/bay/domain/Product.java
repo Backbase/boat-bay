@@ -50,6 +50,9 @@ public class Product implements Serializable {
     @Column(name = "hide")
     private Boolean hide;
 
+    @Column(name = "jira_project_id")
+    private String jiraProjectId;
+
     @OneToMany(mappedBy = "product")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Capability> capabilities = new HashSet<>();
@@ -159,6 +162,19 @@ public class Product implements Serializable {
         this.hide = hide;
     }
 
+    public String getJiraProjectId() {
+        return jiraProjectId;
+    }
+
+    public Product jiraProjectId(String jiraProjectId) {
+        this.jiraProjectId = jiraProjectId;
+        return this;
+    }
+
+    public void setJiraProjectId(String jiraProjectId) {
+        this.jiraProjectId = jiraProjectId;
+    }
+
     public Set<Capability> getCapabilities() {
         return capabilities;
     }
@@ -226,6 +242,7 @@ public class Product implements Serializable {
             ", createdOn='" + getCreatedOn() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
             ", hide='" + isHide() + "'" +
+            ", jiraProjectId='" + getJiraProjectId() + "'" +
             "}";
     }
 }

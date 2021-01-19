@@ -37,6 +37,9 @@
             <column name="hide" type="boolean">
                 <constraints nullable="true" />
             </column>
+            <column name="jira_project_id" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
             <column name="portal_id" type="bigint">
                 <constraints nullable="false" />
             </column>
@@ -71,6 +74,7 @@
             <column name="created_on" type="datetime"/>
             <column name="created_by" type="string"/>
             <column name="hide" type="boolean"/>
+            <column name="jira_project_id" type="string"/>
             <column name="portal_id" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>

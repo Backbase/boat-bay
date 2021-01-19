@@ -35,6 +35,10 @@
     {
       "fieldName": "hide",
       "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "jiraProjectId",
+      "fieldType": "String"
     }
   ],
   "relationships": [

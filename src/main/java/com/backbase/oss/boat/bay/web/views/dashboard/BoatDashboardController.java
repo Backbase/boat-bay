@@ -4,10 +4,12 @@ import com.backbase.oss.boat.bay.domain.Capability;
 import com.backbase.oss.boat.bay.domain.Dashboard;
 import com.backbase.oss.boat.bay.domain.LintReport;
 import com.backbase.oss.boat.bay.domain.Portal;
+import com.backbase.oss.boat.bay.domain.PortalLintRule;
 import com.backbase.oss.boat.bay.domain.Product;
 import com.backbase.oss.boat.bay.domain.ServiceDefinition;
 import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.domain.Tag;
+import com.backbase.oss.boat.bay.repository.PortalLintRuleRepository;
 import com.backbase.oss.boat.bay.repository.TagRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatCapabilityRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatDashboardRepository;
@@ -20,10 +22,15 @@ import com.backbase.oss.boat.bay.repository.extended.BoatSpecRepository;
 import com.backbase.oss.boat.bay.service.lint.BoatSpecLinter;
 import com.backbase.oss.boat.bay.service.statistics.BoatStatisticsCollector;
 import com.backbase.oss.boat.bay.web.views.lint.BoatLintReport;
-import com.backbase.oss.boat.bay.web.views.lint.LintReportMapper;
+import com.backbase.oss.boat.bay.web.views.lint.BoatLintRule;
+import com.backbase.oss.boat.bay.web.views.lint.BoatViolation;
 import io.github.jhipster.web.util.PaginationUtil;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,10 +45,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.zalando.zally.rule.api.Severity;
 
 
 @RestController
@@ -60,15 +70,16 @@ public class BoatDashboardController {
     private final BoatSpecRepository boatSpecRepository;
     private final BoatLintReportRepository boatLintReportRepository;
     private final BoatLintRuleViolationRepository boatLintRuleViolationRepository;
+    private final PortalLintRuleRepository portalLintRuleRepository;
     private final BoatDashboardRepository dashboardRepository;
 
     private final BoatDashboardMapper dashboardMapper;
-    private final LintReportMapper lintReportMapper;
     private final TagRepository tagRepository;
 
     private final BoatStatisticsCollector boatStatisticsCollector;
 
     private final BoatSpecLinter boatSpecLinter;
+    private Map<Severity, Integer> severityOrder;
 
     public List<String> getAllEnabledTags() {
         return tagRepository.findAll(Example.of(new Tag().hide(false))).stream()
@@ -106,17 +117,42 @@ public class BoatDashboardController {
     }
 
     @GetMapping("/portals/{portalKey}/products")
-    public ResponseEntity<List<BoatProductDashboard>> getPortalProducts(@PathVariable String portalKey) {
+    public ResponseEntity<List<BoatProduct>> getPortalProducts(@PathVariable String portalKey) {
 
         Portal portal = boatPortalRepository.findByKey(portalKey)
-            .orElseThrow((() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));;
+            .orElseThrow((() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
 
         List<Product> products = boatProductRepository.findAllByPortal(portal);
 
-        List<BoatProductDashboard> boatProductDashboards  = products.stream().map(
+        List<BoatProduct> boatProductDashboards = products.stream().map(
             this::mapProduct).collect(Collectors.toList());
 
         return ResponseEntity.ok(boatProductDashboards);
+    }
+
+    @GetMapping("/portals/{portalKey}/lint-rules")
+    public ResponseEntity<List<BoatLintRule>> getPortalLintRules(@PathVariable String portalKey) {
+
+        Portal portal = boatPortalRepository.findByKey(portalKey)
+            .orElseThrow((() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
+
+        List<BoatLintRule> portalLintRules = portal.getPortalLintRules().stream().map(dashboardMapper::mapPortalLintRule).collect(Collectors.toList());
+        return ResponseEntity.ok(portalLintRules);
+    }
+
+    @PostMapping("/portals/{portalKey}/lint-rules/{portalLintRuleId}")
+    public ResponseEntity<Void> updatePortalLintRule(@PathVariable String portalKey, @PathVariable String portalLintRuleId,  @RequestBody BoatLintRule boatLintRule) {
+
+        Portal portal = boatPortalRepository.findByKey(portalKey)
+            .orElseThrow((() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
+
+        PortalLintRule portalLintRule = portalLintRuleRepository.findById(Long.valueOf(portalLintRuleId))
+            .orElseThrow((() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
+
+        portalLintRule.setEnabled(boatLintRule.isEnabled());
+        portalLintRuleRepository.save(portalLintRule);
+
+        return ResponseEntity.accepted().build();
     }
 
 
@@ -125,7 +161,7 @@ public class BoatDashboardController {
 
         Product product = getProduct(portalKey, productKey);
 
-        Page<Capability> capabilities  = boatCapabilityRepository.findByProduct(product, pageable);
+        Page<Capability> capabilities = boatCapabilityRepository.findByProduct(product, pageable);
         Page<BoatCapability> page = capabilities.map(this::mapCapability);
 
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
@@ -167,20 +203,46 @@ public class BoatDashboardController {
         return boatSpec;
     }
 
+
     @GetMapping("/portals/{portalKey}/products/{productKey}/specs/{specId}/lint-report")
     public ResponseEntity<BoatLintReport> getLintReportForSpec(@PathVariable String portalKey, @PathVariable String productKey, @PathVariable String specId) {
         Product product = getProduct(portalKey, productKey);
 
         Spec spec = boatSpecRepository.findById(Long.valueOf(specId)).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
+
         LintReport specReport = Optional.ofNullable(spec.getLintReport()).orElseGet(() -> boatSpecLinter.lint(spec));
+
+
         boatSpecLinter.getApiValidator(spec);
 
-        BoatLintReport lintReport = lintReportMapper.mapReport(specReport);
+
+        Map<Severity, Integer> severityIntegerMap = getSeverityOrder();
+
+        BoatLintReport lintReport = dashboardMapper.mapReport(specReport);
+
+        lintReport.getViolations()
+            .sort(Comparator.comparing(boatViolation -> boatViolation.getRule().getRuleId()));
+
+        lintReport.getViolations()
+            .sort(Comparator.comparing(
+                BoatViolation::getSeverity,
+                Comparator.comparingInt(severityIntegerMap::get)));
 
         return ResponseEntity.ok(lintReport);
     }
 
+    private Map<Severity, Integer> getSeverityOrder() {
+        if(severityOrder == null) {
+            severityOrder = new HashMap<>();
+            for (int i = 0; i < Severity.values().length; i++) {
+                severityOrder.put(Severity.values()[i], i);
+            }
+        }
+
+        return severityOrder;
+
+    }
 
 
     private BoatService mapService(ServiceDefinition serviceDefinition) {
@@ -203,12 +265,12 @@ public class BoatDashboardController {
 
     @GetMapping("dashboard/{projectKey}/{productKey}")
     @Cacheable(VIEWS)
-    public ResponseEntity<BoatProductDashboard> getProductDashboard(@PathVariable String projectKey, @PathVariable String productKey) {
+    public ResponseEntity<BoatProduct> getProductDashboard(@PathVariable String projectKey, @PathVariable String productKey) {
 
 
         Product product = getProduct(projectKey, productKey);
 
-        BoatProductDashboard boatProduct = mapProduct(product);
+        BoatProduct boatProduct = mapProduct(product);
 
         return ResponseEntity.ok(boatProduct);
     }
@@ -223,7 +285,7 @@ public class BoatDashboardController {
 
         BoatPortalDashboard portalDto = dashboardMapper.mapPortal(product.getPortal(), product);
         boatLintReportRepository.findDistinctFirstBySpecProductOrderByLintedOn(product)
-            .ifPresent(lintReport -> portalDto.setLastLintReport(lintReportMapper.mapReportWithoutViolations(lintReport)));
+            .ifPresent(lintReport -> portalDto.setLastLintReport(dashboardMapper.mapReportWithoutViolations(lintReport)));
 
         portalDto.setNumberOfCapabilities(boatCapabilityRepository.countByProduct(product));
         portalDto.setNumberOfServices(boatServiceRepository.countByCapabilityProduct(product));
@@ -232,11 +294,11 @@ public class BoatDashboardController {
     }
 
     @NotNull
-    private BoatProductDashboard mapProduct(Product product) {
+    private BoatProduct mapProduct(Product product) {
 
-        BoatProductDashboard boatProduct = dashboardMapper.mapBoatProduct(product);
+        BoatProduct boatProduct = dashboardMapper.mapBoatProduct(product);
         boatLintReportRepository.findDistinctFirstBySpecProductOrderByLintedOn(product)
-            .ifPresent(lintReport -> boatProduct.setLastLintReport(lintReportMapper.mapReportWithoutViolations(lintReport)));
+            .ifPresent(lintReport -> boatProduct.setLastLintReport(dashboardMapper.mapReportWithoutViolations(lintReport)));
         boatProduct.setStatistics(boatStatisticsCollector.collect(product));
         boatProduct.setPortalName(product.getPortal().getName());
         boatProduct.setPortalKey(product.getPortal().getKey());
@@ -248,7 +310,7 @@ public class BoatDashboardController {
 
         BoatCapability boatCapability = dashboardMapper.mapBoatCapability(capability);
         boatLintReportRepository.findDistinctFirstBySpecServiceDefinitionCapability(capability)
-            .ifPresent(lintReport -> boatCapability.setLastLintReport(lintReportMapper.mapReportWithoutViolations(lintReport)));
+            .ifPresent(lintReport -> boatCapability.setLastLintReport(dashboardMapper.mapReportWithoutViolations(lintReport)));
         boatCapability.setStatistics(boatStatisticsCollector.collect(capability));
         return boatCapability;
     }

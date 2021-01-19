@@ -9,6 +9,7 @@ import com.backbase.oss.boat.bay.repository.ProductRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatLintReportRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatSpecRepository;
 import com.backbase.oss.boat.bay.service.lint.BoatSpecLinter;
+import com.backbase.oss.boat.bay.web.views.dashboard.BoatDashboardMapper;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,7 +36,7 @@ public class LintReportController {
     private final BoatSpecRepository specRepository;
     private final BoatLintReportRepository repository;
     private final BoatSpecLinter boatSpecLinter;
-    private final LintReportMapper lintReportMapper;
+    private final BoatDashboardMapper lintReportMapper;
 
     @PostMapping("product")
     public ResponseEntity<Void> lintProduct(@RequestBody String productId) {

@@ -1,12 +1,20 @@
 package com.backbase.oss.boat.bay.web.views.dashboard;
 
 import com.backbase.oss.boat.bay.domain.Capability;
+import com.backbase.oss.boat.bay.domain.LintReport;
+import com.backbase.oss.boat.bay.domain.LintRuleSet;
+import com.backbase.oss.boat.bay.domain.LintRuleViolation;
 import com.backbase.oss.boat.bay.domain.Portal;
+import com.backbase.oss.boat.bay.domain.PortalLintRule;
 import com.backbase.oss.boat.bay.domain.Product;
 import com.backbase.oss.boat.bay.domain.ProductRelease;
 import com.backbase.oss.boat.bay.domain.ServiceDefinition;
 import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.domain.Tag;
+import com.backbase.oss.boat.bay.web.views.lint.BoatLintReport;
+import com.backbase.oss.boat.bay.web.views.lint.BoatLintRule;
+import com.backbase.oss.boat.bay.web.views.lint.BoatViolation;
+import com.fasterxml.jackson.core.JsonPointer;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -20,9 +28,11 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import kotlin.ranges.IntRange;
 import org.jetbrains.annotations.NotNull;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.zalando.zally.rule.api.RuleSet;
 
 @Mapper(componentModel = "spring")
 public interface BoatDashboardMapper {
@@ -145,9 +155,11 @@ public interface BoatDashboardMapper {
             .collect(Collectors.toList());
     }
 
+    @Mapping(target = "portalName", source = "portal.name")
+    @Mapping(target = "portalKey", source = "portal.key")
     @Mapping(target = "statistics", ignore = true)
     @Mapping(target = "lastLintReport", ignore = true)
-    BoatProductDashboard mapBoatProduct(Product byKeyAndPortalKey);
+    BoatProduct mapBoatProduct(Product product);
 
     @Mapping(target = "statistics", ignore = true)
     @Mapping(target = "services", ignore = true)
@@ -168,4 +180,37 @@ public interface BoatDashboardMapper {
 
     @Mapping(target = "statistics", ignore = true)
     BoatSpec mapBoatSpec(Spec spec);
+
+    @Mapping(target = "version", source = "spec.version")
+    @Mapping(target = "openApi", source = "spec.openApi")
+    BoatLintReport mapReport(LintReport specReport);
+
+    @Mapping(target = "version", source = "spec.version")
+    @Mapping(target = "openApi", ignore = true)
+    @Mapping(target = "violations",ignore = true)
+    BoatLintReport mapReportWithoutViolations(LintReport lintReport);
+
+    @Mapping(target = "lines", expression = "java(mapRange(lintRuleViolation))")
+    @Mapping(target = "rule", source = "lintRule")
+    @Mapping(target = "pointer", source = "jsonPointer")
+    BoatViolation mapViolation(LintRuleViolation lintRuleViolation);
+
+    default IntRange mapRange(LintRuleViolation violation) {
+        return new IntRange(violation.getLineStart(), violation.getLineEnd());
+    }
+
+    default String mapRuleSet(RuleSet value) {
+        return value.getId();
+    }
+
+    default String map(LintRuleSet value) {
+        return value.getRuleSetId();
+    }
+
+    default JsonPointer map(String value) {
+        return JsonPointer.valueOf(value);
+    }
+
+    BoatLintRule mapPortalLintRule(PortalLintRule portalLintRule);
+
 }
