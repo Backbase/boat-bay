@@ -31,6 +31,7 @@ export class ProductUpdateComponent implements OnInit {
     createdOn: [],
     createdBy: [],
     hide: [],
+    jiraProjectId: [],
     portal: [null, Validators.required],
   });
 
@@ -66,6 +67,7 @@ export class ProductUpdateComponent implements OnInit {
       createdOn: product.createdOn ? product.createdOn.format(DATE_TIME_FORMAT) : null,
       createdBy: product.createdBy,
       hide: product.hide,
+      jiraProjectId: product.jiraProjectId,
       portal: product.portal,
     });
   }
@@ -111,6 +113,7 @@ export class ProductUpdateComponent implements OnInit {
       createdOn: this.editForm.get(['createdOn'])!.value ? moment(this.editForm.get(['createdOn'])!.value, DATE_TIME_FORMAT) : undefined,
       createdBy: this.editForm.get(['createdBy'])!.value,
       hide: this.editForm.get(['hide'])!.value,
+      jiraProjectId: this.editForm.get(['jiraProjectId'])!.value,
       portal: this.editForm.get(['portal'])!.value,
     };
   }

@@ -1,5 +1,6 @@
 package com.backbase.oss.boat.bay.web.views.lint;
 
+import com.backbase.oss.boat.bay.web.views.dashboard.BoatSpec;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,8 @@ import lombok.Data;
 public class BoatLintReport {
 
     private Long id;
+
+    private BoatSpec spec;
 
     private String name;
     private String grade;

@@ -32,6 +32,7 @@ entity Product {
     createdOn Instant
     createdBy String
     hide Boolean
+    jiraProjectId String
 }
 
 entity Capability {

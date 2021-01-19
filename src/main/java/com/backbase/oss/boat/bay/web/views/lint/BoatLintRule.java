@@ -7,11 +7,12 @@ import org.zalando.zally.rule.api.Severity;
 @Data
 public class BoatLintRule {
 
-    private String id;
-    private String ruleSet;
+    private Long id;
+    private String ruleId;
+    private boolean enabled;
     private String title;
+    private String ruleSet;
     private Severity severity;
-    private boolean ignored;
     private URI url;
 
 }

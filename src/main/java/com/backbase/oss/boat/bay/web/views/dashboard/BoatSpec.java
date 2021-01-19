@@ -24,5 +24,9 @@ public class BoatSpec {
     private boolean backwardsCompatible;
     private boolean changed;
 
+
+    private BoatCapability capability;
+    private BoatService serviceDefinition;
+
 }
 

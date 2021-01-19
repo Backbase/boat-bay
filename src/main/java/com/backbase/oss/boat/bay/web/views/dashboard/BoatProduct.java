@@ -7,7 +7,8 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-public class BoatProductDashboard {
+public class BoatProduct {
+
 
     private String portalKey;
     private String portalName;
@@ -23,6 +24,8 @@ public class BoatProductDashboard {
     private BoatLintReport lastLintReport;
 
     private BoatStatistics statistics;
+
+    private String jiraProjectId;
 
 }
 
