@@ -1,7 +1,6 @@
 package com.backbase.oss.boat.bay.web.utils;
 
 import com.backbase.oss.boat.ExportException;
-import com.backbase.oss.boat.bay.domain.LintReport;
 import com.backbase.oss.boat.bay.domain.Source;
 import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.repository.SourceRepository;
@@ -17,6 +16,7 @@ import com.backbase.oss.boat.bay.web.rest.errors.BadRequestAlertException;
 import com.backbase.oss.boat.bay.web.views.lint.BoatLintReport;
 import com.backbase.oss.boat.bay.web.views.lint.LintReportMapper;
 import io.github.jhipster.web.util.HeaderUtil;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URISyntaxException;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -36,7 +37,8 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api")
 @Transactional
-public class UploadSpec {
+@RequiredArgsConstructor
+public class UploadSpecs {
 
     private final Logger log = LoggerFactory.getLogger(SpecResource.class);
     private final SourceRepository sourceRepository;
@@ -52,23 +54,14 @@ public class UploadSpec {
     private static final String SPEC_CREATOR= "MavenPluginUpload";
 
 
-    public UploadSpec(SpecRepository specRepository, SourceRepository sourceRepository, SpecSourceResolver specSourceResolver, FileSystemExporter fileSystemExporter, BoatSpecLinter boatSpecLinter, LintReportMapper lintReportMapper) {
-        this.sourceRepository = sourceRepository;
-        this.specRepository = specRepository;
-        this.specSourceResolver = specSourceResolver;
-        this.fileSystemExporter = fileSystemExporter;
-        this.boatSpecLinter = boatSpecLinter;
-        this.lintReportMapper = lintReportMapper;
-    }
-
-
 
     @PutMapping("boat-maven-plugin/{sourceId}/upload")
     public ResponseEntity<List<BoatLintReport>> uploadSpec(@Valid @RequestBody UploadRequestBody requestBody, @PathVariable String sourceId) throws URISyntaxException, ExportException {
 
         Source source = sourceRepository.findById(Long.parseLong(sourceId)).orElseThrow(() -> new BadRequestAlertException("Invalid source, source Id does not exist", "SOURCE", "sourceIdInvalid"));
 
-        List<Spec> specs = requestBody.getSpecs();
+        List<UploadRequestBody.UploadSpec> requestSpecs = requestBody.getSpecs();
+
         if (requestBody.getProjectId().isEmpty()
             || requestBody.getVersion().isEmpty()
             || requestBody.getArtifactId().isEmpty()) {
@@ -76,7 +69,12 @@ public class UploadSpec {
         }
 
 
-        for (Spec spec : specs) {
+       List<Spec> specs = new ArrayList<>();
+
+
+        for (UploadRequestBody.UploadSpec uploadSpec : requestSpecs) {
+
+            Spec spec = mapSpec(uploadSpec);
 
             log.debug("REST request to upload : {}", spec.getKey());
 
@@ -84,9 +82,8 @@ public class UploadSpec {
                 spec.setFilename(requestBody.getArtifactId() + "-api-v" + requestBody.getVersion() + ".yaml");
 
             if (spec.getOpenApi().isEmpty()
-                || spec.getProduct().getKey().isEmpty())
-                throw new BadRequestAlertException("Invalid spec with an empty path, api, product, or file name", ENTITY_NAME, "attributeempty");
-
+                || spec.getKey().isEmpty())
+                throw new BadRequestAlertException("Invalid spec with an empty api, key, or file name", ENTITY_NAME, "attributeempty");
 
             spec.setPortal(source.getPortal());
             spec.setProduct(source.getProduct());
@@ -101,7 +98,7 @@ public class UploadSpec {
                 + "/" +
                 spec.getFilename());
 
-            Spec match = new Spec().key(spec.getKey()).name(spec.getName()).version(spec.getVersion());
+            Spec match = new Spec().key(spec.getKey()).name(spec.getName());
 
             Optional<Spec> duplicate = specRepository.findOne(Example.of(match));
 
@@ -129,6 +126,19 @@ public class UploadSpec {
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, "SOURCE", source.getId().toString()))
             .body(lintReports);
+    }
+
+
+    private Spec mapSpec(UploadRequestBody.UploadSpec uploadSpec){
+
+        Spec spec = new Spec();
+
+        spec.setOpenApi(uploadSpec.getOpenApi());
+        spec.setKey(uploadSpec.getKey());
+        spec.setName(uploadSpec.getName());
+        spec.setFilename(uploadSpec.getFilename());
+
+        return spec;
     }
 
 }
