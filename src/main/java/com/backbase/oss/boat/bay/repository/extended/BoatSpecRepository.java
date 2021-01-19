@@ -2,6 +2,7 @@ package com.backbase.oss.boat.bay.repository.extended;
 
 import com.backbase.oss.boat.bay.domain.Capability;
 import com.backbase.oss.boat.bay.domain.Product;
+import com.backbase.oss.boat.bay.domain.ServiceDefinition;
 import com.backbase.oss.boat.bay.domain.Source;
 import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.repository.SpecRepository;
@@ -23,4 +24,7 @@ public interface BoatSpecRepository extends SpecRepository {
 
     Page<Spec> findAllByCapabilityProduct(Product product, Pageable pageable);
 
+    List<Spec> findAllByBackwardsCompatibleIsNull();
+
+    List<Spec> findAllByNameAndServiceDefinitionAndVersionIsNotNull(String name, ServiceDefinition serviceDefinition);
 }

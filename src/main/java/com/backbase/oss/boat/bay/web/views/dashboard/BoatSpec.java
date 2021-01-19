@@ -7,8 +7,12 @@ import lombok.Data;
 @Data
 public class BoatSpec {
 
+    private long id;
+
     private String key;
     private String name;
+    private String title;
+    private String grade;
     private String version;
     private String description;
     private String icon;
@@ -16,6 +20,9 @@ public class BoatSpec {
     private String createdBy;
 
     private BoatStatistics statistics;
+
+    private boolean backwardsCompatible;
+    private boolean changed;
 
 }
 

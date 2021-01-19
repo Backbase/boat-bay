@@ -35,19 +35,19 @@ public class SpecRepositoryAspect {
 
         if (joinPoint.getArgs().length == 1 && joinPoint.getArgs()[0] instanceof Source) {
             Source source = (Source) result;
-            log.info("Publishing Source Updated Event for Source: {}", source.getName());
+            log.debug("Publishing Source Updated Event for Source: {}", source.getName());
             publisher.publishEvent(new SpecSourceUpdatedEvent(this, source));
         }
 
         if (joinPoint.getArgs().length == 1 && joinPoint.getArgs()[0] instanceof Spec) {
             Spec spec = (Spec) result;
-            log.info("Publishing Spec Updated Event for Spec: {}", spec.getName());
+            log.debug("Publishing Spec Updated Event for Spec: {}", spec.getName());
             publisher.publishEvent(new SpecUpdatedEvent(this, spec));
         }
 
         if (joinPoint.getArgs().length == 1 && joinPoint.getArgs()[0] instanceof LintRule) {
             LintRule lintRule = ((LintRule) result);
-                log.info("Publishing Rule Updated Event for Rule: {}", lintRule.getRuleId());
+                log.debug("Publishing Rule Updated Event for Rule: {}", lintRule.getRuleId());
                 publisher.publishEvent(new RuleUpdatedEvent(this, lintRule));
         }
 

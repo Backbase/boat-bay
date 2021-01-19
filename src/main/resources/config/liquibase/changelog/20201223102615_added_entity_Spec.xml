@@ -64,6 +64,15 @@
             <column name="hide" type="boolean">
                 <constraints nullable="true" />
             </column>
+            <column name="grade" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="backwards_compatible" type="boolean">
+                <constraints nullable="true" />
+            </column>
+            <column name="changed" type="boolean">
+                <constraints nullable="true" />
+            </column>
             <column name="source_path" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
@@ -156,6 +165,9 @@
             <column name="parse_error" type="clob"/>
             <column name="external_docs" type="string"/>
             <column name="hide" type="boolean"/>
+            <column name="grade" type="string"/>
+            <column name="backwards_compatible" type="boolean"/>
+            <column name="changed" type="boolean"/>
             <column name="source_path" type="string"/>
             <column name="source_name" type="string"/>
             <column name="source_url" type="string"/>

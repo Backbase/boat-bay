@@ -2,6 +2,7 @@ package com.backbase.oss.boat.bay.web.views.dashboard;
 
 import com.backbase.oss.boat.bay.domain.Capability;
 import com.backbase.oss.boat.bay.domain.Dashboard;
+import com.backbase.oss.boat.bay.domain.LintReport;
 import com.backbase.oss.boat.bay.domain.Portal;
 import com.backbase.oss.boat.bay.domain.Product;
 import com.backbase.oss.boat.bay.domain.ServiceDefinition;
@@ -16,10 +17,13 @@ import com.backbase.oss.boat.bay.repository.extended.BoatPortalRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatProductRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatServiceRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatSpecRepository;
+import com.backbase.oss.boat.bay.service.lint.BoatSpecLinter;
 import com.backbase.oss.boat.bay.service.statistics.BoatStatisticsCollector;
+import com.backbase.oss.boat.bay.web.views.lint.BoatLintReport;
 import com.backbase.oss.boat.bay.web.views.lint.LintReportMapper;
 import io.github.jhipster.web.util.PaginationUtil;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -63,6 +67,8 @@ public class BoatDashboardController {
     private final TagRepository tagRepository;
 
     private final BoatStatisticsCollector boatStatisticsCollector;
+
+    private final BoatSpecLinter boatSpecLinter;
 
     public List<String> getAllEnabledTags() {
         return tagRepository.findAll(Example.of(new Tag().hide(false))).stream()
@@ -117,8 +123,7 @@ public class BoatDashboardController {
     @GetMapping("/portals/{portalKey}/products/{productKey}/capabilities")
     public ResponseEntity<List<BoatCapability>> getPortalProducts(@PathVariable String portalKey, @PathVariable String productKey, Pageable pageable) {
 
-        Product product = boatProductRepository.findByKeyAndPortalKey(productKey, portalKey)
-            .orElseThrow((() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
+        Product product = getProduct(portalKey, productKey);
 
         Page<Capability> capabilities  = boatCapabilityRepository.findByProduct(product, pageable);
         Page<BoatCapability> page = capabilities.map(this::mapCapability);
@@ -129,8 +134,7 @@ public class BoatDashboardController {
 
     @GetMapping("/portals/{portalKey}/products/{productKey}/services")
     public ResponseEntity<List<BoatService>> getPortalServices(@PathVariable String portalKey, @PathVariable String productKey, Pageable pageable) {
-        Product product = boatProductRepository.findByKeyAndPortalKey(productKey, portalKey)
-            .orElseThrow((() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
+        Product product = getProduct(portalKey, productKey);
 
         Page<ServiceDefinition> services = boatServiceRepository.findByCapabilityProduct(product, pageable);
 
@@ -142,8 +146,7 @@ public class BoatDashboardController {
 
     @GetMapping("/portals/{portalKey}/products/{productKey}/specs")
     public ResponseEntity<List<BoatSpec>> getPortalSpecs(@PathVariable String portalKey, @PathVariable String productKey, Pageable pageable) {
-        Product product = boatProductRepository.findByKeyAndPortalKey(productKey, portalKey)
-            .orElseThrow((() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
+        Product product = getProduct(portalKey, productKey);
 
         Page<Spec> services = boatSpecRepository.findAllByCapabilityProduct(product, pageable);
 
@@ -153,12 +156,32 @@ public class BoatDashboardController {
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
+    private Product getProduct(@PathVariable String portalKey, @PathVariable String productKey) {
+        return boatProductRepository.findByKeyAndPortalKey(productKey, portalKey)
+            .orElseThrow((() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
+    }
+
     private BoatSpec mapSpec(Spec spec) {
         BoatSpec boatSpec = dashboardMapper.mapBoatSpec(spec);
         boatSpec.setStatistics(boatStatisticsCollector.collect(spec));
         return boatSpec;
-
     }
+
+    @GetMapping("/portals/{portalKey}/products/{productKey}/specs/{specId}/lint-report")
+    public ResponseEntity<BoatLintReport> getLintReportForSpec(@PathVariable String portalKey, @PathVariable String productKey, @PathVariable String specId) {
+        Product product = getProduct(portalKey, productKey);
+
+        Spec spec = boatSpecRepository.findById(Long.valueOf(specId)).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        LintReport specReport = Optional.ofNullable(spec.getLintReport()).orElseGet(() -> boatSpecLinter.lint(spec));
+        boatSpecLinter.getApiValidator(spec);
+
+        BoatLintReport lintReport = lintReportMapper.mapReport(specReport);
+
+        return ResponseEntity.ok(lintReport);
+    }
+
+
 
     private BoatService mapService(ServiceDefinition serviceDefinition) {
         BoatService boatService = dashboardMapper.mapBoatService(serviceDefinition);
@@ -183,8 +206,7 @@ public class BoatDashboardController {
     public ResponseEntity<BoatProductDashboard> getProductDashboard(@PathVariable String projectKey, @PathVariable String productKey) {
 
 
-        Product product = boatProductRepository.findByKeyAndPortalKey(productKey, projectKey )
-            .orElseThrow((() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
+        Product product = getProduct(projectKey, productKey);
 
         BoatProductDashboard boatProduct = mapProduct(product);
 
