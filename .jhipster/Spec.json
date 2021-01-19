@@ -96,6 +96,18 @@
       "fieldType": "Boolean"
     },
     {
+      "fieldName": "grade",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "backwardsCompatible",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "changed",
+      "fieldType": "Boolean"
+    },
+    {
       "fieldName": "sourcePath",
       "fieldType": "String"
     },

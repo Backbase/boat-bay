@@ -1,0 +1,67 @@
+<div>
+    <h2 id="page-heading">
+        <span>Spec Types</span>
+
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-spec-type" [routerLink]="['/spec-type/new']">
+            <fa-icon icon="plus"></fa-icon>
+            <span>
+            Create a new Spec Type
+            </span>
+        </button>
+    </h2>
+
+    <jhi-alert-error></jhi-alert-error>
+
+    <jhi-alert></jhi-alert>
+
+    <div class="alert alert-warning" id="no-result" *ngIf="specTypes?.length === 0">
+        <span>No specTypes found</span>
+    </div>
+
+    <div class="table-responsive" id="entities" *ngIf="specTypes && specTypes.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
+            <thead>
+                <tr>
+                    <th scope="col" ><span>ID</span></th>
+                    <th scope="col" ><span>Name</span></th>
+                    <th scope="col" ><span>Description</span></th>
+                    <th scope="col" ><span>Match Sp EL</span></th>
+                    <th scope="col" ><span>Icon</span></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let specType of specTypes ;trackBy: trackId">
+                    <td><a [routerLink]="['/spec-type', specType.id, 'view']">{{ specType.id }}</a></td>
+                    <td>{{ specType.name }}</td>
+                    <td>{{ specType.description }}</td>
+                    <td>{{ specType.matchSpEL }}</td>
+                    <td>{{ specType.icon }}</td>
+                    <td class="text-right">
+                        <div class="btn-group">
+                            <button type="submit"
+                                    [routerLink]="['/spec-type', specType.id, 'view']"
+                                    class="btn btn-info btn-sm">
+                                <fa-icon icon="eye"></fa-icon>
+                                <span class="d-none d-md-inline">View</span>
+                            </button>
+
+                            <button type="submit"
+                                    [routerLink]="['/spec-type', specType.id, 'edit']"
+                                    class="btn btn-primary btn-sm">
+                                <fa-icon icon="pencil-alt"></fa-icon>
+                                <span class="d-none d-md-inline">Edit</span>
+                            </button>
+
+                            <button type="submit" (click)="delete(specType)"
+                                    class="btn btn-danger btn-sm">
+                                <fa-icon icon="times"></fa-icon>
+                                <span class="d-none d-md-inline">Delete</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

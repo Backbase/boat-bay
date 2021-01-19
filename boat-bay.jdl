@@ -76,7 +76,9 @@ entity Spec {
     parseError TextBlob
     externalDocs String
     hide Boolean
-
+    grade String
+    backwardsCompatible Boolean
+    changed Boolean
     sourcePath String
     sourceName String
     sourceUrl String

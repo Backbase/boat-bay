@@ -93,6 +93,15 @@ public class SpecResourceIT {
     private static final Boolean DEFAULT_HIDE = false;
     private static final Boolean UPDATED_HIDE = true;
 
+    private static final String DEFAULT_GRADE = "AAAAAAAAAA";
+    private static final String UPDATED_GRADE = "BBBBBBBBBB";
+
+    private static final Boolean DEFAULT_BACKWARDS_COMPATIBLE = false;
+    private static final Boolean UPDATED_BACKWARDS_COMPATIBLE = true;
+
+    private static final Boolean DEFAULT_CHANGED = false;
+    private static final Boolean UPDATED_CHANGED = true;
+
     private static final String DEFAULT_SOURCE_PATH = "AAAAAAAAAA";
     private static final String UPDATED_SOURCE_PATH = "BBBBBBBBBB";
 
@@ -152,6 +161,9 @@ public class SpecResourceIT {
             .parseError(DEFAULT_PARSE_ERROR)
             .externalDocs(DEFAULT_EXTERNAL_DOCS)
             .hide(DEFAULT_HIDE)
+            .grade(DEFAULT_GRADE)
+            .backwardsCompatible(DEFAULT_BACKWARDS_COMPATIBLE)
+            .changed(DEFAULT_CHANGED)
             .sourcePath(DEFAULT_SOURCE_PATH)
             .sourceName(DEFAULT_SOURCE_NAME)
             .sourceUrl(DEFAULT_SOURCE_URL)
@@ -235,6 +247,9 @@ public class SpecResourceIT {
             .parseError(UPDATED_PARSE_ERROR)
             .externalDocs(UPDATED_EXTERNAL_DOCS)
             .hide(UPDATED_HIDE)
+            .grade(UPDATED_GRADE)
+            .backwardsCompatible(UPDATED_BACKWARDS_COMPATIBLE)
+            .changed(UPDATED_CHANGED)
             .sourcePath(UPDATED_SOURCE_PATH)
             .sourceName(UPDATED_SOURCE_NAME)
             .sourceUrl(UPDATED_SOURCE_URL)
@@ -330,6 +345,9 @@ public class SpecResourceIT {
         assertThat(testSpec.getParseError()).isEqualTo(DEFAULT_PARSE_ERROR);
         assertThat(testSpec.getExternalDocs()).isEqualTo(DEFAULT_EXTERNAL_DOCS);
         assertThat(testSpec.isHide()).isEqualTo(DEFAULT_HIDE);
+        assertThat(testSpec.getGrade()).isEqualTo(DEFAULT_GRADE);
+        assertThat(testSpec.isBackwardsCompatible()).isEqualTo(DEFAULT_BACKWARDS_COMPATIBLE);
+        assertThat(testSpec.isChanged()).isEqualTo(DEFAULT_CHANGED);
         assertThat(testSpec.getSourcePath()).isEqualTo(DEFAULT_SOURCE_PATH);
         assertThat(testSpec.getSourceName()).isEqualTo(DEFAULT_SOURCE_NAME);
         assertThat(testSpec.getSourceUrl()).isEqualTo(DEFAULT_SOURCE_URL);
@@ -538,6 +556,9 @@ public class SpecResourceIT {
             .andExpect(jsonPath("$.[*].parseError").value(hasItem(DEFAULT_PARSE_ERROR.toString())))
             .andExpect(jsonPath("$.[*].externalDocs").value(hasItem(DEFAULT_EXTERNAL_DOCS)))
             .andExpect(jsonPath("$.[*].hide").value(hasItem(DEFAULT_HIDE.booleanValue())))
+            .andExpect(jsonPath("$.[*].grade").value(hasItem(DEFAULT_GRADE)))
+            .andExpect(jsonPath("$.[*].backwardsCompatible").value(hasItem(DEFAULT_BACKWARDS_COMPATIBLE.booleanValue())))
+            .andExpect(jsonPath("$.[*].changed").value(hasItem(DEFAULT_CHANGED.booleanValue())))
             .andExpect(jsonPath("$.[*].sourcePath").value(hasItem(DEFAULT_SOURCE_PATH)))
             .andExpect(jsonPath("$.[*].sourceName").value(hasItem(DEFAULT_SOURCE_NAME)))
             .andExpect(jsonPath("$.[*].sourceUrl").value(hasItem(DEFAULT_SOURCE_URL)))
@@ -594,6 +615,9 @@ public class SpecResourceIT {
             .andExpect(jsonPath("$.parseError").value(DEFAULT_PARSE_ERROR.toString()))
             .andExpect(jsonPath("$.externalDocs").value(DEFAULT_EXTERNAL_DOCS))
             .andExpect(jsonPath("$.hide").value(DEFAULT_HIDE.booleanValue()))
+            .andExpect(jsonPath("$.grade").value(DEFAULT_GRADE))
+            .andExpect(jsonPath("$.backwardsCompatible").value(DEFAULT_BACKWARDS_COMPATIBLE.booleanValue()))
+            .andExpect(jsonPath("$.changed").value(DEFAULT_CHANGED.booleanValue()))
             .andExpect(jsonPath("$.sourcePath").value(DEFAULT_SOURCE_PATH))
             .andExpect(jsonPath("$.sourceName").value(DEFAULT_SOURCE_NAME))
             .andExpect(jsonPath("$.sourceUrl").value(DEFAULT_SOURCE_URL))
@@ -639,6 +663,9 @@ public class SpecResourceIT {
             .parseError(UPDATED_PARSE_ERROR)
             .externalDocs(UPDATED_EXTERNAL_DOCS)
             .hide(UPDATED_HIDE)
+            .grade(UPDATED_GRADE)
+            .backwardsCompatible(UPDATED_BACKWARDS_COMPATIBLE)
+            .changed(UPDATED_CHANGED)
             .sourcePath(UPDATED_SOURCE_PATH)
             .sourceName(UPDATED_SOURCE_NAME)
             .sourceUrl(UPDATED_SOURCE_URL)
@@ -672,6 +699,9 @@ public class SpecResourceIT {
         assertThat(testSpec.getParseError()).isEqualTo(UPDATED_PARSE_ERROR);
         assertThat(testSpec.getExternalDocs()).isEqualTo(UPDATED_EXTERNAL_DOCS);
         assertThat(testSpec.isHide()).isEqualTo(UPDATED_HIDE);
+        assertThat(testSpec.getGrade()).isEqualTo(UPDATED_GRADE);
+        assertThat(testSpec.isBackwardsCompatible()).isEqualTo(UPDATED_BACKWARDS_COMPATIBLE);
+        assertThat(testSpec.isChanged()).isEqualTo(UPDATED_CHANGED);
         assertThat(testSpec.getSourcePath()).isEqualTo(UPDATED_SOURCE_PATH);
         assertThat(testSpec.getSourceName()).isEqualTo(UPDATED_SOURCE_NAME);
         assertThat(testSpec.getSourceUrl()).isEqualTo(UPDATED_SOURCE_URL);
