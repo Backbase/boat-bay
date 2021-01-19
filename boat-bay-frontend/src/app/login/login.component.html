@@ -1,0 +1,26 @@
+
+  <h1 mat-dialog-title>Sing in</h1>
+  <mat-dialog-content>
+    <form class="form"   [formGroup]="loginForm"  role="form" (ngSubmit)="login()">
+    <mat-form-field appearance="standard">
+      <mat-label>Username</mat-label>
+      <input matInput type="text" class="form-control" name="username" id="username" placeholder="Your username"
+             formControlName="username" #username required>
+    </mat-form-field>
+
+    <mat-form-field appearance="standard">
+      <mat-label>Password</mat-label>
+      <input matInput type="password" class="form-control" name="password" id="password" placeholder="Your password"
+             formControlName="password" #password required>
+    </mat-form-field>
+
+    <mat-slide-toggle formControlName="rememberMe">Remember me</mat-slide-toggle>
+    <button mat-button mat-dialog-close type="submit">Sign In</button>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions>
+    <button mat-button mat-dialog-close>Cancel</button>
+
+  </mat-dialog-actions>
+

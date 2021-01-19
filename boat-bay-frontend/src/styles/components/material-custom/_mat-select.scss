@@ -1,0 +1,11 @@
+@mixin mat-select-overrides($theme) {
+  .mat-select-panel {
+    margin-top: 30px;
+    margin-left: 16px;
+    min-width: 100% !important;
+  }
+  .mat-select-value {
+    padding-left: 16px;
+    color: $color-light;
+  }
+}

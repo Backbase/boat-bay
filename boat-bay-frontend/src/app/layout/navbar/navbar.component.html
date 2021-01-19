@@ -1,0 +1,39 @@
+<mat-toolbar
+    class="fixed-top"
+    [ngClass]="{ scrolling: isScrolling }"
+    (window:scroll)="onWindowScroll($event)"
+    data-role="top-navigation-container"
+>
+
+    <header>
+        <div class="header-row">
+
+            <div class="bb-brand" >
+                <a href="/">
+                <img
+                    class="bb-brand-logo"
+                    [src]="imageAssetsPath + 'logo-emblem.svg'"
+                    alt="Backbase Logo"
+                />
+                <img
+                    class="bb-brand-logo-full"
+                    [src]="imageAssetsPath + 'backbase-logo.png'"
+                    alt="Backbase Logo with text"
+                />
+
+                <span class="bb-brand-spacer">/</span>
+                <span class="bb-brand-text">BOAT 🚢 BAY 🏝</span>
+                </a>
+            </div>
+
+            <div class="bb-brand-community" [ngSwitch]="isAuthenticated()" >
+                <a
+                    class="bb-brand-community-link"
+                    href="https://community.backbase.com/"
+                    target="_blank"
+                >Community</a
+                >
+            </div>
+        </div>
+    </header>
+</mat-toolbar>

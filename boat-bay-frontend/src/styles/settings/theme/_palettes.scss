@@ -1,0 +1,25 @@
+@import '~@angular/material/theming';
+@import '../colors';
+
+$mat-blue-accent: map_merge(
+    $mat-blue,
+    (
+      500: $color-accent,
+    )
+);
+
+$primary: mat-palette($mat-grey);
+$accent: mat-palette($mat-blue-accent);
+$warn: mat-palette($mat-red);
+
+$rating-A: #0a0;
+$rating-B: #b0d513;
+$rating-C: #eabe06;
+$rating-D: #ed7d20;
+$rating-E: #d4333f;
+
+
+$must: #d4333f;
+$should: #ed7d20;
+$may: #eabe06;
+$hint: #b0d513;

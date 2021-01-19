@@ -1,0 +1,23 @@
+@import '~@angular/material/theming';
+
+@import 'palettes';
+
+$custom-light-theme-background: map_merge(
+  $mat-light-theme-background,
+  (
+    card: $bb-background-color,
+  )
+);
+
+$theme: (
+  primary: $primary,
+  accent: $accent,
+  warn: $warn,
+  is-dark: false,
+  foreground: $mat-light-theme-foreground,
+  background: $custom-light-theme-background,
+
+
+);
+
+
