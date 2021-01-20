@@ -135,24 +135,13 @@ entity SourcePath {
 }
 
 entity LintRule {
-    ruleId String required unique
+    ruleId String required
     title String required
+    ruleSet String
     summary String
     severity Severity required
     description String
     externalUrl String
-    enabled Boolean required
-}
-
-entity LintRuleSet {
-    ruleSetId String required unique
-    name String required
-    description TextBlob
-    externalUrl String
-}
-
-entity PortalLintRule {
-    ruleId String required
     enabled Boolean required
 }
 
@@ -202,8 +191,7 @@ relationship OneToMany {
 	Capability to ServiceDefinition{capability(name) required}
 	ServiceDefinition to Spec{serviceDefinition(name) required}
 	LintReport{violations} to LintRuleViolation{lintReport(name)}
-	LintRuleSet to LintRule{ruleSet(name) required}
-	Portal to PortalLintRule{portal(name) required}
+	Portal to LintRule{portal(name) required}
 	Source to SourcePath{source(name)}
 
 }
@@ -221,8 +209,6 @@ relationship ManyToOne {
     Source{serviceDefinition(name)} to ServiceDefinition
 
     LintRuleViolation{lintRule(title) required} to LintRule
-
-    PortalLintRule{lintRule(title) required} to LintRule
 
 }
 

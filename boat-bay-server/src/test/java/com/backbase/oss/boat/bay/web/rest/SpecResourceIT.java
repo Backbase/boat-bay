@@ -570,7 +570,7 @@ public class SpecResourceIT {
             .andExpect(jsonPath("$.[*].sourceLastModifiedOn").value(hasItem(sameInstant(DEFAULT_SOURCE_LAST_MODIFIED_ON))))
             .andExpect(jsonPath("$.[*].sourceLastModifiedBy").value(hasItem(DEFAULT_SOURCE_LAST_MODIFIED_BY)));
     }
-
+    
     @SuppressWarnings({"unchecked"})
     public void getAllSpecsWithEagerRelationshipsIsEnabled() throws Exception {
         when(specRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));

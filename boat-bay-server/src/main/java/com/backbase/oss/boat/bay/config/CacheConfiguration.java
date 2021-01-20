@@ -58,7 +58,6 @@ public class CacheConfiguration {
             createCache(cm, com.backbase.oss.boat.bay.domain.Capability.class.getName() + ".services");
             createCache(cm, com.backbase.oss.boat.bay.domain.Spec.class.getName());
             createCache(cm, com.backbase.oss.boat.bay.domain.LintRule.class.getName());
-            createCache(cm, com.backbase.oss.boat.bay.domain.LintRuleSet.class.getName());
             createCache(cm, com.backbase.oss.boat.bay.domain.LintReport.class.getName());
             createCache(cm, com.backbase.oss.boat.bay.domain.LintRuleViolation.class.getName());
             createCache(cm, com.backbase.oss.boat.bay.domain.LintRuleViolation.class.getName() + ".lintReports");
@@ -70,8 +69,6 @@ public class CacheConfiguration {
             createCache(cm, com.backbase.oss.boat.bay.domain.Capability.class.getName() + ".capabilityServiceDefinitions");
             createCache(cm, com.backbase.oss.boat.bay.domain.Capability.class.getName() + ".serviceDefinitions");
             createCache(cm, com.backbase.oss.boat.bay.domain.ServiceDefinition.class.getName());
-            createCache(cm, com.backbase.oss.boat.bay.domain.LintRuleSet.class.getName() + ".lintRules");
-            createCache(cm, com.backbase.oss.boat.bay.domain.PortalLintRule.class.getName());
             createCache(cm, com.backbase.oss.boat.bay.domain.Portal.class.getName() + ".products");
             createCache(cm, com.backbase.oss.boat.bay.domain.Product.class.getName());
             createCache(cm, com.backbase.oss.boat.bay.domain.Product.class.getName() + ".capabilities");
@@ -94,6 +91,7 @@ public class CacheConfiguration {
             createCache(cm, com.backbase.oss.boat.bay.domain.LintReport.class.getName() + ".violations");
             createCache(cm, com.backbase.oss.boat.bay.domain.Portal.class.getName() + ".portalLintRules");
             createCache(cm, com.backbase.oss.boat.bay.domain.Product.class.getName() + ".productReleases");
+            createCache(cm, com.backbase.oss.boat.bay.domain.Portal.class.getName() + ".lintRules");
             // jhipster-needle-ehcache-add-entry
             createCache(cm, BoatLintRuleValidatorFactory.API_VALIDATORS);
             createCache(cm, BoatLintRuleValidatorFactory.API_RULE_POLICY);

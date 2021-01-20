@@ -2,10 +2,9 @@ package com.backbase.oss.boat.bay.web.views.dashboard.mapper;
 
 import com.backbase.oss.boat.bay.domain.Capability;
 import com.backbase.oss.boat.bay.domain.LintReport;
-import com.backbase.oss.boat.bay.domain.LintRuleSet;
+import com.backbase.oss.boat.bay.domain.LintRule;
 import com.backbase.oss.boat.bay.domain.LintRuleViolation;
 import com.backbase.oss.boat.bay.domain.Portal;
-import com.backbase.oss.boat.bay.domain.PortalLintRule;
 import com.backbase.oss.boat.bay.domain.Product;
 import com.backbase.oss.boat.bay.domain.ProductRelease;
 import com.backbase.oss.boat.bay.domain.ServiceDefinition;
@@ -42,7 +41,6 @@ import org.zalando.zally.rule.api.RuleSet;
 
 @Mapper(componentModel = "spring")
 public interface BoatDashboardMapper {
-
 
     @Mapping(target = "numberOfServices", ignore = true)
     @Mapping(target = "numberOfCapabilities", ignore = true)
@@ -130,19 +128,13 @@ public interface BoatDashboardMapper {
         return value.getId();
     }
 
-    default String map(LintRuleSet value) {
-        return value.getRuleSetId();
-    }
-
     default JsonPointer map(String value) {
         return JsonPointer.valueOf(value);
     }
 
-    @Mapping(target = "url", source = "rule.lintRule.externalUrl")
-    @Mapping(target = "title", source = "rule.lintRule.title")
-    @Mapping(target = "severity", source = "rule.lintRule.severity")
-    @Mapping(target = "ruleSet", source = "rule.lintRule.ruleSet.name")
-    BoatLintRule mapPortalLintRule(PortalLintRule rule);
+
+    @Mapping(target = "url", source = "externalUrl")
+    BoatLintRule mapPortalLintRule(LintRule rule);
 
     BoatProductRelease mapBoatProductRelease(ProductRelease productRelease);
 

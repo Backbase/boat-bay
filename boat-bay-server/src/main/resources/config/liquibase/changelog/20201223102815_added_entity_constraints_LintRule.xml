@@ -8,11 +8,11 @@
     -->
     <changeSet id="20201223102815-2" author="jhipster">
         
-        <addForeignKeyConstraint baseColumnNames="rule_set_id"
+        <addForeignKeyConstraint baseColumnNames="portal_id"
                                  baseTableName="lint_rule"
-                                 constraintName="fk_lint_rule_rule_set_id"
+                                 constraintName="fk_lint_rule_portal_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="lint_rule_set"/>
+                                 referencedTableName="portal"/>
 
     </changeSet>
 </databaseChangeLog>

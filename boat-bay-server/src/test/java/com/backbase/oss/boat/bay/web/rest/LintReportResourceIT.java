@@ -147,7 +147,7 @@ public class LintReportResourceIT {
             .andExpect(jsonPath("$.[*].passed").value(hasItem(DEFAULT_PASSED.booleanValue())))
             .andExpect(jsonPath("$.[*].lintedOn").value(hasItem(sameInstant(DEFAULT_LINTED_ON))));
     }
-
+    
     @Test
     @Transactional
     public void getLintReport() throws Exception {

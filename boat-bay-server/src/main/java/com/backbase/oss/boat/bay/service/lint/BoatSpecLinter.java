@@ -2,11 +2,11 @@ package com.backbase.oss.boat.bay.service.lint;
 
 import com.backbase.oss.boat.bay.bootstrap.BoatBayBootstrap;
 import com.backbase.oss.boat.bay.domain.LintReport;
+import com.backbase.oss.boat.bay.domain.LintRule;
 import com.backbase.oss.boat.bay.domain.LintRuleViolation;
 import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.domain.enumeration.Severity;
 import com.backbase.oss.boat.bay.events.RuleUpdatedEvent;
-import com.backbase.oss.boat.bay.repository.PortalLintRuleRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatLintReportRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatLintRuleRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatLintRuleViolationRepository;
@@ -14,15 +14,18 @@ import com.backbase.oss.boat.bay.repository.extended.BoatSpecRepository;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
@@ -49,6 +52,7 @@ public class BoatSpecLinter {
     private final RulesManager rulesManager;
     private final BoatSpecRepository specRepository;
 
+
     @Async
     @Transactional
     public void scheduleLintJob(Spec spec) {
@@ -61,13 +65,15 @@ public class BoatSpecLinter {
         log.info("Linting Spec: {}", spec.getName());
         ApiValidator apiValidator = getApiValidator(spec);
         RulesPolicy rulesPolicy = getRulesPolicy(spec);
-        List<Result> validate = apiValidator.validate(spec.getOpenApi(), rulesPolicy, null);
 
+        Map<String, LintRule> applicableRules = boatLintRuleValidatorFactory.getAllByPortalAndEnabled(spec.getPortal()).stream().collect(Collectors.toMap(LintRule::getRuleId, Function.identity()));
+
+        List<Result> validate = apiValidator.validate(spec.getOpenApi(), rulesPolicy, null);
         LintReport lintReport = lintReportRepository.findBySpec(spec).orElse(new LintReport().spec(spec));
 
         // Collect new Violations
         Set<LintRuleViolation> violations = validate.stream()
-            .map(result -> mapResult(lintReport, result))
+            .map(result -> mapResult(lintReport, result, applicableRules))
             .collect(Collectors.toSet());
         lintReport.setName("Lint Report " + spec.getName() + "-" + spec.getVersion());
         String grade = calculateGrade(violations);
@@ -118,13 +124,10 @@ public class BoatSpecLinter {
     }
 
     @NotNull
-    private LintRuleViolation mapResult(LintReport lintReport, Result result) {
+    private LintRuleViolation mapResult(LintReport lintReport, Result result, Map<String, LintRule>  applicableRules) {
         LintRuleViolation lintRuleViolation = new LintRuleViolation();
         lintRuleViolation.lintReport(lintReport);
-        boatLintRuleRepository.findByRuleId(result.getId()).ifPresent(lintRule -> {
-            lintRuleViolation.setSeverity(lintRule.getSeverity());
-            lintRuleViolation.setLintRule(lintRule);
-        });
+        lintRuleViolation.setLintRule(applicableRules.get(result.getId()));
         lintRuleViolation.setName(result.getTitle());
         lintRuleViolation.setDescription(result.getDescription());
         lintRuleViolation.setLineStart(result.getLines().getStart());

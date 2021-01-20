@@ -235,7 +235,7 @@ public class CapabilityResourceIT {
             .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
             .andExpect(jsonPath("$.[*].hide").value(hasItem(DEFAULT_HIDE.booleanValue())));
     }
-
+    
     @Test
     @Transactional
     public void getCapability() throws Exception {

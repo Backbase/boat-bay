@@ -5,8 +5,7 @@
       "fieldName": "ruleId",
       "fieldType": "String",
       "fieldValidateRules": [
-        "required",
-        "unique"
+        "required"
       ]
     },
     {
@@ -15,6 +14,10 @@
       "fieldValidateRules": [
         "required"
       ]
+    },
+    {
+      "fieldName": "ruleSet",
+      "fieldType": "String"
     },
     {
       "fieldName": "summary",
@@ -47,10 +50,10 @@
   "relationships": [
     {
       "relationshipType": "many-to-one",
-      "otherEntityName": "lintRuleSet",
+      "otherEntityName": "portal",
       "otherEntityRelationshipName": "lintRule",
       "relationshipValidateRules": "required",
-      "relationshipName": "ruleSet",
+      "relationshipName": "portal",
       "otherEntityField": "name"
     }
   ],
