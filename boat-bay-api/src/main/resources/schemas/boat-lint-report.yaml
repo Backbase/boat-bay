@@ -1,0 +1,44 @@
+BoatLintReport:
+  type: object
+  properties:
+    id:
+      type: number
+    spec:
+      $ref: "../schemas/boat-spec.yaml#/BoatSpec"
+    name:
+      type: string
+    passed:
+      type: boolean
+    lintedOn:
+      type: string
+      format: date-time
+    openApi:
+      type: string
+    version:
+      type: string
+    grade:
+      type: string
+    volations:
+      type: array
+      items:
+        $ref: "#../schemas/boat-lint-report.yaml#/BoatViolation"
+    hasViolations:
+      type: boolean
+BoatViolation:
+  type: object
+  properties:
+    rule:
+      $ref: "../schemas/boat-lint-rule.yaml#/BoatLintRule"
+    description:
+      type: string
+    severity:
+      $ref: "../other-schemas/severity.yaml#/Severity"
+    lines:
+      type: object
+      properties:
+        start:
+          type: int
+        endInclusive:
+          type: int
+    pointer:
+      type: string

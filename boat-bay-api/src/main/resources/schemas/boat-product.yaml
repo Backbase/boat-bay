@@ -1,0 +1,26 @@
+BoatProduct:
+  type: object
+  properties:
+    portalKey:
+      type: string
+    portalname:
+      type: string
+    id:
+      type: number
+    key:
+      type: string
+    name:
+      type: string
+    content:
+      type: string
+    createdOn:
+      type: string
+      format: date-time
+    createdBy:
+      type: string
+    lastLingReport:
+      $ref: "../schemas/boat-lint-report#/BoatLintReport"
+    statistics:
+      $ref: "../other-schemas/boat-statistics.yaml#/BoatStatistics"
+    jiraProjectId:
+      type: string

@@ -1,0 +1,20 @@
+BoatService:
+  type: object
+  properties:
+    key:
+      type: string
+    name:
+      type: string
+    description:
+      type: string
+    icon:
+      type: string
+    color:
+      type: string
+    createdOn:
+      type: string
+      format: date-time
+    createdBy:
+      type: string
+    statistics:
+      $ref: "../other-schemas/boat-statistics.yaml#/BoatStatistics"

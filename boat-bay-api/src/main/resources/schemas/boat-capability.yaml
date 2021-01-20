@@ -1,0 +1,20 @@
+BoatCapability:
+  type: object
+  properties:
+    id:
+      type: number
+    key:
+      type: string
+    name:
+      type: string
+    content:
+      type: string
+    createdOn:
+      type: string
+      format: date-time
+    createdBy:
+      type: string
+    lastLingReport:
+      $ref: "../schemas/boat-lint-report.yaml#/BoatLintReport"
+    statistics:
+      $ref: "../other-schemas/statistics.yaml#/BoatStatistics"

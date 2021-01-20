@@ -1,0 +1,14 @@
+type: object
+properties:
+  specs:
+    type: array
+    items:
+      $ref: '../schemas/upload-spec.yaml/#UploadSpec'
+  location:
+    type: string
+  projectId:
+    type: string
+  artifactId:
+    type: string
+  version:
+    type: string

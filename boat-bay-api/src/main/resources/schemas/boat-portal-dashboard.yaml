@@ -1,0 +1,25 @@
+BoatPortalDashboard:
+  type: object
+  properties:
+    portalId:
+      type: string
+    portalKey:
+      type: string
+    portalName:
+      type: string
+    productId:
+      type: string
+    productKey:
+      type: string
+    productName:
+      type: string
+    numberOfServices:
+      type: number
+    numberOfCapabilities:
+      type: number
+    productDescription:
+      type: string
+    lastLintReport:
+      $ref: "../schemas/boat-lint-report.yaml#/BoatLintReport"
+    statistics:
+      $ref: "../other-schemas/boat-statistics.yaml#/BoatStatistics"

@@ -1,0 +1,18 @@
+BoatLintRule:
+  type: object
+  properties:
+    id:
+      type: number
+    ruleId:
+      type: string
+    enabled:
+      type: boolean
+    title:
+      type: string
+    ruleSet:
+      type: string
+    severity:
+      $ref: "../other-schemas/severity.yaml#/Severity"
+    url:
+      type: string
+      format: url

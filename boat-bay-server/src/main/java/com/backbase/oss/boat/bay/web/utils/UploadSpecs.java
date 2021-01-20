@@ -13,8 +13,10 @@ import com.backbase.oss.boat.bay.service.source.SpecSourceResolver;
 import com.backbase.oss.boat.bay.service.source.scanner.ScanResult;
 import com.backbase.oss.boat.bay.web.rest.SpecResource;
 import com.backbase.oss.boat.bay.web.rest.errors.BadRequestAlertException;
-import com.backbase.oss.boat.bay.web.views.lint.BoatLintReport;
-import com.backbase.oss.boat.bay.web.views.lint.LintReportMapper;
+//import com.backbase.oss.boat.bay.web.views.models.BoatLintReport;
+import com.backbase.oss.boat.bay.web.views.dashboard.mapper.BoatDashboardMapper;
+import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatLintReport;
+//import com.backbase.oss.boat.bay.web.views.lint.LintReportMapper;
 import io.github.jhipster.web.util.HeaderUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URISyntaxException;
 import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -46,7 +49,7 @@ public class UploadSpecs {
     private final FileSystemExporter fileSystemExporter;
     private final SpecRepository specRepository;
     private final BoatSpecLinter boatSpecLinter;
-    private final LintReportMapper lintReportMapper;
+    private final BoatDashboardMapper lintReportMapper;
 
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
@@ -91,7 +94,7 @@ public class UploadSpecs {
             spec.setSource(source);
             spec.setSourceName(spec.getFilename());
             spec.setCreatedBy(SPEC_CREATOR);
-            spec.setCreatedOn(Instant.now());
+            spec.setCreatedOn(ZonedDateTime.now());
             spec.setSourcePath("/" +
                 requestBody.getProjectId().substring(
                     requestBody.getProjectId().lastIndexOf(".")+1)

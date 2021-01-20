@@ -1,0 +1,34 @@
+BoatSpec:
+  type: object
+  properties:
+    id:
+      type: number
+    key:
+      type: string
+    name:
+      type: string
+    title:
+      type: string
+    description:
+      type: string
+    icon:
+      type: string
+    version:
+      type: string
+    grade:
+      type: string
+    createdOn:
+      type: string
+      format: date-time
+    createdBy:
+      type: string
+    statistics:
+      $ref: "../other-schemas/boat-statistics.yaml#/BoatStatistics"
+    backwardsCompatible:
+      type: boolean
+    changed:
+      type: boolean
+    capability:
+      $ref: "../schemas/boat-capability.yaml#/BoatCapability"
+    serviceDefinition:
+      $ref: "../schemas/boat-service.yaml#/BoatService"

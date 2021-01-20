@@ -1,0 +1,97 @@
+BoatLegacyPortal:
+  type: object
+  properties:
+    id:
+      type: long
+    key:
+      type: string
+    name:
+      type: string
+    releases:
+      additionalProperties:
+        $ref: "../schemas/boat-legacy-portal.yaml#/ProductReleaseDto"
+    products:
+      additionalProperties:
+        $ref: "../schemas/boat-legacy-portal.yaml#/ProductDto"
+    capabilities:
+      additionalProperties:
+        $ref: "../schemas/boat-legacy-portal.yaml#/CapabilityDto"
+ProductReleaseDto:
+  type: object
+  properties:
+    key:
+      type: string
+    title:
+      type: string
+    services:
+      additionalProperties:
+        type: string
+    specs:
+      type: array
+      uniqueItems: true
+      items:
+        type: number
+ProductDto:
+  type: object
+  properties:
+    id:
+      type: number
+    key:
+      type: string
+    name:
+      type: string
+    capabilities:
+      type: array
+    items:
+      type: string
+CapabilityDto:
+  type: object
+  properties:
+    key:
+      type: string
+    name:
+      type: string
+    modules:
+      additionalProperties:
+        $ref: "../schemas/boat-legacy-portal.yaml#/ModuleDto"
+ModuleDto:
+  type: object
+  properties:
+    name:
+      type: string
+    description:
+      type: string
+    versions:
+      type: array
+    items:
+      type: string
+    tags:
+      type: array
+      items:
+        type: string
+    icon:
+      type: string
+    grade:
+      type: string
+    specs:
+      additionalProperties:
+        $ref: "../schemas/boat-legacy-portal.yaml#/SpecDto"
+SpecDto:
+  type: object
+  properties:
+    id:
+      type: number
+    key:
+      type: string
+    name:
+      type: string
+    title:
+      type: string
+    description:
+      type: string
+    icon:
+      type: string
+    version:
+      type: string
+    grade:
+      type: string

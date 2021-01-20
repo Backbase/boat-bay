@@ -1,0 +1,11 @@
+UploadSpec:
+  type: object
+  properties:
+    fileName:
+      type: string
+    openApi:
+      type: string
+    key:
+      type: string
+    name:
+      type: string

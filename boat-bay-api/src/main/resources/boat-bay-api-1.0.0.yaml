@@ -1,0 +1,313 @@
+openapi: 3.0.0
+info:
+    version: 1.0.0
+    title: Boat Bay Client Api
+    license:
+        name: Backbase
+servers:
+    - url:
+paths:
+
+    /api/boat/portals:
+        get:
+            summary: get list of portals
+            operationId: getPortals
+            responses:
+                '200':
+                    description: boat legacy portal
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "../schemas/boat-portal.yaml#/BoatPortal"
+    /api/boat/portals/{portalKey}/products:
+            get:
+                summary: get products for identified portal
+                operationId: getPortalProducts
+                responses:
+                    '200':
+                        description: list of protals products
+                        content:
+                            application/json:
+                                schema:
+                                    type: array
+                                    items:
+                                        $ref: "../schemas/boat-product.yaml#/BoatProduct"
+            parameters:
+                - name: portalKey
+                  in: path
+                  description: portal idenifier
+                  required: true
+                  schema:
+                      type: string
+    /api/boat/portals/{portalKey}/products/{productKey}/capabilities:
+        get:
+            summary: get Portal Products Capabalities
+            operationId: getPortalCapabilities
+            responses:
+                '200':
+                    description: list of capabilities for product
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "../schemas/boat-capability.yaml#/BoatCapability"
+        parameters:
+            - name: productKey
+              in: path
+              description: product idenifier
+              required: true
+              schema:
+                  type: string
+            - name: portalKey
+              in: path
+              description: portal idenifier
+              required: true
+              schema:
+                  type: string
+    /api/boat/portals/{portalKey}/products/{productKey}/services:
+        get:
+            summary: get Portal services for a given product
+            operationId: getPortalServices
+            responses:
+                '200':
+                    description: list of services for product
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "../schemas/boat-service.yaml#/BoatService"
+        parameters:
+            - name: productKey
+              in: path
+              description: product idenifier
+              required: true
+              schema:
+                  type: string
+            - name: portalKey
+              in: path
+              description: portal idenifier
+              required: true
+              schema:
+                  type: string
+    /api/boat/portals/{portalKey}/products/{productKey}/specs:
+        get:
+            summary: get Portal Specs for given product
+            operationId: getProductSpecs
+            responses:
+                '200':
+                    description: list of specs for product
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "../schemas/boat-spec.yaml#/BoatSpec"
+        parameters:
+            - name: productKey
+              in: path
+              description: product idenifier
+              required: true
+              schema:
+                  type: string
+            - name: portalKey
+              in: path
+              description: portal idenifier
+              required: true
+              schema:
+                  type: string
+    /api/boat/portals/{portalKey}/products/{productKey}/specs/{specId}/lint-report:
+        get:
+            summary: get Lint Report for spec
+            operationId: getLintReportForSpec
+            responses:
+                '200':
+                    description: lint report for spec
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "../schemas/boat-lint-report.yaml#/BoatLintReport"
+        parameters:
+            - name: specId
+              in: path
+              description: spec idenifier
+              required: true
+              schema:
+                type: string
+
+            - name: productKey
+              in: path
+              description: product idenifier
+              required: true
+              schema:
+                type: string
+            - name: portalKey
+              in: path
+              description: portal idenifier
+              required: true
+              schema:
+                type: string
+    /api/boat/portals/{portalKey}/lint-rules:
+        get:
+            summary: get list of lint rules
+            operationId: getPortalLintRules
+            responses:
+                '200':
+                    description: list of lint rules for portal
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "../schemas/boat-lint-rule.yaml#/BoatLintRule"
+        parameters:
+            - name: portalKey
+              in: path
+              description: portal idenifier
+              required: true
+              schema:
+                  type: string
+    /api/boat/portals/{portalKey}/lint-rules/{portalLintRuleId}:
+        post:
+            summary: update lint rule for portal
+            operationId: updatePortalLintRule
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '../schemas/boat-lint-rule.yaml#/BoatLintRule'
+            responses:
+                '200':
+                    description: updated successfuly
+                    content: {}
+        parameters:
+            -   name: portalLintRuleId
+                in: path
+                description: id of portals lint rule
+                required: true
+                schema:
+                    type: string
+
+            -   name: portalKey
+                in: path
+                description: portal idenifier
+                required: true
+                schema:
+                    type: string
+    /api/boat/dashboard:
+        get:
+            summary: get list of boat portal dashboards
+            operationId: getDashboard
+            responses:
+                '200':
+                    description: list of boat portal dashboards
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "../schemas/boat-portal-dashboard.yaml#/BoatPortalDashboard"
+    /api/boat/dashboard/{projectKey}/{productKey}:
+        get:
+            summary: get product for dashboard project
+            operationId: getProductDashboard
+            responses:
+                '200':
+                    description: product for dashboard
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "../schemas/boat-product.yaml#/BoatProduct"
+        parameters:
+            -   name: projectKey
+                in: path
+                description: project idenifier
+                required: true
+                schema:
+                    type: string
+            -   name: productKey
+                in: path
+                description: product idenifier
+                required: true
+                schema:
+                    type: string
+    /api/boat/lint/product:
+        post:
+            summary: lint specified product
+            operationId: lintProduct
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: string
+            responses:
+                '202':
+                    description: succssefuly linted product specs
+    /api/boat/lint/capability:
+        post:
+            summary: lint specs by capability
+            operationId: lintCapability
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            type: string
+            responses:
+                '202':
+                    description: succssefuly linted capability specs
+    /api/boat/lint/report:
+        get:
+            summary: get lint reports
+            operationId: getLintReports
+            responses:
+                '200':
+                    description: list of lint reports
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "../schemas/boat-lint-report.yaml#/BoatLintReport"
+    /api/boat-maven-plugin/{sourceId}/upload:
+        put:
+            summary: upload and lint specs
+            operationId: uploadSpec
+            requestBody:
+                required: true
+                content:
+                    application/json:
+                        schema:
+                            $ref: "../schema/upload-request-body.yaml"
+            responses:
+                '200':
+                    description: list of lint reports for specs
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "../schemas/boat-lint-report.yaml#/BoatLintReport"
+        parameters:
+            - name: sourceId
+              in: path
+              description: source idenifier
+              required: true
+              schema:
+                  type: string
+
+
+
+
+
+
+
+
+
+

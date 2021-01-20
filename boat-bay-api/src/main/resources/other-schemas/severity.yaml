@@ -1,0 +1,7 @@
+Severity:
+  type: string
+  enum:
+    - MUST
+    - SHOULD
+    - MAY
+    - HINT
