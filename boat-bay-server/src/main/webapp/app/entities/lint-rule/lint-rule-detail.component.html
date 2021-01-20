@@ -16,6 +16,10 @@
                 <dd>
                     <span>{{ lintRule.title }}</span>
                 </dd>
+                <dt><span>Rule Set</span></dt>
+                <dd>
+                    <span>{{ lintRule.ruleSet }}</span>
+                </dd>
                 <dt><span>Summary</span></dt>
                 <dd>
                     <span>{{ lintRule.summary }}</span>
@@ -36,10 +40,10 @@
                 <dd>
                     <span>{{ lintRule.enabled }}</span>
                 </dd>
-                <dt><span>Rule Set</span></dt>
+                <dt><span>Portal</span></dt>
                 <dd>
-                    <div *ngIf="lintRule.ruleSet">
-                        <a [routerLink]="['/lint-rule-set', lintRule.ruleSet?.id, 'view']">{{ lintRule.ruleSet?.name }}</a>
+                    <div *ngIf="lintRule.portal">
+                        <a [routerLink]="['/portal', lintRule.portal?.id, 'view']">{{ lintRule.portal?.name }}</a>
                     </div>
                 </dd>
             </dl>

@@ -235,7 +235,7 @@ public class ProductResourceIT {
             .andExpect(jsonPath("$.[*].hide").value(hasItem(DEFAULT_HIDE.booleanValue())))
             .andExpect(jsonPath("$.[*].jiraProjectId").value(hasItem(DEFAULT_JIRA_PROJECT_ID)));
     }
-
+    
     @Test
     @Transactional
     public void getProduct() throws Exception {

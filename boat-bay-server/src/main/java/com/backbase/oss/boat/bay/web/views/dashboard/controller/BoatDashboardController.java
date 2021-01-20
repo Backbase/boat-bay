@@ -2,14 +2,14 @@ package com.backbase.oss.boat.bay.web.views.dashboard.controller;
 
 import com.backbase.oss.boat.bay.domain.Capability;
 import com.backbase.oss.boat.bay.domain.LintReport;
+import com.backbase.oss.boat.bay.domain.LintRule;
 import com.backbase.oss.boat.bay.domain.Portal;
-import com.backbase.oss.boat.bay.domain.PortalLintRule;
 import com.backbase.oss.boat.bay.domain.Product;
 import com.backbase.oss.boat.bay.domain.ProductRelease;
 import com.backbase.oss.boat.bay.domain.ServiceDefinition;
 import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.domain.Tag;
-import com.backbase.oss.boat.bay.repository.PortalLintRuleRepository;
+import com.backbase.oss.boat.bay.repository.LintRuleRepository;
 import com.backbase.oss.boat.bay.repository.TagRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatCapabilityRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatDashboardRepository;
@@ -79,10 +79,10 @@ public class BoatDashboardController {
     private final BoatCapabilityRepository boatCapabilityRepository;
     private final BoatServiceRepository boatServiceRepository;
     private final BoatSpecRepository boatSpecRepository;
+    private final LintRuleRepository lintRuleRepository;
     private final BoatLintReportRepository boatLintReportRepository;
     private final BoatLintRuleViolationRepository boatLintRuleViolationRepository;
     private final BoatProductReleaseRepository boatProductReleaseRepository;
-    private final PortalLintRuleRepository portalLintRuleRepository;
     private final BoatDashboardRepository dashboardRepository;
 
     private final BoatDashboardMapper dashboardMapper;
@@ -129,7 +129,7 @@ public class BoatDashboardController {
 
         Portal portal = getPortal(portalKey);
 
-        List<BoatLintRule> portalLintRules = portal.getPortalLintRules().stream().map(dashboardMapper::mapPortalLintRule).collect(Collectors.toList());
+        List<BoatLintRule> portalLintRules = portal.getLintRules().stream().map(dashboardMapper::mapPortalLintRule).collect(Collectors.toList());
         return ResponseEntity.ok(portalLintRules);
     }
 
@@ -138,16 +138,19 @@ public class BoatDashboardController {
             .orElseThrow((() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
     }
 
-    @PostMapping("/portals/{portalKey}/lint-rules/{portalLintRuleId}")
-    public ResponseEntity<Void> updatePortalLintRule(@PathVariable String portalKey, @PathVariable String portalLintRuleId,  @RequestBody BoatLintRule boatLintRule) {
+    @PostMapping("/portals/{portalKey}/lint-rules/{lintRuleId}")
+    public ResponseEntity<Void> updatePortalLintRule(
+        @PathVariable String portalKey,
+        @PathVariable String lintRuleId,
+        @RequestBody BoatLintRule boatLintRule) {
 
         Portal portal = getPortal(portalKey);
 
-        PortalLintRule portalLintRule = portalLintRuleRepository.findById(Long.valueOf(portalLintRuleId))
+        LintRule lintRule = lintRuleRepository.findById(Long.valueOf(lintRuleId))
             .orElseThrow((() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
 
-        portalLintRule.setEnabled(boatLintRule.isEnabled());
-        portalLintRuleRepository.save(portalLintRule);
+        lintRule.setEnabled(boatLintRule.isEnabled());
+        lintRuleRepository.save(lintRule);
 
         return ResponseEntity.accepted().build();
     }

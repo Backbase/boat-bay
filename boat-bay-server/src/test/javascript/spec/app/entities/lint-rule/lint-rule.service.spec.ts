@@ -21,7 +21,7 @@ describe('Service Tests', () => {
       service = injector.get(LintRuleService);
       httpMock = injector.get(HttpTestingController);
 
-      elemDefault = new LintRule(0, 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', Severity.MUST, 'AAAAAAA', 'AAAAAAA', false);
+      elemDefault = new LintRule(0, 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', Severity.MUST, 'AAAAAAA', 'AAAAAAA', false);
     });
 
     describe('Service methods', () => {
@@ -57,6 +57,7 @@ describe('Service Tests', () => {
           {
             ruleId: 'BBBBBB',
             title: 'BBBBBB',
+            ruleSet: 'BBBBBB',
             summary: 'BBBBBB',
             severity: 'BBBBBB',
             description: 'BBBBBB',
@@ -80,6 +81,7 @@ describe('Service Tests', () => {
           {
             ruleId: 'BBBBBB',
             title: 'BBBBBB',
+            ruleSet: 'BBBBBB',
             summary: 'BBBBBB',
             severity: 'BBBBBB',
             description: 'BBBBBB',

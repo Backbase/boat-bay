@@ -7,8 +7,8 @@ import { Observable } from 'rxjs';
 
 import { ILintRule, LintRule } from 'app/shared/model/lint-rule.model';
 import { LintRuleService } from './lint-rule.service';
-import { ILintRuleSet } from 'app/shared/model/lint-rule-set.model';
-import { LintRuleSetService } from 'app/entities/lint-rule-set/lint-rule-set.service';
+import { IPortal } from 'app/shared/model/portal.model';
+import { PortalService } from 'app/entities/portal/portal.service';
 
 @Component({
   selector: 'jhi-lint-rule-update',
@@ -16,23 +16,24 @@ import { LintRuleSetService } from 'app/entities/lint-rule-set/lint-rule-set.ser
 })
 export class LintRuleUpdateComponent implements OnInit {
   isSaving = false;
-  lintrulesets: ILintRuleSet[] = [];
+  portals: IPortal[] = [];
 
   editForm = this.fb.group({
     id: [],
     ruleId: [null, [Validators.required]],
     title: [null, [Validators.required]],
+    ruleSet: [],
     summary: [],
     severity: [null, [Validators.required]],
     description: [],
     externalUrl: [],
     enabled: [null, [Validators.required]],
-    ruleSet: [null, Validators.required],
+    portal: [null, Validators.required],
   });
 
   constructor(
     protected lintRuleService: LintRuleService,
-    protected lintRuleSetService: LintRuleSetService,
+    protected portalService: PortalService,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
   ) {}
@@ -41,7 +42,7 @@ export class LintRuleUpdateComponent implements OnInit {
     this.activatedRoute.data.subscribe(({ lintRule }) => {
       this.updateForm(lintRule);
 
-      this.lintRuleSetService.query().subscribe((res: HttpResponse<ILintRuleSet[]>) => (this.lintrulesets = res.body || []));
+      this.portalService.query().subscribe((res: HttpResponse<IPortal[]>) => (this.portals = res.body || []));
     });
   }
 
@@ -50,12 +51,13 @@ export class LintRuleUpdateComponent implements OnInit {
       id: lintRule.id,
       ruleId: lintRule.ruleId,
       title: lintRule.title,
+      ruleSet: lintRule.ruleSet,
       summary: lintRule.summary,
       severity: lintRule.severity,
       description: lintRule.description,
       externalUrl: lintRule.externalUrl,
       enabled: lintRule.enabled,
-      ruleSet: lintRule.ruleSet,
+      portal: lintRule.portal,
     });
   }
 
@@ -79,12 +81,13 @@ export class LintRuleUpdateComponent implements OnInit {
       id: this.editForm.get(['id'])!.value,
       ruleId: this.editForm.get(['ruleId'])!.value,
       title: this.editForm.get(['title'])!.value,
+      ruleSet: this.editForm.get(['ruleSet'])!.value,
       summary: this.editForm.get(['summary'])!.value,
       severity: this.editForm.get(['severity'])!.value,
       description: this.editForm.get(['description'])!.value,
       externalUrl: this.editForm.get(['externalUrl'])!.value,
       enabled: this.editForm.get(['enabled'])!.value,
-      ruleSet: this.editForm.get(['ruleSet'])!.value,
+      portal: this.editForm.get(['portal'])!.value,
     };
   }
 
@@ -104,7 +107,7 @@ export class LintRuleUpdateComponent implements OnInit {
     this.isSaving = false;
   }
 
-  trackById(index: number, item: ILintRuleSet): any {
+  trackById(index: number, item: IPortal): any {
     return item.id;
   }
 }

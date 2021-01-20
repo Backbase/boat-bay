@@ -53,14 +53,6 @@ import { RouterModule } from '@angular/router';
         loadChildren: () => import('./lint-rule/lint-rule.module').then(m => m.BoatBayLintRuleModule),
       },
       {
-        path: 'lint-rule-set',
-        loadChildren: () => import('./lint-rule-set/lint-rule-set.module').then(m => m.BoatBayLintRuleSetModule),
-      },
-      {
-        path: 'portal-lint-rule',
-        loadChildren: () => import('./portal-lint-rule/portal-lint-rule.module').then(m => m.BoatBayPortalLintRuleModule),
-      },
-      {
         path: 'lint-report',
         loadChildren: () => import('./lint-report/lint-report.module').then(m => m.BoatBayLintReportModule),
       },

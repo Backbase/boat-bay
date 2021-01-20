@@ -88,11 +88,11 @@ export class BoatDashboardService {
 
 
   getPortalLintRules(portalKey: string): Observable<HttpResponse<BoatLintRule[]>> {
-    return this.http.get<BoatLintRule[]>(`${this.resourceUrl}/portals/lint-rules`, {observe: "response"});
+    return this.http.get<BoatLintRule[]>(`${this.resourceUrl}/portals/${portalKey}/lint-rules`, {observe: "response"});
   }
 
   postPortalLintRule(portalKey: string, lintRule: BoatLintRule): Observable<HttpResponse<void>> {
-    return this.http.post<void>(`${this.resourceUrl}/portals/lint-rules/${lintRule.id}`, lintRule, {observe: 'response'});
+    return this.http.post<void>(`${this.resourceUrl}/portals/${portalKey}/lint-rules/${lintRule.id}`, lintRule, {observe: 'response'});
   }
 
 

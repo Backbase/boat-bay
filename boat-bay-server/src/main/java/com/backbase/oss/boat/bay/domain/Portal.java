@@ -61,7 +61,7 @@ public class Portal implements Serializable {
 
     @OneToMany(mappedBy = "portal")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    private Set<PortalLintRule> portalLintRules = new HashSet<>();
+    private Set<LintRule> lintRules = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -214,29 +214,29 @@ public class Portal implements Serializable {
         this.products = products;
     }
 
-    public Set<PortalLintRule> getPortalLintRules() {
-        return portalLintRules;
+    public Set<LintRule> getLintRules() {
+        return lintRules;
     }
 
-    public Portal portalLintRules(Set<PortalLintRule> portalLintRules) {
-        this.portalLintRules = portalLintRules;
+    public Portal lintRules(Set<LintRule> lintRules) {
+        this.lintRules = lintRules;
         return this;
     }
 
-    public Portal addPortalLintRule(PortalLintRule portalLintRule) {
-        this.portalLintRules.add(portalLintRule);
-        portalLintRule.setPortal(this);
+    public Portal addLintRule(LintRule lintRule) {
+        this.lintRules.add(lintRule);
+        lintRule.setPortal(this);
         return this;
     }
 
-    public Portal removePortalLintRule(PortalLintRule portalLintRule) {
-        this.portalLintRules.remove(portalLintRule);
-        portalLintRule.setPortal(null);
+    public Portal removeLintRule(LintRule lintRule) {
+        this.lintRules.remove(lintRule);
+        lintRule.setPortal(null);
         return this;
     }
 
-    public void setPortalLintRules(Set<PortalLintRule> portalLintRules) {
-        this.portalLintRules = portalLintRules;
+    public void setLintRules(Set<LintRule> lintRules) {
+        this.lintRules = lintRules;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 

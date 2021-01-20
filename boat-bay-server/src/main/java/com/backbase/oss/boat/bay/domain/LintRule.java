@@ -26,12 +26,15 @@ public class LintRule implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "rule_id", nullable = false, unique = true)
+    @Column(name = "rule_id", nullable = false)
     private String ruleId;
 
     @NotNull
     @Column(name = "title", nullable = false)
     private String title;
+
+    @Column(name = "rule_set")
+    private String ruleSet;
 
     @Column(name = "summary")
     private String summary;
@@ -54,7 +57,7 @@ public class LintRule implements Serializable {
     @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties(value = "lintRules", allowSetters = true)
-    private LintRuleSet ruleSet;
+    private Portal portal;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -89,6 +92,19 @@ public class LintRule implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getRuleSet() {
+        return ruleSet;
+    }
+
+    public LintRule ruleSet(String ruleSet) {
+        this.ruleSet = ruleSet;
+        return this;
+    }
+
+    public void setRuleSet(String ruleSet) {
+        this.ruleSet = ruleSet;
     }
 
     public String getSummary() {
@@ -156,17 +172,17 @@ public class LintRule implements Serializable {
         this.enabled = enabled;
     }
 
-    public LintRuleSet getRuleSet() {
-        return ruleSet;
+    public Portal getPortal() {
+        return portal;
     }
 
-    public LintRule ruleSet(LintRuleSet lintRuleSet) {
-        this.ruleSet = lintRuleSet;
+    public LintRule portal(Portal portal) {
+        this.portal = portal;
         return this;
     }
 
-    public void setRuleSet(LintRuleSet lintRuleSet) {
-        this.ruleSet = lintRuleSet;
+    public void setPortal(Portal portal) {
+        this.portal = portal;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
@@ -193,6 +209,7 @@ public class LintRule implements Serializable {
             "id=" + getId() +
             ", ruleId='" + getRuleId() + "'" +
             ", title='" + getTitle() + "'" +
+            ", ruleSet='" + getRuleSet() + "'" +
             ", summary='" + getSummary() + "'" +
             ", severity='" + getSeverity() + "'" +
             ", description='" + getDescription() + "'" +

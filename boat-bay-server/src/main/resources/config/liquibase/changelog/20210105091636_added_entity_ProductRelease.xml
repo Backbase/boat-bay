@@ -51,7 +51,7 @@
         </createTable>
 
         <addPrimaryKey columnNames="product_release_id, spec_id" tableName="product_release_spec"/>
-
+        
     </changeSet>
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
 

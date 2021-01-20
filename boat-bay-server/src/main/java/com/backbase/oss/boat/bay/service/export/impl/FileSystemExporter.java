@@ -30,7 +30,7 @@ import java.util.Set;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
-@SuppressWarnings("java:S1610")
+@SuppressWarnings({"java:S1610","unused"})
 @Service
 public class FileSystemExporter implements Exporter {
 
@@ -176,6 +176,7 @@ public class FileSystemExporter implements Exporter {
 
     }
 
+
     private abstract static class MixInProductRelease {
 
         @JsonIgnore
@@ -183,12 +184,6 @@ public class FileSystemExporter implements Exporter {
 
         @JsonIgnore
         abstract Set<Spec> getSpecs();
-    }
-
-    private abstract static class MixInPortalLintRuleSet {
-
-        @JsonIgnore
-        abstract Portal getPortal();
     }
 
 

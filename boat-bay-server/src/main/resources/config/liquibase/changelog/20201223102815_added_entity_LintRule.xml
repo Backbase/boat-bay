@@ -17,10 +17,13 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="rule_id" type="varchar(255)">
-                <constraints nullable="false" unique="true" uniqueConstraintName="ux_lint_rule_rule_id" />
+                <constraints nullable="false" />
             </column>
             <column name="title" type="varchar(255)">
                 <constraints nullable="false" />
+            </column>
+            <column name="rule_set" type="varchar(255)">
+                <constraints nullable="true" />
             </column>
             <column name="summary" type="varchar(255)">
                 <constraints nullable="true" />
@@ -37,7 +40,7 @@
             <column name="enabled" type="boolean">
                 <constraints nullable="false" />
             </column>
-            <column name="rule_set_id" type="bigint">
+            <column name="portal_id" type="bigint">
                 <constraints nullable="false" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
@@ -65,12 +68,13 @@
             <column name="id" type="numeric"/>
             <column name="rule_id" type="string"/>
             <column name="title" type="string"/>
+            <column name="rule_set" type="string"/>
             <column name="summary" type="string"/>
             <column name="severity" type="string"/>
             <column name="description" type="string"/>
             <column name="external_url" type="string"/>
             <column name="enabled" type="boolean"/>
-            <column name="rule_set_id" type="numeric"/>
+            <column name="portal_id" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
         </loadData>
     </changeSet>

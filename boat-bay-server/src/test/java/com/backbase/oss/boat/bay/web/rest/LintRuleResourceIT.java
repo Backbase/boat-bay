@@ -2,7 +2,7 @@ package com.backbase.oss.boat.bay.web.rest;
 
 import com.backbase.oss.boat.bay.BoatBayApp;
 import com.backbase.oss.boat.bay.domain.LintRule;
-import com.backbase.oss.boat.bay.domain.LintRuleSet;
+import com.backbase.oss.boat.bay.domain.Portal;
 import com.backbase.oss.boat.bay.repository.LintRuleRepository;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -36,6 +36,9 @@ public class LintRuleResourceIT {
 
     private static final String DEFAULT_TITLE = "AAAAAAAAAA";
     private static final String UPDATED_TITLE = "BBBBBBBBBB";
+
+    private static final String DEFAULT_RULE_SET = "AAAAAAAAAA";
+    private static final String UPDATED_RULE_SET = "BBBBBBBBBB";
 
     private static final String DEFAULT_SUMMARY = "AAAAAAAAAA";
     private static final String UPDATED_SUMMARY = "BBBBBBBBBB";
@@ -73,21 +76,22 @@ public class LintRuleResourceIT {
         LintRule lintRule = new LintRule()
             .ruleId(DEFAULT_RULE_ID)
             .title(DEFAULT_TITLE)
+            .ruleSet(DEFAULT_RULE_SET)
             .summary(DEFAULT_SUMMARY)
             .severity(DEFAULT_SEVERITY)
             .description(DEFAULT_DESCRIPTION)
             .externalUrl(DEFAULT_EXTERNAL_URL)
             .enabled(DEFAULT_ENABLED);
         // Add required entity
-        LintRuleSet lintRuleSet;
-        if (TestUtil.findAll(em, LintRuleSet.class).isEmpty()) {
-            lintRuleSet = LintRuleSetResourceIT.createEntity(em);
-            em.persist(lintRuleSet);
+        Portal portal;
+        if (TestUtil.findAll(em, Portal.class).isEmpty()) {
+            portal = PortalResourceIT.createEntity(em);
+            em.persist(portal);
             em.flush();
         } else {
-            lintRuleSet = TestUtil.findAll(em, LintRuleSet.class).get(0);
+            portal = TestUtil.findAll(em, Portal.class).get(0);
         }
-        lintRule.setRuleSet(lintRuleSet);
+        lintRule.setPortal(portal);
         return lintRule;
     }
     /**
@@ -100,21 +104,22 @@ public class LintRuleResourceIT {
         LintRule lintRule = new LintRule()
             .ruleId(UPDATED_RULE_ID)
             .title(UPDATED_TITLE)
+            .ruleSet(UPDATED_RULE_SET)
             .summary(UPDATED_SUMMARY)
             .severity(UPDATED_SEVERITY)
             .description(UPDATED_DESCRIPTION)
             .externalUrl(UPDATED_EXTERNAL_URL)
             .enabled(UPDATED_ENABLED);
         // Add required entity
-        LintRuleSet lintRuleSet;
-        if (TestUtil.findAll(em, LintRuleSet.class).isEmpty()) {
-            lintRuleSet = LintRuleSetResourceIT.createUpdatedEntity(em);
-            em.persist(lintRuleSet);
+        Portal portal;
+        if (TestUtil.findAll(em, Portal.class).isEmpty()) {
+            portal = PortalResourceIT.createUpdatedEntity(em);
+            em.persist(portal);
             em.flush();
         } else {
-            lintRuleSet = TestUtil.findAll(em, LintRuleSet.class).get(0);
+            portal = TestUtil.findAll(em, Portal.class).get(0);
         }
-        lintRule.setRuleSet(lintRuleSet);
+        lintRule.setPortal(portal);
         return lintRule;
     }
 
@@ -139,6 +144,7 @@ public class LintRuleResourceIT {
         LintRule testLintRule = lintRuleList.get(lintRuleList.size() - 1);
         assertThat(testLintRule.getRuleId()).isEqualTo(DEFAULT_RULE_ID);
         assertThat(testLintRule.getTitle()).isEqualTo(DEFAULT_TITLE);
+        assertThat(testLintRule.getRuleSet()).isEqualTo(DEFAULT_RULE_SET);
         assertThat(testLintRule.getSummary()).isEqualTo(DEFAULT_SUMMARY);
         assertThat(testLintRule.getSeverity()).isEqualTo(DEFAULT_SEVERITY);
         assertThat(testLintRule.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
@@ -255,6 +261,7 @@ public class LintRuleResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(lintRule.getId().intValue())))
             .andExpect(jsonPath("$.[*].ruleId").value(hasItem(DEFAULT_RULE_ID)))
             .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE)))
+            .andExpect(jsonPath("$.[*].ruleSet").value(hasItem(DEFAULT_RULE_SET)))
             .andExpect(jsonPath("$.[*].summary").value(hasItem(DEFAULT_SUMMARY)))
             .andExpect(jsonPath("$.[*].severity").value(hasItem(DEFAULT_SEVERITY.toString())))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
@@ -275,6 +282,7 @@ public class LintRuleResourceIT {
             .andExpect(jsonPath("$.id").value(lintRule.getId().intValue()))
             .andExpect(jsonPath("$.ruleId").value(DEFAULT_RULE_ID))
             .andExpect(jsonPath("$.title").value(DEFAULT_TITLE))
+            .andExpect(jsonPath("$.ruleSet").value(DEFAULT_RULE_SET))
             .andExpect(jsonPath("$.summary").value(DEFAULT_SUMMARY))
             .andExpect(jsonPath("$.severity").value(DEFAULT_SEVERITY.toString()))
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
@@ -304,6 +312,7 @@ public class LintRuleResourceIT {
         updatedLintRule
             .ruleId(UPDATED_RULE_ID)
             .title(UPDATED_TITLE)
+            .ruleSet(UPDATED_RULE_SET)
             .summary(UPDATED_SUMMARY)
             .severity(UPDATED_SEVERITY)
             .description(UPDATED_DESCRIPTION)
@@ -321,6 +330,7 @@ public class LintRuleResourceIT {
         LintRule testLintRule = lintRuleList.get(lintRuleList.size() - 1);
         assertThat(testLintRule.getRuleId()).isEqualTo(UPDATED_RULE_ID);
         assertThat(testLintRule.getTitle()).isEqualTo(UPDATED_TITLE);
+        assertThat(testLintRule.getRuleSet()).isEqualTo(UPDATED_RULE_SET);
         assertThat(testLintRule.getSummary()).isEqualTo(UPDATED_SUMMARY);
         assertThat(testLintRule.getSeverity()).isEqualTo(UPDATED_SEVERITY);
         assertThat(testLintRule.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
