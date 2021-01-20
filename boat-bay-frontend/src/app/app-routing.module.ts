@@ -7,7 +7,6 @@ import { HttpResponse } from "@angular/common/http";
 import { flatMap } from "rxjs/operators";
 import { PortalDashboardComponent } from "./pages/portal-dashboard/portal-dashboard.component";
 import { ProductDashboardComponent } from "./pages/product-dashboard/product-dashboard.component";
-import { BoatLintReportService } from "./services/boat-lint-report.service";
 import { LintReportComponent } from "./pages/lint-report/lint-report.component";
 
 @Injectable({providedIn: 'root'})
@@ -37,7 +36,7 @@ export class BoatProductDashboardResolver implements Resolve<BoatProduct> {
 
 @Injectable({providedIn: 'root'})
 export class LintReportResolver implements Resolve<BoatLintReport> {
-  constructor(protected boatLintReportService: BoatLintReportService, private router: Router) {
+  constructor(protected boatLintReportService: BoatDashboardService, private router: Router) {
   }
 
   resolve(route: ActivatedRouteSnapshot): Observable<BoatLintReport> | Promise<BoatLintReport> | BoatLintReport {

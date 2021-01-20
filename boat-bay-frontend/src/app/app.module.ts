@@ -28,12 +28,15 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { PortalDashboardModule } from "./pages/portal-dashboard/portal-dashboard.module";
 import { ProductDashboardModule } from "./pages/product-dashboard/product-dashboard.module";
 import { LintReportModule } from "./pages/lint-report/lint-report.module";
+import { DisableRuleModalDialogComponent } from './components/disable-rule-modal-dialog/disable-rule-modal-dialog.component';
+import { MatSnackBarModule } from "@angular/material/snack-bar";
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
     LoginModalComponent,
+    DisableRuleModalDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -59,12 +62,13 @@ import { LintReportModule } from "./pages/lint-report/lint-report.module";
     MatGridListModule,
     MatCardModule,
     MatMenuModule,
-    LayoutModule
+    LayoutModule,
+    MatSnackBarModule
   ],
   providers: [...environment.providers],
-  exports: [
-    NavbarComponent
-  ],
+    exports: [
+        NavbarComponent,
+    ],
   bootstrap: [AppComponent]
 })
 export class AppModule {

@@ -1,0 +1,37 @@
+<div class="lint-report-info mat-elevation-z8 info-container">
+    <div class="info">
+        <dl>
+            <dt>Name</dt>
+            <dd>{{spec.name}}</dd>
+
+            <dt>Title</dt>
+            <dd>{{spec.title}}</dd>
+
+            <dt>Version</dt>
+            <dd>{{spec.version}}</dd>
+        </dl>
+    </div>
+    <div class="info">
+        <dl>
+            <dt>Created On</dt>
+            <dd>{{spec.createdOn | date}}</dd>
+
+            <dt>Capability</dt>
+            <dd>{{spec.capability.name}}</dd>
+
+            <dt>Service</dt>
+            <dd>{{spec.serviceDefinition.name}}</dd>
+        </dl>
+    </div>
+    <div class="info">
+        <dl>
+            <dt>Grade</dt>
+            <dd>
+                <span class="grade grade-{{spec.grade}}">{{spec.grade}}</span>
+            </dd>
+            <dt>Changes</dt>
+            <dd><span class="backwards-compatible backwards-compatible-{{spec.backwardsCompatible}}">{{spec.backwardsCompatible ? 'BACKWARDS COMPATIBLE' : 'BREAKING CHANGES'}}</span></dd>
+        </dl>
+    </div>
+
+</div>

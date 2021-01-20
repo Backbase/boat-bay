@@ -114,8 +114,7 @@ public class BoatDashboardController {
     @GetMapping("/portals/{portalKey}/products")
     public ResponseEntity<List<BoatProduct>> getPortalProducts(@PathVariable String portalKey) {
 
-        Portal portal = boatPortalRepository.findByKey(portalKey)
-            .orElseThrow((() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
+        Portal portal = getPortal(portalKey);
 
         List<Product> products = boatProductRepository.findAllByPortal(portal);
 
@@ -128,18 +127,21 @@ public class BoatDashboardController {
     @GetMapping("/portals/{portalKey}/lint-rules")
     public ResponseEntity<List<BoatLintRule>> getPortalLintRules(@PathVariable String portalKey) {
 
-        Portal portal = boatPortalRepository.findByKey(portalKey)
-            .orElseThrow((() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
+        Portal portal = getPortal(portalKey);
 
         List<BoatLintRule> portalLintRules = portal.getPortalLintRules().stream().map(dashboardMapper::mapPortalLintRule).collect(Collectors.toList());
         return ResponseEntity.ok(portalLintRules);
     }
 
+    private Portal getPortal(@PathVariable String portalKey) {
+        return boatPortalRepository.findByKey(portalKey)
+            .orElseThrow((() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
+    }
+
     @PostMapping("/portals/{portalKey}/lint-rules/{portalLintRuleId}")
     public ResponseEntity<Void> updatePortalLintRule(@PathVariable String portalKey, @PathVariable String portalLintRuleId,  @RequestBody BoatLintRule boatLintRule) {
 
-        Portal portal = boatPortalRepository.findByKey(portalKey)
-            .orElseThrow((() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
+        Portal portal = getPortal(portalKey);
 
         PortalLintRule portalLintRule = portalLintRuleRepository.findById(Long.valueOf(portalLintRuleId))
             .orElseThrow((() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
@@ -243,17 +245,17 @@ public class BoatDashboardController {
 
 
     @GetMapping("/portals/{portalKey}/products/{productKey}/specs/{specId}/lint-report")
-    public ResponseEntity<BoatLintReport> getLintReportForSpec(@PathVariable String portalKey, @PathVariable String productKey, @PathVariable String specId) {
+    public ResponseEntity<BoatLintReport> getLintReportForSpec(@PathVariable String portalKey, @PathVariable String productKey, @PathVariable String specId, @RequestParam(required = false) Boolean refresh) {
         Product product = getProduct(portalKey, productKey);
 
         Spec spec = boatSpecRepository.findById(Long.valueOf(specId)).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-
-        LintReport specReport = Optional.ofNullable(spec.getLintReport()).orElseGet(() -> boatSpecLinter.lint(spec));
-
-
-        boatSpecLinter.getApiValidator(spec);
-
+        LintReport specReport;
+        if(refresh) {
+            specReport = boatSpecLinter.lint(spec);
+        } else {
+            specReport = Optional.ofNullable(spec.getLintReport()).orElseGet(() -> boatSpecLinter.lint(spec));
+        }
 
         Map<Severity, Integer> severityIntegerMap = getSeverityOrder();
 

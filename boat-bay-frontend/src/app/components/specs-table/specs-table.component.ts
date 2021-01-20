@@ -32,18 +32,17 @@ export class SpecsTableComponent implements AfterViewInit, OnInit {
   private _product!: BoatProduct;
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = [ 'name', 'title','version','grade', 'changed', 'backwardsCompatible', 'createdOn', 'createdBy', 'violationsMust', 'violationsShould', 'violationsMay', 'violationsHint'];
+  displayedColumns = [ 'title','version', 'capability', 'serviceDefinition','grade', 'changed', 'backwardsCompatible', 'createdOn', 'createdBy', 'violationsMust', 'violationsShould', 'violationsMay', 'violationsHint'];
 
   constructor(private boatDashboardService: BoatDashboardService) {
   }
 
   ngOnInit() {
     this.dataSource = new SpecsDataSource(this.boatDashboardService);
-    this.dataSource.loadServicesForProduct(this._product.portalKey, this._product.key, 'name', 'asc', 0, 25);
-
   }
 
   ngAfterViewInit() {
+    this.loadData();
     this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 
     merge(this.sort.sortChange, this.paginator.page)
