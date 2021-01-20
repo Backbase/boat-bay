@@ -66,7 +66,7 @@ const routes: Routes = [
     component: PortalDashboardComponent
   },
   {
-    path: ':portalKey/:productKey',
+    path: ':portalKey/:productKey/lint-reports',
     component: ProductDashboardComponent,
     data: {
       pageTitle: 'Boat Bay',
@@ -76,7 +76,7 @@ const routes: Routes = [
     }
   },
   {
-    path: ':portalKey/:productKey/specs/:specId/lint-report',
+    path: ':portalKey/:productKey/lint-reports/:specId',
     component: LintReportComponent,
     data: {
       pageTitle: 'Boat Bay Lint Report',
@@ -84,6 +84,16 @@ const routes: Routes = [
     resolve: {
       product: BoatProductDashboardResolver,
       lintReport: LintReportResolver
+    }
+  },
+  {
+    path: ':portalKey/:productKey/diff-reports',
+    component: ProductDashboardComponent,
+    data: {
+      pageTitle: 'Boat Bay',
+    },
+    resolve: {
+      product: BoatProductDashboardResolver,
     }
   },
   {

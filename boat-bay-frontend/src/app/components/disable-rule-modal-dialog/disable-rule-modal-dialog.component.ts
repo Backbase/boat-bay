@@ -29,19 +29,25 @@ export class DisableRuleModalDialogComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  disableRule():void {
+  disableRule(): void {
     this.rule.enabled = false;
     this.dashboardService.postPortalLintRule(this.product.portalKey, this.rule)
       .subscribe(result => {
-      if (result.ok) {
-        this.dialogRef.close({event: 'Ok'});
-      } else {
-        this._snackBar.open("Error disabling rule...Please contact Chuck Norris");
-      }
-    })
+        if (result.ok) {
+          this.dialogRef.close({
+            event: 'OK',
+            data: {
+              lintReport: this.lintReport,
+              product: this.product
+            }
+          });
+        } else {
+          this._snackBar.open("Error disabling rule...Please contact Chuck Norris");
+        }
+      })
   }
 
-  closeDialog():void {
+  closeDialog(): void {
     this.dialogRef.close({event: 'Cancel'});
   }
 

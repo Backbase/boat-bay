@@ -2,7 +2,7 @@ apiVersion: skaffold/v2beta8
 kind: Config
 build:
   artifacts:
-  - image: boat-bay
+  - image: boat-bay-server
     context: .
     jib: {
       args: [ "-Pno-liquibase" ]

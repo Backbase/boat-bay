@@ -12,6 +12,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { CurrentViolationsComponent } from "../../components/current-violations/current-violations.component";
 import { PortalDashboardComponent } from "./portal-dashboard.component";
+import { MatIconModule } from "@angular/material/icon";
 
 
 @NgModule({
@@ -34,6 +35,7 @@ import { PortalDashboardComponent } from "./portal-dashboard.component";
     MatPaginatorModule,
     MatSortModule,
     MatProgressSpinnerModule,
+    MatIconModule,
   ]
 })
 export class PortalDashboardModule { }

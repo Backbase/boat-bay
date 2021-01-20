@@ -1,18 +1,53 @@
-
 <ng-container *ngIf="boatPortals$ | async as boatPortals" class="container__controls-wrapper">
-    <mat-card *ngFor="let portal of boatPortals " class="portal-product mat-elevation-z8" >
-        <mat-card-title><a
-            [routerLink]="[ portal.portalKey, portal.productKey]"> {{portal.portalName}}
-            / {{portal.productName}}</a></mat-card-title>
-        <mat-card-subtitle *ngIf="portal.lastLintReport">Last linted
-            Spec: {{portal.lastLintReport.name}} {{portal.lastLintReport.version}}
-            on: {{portal.lastLintReport.lintedOn}}</mat-card-subtitle>
-        <mat-card-content>
-            <p>Contains of {{portal.numberOfCapabilities}} capabilities and {{portal.numberOfServices}} services.</p>
-            <current-violations [statistics]="portal.statistics"></current-violations>
-        </mat-card-content>
-    </mat-card>
+    <div class="portal-product">
+        <div *ngFor="let portal of boatPortals " class="portal-product-column">
+            <mat-card class="mat-elevation-z8">
+                <mat-card-title> {{portal.portalName}}
+                    / {{portal.productName}}</mat-card-title>
+                <mat-card-subtitle *ngIf="portal.lastLintReport">Last linted
+                    Spec: {{portal.lastLintReport.name}} {{portal.lastLintReport.version}}
+                    on: {{portal.lastLintReport.lintedOn}}</mat-card-subtitle>
+                <mat-card-content>
+                    <p>Contains of {{portal.numberOfCapabilities}} capabilities and {{portal.numberOfServices}}
+                        services.</p>
+                    <div class="portal-container">
 
+                        <div class="portal-container-column">
+                            <a [routerLink]="[portal.portalKey, portal.productKey, 'lint-reports']">
+                                <mat-icon>grading</mat-icon>
+                                <div>Lint Reports</div>
+                            </a>
+                        </div>
+
+
+                        <div class="portal-container-column">
+                            <a [routerLink]="[portal.portalKey, portal.productKey, 'diff-reports']">
+                                <mat-icon>compare</mat-icon>
+                                <div>Diff Reports</div>
+                            </a>
+
+                        </div>
+
+                        <div class="portal-container-column">
+                            <a [routerLink]="[portal.portalKey, portal.productKey, 'documentation']">
+                                <mat-icon>help_outline</mat-icon>
+                                <div>Documentation</div>
+                            </a>
+                        </div>
+
+                        <div class="portal-container-column">
+                            <a [routerLink]="[portal.portalKey, portal.productKey, 'settings']">
+                                <mat-icon>settings</mat-icon>
+                                <div>Settings</div>
+                            </a>
+                        </div>
+
+                    </div>
+
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
 
 
 </ng-container>

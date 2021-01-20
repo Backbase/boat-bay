@@ -21,17 +21,17 @@
     <div class="table-responsive" id="entities" *ngIf="lintRuleViolations && lintRuleViolations.length > 0">
         <table class="table table-striped" aria-describedby="page-heading">
             <thead>
-                <tr>
-                    <th scope="col" ><span>ID</span></th>
-                    <th scope="col" ><span>Name</span></th>
-                    <th scope="col" ><span>Description</span></th>
-                    <th scope="col" ><span>Url</span></th>
-                    <th scope="col" ><span>Severity</span></th>
-                    <th scope="col" ><span>Line Start</span></th>
-                    <th scope="col" ><span>Line End</span></th>
-                    <th scope="col" ><span>Json Pointer</span></th>
-                    <th scope="col" ><span>Lint Rule</span></th>
-                    <th scope="col" ><span>Lint Report</span></th>
+                <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="loadPage.bind(this)">
+                    <th scope="col"  jhiSortBy="id"><span>ID</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="name"><span>Name</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="description"><span>Description</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="url"><span>Url</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="severity"><span>Severity</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="lineStart"><span>Line Start</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="lineEnd"><span>Line End</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="jsonPointer"><span>Json Pointer</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="lintRule.title"><span>Lint Rule</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="lintReport.name"><span>Lint Report</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -81,5 +81,15 @@
                 </tr>
             </tbody>
         </table>
+    </div>
+
+    <div *ngIf="lintRuleViolations && lintRuleViolations.length > 0">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="totalItems" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="ngbPaginationPage" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage($event)"></ngb-pagination>
+        </div>
     </div>
 </div>

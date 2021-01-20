@@ -82,8 +82,8 @@ export class BoatDashboardService {
     });
   }
 
-  getReport(portalKey: string, productKey: string, id: number): Observable<HttpResponse<BoatLintReport>> {
-    return this.http.get<BoatLintReport>(`${this.resourceUrl}/portals/${portalKey}/products/${productKey}/specs/${id}/lint-report`, { observe: 'response' });
+  getReport(portalKey: string, productKey: string, id: number, refresh: boolean = false): Observable<HttpResponse<BoatLintReport>> {
+    return this.http.get<BoatLintReport>(`${this.resourceUrl}/portals/${portalKey}/products/${productKey}/specs/${id}/lint-report?refresh=${refresh}`, { observe: 'response' });
   }
 
 
