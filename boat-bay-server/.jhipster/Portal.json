@@ -55,9 +55,9 @@
     },
     {
       "relationshipType": "one-to-many",
-      "otherEntityName": "portalLintRule",
+      "otherEntityName": "lintRule",
       "otherEntityRelationshipName": "portal",
-      "relationshipName": "portalLintRule"
+      "relationshipName": "lintRule"
     }
   ],
   "changelogDate": "20201223102315",

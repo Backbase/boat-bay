@@ -1,10 +1,9 @@
 package com.backbase.oss.boat.bay.service.lint;
 
+import com.backbase.oss.boat.bay.domain.LintRule;
 import com.backbase.oss.boat.bay.domain.Portal;
-import com.backbase.oss.boat.bay.domain.PortalLintRule;
 import com.backbase.oss.boat.bay.events.RuleUpdatedEvent;
-import com.backbase.oss.boat.bay.repository.LintRuleRepository;
-import com.backbase.oss.boat.bay.repository.extended.BoatPortalLintRuleRepository;
+import com.backbase.oss.boat.bay.repository.extended.BoatLintRuleRepository;
 import com.typesafe.config.Config;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,15 +36,13 @@ public class BoatLintRuleValidatorFactory {
     private final RulesManager defaultRuleManager;
     private final Config config;
 
-    private final LintRuleRepository lintRuleRepository;
-    private final BoatPortalLintRuleRepository portalLintRuleRepository;
+    private final BoatLintRuleRepository lintRuleRepository;
 
 
     @Cacheable(API_RULE_POLICY)
     public ApiValidator getApiValidatorFor(Portal portal) {
-        prepareLintRules(portal);
-        Set<PortalLintRule> enabledRules = portalLintRuleRepository.findAllByPortalAndEnabled(portal, true);
-        Set<String> ids = enabledRules.stream().map(PortalLintRule::getRuleId).collect(Collectors.toSet());
+        Set<LintRule> enabledRules = getAllByPortalAndEnabled(portal);
+        Set<String> ids = enabledRules.stream().map(LintRule::getRuleId).collect(Collectors.toSet());
 
         List<RuleDetails> collect = defaultRuleManager.getRules().stream().filter(ruleDetails -> ids.contains(ruleDetails.getRule().id())).collect(Collectors.toList());
 
@@ -58,16 +55,8 @@ public class BoatLintRuleValidatorFactory {
         return new CompositeRulesValidator(contextRulesValidator, jsonRulesValidator);
     }
 
-    private synchronized void prepareLintRules(Portal portal) {
-        if (!portalLintRuleRepository.existsAllByPortal(portal)) {
-            portalLintRuleRepository.saveAll(lintRuleRepository.findAll().stream().map(lintRule ->
-                new PortalLintRule()
-                    .portal(portal)
-                    .ruleId(lintRule.getRuleId())
-                    .lintRule(lintRule)
-                    .enabled(lintRule.isEnabled())).collect(Collectors.toSet())
-            );
-        }
+    public Set<LintRule> getAllByPortalAndEnabled(Portal portal) {
+        return lintRuleRepository.findAllByPortalAndEnabled(portal, true);
     }
 
     public RulesPolicy getRulePolicy(Portal portal) {
@@ -83,15 +72,6 @@ public class BoatLintRuleValidatorFactory {
     @Async
     @EventListener(RuleUpdatedEvent.class)
     public void lintRuleUpdatedEvent(RuleUpdatedEvent ruleUpdatedEvent) {
-
-        portalLintRuleRepository.findAllByLintRule(ruleUpdatedEvent.getLintRule())
-            .forEach(portalLintRule -> {
-                evictPortalCache(portalLintRule.getPortal());
-                if (portalLintRule.isEnabled() && !ruleUpdatedEvent.getLintRule().isEnabled()) {
-                    portalLintRule.setEnabled(false);
-                    log.info("Disabled Rule: {} for portal: {} as global rule is disabled", portalLintRule.getRuleId(), portalLintRule.getPortal().getName());
-                    portalLintRuleRepository.save(portalLintRule);
-                }
-            });
+        evictPortalCache(ruleUpdatedEvent.getLintRule().getPortal());
     }
 }

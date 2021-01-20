@@ -1,6 +1,6 @@
 import { Moment } from 'moment';
 import { IProduct } from 'app/shared/model/product.model';
-import { IPortalLintRule } from 'app/shared/model/portal-lint-rule.model';
+import { ILintRule } from 'app/shared/model/lint-rule.model';
 
 export interface IPortal {
   id?: number;
@@ -14,7 +14,7 @@ export interface IPortal {
   createdBy?: string;
   hide?: boolean;
   products?: IProduct[];
-  portalLintRules?: IPortalLintRule[];
+  lintRules?: ILintRule[];
 }
 
 export class Portal implements IPortal {
@@ -30,7 +30,7 @@ export class Portal implements IPortal {
     public createdBy?: string,
     public hide?: boolean,
     public products?: IProduct[],
-    public portalLintRules?: IPortalLintRule[]
+    public lintRules?: ILintRule[]
   ) {
     this.hide = this.hide || false;
   }

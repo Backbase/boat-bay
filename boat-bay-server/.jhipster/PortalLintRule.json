@@ -9,6 +9,37 @@
       ]
     },
     {
+      "fieldName": "title",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "ruleSet",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "summary",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "severity",
+      "fieldType": "Severity",
+      "fieldValues": "MUST,SHOULD,MAY,HINT",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "externalUrl",
+      "fieldType": "String"
+    },
+    {
       "fieldName": "enabled",
       "fieldType": "Boolean",
       "fieldValidateRules": [
@@ -17,14 +48,6 @@
     }
   ],
   "relationships": [
-    {
-      "relationshipType": "many-to-one",
-      "otherEntityName": "lintRule",
-      "otherEntityRelationshipName": "portalLintRule",
-      "relationshipValidateRules": "required",
-      "relationshipName": "lintRule",
-      "otherEntityField": "title"
-    },
     {
       "relationshipType": "many-to-one",
       "otherEntityName": "portal",

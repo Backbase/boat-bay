@@ -243,7 +243,7 @@ public class ProductReleaseResourceIT {
             .andExpect(jsonPath("$.[*].releaseDate").value(hasItem(sameInstant(DEFAULT_RELEASE_DATE))))
             .andExpect(jsonPath("$.[*].hide").value(hasItem(DEFAULT_HIDE.booleanValue())));
     }
-
+    
     @SuppressWarnings({"unchecked"})
     public void getAllProductReleasesWithEagerRelationshipsIsEnabled() throws Exception {
         when(productReleaseRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));

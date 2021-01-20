@@ -370,7 +370,7 @@ public class SourceResourceIT {
             .andExpect(jsonPath("$.[*].itemLimit").value(hasItem(DEFAULT_ITEM_LIMIT)))
             .andExpect(jsonPath("$.[*].overwriteChanges").value(hasItem(DEFAULT_OVERWRITE_CHANGES.booleanValue())));
     }
-
+    
     @Test
     @Transactional
     public void getSource() throws Exception {
