@@ -104,7 +104,7 @@
 
 <!--        <tr mat-header-row *matHeaderRowDef="['header-row-first-group', 'header-row-second-group']"></tr>-->
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;" [routerLink]="['/', product.portalKey, product.key, 'specs', row.id, 'lint-report']"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" [routerLink]="['/', product.portalKey, product.key, 'lint-reports', row.id]"></tr>
     </table>
 
     <mat-paginator

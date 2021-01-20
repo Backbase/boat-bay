@@ -38,8 +38,6 @@ public class BoatLintRuleValidatorFactory {
 
     private final BoatLintRuleRepository lintRuleRepository;
 
-
-    @Cacheable(API_RULE_POLICY)
     public ApiValidator getApiValidatorFor(Portal portal) {
         Set<LintRule> enabledRules = getAllByPortalAndEnabled(portal);
         Set<String> ids = enabledRules.stream().map(LintRule::getRuleId).collect(Collectors.toSet());
@@ -60,7 +58,6 @@ public class BoatLintRuleValidatorFactory {
     }
 
     public RulesPolicy getRulePolicy(Portal portal) {
-        log.info("Created new Rule Policy for Portal: {}", portal.getName());
         return new RulesPolicy(new ArrayList<>());
     }
 

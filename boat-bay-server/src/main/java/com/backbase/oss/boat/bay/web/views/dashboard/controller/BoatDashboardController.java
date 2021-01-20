@@ -144,11 +144,13 @@ public class BoatDashboardController {
         @PathVariable String lintRuleId,
         @RequestBody BoatLintRule boatLintRule) {
 
+
         Portal portal = getPortal(portalKey);
 
         LintRule lintRule = lintRuleRepository.findById(Long.valueOf(lintRuleId))
             .orElseThrow((() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
 
+        log.info("Updating lint rule: {}", lintRule);
         lintRule.setEnabled(boatLintRule.isEnabled());
         lintRuleRepository.save(lintRule);
 
@@ -254,7 +256,7 @@ public class BoatDashboardController {
         Spec spec = boatSpecRepository.findById(Long.valueOf(specId)).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         LintReport specReport;
-        if(refresh) {
+        if(refresh != null && refresh) {
             specReport = boatSpecLinter.lint(spec);
         } else {
             specReport = Optional.ofNullable(spec.getLintReport()).orElseGet(() -> boatSpecLinter.lint(spec));

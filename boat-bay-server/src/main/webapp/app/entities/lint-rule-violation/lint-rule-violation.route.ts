@@ -40,6 +40,7 @@ export const lintRuleViolationRoute: Routes = [
     component: LintRuleViolationComponent,
     data: {
       authorities: [Authority.USER],
+      defaultSort: 'id,asc',
       pageTitle: 'LintRuleViolations',
     },
     canActivate: [UserRouteAccessService],
