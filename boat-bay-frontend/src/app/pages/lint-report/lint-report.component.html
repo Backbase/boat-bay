@@ -1,0 +1,45 @@
+<ng-container *ngIf="lintReport$ | async as lintReport">
+
+    <div class="mdl-grid mdl-cell mdl-cell--12-col mdl-cell--top">
+        <div class="mdl-cell mdl-cell--7-col-desktop">
+            <div class="lint-report-info mat-elevation-z8 info-container">
+                <app-spec-summary [spec]="lintReport.spec"><</app-spec-summary>
+            </div>
+
+            <div class="mat-elevation-z8">
+                <div class="openapi-editor ">
+                    <ace-editor [contents]="lintReport.openApi"
+                                [annotations]="annotations"
+                                [highlight]="highlight"></ace-editor>
+                </div>
+            </div>
+
+        </div>
+        <div class="mdl-cell mdl-cell--5-col-desktop">
+            <div class="violations" *ngIf="product$ | async as product">
+                <mat-card *ngFor="let violation of lintReport.violations"
+                          class="violation-card {{violation.severity}}">
+                    <mat-card-title><span
+                        class="ruleId">{{violation.rule.ruleId}}</span>  {{violation.rule.title}}
+                    </mat-card-title>
+                    <mat-card-subtitle>{{violation.rule.ruleSet}}</mat-card-subtitle>
+                    <mat-card-content>{{violation.description}}</mat-card-content>
+                    <mat-card-actions>
+                        <button mat-button (click)="mark(violation)">
+                            highlight
+                        </button>
+                        <app-create-jira-issue-button [violation]="violation"
+                                                      [product]="product"></app-create-jira-issue-button>
+                        <button mat-button (click)="disableRule(lintReport, product, violation.rule)">
+                            disable rule
+                        </button>
+
+                    </mat-card-actions>
+                </mat-card>
+
+            </div>
+        </div>
+    </div>
+
+
+</ng-container>

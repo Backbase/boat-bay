@@ -1,0 +1,4 @@
+<a *ngIf="product && product.jiraProjectId"
+   mat-button
+   [href]="this.jiraBaseUrl + '/secure/CreateIssueDetails!init.jspa?pid=' + this.product.jiraProjectId  + '&issuetype=1&summary=' + this.violation.rule.title + '&description=' + this.violation.description"
+   target="_blank">Create Jira ticket</a>

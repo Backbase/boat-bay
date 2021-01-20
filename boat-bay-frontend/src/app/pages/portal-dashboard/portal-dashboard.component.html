@@ -1,0 +1,19 @@
+
+<ng-container *ngIf="boatPortals$ | async as boatPortals" class="container__controls-wrapper">
+    <mat-card *ngFor="let portal of boatPortals " class="portal-product mat-elevation-z8" >
+        <mat-card-title><a
+            [routerLink]="[ portal.portalKey, portal.productKey]"> {{portal.portalName}}
+            / {{portal.productName}}</a></mat-card-title>
+        <mat-card-subtitle *ngIf="portal.lastLintReport">Last linted
+            Spec: {{portal.lastLintReport.name}} {{portal.lastLintReport.version}}
+            on: {{portal.lastLintReport.lintedOn}}</mat-card-subtitle>
+        <mat-card-content>
+            <p>Contains of {{portal.numberOfCapabilities}} capabilities and {{portal.numberOfServices}} services.</p>
+            <current-violations [statistics]="portal.statistics"></current-violations>
+        </mat-card-content>
+    </mat-card>
+
+
+
+</ng-container>
+

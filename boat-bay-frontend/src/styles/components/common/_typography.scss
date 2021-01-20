@@ -1,0 +1,29 @@
+@import '~@angular/material/theming';
+
+.text-overline {
+  @include mat-typography-level-to-styles($custom-typography, caption);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.text-emphasis {
+  color: mat-color($mat-grey, 500); //todo update with right colours
+}
+
+.text-emphasis-medium {
+  color: mat-color($mat-grey, 600); //todo update with right colours
+}
+
+.text-emphasis-high {
+  color: mat-color($mat-grey, 700); //todo update with right colours
+}
+
+.mat-button,
+.mat-raised-button,
+.mat-icon-button,
+.mat-stroked-button,
+.mat-flat-button,
+.mat-fab,
+.mat-mini-fab {
+  text-transform: uppercase;
+}

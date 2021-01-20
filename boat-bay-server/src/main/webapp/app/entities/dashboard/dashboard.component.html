@@ -1,0 +1,75 @@
+<div>
+    <h2 id="page-heading">
+        <span>Dashboards</span>
+
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-dashboard" [routerLink]="['/dashboard/new']">
+            <fa-icon icon="plus"></fa-icon>
+            <span>
+            Create a new Dashboard
+            </span>
+        </button>
+    </h2>
+
+    <jhi-alert-error></jhi-alert-error>
+
+    <jhi-alert></jhi-alert>
+
+    <div class="alert alert-warning" id="no-result" *ngIf="dashboards?.length === 0">
+        <span>No dashboards found</span>
+    </div>
+
+    <div class="table-responsive" id="entities" *ngIf="dashboards && dashboards.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
+            <thead>
+                <tr>
+                    <th scope="col" ><span>ID</span></th>
+                    <th scope="col" ><span>Name</span></th>
+                    <th scope="col" ><span>Title</span></th>
+                    <th scope="col" ><span>Sub Title</span></th>
+                    <th scope="col" ><span>Nav Title</span></th>
+                    <th scope="col" ><span>Content</span></th>
+                    <th scope="col" ><span>Default Portal</span></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let dashboard of dashboards ;trackBy: trackId">
+                    <td><a [routerLink]="['/dashboard', dashboard.id, 'view']">{{ dashboard.id }}</a></td>
+                    <td>{{ dashboard.name }}</td>
+                    <td>{{ dashboard.title }}</td>
+                    <td>{{ dashboard.subTitle }}</td>
+                    <td>{{ dashboard.navTitle }}</td>
+                    <td>{{ dashboard.content }}</td>
+                    <td>
+                        <div *ngIf="dashboard.defaultPortal">
+                            <a [routerLink]="['/portal', dashboard.defaultPortal?.id, 'view']" >{{ dashboard.defaultPortal?.name }}</a>
+                        </div>
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group">
+                            <button type="submit"
+                                    [routerLink]="['/dashboard', dashboard.id, 'view']"
+                                    class="btn btn-info btn-sm">
+                                <fa-icon icon="eye"></fa-icon>
+                                <span class="d-none d-md-inline">View</span>
+                            </button>
+
+                            <button type="submit"
+                                    [routerLink]="['/dashboard', dashboard.id, 'edit']"
+                                    class="btn btn-primary btn-sm">
+                                <fa-icon icon="pencil-alt"></fa-icon>
+                                <span class="d-none d-md-inline">Edit</span>
+                            </button>
+
+                            <button type="submit" (click)="delete(dashboard)"
+                                    class="btn btn-danger btn-sm">
+                                <fa-icon icon="times"></fa-icon>
+                                <span class="d-none d-md-inline">Delete</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

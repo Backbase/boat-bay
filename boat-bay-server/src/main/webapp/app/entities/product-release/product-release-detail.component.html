@@ -1,0 +1,58 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="productRelease">
+            <h2><span>Product Release</span> {{ productRelease.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span>Key</span></dt>
+                <dd>
+                    <span>{{ productRelease.key }}</span>
+                </dd>
+                <dt><span>Name</span></dt>
+                <dd>
+                    <span>{{ productRelease.name }}</span>
+                </dd>
+                <dt><span>Version</span></dt>
+                <dd>
+                    <span>{{ productRelease.version }}</span>
+                </dd>
+                <dt><span>Release Date</span></dt>
+                <dd>
+                    <span>{{ productRelease.releaseDate }}</span>
+                </dd>
+                <dt><span>Hide</span></dt>
+                <dd>
+                    <span>{{ productRelease.hide }}</span>
+                </dd>
+                <dt><span>Spec</span></dt>
+                <dd>
+                    <span *ngFor="let spec of productRelease.specs; let last = last">
+                        <a [routerLink]="['/spec', spec?.id, 'view']">{{ spec.id }}</a>{{ last ? '' : ', ' }}
+                    </span>
+                </dd>
+                <dt><span>Product</span></dt>
+                <dd>
+                    <div *ngIf="productRelease.product">
+                        <a [routerLink]="['/product', productRelease.product?.id, 'view']">{{ productRelease.product?.name }}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span>Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/product-release', productRelease.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span>Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

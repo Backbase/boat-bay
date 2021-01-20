@@ -1,0 +1,79 @@
+<div>
+    <h2 id="page-heading">
+        <span>Lint Rules</span>
+
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-lint-rule" [routerLink]="['/lint-rule/new']">
+            <fa-icon icon="plus"></fa-icon>
+            <span>
+            Create a new Lint Rule
+            </span>
+        </button>
+    </h2>
+
+    <jhi-alert-error></jhi-alert-error>
+
+    <jhi-alert></jhi-alert>
+
+    <div class="alert alert-warning" id="no-result" *ngIf="lintRules?.length === 0">
+        <span>No lintRules found</span>
+    </div>
+
+    <div class="table-responsive" id="entities" *ngIf="lintRules && lintRules.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
+            <thead>
+                <tr>
+                    <th scope="col" ><span>ID</span></th>
+                    <th scope="col" ><span>Rule Id</span></th>
+                    <th scope="col" ><span>Title</span></th>
+                    <th scope="col" ><span>Summary</span></th>
+                    <th scope="col" ><span>Severity</span></th>
+                    <th scope="col" ><span>Description</span></th>
+                    <th scope="col" ><span>External Url</span></th>
+                    <th scope="col" ><span>Enabled</span></th>
+                    <th scope="col" ><span>Rule Set</span></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let lintRule of lintRules ;trackBy: trackId">
+                    <td><a [routerLink]="['/lint-rule', lintRule.id, 'view']">{{ lintRule.id }}</a></td>
+                    <td>{{ lintRule.ruleId }}</td>
+                    <td>{{ lintRule.title }}</td>
+                    <td>{{ lintRule.summary }}</td>
+                    <td>{{ lintRule.severity }}</td>
+                    <td>{{ lintRule.description }}</td>
+                    <td>{{ lintRule.externalUrl }}</td>
+                    <td>{{ lintRule.enabled }}</td>
+                    <td>
+                        <div *ngIf="lintRule.ruleSet">
+                            <a [routerLink]="['/lint-rule-set', lintRule.ruleSet?.id, 'view']" >{{ lintRule.ruleSet?.name }}</a>
+                        </div>
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group">
+                            <button type="submit"
+                                    [routerLink]="['/lint-rule', lintRule.id, 'view']"
+                                    class="btn btn-info btn-sm">
+                                <fa-icon icon="eye"></fa-icon>
+                                <span class="d-none d-md-inline">View</span>
+                            </button>
+
+                            <button type="submit"
+                                    [routerLink]="['/lint-rule', lintRule.id, 'edit']"
+                                    class="btn btn-primary btn-sm">
+                                <fa-icon icon="pencil-alt"></fa-icon>
+                                <span class="d-none d-md-inline">Edit</span>
+                            </button>
+
+                            <button type="submit" (click)="delete(lintRule)"
+                                    class="btn btn-danger btn-sm">
+                                <fa-icon icon="times"></fa-icon>
+                                <span class="d-none d-md-inline">Delete</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

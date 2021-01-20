@@ -1,0 +1,2351 @@
+{
+  "id": 158,
+  "name": "Lint Report account-statement-client-api-v2.0.0.yaml-2.0.0",
+  "grade": "F",
+  "passed": false,
+  "lintedOn": "2021-01-18T12:08:04Z",
+  "version": "2.0.0",
+  "openApi": "openapi: 3.0.3\ninfo:\n  title: Account Statement Client API\n  version: 2.0.0\n  description: |-\n    ## Supported Operations\n\n    Currently the Account Statement Client API contains the following operations:\n    * Get account statements (GET and POST operations)\n    * Get account statement categories\n    * Download account statement\n\n    ## Default Errors\n\n    * HTTP 400:  Request for getting list of 'available' statements or downloading them could not be understood by the server.\n    * HTTP 500: The server encountered an unexpected condition which prevented it from fulfilling the request.\n\n    ## Authorization Errors\n\n    * HTTP 403: Request for getting list of 'available' statements or downloading them was understood by the server but is refusing to fulfill it.\n    * HTTP 404: The server has not found anything matching Request-URI.\n    * HTTP 422: Request for getting list of 'available' statements or downloading them was understood by the server but was unable to process the contained instructions.\n\n    Overall capability description can be found [here](https://community.backbase.com/documentation/DBS/latest/accountstatements_understand)\nservers:\n  - description: Prism mock server\n    url: 'http://localhost:4010'\ntags:\n  - name: account-statement\npaths:\n  /client-api/v2/account/statements:\n    get:\n      description: Get the list of 'available' statements\n      deprecated: true\n      x-bb-api-deprecation-deprecated-from-version: DBS 2.20.0\n      x-bb-api-deprecation-removed-from-version: DBS 2.21.0\n      x-bb-api-deprecation-reason: '| The functionality covered by POST endpoint in client api.'\n      x-bb-api-deprecation-description: '| From DBS 2.21.0 this endpoint will no longer be exposed. Please use POST /client-api/v2/account/statements endpoint instead.'\n      operationId: getAccountStatements\n      parameters:\n        - name: accountId\n          description: Id of an account\n          in: query\n          required: false\n          schema:\n            maxLength: 256\n            type: string\n        - name: dateFrom\n          description: Date from which the statements should be retrieved\n          in: query\n          required: false\n          schema:\n            type: string\n          example: 2017-02-03T00:00:00.000Z\n        - name: dateTo\n          description: Date to which the statements should be retrieved\n          in: query\n          required: false\n          schema:\n            type: string\n          example: 2017-02-03T00:00:00.000Z\n        - name: category\n          description: Categories to filter on\n          example:\n            - cat_1\n            - cat_2\n          in: query\n          required: false\n          schema:\n            type: array\n            items:\n              type: string\n        - name: from\n          description: Skip over a page of elements by specifying a start value for the query\n          example: 20\n          in: query\n          required: false\n          schema:\n            type: integer\n            default: 0\n        - name: cursor\n          description: |\n            As an alternative for specifying 'from' this allows to point to the record to start the selection from.\n          in: query\n          required: false\n          schema:\n            type: string\n            default: ''\n          example: 76d5be8b-e80d-4842-8ce6-ea67519e8f74\n        - name: size\n          description: |\n            Limit the number of elements on the response. When used in combination with cursor, the value\n            is allowed to be a negative number to indicate requesting records upwards from the starting point indicated\n            by the cursor.\n          in: query\n          required: false\n          schema:\n            type: integer\n            default: 10\n            format: int32\n          example: 80\n        - name: orderBy\n          description: Order by field\n          in: query\n          required: false\n          schema:\n            type: string\n          example: accountName\n        - name: direction\n          description: Direction\n          in: query\n          required: false\n          schema:\n            default: DESC\n            enum:\n              - ASC\n              - DESC\n            type: string\n          example: DESC\n      responses:\n        '200':\n          headers:\n            X-Total-Count:\n              $ref: '#/components/headers/TotalCount'\n          content:\n            application/json:\n              example:\n                $ref: '#/components/examples/AccountStatementsResponse'\n              schema:\n                $ref: '#/components/schemas/AccountStatementsResponse'\n          description: |\n            List of account-statement\n\n            Provides list of account-statements for given accounts.\n            The size of list and content can be controlled by paging parameters.\n\n            Count of items is in **X-Total-Count** header.\n        '400':\n          content:\n            application/json:\n              examples:\n                example:\n                  $ref: '#/components/examples/BadRequestError'\n              schema:\n                $ref: '#/components/schemas/BadRequestError'\n          description: |-\n            Either:\n\n            * Request does not honor the contract, check the example in the Request tab.\n            * There was one of the following logic errors resulting from the spec generation:\n\n            | Message | key | context |\n            --- | --- | ---\n            | Invalid date format!!! -> **dateFrom** expected: yyyy-MM-dd | none | dateFrom: < invalidDate > |\n            | Invalid date format!!! -> **dateTo** expected: yyyy-MM-dd | none | dateTo: < invalidDate > |\n            | size must be greater than or equal to 1 | none | size: < less then 1 > |\n            | orderBy must match \"date/category/description/accountNumber/accountName\" | none | orderBy: < invalid value > |\n            | direction must match \"asc/desc\" | none | direction: < invalid value > |\n        '401':\n          content:\n            application/json:\n              example:\n                $ref: '#/components/examples/UnauthorizedError'\n              schema:\n                $ref: '#/components/schemas/UnauthorizedError'\n          description: Unauthorized\n        '403':\n          content:\n            application/json:\n              example:\n                $ref: '#/components/examples/ForbiddenError'\n              schema:\n                $ref: '#/components/schemas/ForbiddenError'\n          description: Forbidden\n        '500':\n          content:\n            application/json:\n              example:\n                $ref: '#/components/examples/InternalServerError'\n              schema:\n                $ref: '#/components/schemas/InternalServerError'\n          description: InternalServerError\n      summary: Get the list of 'available' statements.\n      tags:\n        - account-statement\n      x-BbAccessControl-resource: account-statement\n      x-BbAccessControl-function: Manage Statements\n      x-BbAccessControl-privilege: view\n    post:\n      description: Get the list of 'available' statements for multiple accounts\n      operationId: postAccountStatements\n      requestBody:\n        content:\n          application/json:\n            example:\n              $ref: '#/components/examples/AccountStatementPostRequest'\n            schema:\n              $ref: '#/components/schemas/AccountStatementsPostRequest'\n        description: Request body that contains query parameters\n      responses:\n        '200':\n          headers:\n            X-Total-Count:\n              $ref: '#/components/headers/TotalCount'\n          content:\n            application/json:\n              example:\n                $ref: '#/components/examples/AccountStatementsResponse'\n              schema:\n                $ref: '#/components/schemas/AccountStatementsResponse'\n          description: |-\n            List of account-statement\n\n            Provide list of account-statement for given accounts.\n            List size and content can be controlled by paging parameters.\n\n            Count of items is in **X-Total-Count** header.\n        '400':\n          content:\n            application/json:\n              examples:\n                example:\n                  $ref: '#/components/examples/BadRequestError'\n              schema:\n                $ref: '#/components/schemas/BadRequestError'\n          description: |-\n            BadRequestError\n            Either:\n\n            * Request does not honor the contract, check the example in the Request tab.\n            * There was one of the following logic errors resulting from the spec generation:\n\n            | Message | key | context |\n            --- | --- | ---\n            | Invalid date format!!! -> **dateFrom** expected: yyyy-MM-dd | none | dateFrom: < invalidDate > |\n            | Invalid date format!!! -> **dateTo** expected: yyyy-MM-dd | none | dateTo: < invalidDate > |\n            | size must be greater than or equal to 1 | none | size: < less then 1 > |\n            | orderBy must match \"date/category/description/accountNumber/accountName\" | none | orderBy: < inappropriate value > |\n            | direction must match \"asc/desc\" | none | direction: < inappropriate value > |\n        '401':\n          content:\n            application/json:\n              example:\n                $ref: '#/components/examples/UnauthorizedError'\n              schema:\n                $ref: '#/components/schemas/UnauthorizedError'\n          description: Unauthorized\n        '403':\n          content:\n            application/json:\n              example:\n                $ref: '#/components/examples/ForbiddenError'\n              schema:\n                $ref: '#/components/schemas/ForbiddenError'\n          description: Forbidden\n        '500':\n          content:\n            application/json:\n              example:\n                $ref: '#/components/examples/InternalServerError'\n              schema:\n                $ref: '#/components/schemas/InternalServerError'\n          description: InternalServerError\n      summary: Get the list of 'available' statements for multiple accounts.\n      tags:\n        - account-statement\n      x-BbAccessControl-resource: account-statement\n      x-BbAccessControl-function: Manage Statements\n      x-BbAccessControl-privilege: view\n    summary: AccountStatements\n  /client-api/v2/account/statements/categories:\n    description: Endpoint to access list of categories\n    get:\n      description: Get the list of 'available' categories\n      operationId: getCategories\n      responses:\n        '200':\n          description: |-\n            List of account statements categories\n\n            Provide list of account statements categories across all accounts.\n            Does not support pagination or sorting.\n\n            Count of items is in **X-Total-Count** header.\n          headers:\n            X-Total-Count:\n              $ref: '#/components/headers/TotalCount'\n          content:\n            application/json:\n              examples:\n                example:\n                  $ref: '#/components/examples/AccountStatementsCategoriesResponse'\n              schema:\n                $ref: '#/components/schemas/AccountStatementsCategoriesResponse'\n      summary: Get the list of 'available' categories.\n      tags:\n        - account-statement\n      x-BbAccessControl-resource: account-statement\n      x-BbAccessControl-function: Manage Statements\n      x-BbAccessControl-privilege: view\n    summary: AccountStatementsCategories\n  '/client-api/v2/account/statements/download/{uid}':\n    parameters:\n      - name: uid\n        description: UID of account statement file to be downloaded\n        in: path\n        required: true\n        schema:\n          type: string\n    get:\n      description: |\n        Downloads an account statement file for the given file UID.\n        Supported statement types:\n          * binary/octet-stream\n          * application/pdf\n          * text/plain\n          * text/csv\n          * application/rtf\n          * application/msword\n          * application/vnd.openxmlformats-officedocument.wordprocessingml.document\n          * application/vnd.ms-excel\n          * application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\n          * application/xml\n          * image/png\n          * image/jpeg\n          * image/gif\n          * image/tiff\n      operationId: downloadAccountStatements\n      parameters:\n        - name: inline\n          description: Content-Disposition header will include \"attachment\" when this parameter is false. Else \"inline\".\n          in: query\n          required: false\n          schema:\n            type: boolean\n            default: true\n      responses:\n        '200':\n          headers:\n            Content-Disposition:\n              $ref: '#/components/headers/ContentDisposition'\n            Content-Length:\n              $ref: '#/components/headers/ContentLength'\n          content:\n            binary/octet-stream: {}\n            application/pdf: {}\n            text/plain: {}\n            text/csv: {}\n            application/rtf: {}\n            application/msword: {}\n            application/vnd.openxmlformats-officedocument.wordprocessingml.document: {}\n            application/vnd.ms-excel: {}\n            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet: {}\n            application/xml: {}\n            image/png: {}\n            image/jpeg: {}\n            image/gif: {}\n            image/tiff: {}\n          description: Download account-statement\n        '400':\n          content:\n            application/json:\n              examples:\n                example:\n                  $ref: '#/components/examples/BadRequestError'\n              schema:\n                $ref: '#/components/schemas/BadRequestError'\n          description: BadRequest\n        '403':\n          content:\n            application/json:\n              example:\n                $ref: '#/components/examples/ForbiddenError'\n              schema:\n                $ref: '#/components/schemas/ForbiddenError'\n          description: Forbidden\n        '404':\n          content:\n            application/json:\n              example:\n                $ref: '#/components/examples/NotFoundError'\n              schema:\n                $ref: '#/components/schemas/NotFoundError'\n          description: |-\n            Either:\n\n            * Request does not honor the contract, check the example in the Request tab.\n            * There was one of the following logic errors resulting from the spec generation:\n\n            | Message | key | context |\n            --- | --- | ---\n            | File not found for requested file uri 123 | none | uid path variable: 123 |\n        '500':\n          content:\n            application/json:\n              example:\n                $ref: '#/components/examples/InternalServerError'\n              schema:\n                $ref: '#/components/schemas/InternalServerError'\n          description: InternalServerError\n      summary: Download account-statement.\n      tags:\n        - account-statement\n      x-BbAccessControl-resource: account-statement\n      x-BbAccessControl-function: Manage Statements\n      x-BbAccessControl-privilege: view\n    summary: AccountStatementsDownload\ncomponents:\n  schemas:\n    AccountStatement:\n      type: object\n      properties:\n        accountId:\n          description: Reference to the account to which the statement belongs\n          type: string\n        accountName:\n          description: Name of account\n          type: string\n        accountNumber:\n          description: Number of account\n          type: string\n        date:\n          description: The context agnostic statement date\n          format: date\n          type: string\n        description:\n          description: The description of the statement\n          type: string\n        category:\n          description: Category of the account statement\n          type: string\n        documents:\n          description: List of documents provided by the bank\n          items:\n            $ref: '#/components/schemas/AccountStatementDocument'\n          type: array\n        additions:\n          description: Additional properties\n          type: object\n          additionalProperties:\n            type: string\n      required:\n        - date\n        - documents\n    AccountStatementDocument:\n      type: object\n      properties:\n        uid:\n          description: Unique identification of the statement returned in the response of the first call 'account-statements-get'\n          type: string\n        url:\n          description: The url to download the statement sent by the CBS in the response of the first call 'account-statements-get'\n          type: string\n        contentType:\n          description: The MIME type of the document\n          type: string\n        additions:\n          description: Additional properties\n          type: object\n          additionalProperties:\n            type: string\n    AccountStatementsCategoriesResponse:\n      type: object\n      description: List of account statements categories\n      properties:\n        categories:\n          description: Account statements category list\n          type: array\n          items:\n            type: string\n        additions:\n          description: Additional properties\n          type: object\n          additionalProperties:\n            type: string\n      required:\n        - categories\n      example:\n        categories:\n          - Account\n          - Credit Card\n          - Mortgage\n          - Tax Form\n          - LOC\n          - EELOC\n        additions:\n          categoryId: '1'\n    AccountStatementsPostRequest:\n      type: object\n      description: Expected body of POST account statement request\n      properties:\n        accountIds:\n          description: Array of account identifiers.\n          items:\n            type: string\n          type: array\n        dateFrom:\n          description: Date from which the statements should be retrieved.\n          type: string\n        dateTo:\n          description: Date to which the statements should be retrieved.\n          type: string\n        category:\n          description: Categories to filter on.\n          items:\n            type: string\n          type: array\n        from:\n          description: Skip over a page of elements by specifying a start value for the query.\n          format: int32\n          type: integer\n          default: 0\n        cursor:\n          description: As an alternative for specifying 'from' this allows to point to the record to start the selection from.\n          type: string\n        size:\n          description: |-\n            Limit the number of elements on the response. When used in combination with cursor, the value\n            is allowed to be a negative number to indicate requesting records upwards from the starting point indicated by the cursor.\n          format: int32\n          type: integer\n          default: 10\n        orderBy:\n          description: Order by field\n          type: string\n        direction:\n          description: Direction\n          enum:\n            - ASC\n            - DESC\n          type: string\n          default: DESC\n        additions:\n          description: Additional properties\n          type: object\n          additionalProperties:\n            type: string\n    AccountStatementsResponse:\n      type: array\n      items:\n        $ref: '#/components/schemas/AccountStatement'\n      description: List of account statements\n      example:\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2016-02-15'\n          category: Credit Card\n          description: Credit Card statement - February 2016\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_1'\n              contentType: application/pdf\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2016-03-15'\n          category: Credit Card\n          description: Credit Card statement - March 2016\n          documents:\n            - uid: uid_2\n              contentType: application/pdf\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2016-04-15'\n          category: Credit Card\n          description: Credit Card statement - April 2016\n          documents:\n            - uid: uid_3\n              contentType: application/pdf\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2016-05-15'\n          category: Credit Card\n          description: Credit Card statement - May 2016\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_4'\n              contentType: application/pdf\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2016-06-15'\n          category: Credit Card\n          description: Credit Card statement - June 2016\n          documents:\n            - uid: uid_5\n              contentType: application/pdf\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2016-07-15'\n          category: Credit Card\n          description: Credit Card statement - July 2016\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_6'\n              contentType: application/pdf\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2016-08-15'\n          category: Credit Card\n          description: Credit Card statement - August 2016\n          documents:\n            - uid: uid_7\n              contentType: application/pdf\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2016-09-15'\n          category: Credit Card\n          description: Credit Card statement - September 2016\n          documents:\n            - uid: uid_8\n              url: ''\n              contentType: ''\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-01-31'\n          category: Account\n          description: Account statement - January 2017\n          documents:\n            - uid: uid_9_1\n              contentType: application/pdf\n            - url: 'http://server.com/documentsdepo/uid_9_2'\n              contentType: text/csv\n            - uid: uid_9_3\n              url: 'http://server.com/documentsdepo/uid_9_3'\n              contentType: application/pdf\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-02-28'\n          category: Account\n          description: Account statement - February 2017\n          documents:\n            - uid: uid_10_1\n              contentType: application/pdf\n            - uid: uid_10_2\n              contentType: text/csv\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-03-31'\n          category: Account\n          description: Account statement - March 2017\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_11_1'\n              contentType: application/pdf\n            - uid: uid_11_2\n              url: 'http://server.com/documentsdepo/uid_11_2'\n              contentType: text/csv\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-04-30'\n          category: Account\n          description: Account statement - April 2017\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_12_1'\n              contentType: application/pdf\n            - url: 'http://server.com/documentsdepo/uid_12_2'\n              contentType: text/csv\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-05-31'\n          category: Account\n          description: Account statement - May 2017\n          documents:\n            - uid: uid_13_1\n              contentType: application/pdf\n            - uid: uid_13_2\n              contentType: text/csv\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-06-30'\n          category: Account\n          description: Account statement - June 2017\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_14_1'\n              contentType: application/pdf\n            - uid: uid_14_2\n              contentType: text/csv\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-07-31'\n          category: Account\n          description: Account statement - July 2017\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_15_1'\n              contentType: application/pdf\n            - url: 'http://server.com/documentsdepo/uid_15_2'\n              contentType: text/csv\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-08-31'\n          category: Account\n          description: Account statement - August 2017\n          documents:\n            - uid: uid_16_1\n              url: 'http://server.com/documentsdepo/uid_16_1'\n              contentType: application/pdf\n            - uid: uid_16_2\n              url: 'http://server.com/documentsdepo/uid_16_2'\n              contentType: text/csv\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-09-30'\n          description: Statement - September 2017\n          documents:\n            - uid: uid_17_2\n              contentType: text/csv\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-10-31'\n          category: Account\n          description: Account statement - October 2017\n          documents:\n            - uid: uid_18_1\n              contentType: application/pdf\n            - uid: uid_18_2\n              contentType: text/csv\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-11-30'\n          category: Account\n          description: Account statement - November 2017\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_19_1'\n              contentType: application/pdf\n            - url: 'http://server.com/documentsdepo/uid_19_2'\n              contentType: text/csv\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-12-31'\n          category: Account\n          description: Account statement - December 2017\n          documents:\n            - uid: uid_20_1\n              contentType: application/pdf\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-05-19'\n          category: Mortgage\n          description: Mortgage statement - May 2017\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_21'\n              contentType: application/pdf\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-06-19'\n          category: Mortgage\n          description: Mortgage statement - June 2017\n          documents:\n            - uid: uid_22\n              contentType: application/pdf\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-07-19'\n          category: Mortgage\n          description: Mortgage statement - July 2017\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_23'\n              contentType: application/pdf\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-08-19'\n          category: Mortgage\n          description: Mortgage statement - August 2017\n          documents:\n            - uid: uid_24\n              contentType: application/pdf\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-09-19'\n          category: Mortgage\n          description: Mortgage statement - September 2017\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_25'\n              contentType: application/pdf\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-10-19'\n          category: Mortgage\n          description: Mortgage statement - October 2017\n          documents:\n            - uid: uid_26\n              contentType: application/pdf\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-11-19'\n          category: Mortgage\n          description: Mortgage statement - November 2017\n          documents:\n            - uid: uid_27\n              contentType: application/pdf\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-12-19'\n          category: Mortgage\n          description: Mortgage statement - December 2017\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_28'\n              contentType: application/pdf\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2018-01-19'\n          category: Mortgage\n          description: Mortgage statement - January 2018\n          documents:\n            - uid: uid_29\n              contentType: application/pdf\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-12-31'\n          category: Tax Forms\n          description: Tax form - 2017\n          documents:\n            - uid: uid_30\n              contentType: application/pdf\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2016-02-09'\n          category: Credit Card\n          description: Credit Card statement - February 2016\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_31'\n              contentType: application/pdf\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2016-03-09'\n          category: Credit Card\n          description: Credit Card statement - March 2016\n          documents:\n            - uid: uid_32\n              contentType: application/pdf\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2016-04-09'\n          category: Credit Card\n          description: Credit Card statement - April 2016\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_33'\n              contentType: application/pdf\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2016-05-09'\n          category: Credit Card\n          description: Credit Card statement - May 2016\n          documents:\n            - uid: uid_34\n              contentType: application/pdf\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2016-06-09'\n          category: Credit Card\n          description: Credit Card statement - June 2016\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_35'\n              contentType: application/pdf\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2016-07-09'\n          category: Credit Card\n          description: Credit Card statement - July 2016\n          documents:\n            - uid: uid_36\n              contentType: application/pdf\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2016-08-09'\n          category: Credit Card\n          description: Credit Card statement - August 2016\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_37'\n              contentType: application/pdf\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2016-09-09'\n          category: Credit Card\n          description: Credit Card statement - September 2016\n          documents:\n            - uid: uid_38\n              url: ''\n              contentType: ''\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-01-31'\n          category: Account\n          description: Account statement - January 2017\n          documents:\n            - uid: ''\n              contentType: application/pdf\n            - uid: uid_39_2\n              contentType: text/csv\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-02-28'\n          category: Account\n          description: Account statement - February 2017\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_40_1'\n              contentType: application/pdf\n            - url: ''\n              contentType: text/csv\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-03-31'\n          category: Account\n          description: Account statement - March 2017\n          documents:\n            - uid: uid_41_1\n              contentType: application/pdf\n            - url: 'http://server.com/documentsdepo/uid_41_2'\n              contentType: text/csv\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-04-30'\n          category: Account\n          description: Account statement - April 2017\n          documents:\n            - uid: uid_42_1\n              contentType: application/pdf\n            - url: 'http://server.com/documentsdepo/uid_42_2'\n              contentType: text/csv\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-05-31'\n          category: Account\n          description: Account statement - May 2017\n          documents:\n            - uid: uid_43_1\n              contentType: application/pdf\n            - url: 'http://server.com/documentsdepo/uid_43_2'\n              contentType: text/csv\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-06-30'\n          category: Account\n          description: Account statement - June 2017\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_44_1'\n              contentType: application/pdf\n            - uid: uid_44_2\n              contentType: text/csv\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-07-31'\n          category: Account\n          description: Account statement - July 2017\n          documents:\n            - uid: uid_45_1\n              contentType: application/pdf\n            - uid: uid_45_2\n              contentType: text/csv\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-08-31'\n          category: Account\n          description: Account statement - August 2017\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_46_1'\n              contentType: application/pdf\n            - url: 'http://server.com/documentsdepo/uid_46_2'\n              contentType: text/csv\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-09-30'\n          description: Statement - September 2017\n          documents:\n            - uid: uid_47_2\n              contentType: text/csv\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-10-31'\n          category: Account\n          description: Account statement - October 2017\n          documents:\n            - uid: uid_48_1\n              contentType: application/pdf\n            - uid: uid_48_2\n              contentType: text/csv\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-11-30'\n          category: Account\n          description: Account statement - November 2017\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_49_1'\n              contentType: application/pdf\n            - url: 'http://server.com/documentsdepo/uid_49_2'\n              contentType: text/csv\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-12-31'\n          category: Account\n          description: Account statement - December 2017\n          documents:\n            - uid: uid_50_1\n              contentType: application/pdf\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-05-19'\n          category: Mortgage\n          description: Mortgage statement - May 2017\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_51'\n              contentType: application/pdf\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-06-19'\n          category: Mortgage\n          description: Mortgage statement - June 2017\n          documents:\n            - uid: uid_52\n              contentType: application/pdf\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-06-20'\n          category: Mortgage\n          description: Mortgage statement - July 2017\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_53'\n              contentType: application/pdf\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-08-19'\n          category: Mortgage\n          description: Mortgage statement - August 2017\n          documents:\n            - uid: uid_54\n              contentType: application/pdf\n    ErrorItem:\n      type: object\n      properties:\n        message:\n          description: Any further information.\n          type: string\n        key:\n          description: '{capability-name}.api.{api-key-name}. For generated validation errors this is the path in the document the error resolves to. e.g. object name + ''.'' + field'\n          type: string\n        context:\n          description: Context can be anything used to construct localised messages.\n          type: object\n          additionalProperties:\n            type: string\n    UnauthorizedError:\n      type: object\n      properties:\n        message:\n          type: string\n          description: Any further information\n        errors:\n          type: array\n          description: Detailed error information\n          items:\n            $ref: '#/components/schemas/ErrorItem'\n    BadRequestError:\n      type: object\n      properties:\n        message:\n          description: Any further information\n          type: string\n        errors:\n          description: Detailed error information\n          type: array\n          items:\n            $ref: '#/components/schemas/ErrorItem'\n      required:\n        - message\n    NotFoundError:\n      type: object\n      properties:\n        message:\n          description: Any further information\n          type: string\n        errors:\n          description: Detailed error information\n          type: array\n          items:\n            $ref: '#/components/schemas/ErrorItem'\n    ForbiddenError:\n      type: object\n      properties:\n        message:\n          description: Any further information\n          type: string\n        errors:\n          description: Detailed error information\n          type: array\n          items:\n            $ref: '#/components/schemas/ErrorItem'\n    InternalServerError:\n      type: object\n      description: Represents HTTP 500 Internal Server Error\n      properties:\n        message:\n          description: Further Information\n          type: string\n  examples:\n    AccountStatementsResponse:\n      value:\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2016-02-15'\n          category: Credit Card\n          description: Credit Card statement - February 2016\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_1'\n              contentType: application/pdf\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2016-03-15'\n          category: Credit Card\n          description: Credit Card statement - March 2016\n          documents:\n            - uid: uid_2\n              contentType: application/pdf\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2016-04-15'\n          category: Credit Card\n          description: Credit Card statement - April 2016\n          documents:\n            - uid: uid_3\n              contentType: application/pdf\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2016-05-15'\n          category: Credit Card\n          description: Credit Card statement - May 2016\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_4'\n              contentType: application/pdf\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2016-06-15'\n          category: Credit Card\n          description: Credit Card statement - June 2016\n          documents:\n            - uid: uid_5\n              contentType: application/pdf\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2016-07-15'\n          category: Credit Card\n          description: Credit Card statement - July 2016\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_6'\n              contentType: application/pdf\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2016-08-15'\n          category: Credit Card\n          description: Credit Card statement - August 2016\n          documents:\n            - uid: uid_7\n              contentType: application/pdf\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2016-09-15'\n          category: Credit Card\n          description: Credit Card statement - September 2016\n          documents:\n            - uid: uid_8\n              url: ''\n              contentType: ''\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-01-31'\n          category: Account\n          description: Account statement - January 2017\n          documents:\n            - uid: uid_9_1\n              contentType: application/pdf\n            - url: 'http://server.com/documentsdepo/uid_9_2'\n              contentType: text/csv\n            - uid: uid_9_3\n              url: 'http://server.com/documentsdepo/uid_9_3'\n              contentType: application/pdf\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-02-28'\n          category: Account\n          description: Account statement - February 2017\n          documents:\n            - uid: uid_10_1\n              contentType: application/pdf\n            - uid: uid_10_2\n              contentType: text/csv\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-03-31'\n          category: Account\n          description: Account statement - March 2017\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_11_1'\n              contentType: application/pdf\n            - uid: uid_11_2\n              url: 'http://server.com/documentsdepo/uid_11_2'\n              contentType: text/csv\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-04-30'\n          category: Account\n          description: Account statement - April 2017\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_12_1'\n              contentType: application/pdf\n            - url: 'http://server.com/documentsdepo/uid_12_2'\n              contentType: text/csv\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-05-31'\n          category: Account\n          description: Account statement - May 2017\n          documents:\n            - uid: uid_13_1\n              contentType: application/pdf\n            - uid: uid_13_2\n              contentType: text/csv\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-06-30'\n          category: Account\n          description: Account statement - June 2017\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_14_1'\n              contentType: application/pdf\n            - uid: uid_14_2\n              contentType: text/csv\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-07-31'\n          category: Account\n          description: Account statement - July 2017\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_15_1'\n              contentType: application/pdf\n            - url: 'http://server.com/documentsdepo/uid_15_2'\n              contentType: text/csv\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-08-31'\n          category: Account\n          description: Account statement - August 2017\n          documents:\n            - uid: uid_16_1\n              url: 'http://server.com/documentsdepo/uid_16_1'\n              contentType: application/pdf\n            - uid: uid_16_2\n              url: 'http://server.com/documentsdepo/uid_16_2'\n              contentType: text/csv\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-09-30'\n          description: Statement - September 2017\n          documents:\n            - uid: uid_17_2\n              contentType: text/csv\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-10-31'\n          category: Account\n          description: Account statement - October 2017\n          documents:\n            - uid: uid_18_1\n              contentType: application/pdf\n            - uid: uid_18_2\n              contentType: text/csv\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-11-30'\n          category: Account\n          description: Account statement - November 2017\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_19_1'\n              contentType: application/pdf\n            - url: 'http://server.com/documentsdepo/uid_19_2'\n              contentType: text/csv\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-12-31'\n          category: Account\n          description: Account statement - December 2017\n          documents:\n            - uid: uid_20_1\n              contentType: application/pdf\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-05-19'\n          category: Mortgage\n          description: Mortgage statement - May 2017\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_21'\n              contentType: application/pdf\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-06-19'\n          category: Mortgage\n          description: Mortgage statement - June 2017\n          documents:\n            - uid: uid_22\n              contentType: application/pdf\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-07-19'\n          category: Mortgage\n          description: Mortgage statement - July 2017\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_23'\n              contentType: application/pdf\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-08-19'\n          category: Mortgage\n          description: Mortgage statement - August 2017\n          documents:\n            - uid: uid_24\n              contentType: application/pdf\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-09-19'\n          category: Mortgage\n          description: Mortgage statement - September 2017\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_25'\n              contentType: application/pdf\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-10-19'\n          category: Mortgage\n          description: Mortgage statement - October 2017\n          documents:\n            - uid: uid_26\n              contentType: application/pdf\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-11-19'\n          category: Mortgage\n          description: Mortgage statement - November 2017\n          documents:\n            - uid: uid_27\n              contentType: application/pdf\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-12-19'\n          category: Mortgage\n          description: Mortgage statement - December 2017\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_28'\n              contentType: application/pdf\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2018-01-19'\n          category: Mortgage\n          description: Mortgage statement - January 2018\n          documents:\n            - uid: uid_29\n              contentType: application/pdf\n        - accountId: 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-12-31'\n          category: Tax Forms\n          description: Tax form - 2017\n          documents:\n            - uid: uid_30\n              contentType: application/pdf\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2016-02-09'\n          category: Credit Card\n          description: Credit Card statement - February 2016\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_31'\n              contentType: application/pdf\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2016-03-09'\n          category: Credit Card\n          description: Credit Card statement - March 2016\n          documents:\n            - uid: uid_32\n              contentType: application/pdf\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2016-04-09'\n          category: Credit Card\n          description: Credit Card statement - April 2016\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_33'\n              contentType: application/pdf\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2016-05-09'\n          category: Credit Card\n          description: Credit Card statement - May 2016\n          documents:\n            - uid: uid_34\n              contentType: application/pdf\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2016-06-09'\n          category: Credit Card\n          description: Credit Card statement - June 2016\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_35'\n              contentType: application/pdf\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2016-07-09'\n          category: Credit Card\n          description: Credit Card statement - July 2016\n          documents:\n            - uid: uid_36\n              contentType: application/pdf\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2016-08-09'\n          category: Credit Card\n          description: Credit Card statement - August 2016\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_37'\n              contentType: application/pdf\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2016-09-09'\n          category: Credit Card\n          description: Credit Card statement - September 2016\n          documents:\n            - uid: uid_38\n              url: ''\n              contentType: ''\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-01-31'\n          category: Account\n          description: Account statement - January 2017\n          documents:\n            - uid: ''\n              contentType: application/pdf\n            - uid: uid_39_2\n              contentType: text/csv\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-02-28'\n          category: Account\n          description: Account statement - February 2017\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_40_1'\n              contentType: application/pdf\n            - url: ''\n              contentType: text/csv\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-03-31'\n          category: Account\n          description: Account statement - March 2017\n          documents:\n            - uid: uid_41_1\n              contentType: application/pdf\n            - url: 'http://server.com/documentsdepo/uid_41_2'\n              contentType: text/csv\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-04-30'\n          category: Account\n          description: Account statement - April 2017\n          documents:\n            - uid: uid_42_1\n              contentType: application/pdf\n            - url: 'http://server.com/documentsdepo/uid_42_2'\n              contentType: text/csv\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-05-31'\n          category: Account\n          description: Account statement - May 2017\n          documents:\n            - uid: uid_43_1\n              contentType: application/pdf\n            - url: 'http://server.com/documentsdepo/uid_43_2'\n              contentType: text/csv\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-06-30'\n          category: Account\n          description: Account statement - June 2017\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_44_1'\n              contentType: application/pdf\n            - uid: uid_44_2\n              contentType: text/csv\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-07-31'\n          category: Account\n          description: Account statement - July 2017\n          documents:\n            - uid: uid_45_1\n              contentType: application/pdf\n            - uid: uid_45_2\n              contentType: text/csv\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-08-31'\n          category: Account\n          description: Account statement - August 2017\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_46_1'\n              contentType: application/pdf\n            - url: 'http://server.com/documentsdepo/uid_46_2'\n              contentType: text/csv\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-09-30'\n          description: Statement - September 2017\n          documents:\n            - uid: uid_47_2\n              contentType: text/csv\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-10-31'\n          category: Account\n          description: Account statement - October 2017\n          documents:\n            - uid: uid_48_1\n              contentType: application/pdf\n            - uid: uid_48_2\n              contentType: text/csv\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-11-30'\n          category: Account\n          description: Account statement - November 2017\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_49_1'\n              contentType: application/pdf\n            - url: 'http://server.com/documentsdepo/uid_49_2'\n              contentType: text/csv\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-12-31'\n          category: Account\n          description: Account statement - December 2017\n          documents:\n            - uid: uid_50_1\n              contentType: application/pdf\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-05-19'\n          category: Mortgage\n          description: Mortgage statement - May 2017\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_51'\n              contentType: application/pdf\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-06-19'\n          category: Mortgage\n          description: Mortgage statement - June 2017\n          documents:\n            - uid: uid_52\n              contentType: application/pdf\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-06-20'\n          category: Mortgage\n          description: Mortgage statement - July 2017\n          documents:\n            - url: 'http://server.com/documentsdepo/uid_53'\n              contentType: application/pdf\n        - accountId: 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          accountName: The Walt Disney Company\n          accountNumber: UA85 3996 2200 0000 0260 0123 3566 1\n          date: '2017-08-19'\n          category: Mortgage\n          description: Mortgage statement - August 2017\n          documents:\n            - uid: uid_54\n              contentType: application/pdf\n    AccountStatementsCategoriesResponse:\n      value:\n        categories:\n          - Account\n          - Credit Card\n          - Mortgage\n          - Tax Form\n          - LOC\n          - EELOC\n        additions:\n          categoryId: '1'\n    AccountStatementPostRequest:\n      value:\n        accountIds:\n          - 1cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n          - 6cdb2224-8926-4b4d-a99f-1c9dfbbb4699\n        dateFrom: '2020-01-01'\n        dateTo: '2020-01-01'\n        category:\n          - cat_1\n          - cat_2\n        from: 20\n        cursor: 76d5be8b-e80d-4842-8ce6-ea67519e8f74\n        size: 80\n        orderBy: date\n        direction: ASC\n    UnauthorizedError:\n      value:\n        message: Access to requested resource denied.\n        errors:\n          - message: Resource access denied due to invalid credentials.\n            key: common.api.token\n            context:\n              accessToken: expired\n    BadRequestError:\n      value:\n        message: Bad Request\n        errors:\n          - message: 'Value Exceeded. Must be between {min} and {max}.'\n            key: common.api.shoesize\n            context:\n              max: '50'\n              min: '1'\n    ForbiddenError:\n      value:\n        message: Access to requested resource denied.\n        errors:\n          - message: 'Resource access denied due to an insufficient user quota of {quota}.'\n            key: common.api.quota\n            context:\n              quota: someQuota\n    NotFoundError:\n      value:\n        message: Resource not found.\n        errors:\n          - message: 'Unable to find the resource requested resource: {resource}.'\n            key: common.api.resource\n            context:\n              resource: aResource\n    InternalServerError:\n      value:\n        message: Description of error\n  headers:\n    TotalCount:\n      description: Overall count of account statements\n      schema:\n        type: integer\n      required: true\n      example: 10\n    ContentDisposition:\n      schema:\n        type: string\n      required: true\n      example: inline; filename=Statements\n    ContentLength:\n      description: Content length response header\n      schema:\n        type: integer\n        minimum: 0\n      required: false\n",
+  "violations": [
+    {
+      "rule": {
+        "id": "21",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Pluralize Resource Names",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Resource 'client-api' appears to be singular",
+      "severity": "MUST",
+      "lines": {
+        "start": 302,
+        "end": 408
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "18",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Do Not Use URI Versioning",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "URL contains version number",
+      "severity": "MUST",
+      "lines": {
+        "start": 271,
+        "end": 302
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "21",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Pluralize Resource Names",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Resource 'account' appears to be singular",
+      "severity": "MUST",
+      "lines": {
+        "start": 302,
+        "end": 408
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "3",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Contain API Meta Information",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Contact e-mail has to be provided",
+      "severity": "MUST",
+      "lines": {
+        "start": 2,
+        "end": 25
+      },
+      "pointer": {
+        "matchingProperty": "info",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "41",
+        "ruleSet": "BoatRuleSet",
+        "title": "Pluralize Resource Names",
+        "severity": "HINT",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Resource 'download' appears to be singular",
+      "severity": "HINT",
+      "lines": {
+        "start": 302,
+        "end": 408
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "52",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Define bounds for lengths of string properties",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "No maxLength defined",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 523,
+        "end": 526
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "47",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Check case of various terms",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Header 'ContentLength' does not match Hyphenated-Pascal-Case ('[A-Z]+[a-z0-9]*(?:-[A-Z0-9]+[a-z0-9]*)*') but seems to be one of PascalCase ('[A-Z]+[a-z0-9]*(?:[A-Z0-9]+[a-z0-9]*)*'), Title Case ('([A-Z][^\\s]*\\s?)+')",
+      "severity": "MUST",
+      "lines": {
+        "start": 1752,
+        "end": 1758
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "16",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Prefer standard media type names",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Custom media types should only be used for versioning",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 349,
+        "end": 349
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "3",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Contain API Meta Information",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Contact URL has to be provided",
+      "severity": "MUST",
+      "lines": {
+        "start": 2,
+        "end": 25
+      },
+      "pointer": {
+        "matchingProperty": "info",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "12",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Specify Success and Error Responses",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "operation has to contain the default response",
+      "severity": "MUST",
+      "lines": {
+        "start": 273,
+        "end": 301
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "52",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Define bounds for lengths of string properties",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "No maxLength defined",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 513,
+        "end": 516
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "52",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Define bounds for lengths of string properties",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "No maxLength defined",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 426,
+        "end": 429
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "20",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Array names should be pluralized",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Array property name appears to be singular: category",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 503,
+        "end": 508
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "18",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Do Not Use URI Versioning",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "URL contains version number",
+      "severity": "MUST",
+      "lines": {
+        "start": 302,
+        "end": 408
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "21",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Pluralize Resource Names",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Resource 'download' appears to be singular",
+      "severity": "MUST",
+      "lines": {
+        "start": 302,
+        "end": 408
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "24",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Secure All Endpoints With Scopes",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Endpoint not secured by OAuth2 scope(s)",
+      "severity": "MUST",
+      "lines": {
+        "start": 189,
+        "end": 270
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "31",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Use Problem JSON",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Operations should return problem JSON when any problem occurs during processing whether caused by client or server. Media type have to be 'application/problem+json'",
+      "severity": "MUST",
+      "lines": {
+        "start": 250,
+        "end": 255
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "52",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Define bounds for lengths of string properties",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "No minLength defined",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 416,
+        "end": 419
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "16",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Prefer standard media type names",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Custom media types should only be used for versioning",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 353,
+        "end": 353
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "21",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Pluralize Resource Names",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Resource 'account' appears to be singular",
+      "severity": "MUST",
+      "lines": {
+        "start": 31,
+        "end": 271
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "22",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Use Only the Specified Proprietary Zalando Headers",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "use only standardized or specified response headers",
+      "severity": "MUST",
+      "lines": {
+        "start": 1741,
+        "end": 1747
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "22",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Use Only the Specified Proprietary Zalando Headers",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "use only standardized or specified response headers",
+      "severity": "MUST",
+      "lines": {
+        "start": 1741,
+        "end": 1747
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "22",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Use Only the Specified Proprietary Zalando Headers",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "use only standardized or specified response headers",
+      "severity": "MUST",
+      "lines": {
+        "start": 1741,
+        "end": 1747
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "52",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Define bounds for lengths of string properties",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "No minLength defined",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 497,
+        "end": 500
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "52",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Define bounds for lengths of string properties",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "No maxLength defined",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 451,
+        "end": 454
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "41",
+        "ruleSet": "BoatRuleSet",
+        "title": "Pluralize Resource Names",
+        "severity": "HINT",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Resource 'account' appears to be singular",
+      "severity": "HINT",
+      "lines": {
+        "start": 31,
+        "end": 271
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "52",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Define bounds for lengths of string properties",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "No maxLength defined",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 454,
+        "end": 457
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "31",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Use Problem JSON",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Operations should return problem JSON when any problem occurs during processing whether caused by client or server. Media type have to be 'application/problem+json'",
+      "severity": "MUST",
+      "lines": {
+        "start": 371,
+        "end": 376
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "31",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Use Problem JSON",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Operations should return problem JSON when any problem occurs during processing whether caused by client or server. Media type have to be 'application/problem+json'",
+      "severity": "MUST",
+      "lines": {
+        "start": 379,
+        "end": 384
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "7",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Name date/time properties using the \"_at\" suffix",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Property \"date\" of type \"string\" and format \"date\" should match one of the patterns [.*_at]\"",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 422,
+        "end": 426
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "16",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Prefer standard media type names",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Custom media types should only be used for versioning",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 346,
+        "end": 346
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "16",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Prefer standard media type names",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Custom media types should only be used for versioning",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 347,
+        "end": 347
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "12",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Specify Success and Error Responses",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "operation has to contain the default response",
+      "severity": "MUST",
+      "lines": {
+        "start": 32,
+        "end": 189
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "20",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Array names should be pluralized",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Array property name appears to be singular: category",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 503,
+        "end": 508
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "31",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Use Problem JSON",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Operations should return problem JSON when any problem occurs during processing whether caused by client or server. Media type have to be 'application/problem+json'",
+      "severity": "MUST",
+      "lines": {
+        "start": 161,
+        "end": 166
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "25",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Secure Endpoints with OAuth 2.0",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "API has to be secured by OAuth2",
+      "severity": "MUST",
+      "lines": {
+        "start": 408,
+        "end": 1758
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "48",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Base path can be extracted",
+        "severity": "HINT",
+        "ignored": false,
+        "url": null
+      },
+      "description": "All paths start with prefix '/client-api/v2/account/statements' which could be part of servers' urls.",
+      "severity": "HINT",
+      "lines": {
+        "start": 30,
+        "end": 408
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "16",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Prefer standard media type names",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Custom media types should only be used for versioning",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 348,
+        "end": 348
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "12",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Specify Success and Error Responses",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "operation has to contain the default response",
+      "severity": "MUST",
+      "lines": {
+        "start": 310,
+        "end": 407
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "21",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Pluralize Resource Names",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Resource 'account' appears to be singular",
+      "severity": "MUST",
+      "lines": {
+        "start": 271,
+        "end": 302
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "18",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Do Not Use URI Versioning",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "URL contains version number",
+      "severity": "MUST",
+      "lines": {
+        "start": 31,
+        "end": 271
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "52",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Define bounds for lengths of string properties",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "No maxLength defined",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 1140,
+        "end": 1143
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "8",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Prefer Compatible Extensions",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Property is not an extensible enum (use `x-extensible-enum` instead)",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 526,
+        "end": 533
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "31",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Use Problem JSON",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Operations should return problem JSON when any problem occurs during processing whether caused by client or server. Media type have to be 'application/problem+json'",
+      "severity": "MUST",
+      "lines": {
+        "start": 177,
+        "end": 182
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "51",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Define bounds for numeric properties",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "No minimum defined",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 516,
+        "end": 523
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "47",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Check case of various terms",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Enum values 'ASC', 'DESC' do not match snake_case ('[a-z][a-z0-9]*(?:_[a-z0-9]+)*') but seems to be one of SCREAMING_SNAKE_CASE ('[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)*'), COBOL-CASE ('[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)*'), PascalCase ('[A-Z]+[a-z0-9]*(?:[A-Z0-9]+[a-z0-9]*)*'), Title Case ('([A-Z][^\\s]*\\s?)+'), Hyphenated-Pascal-Case ('[A-Z]+[a-z0-9]*(?:-[A-Z0-9]+[a-z0-9]*)*')",
+      "severity": "MUST",
+      "lines": {
+        "start": 526,
+        "end": 533
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "21",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Pluralize Resource Names",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Resource 'client-api' appears to be singular",
+      "severity": "MUST",
+      "lines": {
+        "start": 31,
+        "end": 271
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "16",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Prefer standard media type names",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Custom media types should only be used for versioning",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 357,
+        "end": 357
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "41",
+        "ruleSet": "BoatRuleSet",
+        "title": "Pluralize Resource Names",
+        "severity": "HINT",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Resource 'account' appears to be singular",
+      "severity": "HINT",
+      "lines": {
+        "start": 271,
+        "end": 302
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "52",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Define bounds for lengths of string properties",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "No minLength defined",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 523,
+        "end": 526
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "47",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Check case of various terms",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Tag 'account-statement' does not match any of camelCase ('[a-z][a-z0-9]*(?:[A-Z0-9]+[a-z0-9]*)*'), Title Case ('([A-Z][^\\s]*\\s?)+') but seems to be kebab-case ('[a-z][a-z0-9]*(?:-[a-z0-9]+)*')",
+      "severity": "MUST",
+      "lines": {
+        "start": 184,
+        "end": 186
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "16",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Prefer standard media type names",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Custom media types should only be used for versioning",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 358,
+        "end": 358
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "52",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Define bounds for lengths of string properties",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "No minLength defined",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 513,
+        "end": 516
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "21",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Pluralize Resource Names",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Resource 'v2' appears to be singular",
+      "severity": "MUST",
+      "lines": {
+        "start": 271,
+        "end": 302
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "52",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Define bounds for lengths of string properties",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "No minLength defined",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 448,
+        "end": 451
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "47",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Check case of various terms",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Enum values 'ASC', 'DESC' do not match snake_case ('[a-z][a-z0-9]*(?:_[a-z0-9]+)*') but seems to be one of SCREAMING_SNAKE_CASE ('[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)*'), COBOL-CASE ('[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)*'), PascalCase ('[A-Z]+[a-z0-9]*(?:[A-Z0-9]+[a-z0-9]*)*'), Title Case ('([A-Z][^\\s]*\\s?)+'), Hyphenated-Pascal-Case ('[A-Z]+[a-z0-9]*(?:-[A-Z0-9]+[a-z0-9]*)*')",
+      "severity": "MUST",
+      "lines": {
+        "start": 526,
+        "end": 533
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "52",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Define bounds for lengths of string properties",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "No minLength defined",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 500,
+        "end": 503
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "41",
+        "ruleSet": "BoatRuleSet",
+        "title": "Pluralize Resource Names",
+        "severity": "HINT",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Resource 'account' appears to be singular",
+      "severity": "HINT",
+      "lines": {
+        "start": 302,
+        "end": 408
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "52",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Define bounds for lengths of string properties",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "No maxLength defined",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 413,
+        "end": 416
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "47",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Check case of various terms",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Tag 'account-statement' does not match any of camelCase ('[a-z][a-z0-9]*(?:[A-Z0-9]+[a-z0-9]*)*'), Title Case ('([A-Z][^\\s]*\\s?)+') but seems to be kebab-case ('[a-z][a-z0-9]*(?:-[a-z0-9]+)*')",
+      "severity": "MUST",
+      "lines": {
+        "start": 29,
+        "end": 30
+      },
+      "pointer": {
+        "matchingProperty": "tags",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "21",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Pluralize Resource Names",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Resource 'v2' appears to be singular",
+      "severity": "MUST",
+      "lines": {
+        "start": 302,
+        "end": 408
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "31",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Use Problem JSON",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Operations should return problem JSON when any problem occurs during processing whether caused by client or server. Media type have to be 'application/problem+json'",
+      "severity": "MUST",
+      "lines": {
+        "start": 169,
+        "end": 174
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "53",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Tag all operations",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Tag 'account-statement' has no description",
+      "severity": "MUST",
+      "lines": {
+        "start": 29,
+        "end": 30
+      },
+      "pointer": {
+        "matchingProperty": "tags",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "47",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Check case of various terms",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Tag 'account-statement' does not match any of camelCase ('[a-z][a-z0-9]*(?:[A-Z0-9]+[a-z0-9]*)*'), Title Case ('([A-Z][^\\s]*\\s?)+') but seems to be kebab-case ('[a-z][a-z0-9]*(?:-[a-z0-9]+)*')",
+      "severity": "MUST",
+      "lines": {
+        "start": 402,
+        "end": 404
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "15",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Limit number of Sub-resources level",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Number of sub-resources should not exceed 3",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 271,
+        "end": 302
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "31",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Use Problem JSON",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Operations should return problem JSON when any problem occurs during processing whether caused by client or server. Media type have to be 'application/problem+json'",
+      "severity": "MUST",
+      "lines": {
+        "start": 258,
+        "end": 263
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "1",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Provide API Audience",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "API Audience must be provided",
+      "severity": "MUST",
+      "lines": {
+        "start": 2,
+        "end": 25
+      },
+      "pointer": {
+        "matchingProperty": "info",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "16",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Prefer standard media type names",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Custom media types should only be used for versioning",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 354,
+        "end": 354
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "2",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Provide API Identifier",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "API Identifier should be provided",
+      "severity": "MUST",
+      "lines": {
+        "start": 2,
+        "end": 25
+      },
+      "pointer": {
+        "matchingProperty": "info",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "52",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Define bounds for lengths of string properties",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "No minLength defined",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 454,
+        "end": 457
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "52",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Define bounds for lengths of string properties",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "No minLength defined",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 426,
+        "end": 429
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "31",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Use Problem JSON",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Operations should return problem JSON when any problem occurs during processing whether caused by client or server. Media type have to be 'application/problem+json'",
+      "severity": "MUST",
+      "lines": {
+        "start": 220,
+        "end": 226
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "52",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Define bounds for lengths of string properties",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "No maxLength defined",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 500,
+        "end": 503
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "21",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Pluralize Resource Names",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Resource 'v2' appears to be singular",
+      "severity": "MUST",
+      "lines": {
+        "start": 31,
+        "end": 271
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "16",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Prefer standard media type names",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Custom media types should only be used for versioning",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 356,
+        "end": 356
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "31",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Use Problem JSON",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Operations should return problem JSON when any problem occurs during processing whether caused by client or server. Media type have to be 'application/problem+json'",
+      "severity": "MUST",
+      "lines": {
+        "start": 242,
+        "end": 247
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "19",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Prefer Hyphenated-Pascal-Case for HTTP header fields",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Header has to be Hyphenated-Pascal-Case",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 1747,
+        "end": 1752
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "24",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Secure All Endpoints With Scopes",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Endpoint not secured by OAuth2 scope(s)",
+      "severity": "MUST",
+      "lines": {
+        "start": 310,
+        "end": 407
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "52",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Define bounds for lengths of string properties",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "No minLength defined",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 451,
+        "end": 454
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "28",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Response As JSON Object",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Always return JSON objects as top-level data structures to support extensibility",
+      "severity": "MUST",
+      "lines": {
+        "start": 538,
+        "end": 1076
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "35",
+        "ruleSet": "BoatRuleSet",
+        "title": "Check info block description format.",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "description can not be longer than 140",
+      "severity": "MUST",
+      "lines": {
+        "start": 1,
+        "end": 1
+      },
+      "pointer": {
+        "matchingProperty": "openapi",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "51",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Define bounds for numeric properties",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "No maximum defined",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 508,
+        "end": 513
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "52",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Define bounds for lengths of string properties",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "No maxLength defined",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 419,
+        "end": 422
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "52",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Define bounds for lengths of string properties",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "No minLength defined",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 1082,
+        "end": 1085
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "51",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Define bounds for numeric properties",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "No minimum defined",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 508,
+        "end": 513
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "28",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Response As JSON Object",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Always return JSON objects as top-level data structures to support extensibility",
+      "severity": "MUST",
+      "lines": {
+        "start": 538,
+        "end": 1076
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "52",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Define bounds for lengths of string properties",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "No maxLength defined",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 497,
+        "end": 500
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "52",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Define bounds for lengths of string properties",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "No maxLength defined",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 448,
+        "end": 451
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "47",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Check case of various terms",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Header 'TotalCount' does not match Hyphenated-Pascal-Case ('[A-Z]+[a-z0-9]*(?:-[A-Z0-9]+[a-z0-9]*)*') but seems to be one of PascalCase ('[A-Z]+[a-z0-9]*(?:[A-Z0-9]+[a-z0-9]*)*'), Title Case ('([A-Z][^\\s]*\\s?)+')",
+      "severity": "MUST",
+      "lines": {
+        "start": 1741,
+        "end": 1747
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "24",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Secure All Endpoints With Scopes",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Endpoint not secured by OAuth2 scope(s)",
+      "severity": "MUST",
+      "lines": {
+        "start": 273,
+        "end": 301
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "21",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Pluralize Resource Names",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Resource 'client-api' appears to be singular",
+      "severity": "MUST",
+      "lines": {
+        "start": 271,
+        "end": 302
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "47",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Check case of various terms",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Enum values 'ASC', 'DESC' do not match snake_case ('[a-z][a-z0-9]*(?:_[a-z0-9]+)*') but seems to be one of SCREAMING_SNAKE_CASE ('[A-Z][A-Z0-9]*(?:_[A-Z0-9]+)*'), COBOL-CASE ('[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)*'), PascalCase ('[A-Z]+[a-z0-9]*(?:[A-Z0-9]+[a-z0-9]*)*'), Title Case ('([A-Z][^\\s]*\\s?)+'), Hyphenated-Pascal-Case ('[A-Z]+[a-z0-9]*(?:-[A-Z0-9]+[a-z0-9]*)*')",
+      "severity": "MUST",
+      "lines": {
+        "start": 113,
+        "end": 119
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "31",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Use Problem JSON",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Operations should return problem JSON when any problem occurs during processing whether caused by client or server. Media type have to be 'application/problem+json'",
+      "severity": "MUST",
+      "lines": {
+        "start": 362,
+        "end": 368
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "36",
+        "ruleSet": "BoatRuleSet",
+        "title": "Check info block tags allowed.",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "tag name is not allowed: account-statement. Only [Retail, Business, Wealth, Identity, Foundation, Basic Support, Flow, Mobile, Security, Payments, Authentication, Employee, Cash, Insights] are allowed",
+      "severity": "MUST",
+      "lines": {
+        "start": 28,
+        "end": 30
+      },
+      "pointer": {
+        "matchingProperty": "tags",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "51",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Define bounds for numeric properties",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "No maximum defined",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 516,
+        "end": 523
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "52",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Define bounds for lengths of string properties",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "No minLength defined",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 1140,
+        "end": 1143
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "52",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Define bounds for lengths of string properties",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "No minLength defined",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 413,
+        "end": 416
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "16",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Prefer standard media type names",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Custom media types should only be used for versioning",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 355,
+        "end": 355
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "31",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Use Problem JSON",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Operations should return problem JSON when any problem occurs during processing whether caused by client or server. Media type have to be 'application/problem+json'",
+      "severity": "MUST",
+      "lines": {
+        "start": 395,
+        "end": 400
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "52",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Define bounds for lengths of string properties",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "No maxLength defined",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 1082,
+        "end": 1085
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "47",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Check case of various terms",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Header 'ContentDisposition' does not match Hyphenated-Pascal-Case ('[A-Z]+[a-z0-9]*(?:-[A-Z0-9]+[a-z0-9]*)*') but seems to be one of PascalCase ('[A-Z]+[a-z0-9]*(?:[A-Z0-9]+[a-z0-9]*)*'), Title Case ('([A-Z][^\\s]*\\s?)+')",
+      "severity": "MUST",
+      "lines": {
+        "start": 1747,
+        "end": 1752
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "31",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Use Problem JSON",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Operations should return problem JSON when any problem occurs during processing whether caused by client or server. Media type have to be 'application/problem+json'",
+      "severity": "MUST",
+      "lines": {
+        "start": 140,
+        "end": 146
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "3",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Contain API Meta Information",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Contact name has to be provided",
+      "severity": "MUST",
+      "lines": {
+        "start": 2,
+        "end": 25
+      },
+      "pointer": {
+        "matchingProperty": "info",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "52",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Define bounds for lengths of string properties",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "No minLength defined",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 419,
+        "end": 422
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "24",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Secure All Endpoints With Scopes",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Endpoint not secured by OAuth2 scope(s)",
+      "severity": "MUST",
+      "lines": {
+        "start": 32,
+        "end": 189
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "16",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Prefer standard media type names",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Custom media types should only be used for versioning",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 345,
+        "end": 345
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "19",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Prefer Hyphenated-Pascal-Case for HTTP header fields",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Header has to be Hyphenated-Pascal-Case",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 1752,
+        "end": 1758
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "16",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Prefer standard media type names",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Custom media types should only be used for versioning",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 350,
+        "end": 350
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "34",
+        "ruleSet": "BoatRuleSet",
+        "title": "Check x-icon value in the info block",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "x-icon should be provided in the info block with the assigned value for the API",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 1,
+        "end": 1
+      },
+      "pointer": {
+        "matchingProperty": "openapi",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "15",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Limit number of Sub-resources level",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Number of sub-resources should not exceed 3",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 302,
+        "end": 408
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "19",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Prefer Hyphenated-Pascal-Case for HTTP header fields",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Header has to be Hyphenated-Pascal-Case",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 1741,
+        "end": 1747
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "47",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Check case of various terms",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Tag 'account-statement' does not match any of camelCase ('[a-z][a-z0-9]*(?:[A-Z0-9]+[a-z0-9]*)*'), Title Case ('([A-Z][^\\s]*\\s?)+') but seems to be kebab-case ('[a-z][a-z0-9]*(?:-[a-z0-9]+)*')",
+      "severity": "MUST",
+      "lines": {
+        "start": 265,
+        "end": 267
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "12",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Specify Success and Error Responses",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "operation has to contain the default response",
+      "severity": "MUST",
+      "lines": {
+        "start": 189,
+        "end": 270
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "16",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Prefer standard media type names",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Custom media types should only be used for versioning",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 351,
+        "end": 351
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "47",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Check case of various terms",
+        "severity": "MUST",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Tag 'account-statement' does not match any of camelCase ('[a-z][a-z0-9]*(?:[A-Z0-9]+[a-z0-9]*)*'), Title Case ('([A-Z][^\\s]*\\s?)+') but seems to be kebab-case ('[a-z][a-z0-9]*(?:-[a-z0-9]+)*')",
+      "severity": "MUST",
+      "lines": {
+        "start": 296,
+        "end": 298
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "16",
+        "ruleSet": "ZalandoRuleSet",
+        "title": "Prefer standard media type names",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "Custom media types should only be used for versioning",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 352,
+        "end": 352
+      },
+      "pointer": {
+        "matchingProperty": "paths",
+        "matchingIndex": -1
+      }
+    },
+    {
+      "rule": {
+        "id": "52",
+        "ruleSet": "ZallyRuleSet",
+        "title": "Define bounds for lengths of string properties",
+        "severity": "SHOULD",
+        "ignored": false,
+        "url": null
+      },
+      "description": "No maxLength defined",
+      "severity": "SHOULD",
+      "lines": {
+        "start": 416,
+        "end": 419
+      },
+      "pointer": {
+        "matchingProperty": "components",
+        "matchingIndex": -1
+      }
+    }
+  ]
+}

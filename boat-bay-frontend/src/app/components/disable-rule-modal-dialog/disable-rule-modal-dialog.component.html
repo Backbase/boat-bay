@@ -1,0 +1,12 @@
+<h1 mat-dialog-title>Disable Rule {{rule.ruleId}} - {{rule.title}}</h1>
+<mat-dialog-content>
+    <p>Rules can only be enabled / disabled for all specs in {{product.portalName}}.</p>
+    <p>When you disable a rule, all specs are going to be revalidated according to the new rules.</p>
+    <p>Are you sure you want to disable rule: <strong>{{rule.ruleId}} - {{rule.title}}</strong></p>
+
+
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button (click)="disableRule()">Yes</button>
+    <button mat-button (click)="closeDialog()">No</button>
+</mat-dialog-actions>

@@ -1,0 +1,20 @@
+@font-face {
+  font-weight: 400;
+  font-family: 'Inter';
+  font-style: normal;
+  src: url('#{$base-fonts-inter-path}/Inter-Regular.woff');
+}
+
+@font-face {
+  font-weight: 600;
+  font-family: 'Inter';
+  font-style: normal;
+  src: url('#{$base-fonts-inter-path}/Inter-SemiBold.woff');
+}
+
+@font-face {
+  font-weight: 700;
+  font-family: 'Inter';
+  font-style: normal;
+  src: url('#{$base-fonts-inter-path}/Inter-Bold.woff');
+}

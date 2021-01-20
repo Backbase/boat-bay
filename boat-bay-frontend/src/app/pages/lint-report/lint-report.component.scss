@@ -1,0 +1,42 @@
+@import "settings/theme/palettes";
+
+.openapi-editor {
+  height: 900px;
+  width: 100%;
+  display: block;
+}
+
+.violations {
+  display: block;
+  overflow: auto;
+  height: 900px;
+  width: 100%;
+}
+
+
+.violation-card {
+  border-top: 3px solid;
+}
+
+.violation-card.MUST {
+  border-top-color: $must;
+}
+
+.violation-card.SHOULD {
+  border-top-color: $should;
+}
+
+.violation-card.MAY {
+  border-top-color: $may
+}
+
+.violation-card.HINT {
+  border-top-color: $hint
+}
+
+
+
+
+
+
+
