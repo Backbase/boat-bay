@@ -8,10 +8,10 @@ import com.backbase.oss.boat.bay.domain.Source;
 import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.domain.SpecType;
 import com.backbase.oss.boat.bay.domain.Tag;
-import com.backbase.oss.boat.bay.repository.ProductReleaseRepository;
 import com.backbase.oss.boat.bay.repository.SpecRepository;
 import com.backbase.oss.boat.bay.repository.SpecTypeRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatCapabilityRepository;
+import com.backbase.oss.boat.bay.repository.extended.BoatProductReleaseRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatProductRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatServiceRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatSpecRepository;
@@ -26,6 +26,7 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -46,6 +47,7 @@ import org.springframework.util.StringUtils;
 public class SpecSourceResolver {
 
 
+    public static final String LATEST = "latest";
     private final SpecRepository specRepository;
     private final BoatProductRepository boatProductRepository;
     private final BoatCapabilityRepository capabilityRepository;
@@ -54,7 +56,7 @@ public class SpecSourceResolver {
     private final BoatSpecRepository boatSpecRepository;
     private final SpecTypeRepository specTypeRepository;
     private final BoatTagRepository boatTagRepository;
-    private final ProductReleaseRepository productReleaseRepository;
+    private final BoatProductReleaseRepository productReleaseRepository;
 
     private final BoatSpecLinter boatSpecLinter;
     private final BoatBackwardsCompatibleChecker boatBackwardsCompatibleChecker;
@@ -82,25 +84,42 @@ public class SpecSourceResolver {
         log.info("Processing {} releases from scan result from source: {}", scan.getProductReleases().size(), scan.getSource().getName());
         if (scan.getProductReleases().isEmpty()) {
 
-            ProductRelease latest = new ProductRelease().key("latest").portal(source.getPortal());
-            ProductRelease productRelease = productReleaseRepository.findOne(Example.of(latest)).orElseGet(() -> productReleaseRepository.save(latest.name("Latest").key("latest")));
+            ProductRelease productRelease = productReleaseRepository.findByProductAndKey(source.getProduct(), LATEST)
+                .orElseGet(() -> createLatestProductRelease(source.getProduct()));
 
             processedSpecs.stream()
                 .collect(Collectors.toMap(Spec::getKey, spec -> spec, this::compareVersion))
                 .forEach((s, spec) -> productRelease.addSpec(spec));
+
             productReleaseRepository.save(productRelease);
         } else {
             scan.getProductReleases().forEach(pr -> {
-                if (!productReleaseRepository.exists(Example.of(new ProductRelease().portal(source.getPortal()).key(pr.getKey())))) {
-                    log.info("Create Product Release: {} for Portal: {}", pr.getName(), source.getPortal());
-                    pr.setPortal(source.getPortal());
-                    if (pr.getKey() == null && pr.getName() != null) {
-                        pr.setKey(pr.getName().toLowerCase(Locale.ROOT));
-                    }
-                    productReleaseRepository.save(pr);
-                }
+                ProductRelease productRelease = productReleaseRepository.findByProductAndKey(source.getProduct(), pr.getKey())
+                    .orElseGet(() -> productReleaseRepository.save(pr));
+                log.info("Processed release: {}", productRelease.getName());
             });
         }
+    }
+
+    @NotNull
+    private ProductRelease createLatestProductRelease(Product product) {
+        ProductRelease newProductRelease = new ProductRelease();
+        newProductRelease.setKey(LATEST.toLowerCase(Locale.ROOT));
+        newProductRelease.setName(LATEST);
+        newProductRelease.setVersion(LATEST);
+        newProductRelease.setReleaseDate(ZonedDateTime.now());
+
+        newProductRelease.setProduct(product);
+        return productReleaseRepository.save(newProductRelease);
+    }
+
+    @NotNull
+    private ProductRelease createProductRelease(Product product, ProductRelease productRelease) {
+
+
+        productRelease.setReleaseDate(ZonedDateTime.now());
+        productRelease.setProduct(product);
+        return productReleaseRepository.save(productRelease);
     }
 
     @NotNull
@@ -251,7 +270,7 @@ public class SpecSourceResolver {
         serviceDefinition.setCapability(spec.getCapability());
         serviceDefinition.setKey(key);
         serviceDefinition.setCreatedBy(spec.getCreatedBy());
-        serviceDefinition.setCreatedOn(Instant.now());
+        serviceDefinition.setCreatedOn(ZonedDateTime.now());
         serviceDefinition.setName(StringUtils.capitalize(serviceNameSpEL.map(exp -> SpringExpressionUtils.parseName(exp, spec, key)).orElse(key)).replaceAll("-", " "));
         serviceDefinition.setDescription(spec.getDescription());
         return boatServiceRepository.save(serviceDefinition);
@@ -266,7 +285,7 @@ public class SpecSourceResolver {
         capability.setProduct(spec.getProduct());
         capability.setKey(key);
         capability.setCreatedBy(spec.getSource().getName());
-        capability.setCreatedOn(Instant.now());
+        capability.setCreatedOn(ZonedDateTime.now());
 
         capability.setName(capabilityNameSpEL.map(exp -> SpringExpressionUtils.parseName(exp, spec, key)).orElse(key));
         return capabilityRepository.save(capability);

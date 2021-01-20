@@ -178,11 +178,16 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
                 zipInputStream.close();
 
                 if(!specsInZip.isEmpty()) {
+                    String name = SpringExpressionUtils.parseName(source.getProductReleaseNameSpEL(), item, item.info().getName());
+                    String key = SpringExpressionUtils.parseName(source.getProductReleaseKeySpEL(), item, item.info().getName());
+                    String version = SpringExpressionUtils.parseName(source.getProductReleaseVersionSpEL(), item, item.info().getName());
                     ProductRelease productRelease = new ProductRelease();
-                    String name = SpringExpressionUtils.parseName(source.getProductReleaseSpEL(), item, item.info().getName());
-                    productRelease.setKey(name.toLowerCase(Locale.ROOT));
+                    productRelease.setKey(key);
                     productRelease.setName(name);
+                    productRelease.setVersion(version);
                     productRelease.setSpecs(specsInZip);
+                    productRelease.setProduct(source.getProduct());
+                    productRelease.setReleaseDate(item.info().getLastModified().toInstant().atZone(ZoneId.systemDefault()));
                     log.info("Adding {} to release named: {}", specsInZip.size(), productRelease.getName());
                     scanResult.addProductRelease(productRelease);
                 }
@@ -214,7 +219,7 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
             spec.setSource(source);
             spec.setName(filename);
             spec.setCreatedBy(JFrogSpecSourceScanner.class.getSimpleName());
-            spec.setCreatedOn(Instant.now());
+            spec.setCreatedOn(Instant.now().atZone(ZoneId.systemDefault()));
             spec.setOpenApi(openApi);
 
             spec.setFilename(filename);
@@ -222,9 +227,9 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
             spec.setSourceUrl(file.getDownloadUri());
             spec.setSourceName(filename);
             spec.setSourceCreatedBy(file.getCreatedBy());
-            spec.setSourceCreatedOn(file.getCreated().toInstant());
+            spec.setSourceCreatedOn(file.getCreated().toInstant().atZone(ZoneId.systemDefault()));
             spec.setSourceLastModifiedBy(file.getModifiedBy());
-            spec.setSourceLastModifiedOn(file.getLastModified().toInstant());
+            spec.setSourceLastModifiedOn(file.getLastModified().toInstant().atZone(ZoneId.systemDefault()));
             return Optional.of(spec);
         } else {
             log.debug("Ignoring {}", zipEntry.getName());
@@ -255,16 +260,16 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
         spec.setSource(source);
         spec.setName(file.getName());
         spec.setCreatedBy(JFrogSpecSourceScanner.class.getSimpleName());
-        spec.setCreatedOn(Instant.now());
+        spec.setCreatedOn(Instant.now().atZone(ZoneId.systemDefault()));
         spec.setChecksum(file.getChecksums().getMd5());
         spec.setFilename(file.getName());
         spec.setSourcePath(file.getPath());
         spec.setSourceUrl(file.getDownloadUri());
         spec.setSourceName(file.getName());
         spec.setSourceCreatedBy(file.getCreatedBy());
-        spec.setSourceCreatedOn(file.getCreated().toInstant());
+        spec.setSourceCreatedOn(file.getCreated().toInstant().atZone(ZoneId.systemDefault()));
         spec.setSourceLastModifiedBy(file.getModifiedBy());
-        spec.setSourceLastModifiedOn(file.getLastModified().toInstant());
+        spec.setSourceLastModifiedOn(file.getLastModified().toInstant().atZone(ZoneId.systemDefault()));
         return spec;
     }
 

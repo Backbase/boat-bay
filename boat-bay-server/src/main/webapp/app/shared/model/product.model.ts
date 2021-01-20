@@ -1,4 +1,5 @@
 import { Moment } from 'moment';
+import { IProductRelease } from 'app/shared/model/product-release.model';
 import { ICapability } from 'app/shared/model/capability.model';
 import { IPortal } from 'app/shared/model/portal.model';
 
@@ -12,6 +13,7 @@ export interface IProduct {
   createdBy?: string;
   hide?: boolean;
   jiraProjectId?: string;
+  productReleases?: IProductRelease[];
   capabilities?: ICapability[];
   portal?: IPortal;
 }
@@ -27,6 +29,7 @@ export class Product implements IProduct {
     public createdBy?: string,
     public hide?: boolean,
     public jiraProjectId?: string,
+    public productReleases?: IProductRelease[],
     public capabilities?: ICapability[],
     public portal?: IPortal
   ) {

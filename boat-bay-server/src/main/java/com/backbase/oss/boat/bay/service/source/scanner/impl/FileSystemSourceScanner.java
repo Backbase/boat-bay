@@ -1,34 +1,44 @@
 package com.backbase.oss.boat.bay.service.source.scanner.impl;
 
-import com.backbase.oss.boat.bay.domain.*;
+import com.backbase.oss.boat.bay.domain.Capability;
+import com.backbase.oss.boat.bay.domain.Portal;
+import com.backbase.oss.boat.bay.domain.Product;
+import com.backbase.oss.boat.bay.domain.ProductRelease;
+import com.backbase.oss.boat.bay.domain.ServiceDefinition;
 import com.backbase.oss.boat.bay.domain.Source;
 import com.backbase.oss.boat.bay.domain.SourcePath;
 import com.backbase.oss.boat.bay.domain.Spec;
+import com.backbase.oss.boat.bay.domain.SpecType;
+import com.backbase.oss.boat.bay.domain.Tag;
 import com.backbase.oss.boat.bay.domain.enumeration.SourceType;
-import com.backbase.oss.boat.bay.repository.*;
-import com.backbase.oss.boat.bay.service.source.scanner.SpecSourceScanner;
+import com.backbase.oss.boat.bay.repository.CapabilityRepository;
+import com.backbase.oss.boat.bay.repository.PortalRepository;
+import com.backbase.oss.boat.bay.repository.ProductReleaseRepository;
+import com.backbase.oss.boat.bay.repository.ProductRepository;
+import com.backbase.oss.boat.bay.repository.ServiceDefinitionRepository;
+import com.backbase.oss.boat.bay.repository.SpecRepository;
+import com.backbase.oss.boat.bay.repository.SpecTypeRepository;
+import com.backbase.oss.boat.bay.repository.TagRepository;
 import com.backbase.oss.boat.bay.service.source.scanner.ScanResult;
-
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
-
+import com.backbase.oss.boat.bay.service.source.scanner.SpecSourceScanner;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-
 import org.jetbrains.annotations.NotNull;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 
@@ -118,19 +128,8 @@ public class FileSystemSourceScanner implements SpecSourceScanner {
             File portalFile = new File(path.toString());
 
             portal = objectMapper.readValue(portalFile, Portal.class);
-            productReleases.addAll(portal.getProductReleases());
-            portal.setProductReleases(new HashSet<>());
+
             portalRepository.save(portal);
-
-            for (ProductRelease p : productReleases){
-
-                p.setPortal(portal);
-                productReleaseRepository.save(p);
-                portal.addProductRelease(p);
-
-            }
-            portalRepository.save(portal);
-
 
             portal.setProducts(Files.walk(path.getParent())
                 .filter(Files::isRegularFile)

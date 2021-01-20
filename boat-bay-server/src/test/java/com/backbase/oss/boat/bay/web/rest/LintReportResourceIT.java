@@ -15,9 +15,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
+import java.time.ZonedDateTime;
+import java.time.ZoneOffset;
+import java.time.ZoneId;
 import java.util.List;
 
+import static com.backbase.oss.boat.bay.web.rest.TestUtil.sameInstant;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -40,8 +43,8 @@ public class LintReportResourceIT {
     private static final Boolean DEFAULT_PASSED = false;
     private static final Boolean UPDATED_PASSED = true;
 
-    private static final Instant DEFAULT_LINTED_ON = Instant.ofEpochMilli(0L);
-    private static final Instant UPDATED_LINTED_ON = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+    private static final ZonedDateTime DEFAULT_LINTED_ON = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
+    private static final ZonedDateTime UPDATED_LINTED_ON = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
     @Autowired
     private LintReportRepository lintReportRepository;
@@ -142,9 +145,9 @@ public class LintReportResourceIT {
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].grade").value(hasItem(DEFAULT_GRADE)))
             .andExpect(jsonPath("$.[*].passed").value(hasItem(DEFAULT_PASSED.booleanValue())))
-            .andExpect(jsonPath("$.[*].lintedOn").value(hasItem(DEFAULT_LINTED_ON.toString())));
+            .andExpect(jsonPath("$.[*].lintedOn").value(hasItem(sameInstant(DEFAULT_LINTED_ON))));
     }
-    
+
     @Test
     @Transactional
     public void getLintReport() throws Exception {
@@ -159,7 +162,7 @@ public class LintReportResourceIT {
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.grade").value(DEFAULT_GRADE))
             .andExpect(jsonPath("$.passed").value(DEFAULT_PASSED.booleanValue()))
-            .andExpect(jsonPath("$.lintedOn").value(DEFAULT_LINTED_ON.toString()));
+            .andExpect(jsonPath("$.lintedOn").value(sameInstant(DEFAULT_LINTED_ON)));
     }
     @Test
     @Transactional

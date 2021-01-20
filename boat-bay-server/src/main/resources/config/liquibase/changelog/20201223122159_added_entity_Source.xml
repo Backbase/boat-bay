@@ -67,7 +67,13 @@
             <column name="version_sp_el" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-            <column name="product_release_sp_el" type="varchar(255)">
+            <column name="product_release_name_sp_el" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="product_release_version_sp_el" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="product_release_key_sp_el" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
             <column name="item_limit" type="integer">
@@ -128,7 +134,9 @@
             <column name="service_name_sp_el" type="string"/>
             <column name="spec_key_sp_el" type="string"/>
             <column name="version_sp_el" type="string"/>
-            <column name="product_release_sp_el" type="string"/>
+            <column name="product_release_name_sp_el" type="string"/>
+            <column name="product_release_version_sp_el" type="string"/>
+            <column name="product_release_key_sp_el" type="string"/>
             <column name="item_limit" type="numeric"/>
             <column name="overwrite_changes" type="boolean"/>
             <column name="portal_id" type="numeric"/>

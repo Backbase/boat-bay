@@ -30,7 +30,7 @@
     },
     {
       "fieldName": "createdOn",
-      "fieldType": "Instant"
+      "fieldType": "ZonedDateTime"
     },
     {
       "fieldName": "createdBy",

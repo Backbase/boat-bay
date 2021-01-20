@@ -1,4 +1,4 @@
-package com.backbase.oss.boat.bay.web.views.dashboard;
+package com.backbase.oss.boat.bay.web.views.dashboard.models;
 
 import io.micrometer.core.instrument.Statistic;
 import java.time.LocalDateTime;

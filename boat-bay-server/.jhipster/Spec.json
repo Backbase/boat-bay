@@ -45,7 +45,7 @@
     },
     {
       "fieldName": "createdOn",
-      "fieldType": "Instant",
+      "fieldType": "ZonedDateTime",
       "fieldValidateRules": [
         "required"
       ]
@@ -125,11 +125,11 @@
     },
     {
       "fieldName": "sourceCreatedOn",
-      "fieldType": "Instant"
+      "fieldType": "ZonedDateTime"
     },
     {
       "fieldName": "sourceLastModifiedOn",
-      "fieldType": "Instant"
+      "fieldType": "ZonedDateTime"
     },
     {
       "fieldName": "sourceLastModifiedBy",

@@ -1,4 +1,4 @@
-package com.backbase.oss.boat.bay.web.views.lint;
+package com.backbase.oss.boat.bay.web.views.dashboard.models;
 
 import com.fasterxml.jackson.core.JsonPointer;
 import kotlin.ranges.IntRange;

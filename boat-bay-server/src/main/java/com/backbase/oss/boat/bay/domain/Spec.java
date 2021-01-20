@@ -9,7 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -45,7 +45,7 @@ public class Spec implements Serializable {
     @Column(name = "icon")
     private String icon;
 
-    
+
     @Lob
     @Column(name = "open_api", nullable = false)
     private String openApi;
@@ -56,7 +56,7 @@ public class Spec implements Serializable {
 
     @NotNull
     @Column(name = "created_on", nullable = false)
-    private Instant createdOn;
+    private ZonedDateTime createdOn;
 
     @NotNull
     @Column(name = "created_by", nullable = false)
@@ -109,10 +109,10 @@ public class Spec implements Serializable {
     private String sourceCreatedBy;
 
     @Column(name = "source_created_on")
-    private Instant sourceCreatedOn;
+    private ZonedDateTime sourceCreatedOn;
 
     @Column(name = "source_last_modified_on")
-    private Instant sourceLastModifiedOn;
+    private ZonedDateTime sourceLastModifiedOn;
 
     @Column(name = "source_last_modified_by")
     private String sourceLastModifiedBy;
@@ -262,16 +262,16 @@ public class Spec implements Serializable {
         this.description = description;
     }
 
-    public Instant getCreatedOn() {
+    public ZonedDateTime getCreatedOn() {
         return createdOn;
     }
 
-    public Spec createdOn(Instant createdOn) {
+    public Spec createdOn(ZonedDateTime createdOn) {
         this.createdOn = createdOn;
         return this;
     }
 
-    public void setCreatedOn(Instant createdOn) {
+    public void setCreatedOn(ZonedDateTime createdOn) {
         this.createdOn = createdOn;
     }
 
@@ -470,29 +470,29 @@ public class Spec implements Serializable {
         this.sourceCreatedBy = sourceCreatedBy;
     }
 
-    public Instant getSourceCreatedOn() {
+    public ZonedDateTime getSourceCreatedOn() {
         return sourceCreatedOn;
     }
 
-    public Spec sourceCreatedOn(Instant sourceCreatedOn) {
+    public Spec sourceCreatedOn(ZonedDateTime sourceCreatedOn) {
         this.sourceCreatedOn = sourceCreatedOn;
         return this;
     }
 
-    public void setSourceCreatedOn(Instant sourceCreatedOn) {
+    public void setSourceCreatedOn(ZonedDateTime sourceCreatedOn) {
         this.sourceCreatedOn = sourceCreatedOn;
     }
 
-    public Instant getSourceLastModifiedOn() {
+    public ZonedDateTime getSourceLastModifiedOn() {
         return sourceLastModifiedOn;
     }
 
-    public Spec sourceLastModifiedOn(Instant sourceLastModifiedOn) {
+    public Spec sourceLastModifiedOn(ZonedDateTime sourceLastModifiedOn) {
         this.sourceLastModifiedOn = sourceLastModifiedOn;
         return this;
     }
 
-    public void setSourceLastModifiedOn(Instant sourceLastModifiedOn) {
+    public void setSourceLastModifiedOn(ZonedDateTime sourceLastModifiedOn) {
         this.sourceLastModifiedOn = sourceLastModifiedOn;
     }
 

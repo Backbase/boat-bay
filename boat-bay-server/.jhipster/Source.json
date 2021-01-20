@@ -80,7 +80,15 @@
       "fieldType": "String"
     },
     {
-      "fieldName": "productReleaseSpEL",
+      "fieldName": "productReleaseNameSpEL",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "productReleaseVersionSpEL",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "productReleaseKeySpEL",
       "fieldType": "String"
     },
     {

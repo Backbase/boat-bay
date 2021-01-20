@@ -2,7 +2,7 @@ package com.backbase.oss.boat.bay.web.rest;
 
 import com.backbase.oss.boat.bay.BoatBayApp;
 import com.backbase.oss.boat.bay.domain.ProductRelease;
-import com.backbase.oss.boat.bay.domain.Portal;
+import com.backbase.oss.boat.bay.domain.Product;
 import com.backbase.oss.boat.bay.repository.ProductReleaseRepository;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -20,9 +20,14 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
+import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.time.ZoneOffset;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.backbase.oss.boat.bay.web.rest.TestUtil.sameInstant;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.mockito.Mockito.*;
@@ -43,6 +48,12 @@ public class ProductReleaseResourceIT {
 
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
+
+    private static final String DEFAULT_VERSION = "AAAAAAAAAA";
+    private static final String UPDATED_VERSION = "BBBBBBBBBB";
+
+    private static final ZonedDateTime DEFAULT_RELEASE_DATE = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
+    private static final ZonedDateTime UPDATED_RELEASE_DATE = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
     private static final Boolean DEFAULT_HIDE = false;
     private static final Boolean UPDATED_HIDE = true;
@@ -71,17 +82,19 @@ public class ProductReleaseResourceIT {
         ProductRelease productRelease = new ProductRelease()
             .key(DEFAULT_KEY)
             .name(DEFAULT_NAME)
+            .version(DEFAULT_VERSION)
+            .releaseDate(DEFAULT_RELEASE_DATE)
             .hide(DEFAULT_HIDE);
         // Add required entity
-        Portal portal;
-        if (TestUtil.findAll(em, Portal.class).isEmpty()) {
-            portal = PortalResourceIT.createEntity(em);
-            em.persist(portal);
+        Product product;
+        if (TestUtil.findAll(em, Product.class).isEmpty()) {
+            product = ProductResourceIT.createEntity(em);
+            em.persist(product);
             em.flush();
         } else {
-            portal = TestUtil.findAll(em, Portal.class).get(0);
+            product = TestUtil.findAll(em, Product.class).get(0);
         }
-        productRelease.setPortal(portal);
+        productRelease.setProduct(product);
         return productRelease;
     }
     /**
@@ -94,17 +107,19 @@ public class ProductReleaseResourceIT {
         ProductRelease productRelease = new ProductRelease()
             .key(UPDATED_KEY)
             .name(UPDATED_NAME)
+            .version(UPDATED_VERSION)
+            .releaseDate(UPDATED_RELEASE_DATE)
             .hide(UPDATED_HIDE);
         // Add required entity
-        Portal portal;
-        if (TestUtil.findAll(em, Portal.class).isEmpty()) {
-            portal = PortalResourceIT.createUpdatedEntity(em);
-            em.persist(portal);
+        Product product;
+        if (TestUtil.findAll(em, Product.class).isEmpty()) {
+            product = ProductResourceIT.createUpdatedEntity(em);
+            em.persist(product);
             em.flush();
         } else {
-            portal = TestUtil.findAll(em, Portal.class).get(0);
+            product = TestUtil.findAll(em, Product.class).get(0);
         }
-        productRelease.setPortal(portal);
+        productRelease.setProduct(product);
         return productRelease;
     }
 
@@ -129,6 +144,8 @@ public class ProductReleaseResourceIT {
         ProductRelease testProductRelease = productReleaseList.get(productReleaseList.size() - 1);
         assertThat(testProductRelease.getKey()).isEqualTo(DEFAULT_KEY);
         assertThat(testProductRelease.getName()).isEqualTo(DEFAULT_NAME);
+        assertThat(testProductRelease.getVersion()).isEqualTo(DEFAULT_VERSION);
+        assertThat(testProductRelease.getReleaseDate()).isEqualTo(DEFAULT_RELEASE_DATE);
         assertThat(testProductRelease.isHide()).isEqualTo(DEFAULT_HIDE);
     }
 
@@ -192,6 +209,25 @@ public class ProductReleaseResourceIT {
 
     @Test
     @Transactional
+    public void checkVersionIsRequired() throws Exception {
+        int databaseSizeBeforeTest = productReleaseRepository.findAll().size();
+        // set the field null
+        productRelease.setVersion(null);
+
+        // Create the ProductRelease, which fails.
+
+
+        restProductReleaseMockMvc.perform(post("/api/product-releases")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(productRelease)))
+            .andExpect(status().isBadRequest());
+
+        List<ProductRelease> productReleaseList = productReleaseRepository.findAll();
+        assertThat(productReleaseList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void getAllProductReleases() throws Exception {
         // Initialize the database
         productReleaseRepository.saveAndFlush(productRelease);
@@ -203,9 +239,11 @@ public class ProductReleaseResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(productRelease.getId().intValue())))
             .andExpect(jsonPath("$.[*].key").value(hasItem(DEFAULT_KEY)))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
+            .andExpect(jsonPath("$.[*].version").value(hasItem(DEFAULT_VERSION)))
+            .andExpect(jsonPath("$.[*].releaseDate").value(hasItem(sameInstant(DEFAULT_RELEASE_DATE))))
             .andExpect(jsonPath("$.[*].hide").value(hasItem(DEFAULT_HIDE.booleanValue())));
     }
-    
+
     @SuppressWarnings({"unchecked"})
     public void getAllProductReleasesWithEagerRelationshipsIsEnabled() throws Exception {
         when(productReleaseRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
@@ -239,6 +277,8 @@ public class ProductReleaseResourceIT {
             .andExpect(jsonPath("$.id").value(productRelease.getId().intValue()))
             .andExpect(jsonPath("$.key").value(DEFAULT_KEY))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
+            .andExpect(jsonPath("$.version").value(DEFAULT_VERSION))
+            .andExpect(jsonPath("$.releaseDate").value(sameInstant(DEFAULT_RELEASE_DATE)))
             .andExpect(jsonPath("$.hide").value(DEFAULT_HIDE.booleanValue()));
     }
     @Test
@@ -264,6 +304,8 @@ public class ProductReleaseResourceIT {
         updatedProductRelease
             .key(UPDATED_KEY)
             .name(UPDATED_NAME)
+            .version(UPDATED_VERSION)
+            .releaseDate(UPDATED_RELEASE_DATE)
             .hide(UPDATED_HIDE);
 
         restProductReleaseMockMvc.perform(put("/api/product-releases")
@@ -277,6 +319,8 @@ public class ProductReleaseResourceIT {
         ProductRelease testProductRelease = productReleaseList.get(productReleaseList.size() - 1);
         assertThat(testProductRelease.getKey()).isEqualTo(UPDATED_KEY);
         assertThat(testProductRelease.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testProductRelease.getVersion()).isEqualTo(UPDATED_VERSION);
+        assertThat(testProductRelease.getReleaseDate()).isEqualTo(UPDATED_RELEASE_DATE);
         assertThat(testProductRelease.isHide()).isEqualTo(UPDATED_HIDE);
     }
 

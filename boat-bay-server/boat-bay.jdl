@@ -13,7 +13,7 @@ entity Portal {
     logoUrl String
     logoLink String
     content TextBlob
-    createdOn Instant
+    createdOn ZonedDateTime
     createdBy String
     hide Boolean
 }
@@ -21,6 +21,8 @@ entity Portal {
 entity ProductRelease {
     key String required
     name String required
+    version String required
+    releaseDate ZonedDateTime
     hide Boolean
 }
 
@@ -29,7 +31,7 @@ entity Product {
 	name String required
 	order Integer
     content TextBlob
-    createdOn Instant
+    createdOn ZonedDateTime
     createdBy String
     hide Boolean
     jiraProjectId String
@@ -41,7 +43,7 @@ entity Capability {
     order Integer
     subTitle String
     content TextBlob
-    createdOn Instant
+    createdOn ZonedDateTime
     createdBy String
     hide Boolean
 }
@@ -55,7 +57,7 @@ entity ServiceDefinition {
     icon String
     color String
     order Integer
-    createdOn Instant
+    createdOn ZonedDateTime
     createdBy String
     hide Boolean
 }
@@ -68,7 +70,7 @@ entity Spec {
     icon String
     openApi TextBlob required
     description TextBlob
-    createdOn Instant required
+    createdOn ZonedDateTime required
     createdBy String required
     checksum String required
     filename String required
@@ -84,8 +86,8 @@ entity Spec {
     sourceName String
     sourceUrl String
     sourceCreatedBy String
-    sourceCreatedOn Instant
-    sourceLastModifiedOn Instant
+    sourceCreatedOn ZonedDateTime
+    sourceLastModifiedOn ZonedDateTime
     sourceLastModifiedBy String
 
 }
@@ -121,7 +123,9 @@ entity Source {
     serviceNameSpEL String
     specKeySpEL String
     versionSpEL String
-    productReleaseSpEL String
+    productReleaseNameSpEL String
+    productReleaseVersionSpEL String
+    productReleaseKeySpEL String
     itemLimit Integer
     overwriteChanges Boolean
 }
@@ -156,7 +160,7 @@ entity LintReport {
     name String
     grade String
     passed Boolean
-    lintedOn Instant
+    lintedOn ZonedDateTime
 }
 
 entity LintRuleViolation {
@@ -192,7 +196,7 @@ relationship ManyToMany {
 }
 
 relationship OneToMany {
-    Portal to ProductRelease{portal(name) required}
+    Product to ProductRelease{product(name) required}
 	Portal to Product{portal(name) required}
 	Product to Capability{product(name) required}
 	Capability to ServiceDefinition{capability(name) required}

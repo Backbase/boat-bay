@@ -8,11 +8,11 @@ import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.repository.SpecRepository;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-public interface BoatSpecRepository extends SpecRepository {
+public interface BoatSpecRepository extends SpecRepository, JpaSpecificationExecutor<Spec> {
 
     Optional<Spec> findByChecksumAndSource(String checkSum, Source source);
 
@@ -24,7 +24,17 @@ public interface BoatSpecRepository extends SpecRepository {
 
     Page<Spec> findAllByCapabilityProduct(Product product, Pageable pageable);
 
+
+    Page<Spec> findAllByCapability(Capability capability, Pageable pageable);
+
+    Page<Spec> findAllByServiceDefinition(ServiceDefinition serviceDefinition, Pageable pageable);
+
+    Page<Spec> findAllByCapabilityAndServiceDefinition(Capability capability, ServiceDefinition serviceDefinition, Pageable pageable);
+
+
     List<Spec> findAllByBackwardsCompatibleIsNull();
 
     List<Spec> findAllByNameAndServiceDefinitionAndVersionIsNotNull(String name, ServiceDefinition serviceDefinition);
+
+
 }

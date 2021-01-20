@@ -35,7 +35,7 @@
     },
     {
       "fieldName": "createdOn",
-      "fieldType": "Instant"
+      "fieldType": "ZonedDateTime"
     },
     {
       "fieldName": "createdBy",
@@ -47,12 +47,6 @@
     }
   ],
   "relationships": [
-    {
-      "relationshipType": "one-to-many",
-      "otherEntityName": "productRelease",
-      "otherEntityRelationshipName": "portal",
-      "relationshipName": "productRelease"
-    },
     {
       "relationshipType": "one-to-many",
       "otherEntityName": "product",
