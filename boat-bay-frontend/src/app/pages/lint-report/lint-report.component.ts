@@ -2,10 +2,13 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Range } from '../../components/ace-editor/ace-editor.component';
-import { BoatLintReport, BoatProduct, BoatViolation } from "../../models/";
+import { BoatLintReport, BoatProduct, BoatLintRule, BoatViolation } from "../../models/";
 import { ActivatedRoute } from "@angular/router";
 import { Ace } from "ace-builds";
+import { MatDialog } from "@angular/material/dialog";
+import { DisableRuleModalDialogComponent } from "../../components/disable-rule-modal-dialog/disable-rule-modal-dialog.component";
 import Annotation = Ace.Annotation;
+import { BoatDashboardService } from "../../services/boat-dashboard.service";
 
 @Component({
   selector: 'lint-report',
@@ -13,13 +16,13 @@ import Annotation = Ace.Annotation;
   styleUrls: ['lint-report.component.scss'],
 })
 export class LintReportComponent implements OnInit {
-  lintReport$: Observable<BoatLintReport>;
+  lintReport$: Observable<BoatLintReport> | null;
   product$: Observable<BoatProduct>;
   @Output() highlight = new EventEmitter<Range>();
   @Output() annotations = new EventEmitter<Annotation[]>();
 
 
-  constructor(protected activatedRoute: ActivatedRoute) {
+  constructor(protected activatedRoute: ActivatedRoute, public dialog: MatDialog, protected boatLintReportService: BoatDashboardService) {
     this.lintReport$ = activatedRoute.data.pipe(map(({lintReport}) => lintReport));
     this.product$ = activatedRoute.data.pipe(map(({product}) => product));
 
@@ -53,5 +56,20 @@ export class LintReportComponent implements OnInit {
       end: violation.lines.end,
     };
     this.highlight.emit(range);
+  }
+
+  disableRule(lintReport: BoatLintReport, boatProduct: BoatProduct, rule: BoatLintRule): void {
+    const dialogRef = this.dialog.open(DisableRuleModalDialogComponent, {
+      data: {
+        product: boatProduct,
+        lintReport: lintReport,
+        rule: rule
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+
+
+      window.location.reload();
+    });
   }
 }

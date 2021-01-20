@@ -13,7 +13,7 @@ export class CreateJiraIssueButtonComponent  {
   public violation!:BoatViolation
 
   @Input()
-  public product!: BoatProduct
+  public product: BoatProduct| null = null;
 
   constructor(@Inject(JIRA_BASE_URL) public jiraBaseUrl: string) { }
 

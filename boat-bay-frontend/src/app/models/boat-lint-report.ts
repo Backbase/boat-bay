@@ -1,16 +1,5 @@
 import { BoatSpec } from "./boat-spec";
-
-interface Rule {
-  id: number;
-  ruleId: string;
-  ruleSet: string;
-  title: string;
-  severity: string;
-  ignored: boolean;
-  url: string;
-  effortMinutes: number;
-  type: string;
-}
+import { BoatLintRule } from "./boat-lint-rule";
 
 interface Range {
   start: number;
@@ -22,7 +11,7 @@ interface Pointer {
 }
 
 export interface BoatViolation {
-  rule: Rule;
+  rule: BoatLintRule;
   description: string;
   severity: string;
   lines: Range;
