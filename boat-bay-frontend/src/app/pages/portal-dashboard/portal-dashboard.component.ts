@@ -3,7 +3,6 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { BoatDashboard, BoatPortal } from "../../models/";
 import { BoatDashboardService } from "../../services/boat-dashboard.service";
-import { BoatLintReportService } from "../../services/boat-lint-report.service";
 
 @Component({
   selector: 'bb-dashboard',
@@ -15,8 +14,7 @@ export class PortalDashboardComponent implements OnInit {
   portals!: BoatPortal[] | null;
 
   constructor(
-    protected boatDashboardService: BoatDashboardService,
-    protected boatLintReportService: BoatLintReportService,
+    protected boatDashboardService: BoatDashboardService
   ) {
     boatDashboardService.getPortals().subscribe(
       value => {
@@ -29,7 +27,4 @@ export class PortalDashboardComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  analyse(portal: BoatDashboard): void {
-    this.boatLintReportService.postLintProduct(portal.productId).subscribe();
-  }
 }

@@ -6,13 +6,17 @@ import { MatButtonModule } from "@angular/material/button";
 import { CommonModule } from "@angular/common";
 import { MatTabsModule } from "@angular/material/tabs";
 import { CreateJiraIssueButtonComponent } from "../../components/create-jira-issue-button/create-jira-issue-button.component";
+import { SpecSummaryComponent } from "../../components/spec-summary/spec-summary.component";
+import { MatListModule } from "@angular/material/list";
+import { MatCheckboxModule } from "@angular/material/checkbox";
 
 
 @NgModule({
   declarations: [
     LintReportComponent,
     AceEditorComponent,
-    CreateJiraIssueButtonComponent
+    CreateJiraIssueButtonComponent,
+    SpecSummaryComponent
   ],
   exports: [
     LintReportComponent
@@ -21,8 +25,10 @@ import { CreateJiraIssueButtonComponent } from "../../components/create-jira-iss
     MatCardModule,
     MatButtonModule,
     CommonModule,
-    MatTabsModule
-
+    MatTabsModule,
+    MatListModule,
+    MatCheckboxModule
   ]
 })
-export class LintReportModule { }
+export class LintReportModule {
+}

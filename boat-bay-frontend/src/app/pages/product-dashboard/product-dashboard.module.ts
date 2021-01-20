@@ -18,7 +18,9 @@ import { SpecsTableComponent } from "../../components/specs-table/specs-table.co
 import { SpecFilterComponent } from "../../components/spec-filter/spec-filter.component";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatSelectModule } from "@angular/material/select";
-import { ReactiveFormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatListModule } from "@angular/material/list";
 
 
 @NgModule({
@@ -45,6 +47,9 @@ import { ReactiveFormsModule } from "@angular/forms";
     MatFormFieldModule,
     MatSelectModule,
     ReactiveFormsModule,
+    MatCheckboxModule,
+    MatListModule,
+    FormsModule,
   ]
 })
 export class ProductDashboardModule { }

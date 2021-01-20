@@ -3,7 +3,15 @@ import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { LegacyPortalView } from "../models/dashboard/v1";
 import { BoatDashboard } from "../models/boat-dashboard";
-import { BoatCapability, BoatPortal, BoatProduct, BoatService, BoatSpec } from "../models";
+import {
+  BoatCapability,
+  BoatLintReport,
+  BoatLintRule,
+  BoatPortal,
+  BoatProduct,
+  BoatService,
+  BoatSpec
+} from "../models";
 
 @Injectable({providedIn: 'root'})
 export class BoatDashboardService {
@@ -29,7 +37,7 @@ export class BoatDashboardService {
   }
 
   getBoatCapabilities(portalKey: string, productKey: string, page: number, size: number, sort: string, direction: string): Observable<HttpResponse<BoatCapability[]>> {
-    if(sort === undefined) {
+    if (sort === undefined) {
       sort = "name";
     }
 
@@ -47,7 +55,7 @@ export class BoatDashboardService {
   }
 
   getBoatServices(portalKey: string, productKey: string, page: number, size: number, sort: string, direction: string): Observable<HttpResponse<BoatService[]>> {
-    if(sort === undefined) {
+    if (sort === undefined) {
       sort = "name";
     }
     let params = new HttpParams().set("page", page.toString())
@@ -62,19 +70,30 @@ export class BoatDashboardService {
   }
 
   getBoatSpecs(portalKey: string, productKey: string, page: number, size: number, sort: string, direction: string): Observable<HttpResponse<BoatSpec[]>> {
-    if(sort === undefined) {
+    if (sort === undefined) {
       sort = "name";
     }
     let params = new HttpParams().set("page", page.toString())
       .set("size", size.toString())
       .set("sort", sort + "," + direction)
     return this.http.get<BoatSpec[]>(`${this.resourceUrl}/portals/${portalKey}/products/${productKey}/specs`, {
-
       params: params,
       observe: 'response'
     });
   }
 
+  getReport(portalKey: string, productKey: string, id: number): Observable<HttpResponse<BoatLintReport>> {
+    return this.http.get<BoatLintReport>(`${this.resourceUrl}/portals/${portalKey}/products/${productKey}/specs/${id}/lint-report`, { observe: 'response' });
+  }
+
+
+  getPortalLintRules(portalKey: string): Observable<HttpResponse<BoatLintRule[]>> {
+    return this.http.get<BoatLintRule[]>(`${this.resourceUrl}/portals/lint-rules`, {observe: "response"});
+  }
+
+  postPortalLintRule(portalKey: string, lintRule: BoatLintRule): Observable<HttpResponse<void>> {
+    return this.http.post<void>(`${this.resourceUrl}/portals/lint-rules/${lintRule.id}`, lintRule, {observe: 'response'});
+  }
 
 
 }

@@ -1,77 +1,43 @@
 <ng-container *ngIf="lintReport$ | async as lintReport">
 
     <div class="mdl-grid mdl-cell mdl-cell--12-col mdl-cell--top">
-        <div class="mdl-cell mdl-cell--8-col-desktop">
+        <div class="mdl-cell mdl-cell--7-col-desktop">
             <div class="lint-report-info mat-elevation-z8 info-container">
-                <div class="info">
-                    <dl>
-                        <dt>Name</dt>
-                        <dd>{{lintReport.spec.name}}</dd>
-
-                        <dt>Title</dt>
-                        <dd>{{lintReport.spec.title}}</dd>
-
-                        <dt>Version</dt>
-                        <dd>{{lintReport.spec.version}}</dd>
-                    </dl>
-                </div>
-                <div class="info">
-                    <dl>
-                        <dt>Linted On</dt>
-                        <dd>{{lintReport.lintedOn | date}}</dd>
-
-                        <dt>Capability</dt>
-                        <dd>{{lintReport.spec.capability.name}}</dd>
-
-                        <dt>Service</dt>
-                        <dd>{{lintReport.spec.serviceDefinition.name}}</dd>
-                    </dl>
-                </div>
-                <div class="info">
-                    <dl>
-                        <dt>Grade</dt>
-                        <dd>
-                            <span class="grade grade-{{lintReport.grade}}">{{lintReport.grade}}</span>
-                        </dd>
-                        <dt>Changes</dt>
-                        <dd><span class="backwards-compatible backwards-compatible-{{lintReport.spec.backwardsCompatible}}">{{lintReport.spec.backwardsCompatible ? 'BACKWARDS COMPATIBLE' : 'BREAKING CHANGES'}}</span></dd>
-                    </dl>
-                </div>
-
+                <app-spec-summary [spec]="lintReport.spec"><</app-spec-summary>
             </div>
 
-
-            <div class="openapi-editor mat-elevation-z8">
-                <ace-editor [contents]="lintReport.openApi"
-                            [annotations]="annotations"
-                            [highlight]="highlight"></ace-editor>
+            <div class="mat-elevation-z8">
+                <div class="openapi-editor ">
+                    <ace-editor [contents]="lintReport.openApi"
+                                [annotations]="annotations"
+                                [highlight]="highlight"></ace-editor>
+                </div>
             </div>
 
         </div>
-        <div class="mdl-cell mdl-cell--4-col-desktop">
-            <mat-tab-group>
-                <mat-tab label="Violations">
-                    <div class="violations">
-                        <mat-card *ngFor="let violation of lintReport.violations"
-                                  class="violation-card {{violation.severity}}">
-                            <mat-card-title><span class="ruleId">{{violation.rule.ruleId}}</span>  {{violation.rule.title}}
-                            </mat-card-title>
-                            <mat-card-subtitle>{{violation.rule.ruleSet}}</mat-card-subtitle>
-                            <mat-card-content>{{violation.description}}</mat-card-content>
-                            <mat-card-actions>
-                                <button mat-button (click)="mark(violation)">
-                                    highlight &gt; {{violation.pointer.matchingProperty }}
-                                </button>
-                                <app-create-jira-issue-button [violation]="violation" [product]="product$ | async"></app-create-jira-issue-button>
-                            </mat-card-actions>
-                        </mat-card>
+        <div class="mdl-cell mdl-cell--5-col-desktop">
+            <div class="violations" *ngIf="product$ | async as product">
+                <mat-card *ngFor="let violation of lintReport.violations"
+                          class="violation-card {{violation.severity}}">
+                    <mat-card-title><span
+                        class="ruleId">{{violation.rule.ruleId}}</span>  {{violation.rule.title}}
+                    </mat-card-title>
+                    <mat-card-subtitle>{{violation.rule.ruleSet}}</mat-card-subtitle>
+                    <mat-card-content>{{violation.description}}</mat-card-content>
+                    <mat-card-actions>
+                        <button mat-button (click)="mark(violation)">
+                            highlight
+                        </button>
+                        <app-create-jira-issue-button [violation]="violation"
+                                                      [product]="product"></app-create-jira-issue-button>
+                        <button mat-button (click)="disableRule(lintReport, product, violation.rule)">
+                            disable rule
+                        </button>
 
-                    </div>
-                </mat-tab>
-                <mat-tab label="Applied Rules">
-                    <h1>Rules</h1>
-                </mat-tab>
-            </mat-tab-group>
+                    </mat-card-actions>
+                </mat-card>
+
+            </div>
         </div>
     </div>
 

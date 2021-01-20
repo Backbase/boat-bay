@@ -1,0 +1,21 @@
+
+.lint-report-info {
+  dl {margin-block-start: 0;}
+  dt, dd { display: block; float: left; margin-top: 10px; }
+  dd { float:right; padding-right: 10px;}
+  dt { clear: both;  }
+  .info {
+    display: inline-block;
+  }
+}
+
+.info-container {
+  display: flex;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.info {
+  flex-grow: 1;
+
+}
