@@ -1,4 +1,4 @@
-package com.backbase.oss.boat.bay.web.views.lint;
+package com.backbase.oss.boat.bay.web.views.dashboard.models;
 
 import java.net.URI;
 import lombok.Data;

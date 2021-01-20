@@ -8,7 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -45,7 +45,7 @@ public class Capability implements Serializable {
     private String content;
 
     @Column(name = "created_on")
-    private Instant createdOn;
+    private ZonedDateTime createdOn;
 
     @Column(name = "created_by")
     private String createdBy;
@@ -136,16 +136,16 @@ public class Capability implements Serializable {
         this.content = content;
     }
 
-    public Instant getCreatedOn() {
+    public ZonedDateTime getCreatedOn() {
         return createdOn;
     }
 
-    public Capability createdOn(Instant createdOn) {
+    public Capability createdOn(ZonedDateTime createdOn) {
         this.createdOn = createdOn;
         return this;
     }
 
-    public void setCreatedOn(Instant createdOn) {
+    public void setCreatedOn(ZonedDateTime createdOn) {
         this.createdOn = createdOn;
     }
 

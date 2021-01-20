@@ -6,7 +6,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import javax.persistence.*;
 
 import java.io.Serializable;
-import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,7 +34,7 @@ public class LintReport implements Serializable {
     private Boolean passed;
 
     @Column(name = "linted_on")
-    private Instant lintedOn;
+    private ZonedDateTime lintedOn;
 
     @OneToOne
     @JoinColumn(unique = true)
@@ -92,16 +92,16 @@ public class LintReport implements Serializable {
         this.passed = passed;
     }
 
-    public Instant getLintedOn() {
+    public ZonedDateTime getLintedOn() {
         return lintedOn;
     }
 
-    public LintReport lintedOn(Instant lintedOn) {
+    public LintReport lintedOn(ZonedDateTime lintedOn) {
         this.lintedOn = lintedOn;
         return this;
     }
 
-    public void setLintedOn(Instant lintedOn) {
+    public void setLintedOn(ZonedDateTime lintedOn) {
         this.lintedOn = lintedOn;
     }
 

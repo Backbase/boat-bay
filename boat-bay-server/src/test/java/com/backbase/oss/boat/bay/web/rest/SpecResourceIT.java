@@ -26,10 +26,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
 import javax.persistence.EntityManager;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
+import java.time.ZonedDateTime;
+import java.time.ZoneOffset;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.backbase.oss.boat.bay.web.rest.TestUtil.sameInstant;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.mockito.Mockito.*;
@@ -66,8 +69,8 @@ public class SpecResourceIT {
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
-    private static final Instant DEFAULT_CREATED_ON = Instant.ofEpochMilli(0L);
-    private static final Instant UPDATED_CREATED_ON = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+    private static final ZonedDateTime DEFAULT_CREATED_ON = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
+    private static final ZonedDateTime UPDATED_CREATED_ON = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
     private static final String DEFAULT_CREATED_BY = "AAAAAAAAAA";
     private static final String UPDATED_CREATED_BY = "BBBBBBBBBB";
@@ -114,11 +117,11 @@ public class SpecResourceIT {
     private static final String DEFAULT_SOURCE_CREATED_BY = "AAAAAAAAAA";
     private static final String UPDATED_SOURCE_CREATED_BY = "BBBBBBBBBB";
 
-    private static final Instant DEFAULT_SOURCE_CREATED_ON = Instant.ofEpochMilli(0L);
-    private static final Instant UPDATED_SOURCE_CREATED_ON = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+    private static final ZonedDateTime DEFAULT_SOURCE_CREATED_ON = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
+    private static final ZonedDateTime UPDATED_SOURCE_CREATED_ON = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
-    private static final Instant DEFAULT_SOURCE_LAST_MODIFIED_ON = Instant.ofEpochMilli(0L);
-    private static final Instant UPDATED_SOURCE_LAST_MODIFIED_ON = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+    private static final ZonedDateTime DEFAULT_SOURCE_LAST_MODIFIED_ON = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
+    private static final ZonedDateTime UPDATED_SOURCE_LAST_MODIFIED_ON = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
     private static final String DEFAULT_SOURCE_LAST_MODIFIED_BY = "AAAAAAAAAA";
     private static final String UPDATED_SOURCE_LAST_MODIFIED_BY = "BBBBBBBBBB";
@@ -547,7 +550,7 @@ public class SpecResourceIT {
             .andExpect(jsonPath("$.[*].icon").value(hasItem(DEFAULT_ICON)))
             .andExpect(jsonPath("$.[*].openApi").value(hasItem(DEFAULT_OPEN_API.toString())))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
-            .andExpect(jsonPath("$.[*].createdOn").value(hasItem(DEFAULT_CREATED_ON.toString())))
+            .andExpect(jsonPath("$.[*].createdOn").value(hasItem(sameInstant(DEFAULT_CREATED_ON))))
             .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
             .andExpect(jsonPath("$.[*].checksum").value(hasItem(DEFAULT_CHECKSUM)))
             .andExpect(jsonPath("$.[*].filename").value(hasItem(DEFAULT_FILENAME)))
@@ -563,11 +566,11 @@ public class SpecResourceIT {
             .andExpect(jsonPath("$.[*].sourceName").value(hasItem(DEFAULT_SOURCE_NAME)))
             .andExpect(jsonPath("$.[*].sourceUrl").value(hasItem(DEFAULT_SOURCE_URL)))
             .andExpect(jsonPath("$.[*].sourceCreatedBy").value(hasItem(DEFAULT_SOURCE_CREATED_BY)))
-            .andExpect(jsonPath("$.[*].sourceCreatedOn").value(hasItem(DEFAULT_SOURCE_CREATED_ON.toString())))
-            .andExpect(jsonPath("$.[*].sourceLastModifiedOn").value(hasItem(DEFAULT_SOURCE_LAST_MODIFIED_ON.toString())))
+            .andExpect(jsonPath("$.[*].sourceCreatedOn").value(hasItem(sameInstant(DEFAULT_SOURCE_CREATED_ON))))
+            .andExpect(jsonPath("$.[*].sourceLastModifiedOn").value(hasItem(sameInstant(DEFAULT_SOURCE_LAST_MODIFIED_ON))))
             .andExpect(jsonPath("$.[*].sourceLastModifiedBy").value(hasItem(DEFAULT_SOURCE_LAST_MODIFIED_BY)));
     }
-    
+
     @SuppressWarnings({"unchecked"})
     public void getAllSpecsWithEagerRelationshipsIsEnabled() throws Exception {
         when(specRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
@@ -606,7 +609,7 @@ public class SpecResourceIT {
             .andExpect(jsonPath("$.icon").value(DEFAULT_ICON))
             .andExpect(jsonPath("$.openApi").value(DEFAULT_OPEN_API.toString()))
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
-            .andExpect(jsonPath("$.createdOn").value(DEFAULT_CREATED_ON.toString()))
+            .andExpect(jsonPath("$.createdOn").value(sameInstant(DEFAULT_CREATED_ON)))
             .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
             .andExpect(jsonPath("$.checksum").value(DEFAULT_CHECKSUM))
             .andExpect(jsonPath("$.filename").value(DEFAULT_FILENAME))
@@ -622,8 +625,8 @@ public class SpecResourceIT {
             .andExpect(jsonPath("$.sourceName").value(DEFAULT_SOURCE_NAME))
             .andExpect(jsonPath("$.sourceUrl").value(DEFAULT_SOURCE_URL))
             .andExpect(jsonPath("$.sourceCreatedBy").value(DEFAULT_SOURCE_CREATED_BY))
-            .andExpect(jsonPath("$.sourceCreatedOn").value(DEFAULT_SOURCE_CREATED_ON.toString()))
-            .andExpect(jsonPath("$.sourceLastModifiedOn").value(DEFAULT_SOURCE_LAST_MODIFIED_ON.toString()))
+            .andExpect(jsonPath("$.sourceCreatedOn").value(sameInstant(DEFAULT_SOURCE_CREATED_ON)))
+            .andExpect(jsonPath("$.sourceLastModifiedOn").value(sameInstant(DEFAULT_SOURCE_LAST_MODIFIED_ON)))
             .andExpect(jsonPath("$.sourceLastModifiedBy").value(DEFAULT_SOURCE_LAST_MODIFIED_BY));
     }
     @Test

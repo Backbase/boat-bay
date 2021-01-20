@@ -16,6 +16,17 @@
       ]
     },
     {
+      "fieldName": "version",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "releaseDate",
+      "fieldType": "ZonedDateTime"
+    },
+    {
       "fieldName": "hide",
       "fieldType": "Boolean"
     }
@@ -31,10 +42,10 @@
     },
     {
       "relationshipType": "many-to-one",
-      "otherEntityName": "portal",
+      "otherEntityName": "product",
       "otherEntityRelationshipName": "productRelease",
       "relationshipValidateRules": "required",
-      "relationshipName": "portal",
+      "relationshipName": "product",
       "otherEntityField": "name"
     }
   ],

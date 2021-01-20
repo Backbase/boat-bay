@@ -83,8 +83,14 @@ public class Source implements Serializable {
     @Column(name = "version_sp_el")
     private String versionSpEL;
 
-    @Column(name = "product_release_sp_el")
-    private String productReleaseSpEL;
+    @Column(name = "product_release_name_sp_el")
+    private String productReleaseNameSpEL;
+
+    @Column(name = "product_release_version_sp_el")
+    private String productReleaseVersionSpEL;
+
+    @Column(name = "product_release_key_sp_el")
+    private String productReleaseKeySpEL;
 
     @Column(name = "item_limit")
     private Integer itemLimit;
@@ -344,17 +350,43 @@ public class Source implements Serializable {
         this.versionSpEL = versionSpEL;
     }
 
-    public String getProductReleaseSpEL() {
-        return productReleaseSpEL;
+    public String getProductReleaseNameSpEL() {
+        return productReleaseNameSpEL;
     }
 
-    public Source productReleaseSpEL(String productReleaseSpEL) {
-        this.productReleaseSpEL = productReleaseSpEL;
+    public Source productReleaseNameSpEL(String productReleaseNameSpEL) {
+        this.productReleaseNameSpEL = productReleaseNameSpEL;
         return this;
     }
 
-    public void setProductReleaseSpEL(String productReleaseSpEL) {
-        this.productReleaseSpEL = productReleaseSpEL;
+    public void setProductReleaseNameSpEL(String productReleaseNameSpEL) {
+        this.productReleaseNameSpEL = productReleaseNameSpEL;
+    }
+
+    public String getProductReleaseVersionSpEL() {
+        return productReleaseVersionSpEL;
+    }
+
+    public Source productReleaseVersionSpEL(String productReleaseVersionSpEL) {
+        this.productReleaseVersionSpEL = productReleaseVersionSpEL;
+        return this;
+    }
+
+    public void setProductReleaseVersionSpEL(String productReleaseVersionSpEL) {
+        this.productReleaseVersionSpEL = productReleaseVersionSpEL;
+    }
+
+    public String getProductReleaseKeySpEL() {
+        return productReleaseKeySpEL;
+    }
+
+    public Source productReleaseKeySpEL(String productReleaseKeySpEL) {
+        this.productReleaseKeySpEL = productReleaseKeySpEL;
+        return this;
+    }
+
+    public void setProductReleaseKeySpEL(String productReleaseKeySpEL) {
+        this.productReleaseKeySpEL = productReleaseKeySpEL;
     }
 
     public Integer getItemLimit() {
@@ -499,7 +531,9 @@ public class Source implements Serializable {
             ", serviceNameSpEL='" + getServiceNameSpEL() + "'" +
             ", specKeySpEL='" + getSpecKeySpEL() + "'" +
             ", versionSpEL='" + getVersionSpEL() + "'" +
-            ", productReleaseSpEL='" + getProductReleaseSpEL() + "'" +
+            ", productReleaseNameSpEL='" + getProductReleaseNameSpEL() + "'" +
+            ", productReleaseVersionSpEL='" + getProductReleaseVersionSpEL() + "'" +
+            ", productReleaseKeySpEL='" + getProductReleaseKeySpEL() + "'" +
             ", itemLimit=" + getItemLimit() +
             ", overwriteChanges='" + isOverwriteChanges() + "'" +
             "}";

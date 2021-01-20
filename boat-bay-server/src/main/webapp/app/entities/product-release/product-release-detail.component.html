@@ -16,6 +16,14 @@
                 <dd>
                     <span>{{ productRelease.name }}</span>
                 </dd>
+                <dt><span>Version</span></dt>
+                <dd>
+                    <span>{{ productRelease.version }}</span>
+                </dd>
+                <dt><span>Release Date</span></dt>
+                <dd>
+                    <span>{{ productRelease.releaseDate }}</span>
+                </dd>
                 <dt><span>Hide</span></dt>
                 <dd>
                     <span>{{ productRelease.hide }}</span>
@@ -26,10 +34,10 @@
                         <a [routerLink]="['/spec', spec?.id, 'view']">{{ spec.id }}</a>{{ last ? '' : ', ' }}
                     </span>
                 </dd>
-                <dt><span>Portal</span></dt>
+                <dt><span>Product</span></dt>
                 <dd>
-                    <div *ngIf="productRelease.portal">
-                        <a [routerLink]="['/portal', productRelease.portal?.id, 'view']">{{ productRelease.portal?.name }}</a>
+                    <div *ngIf="productRelease.product">
+                        <a [routerLink]="['/product', productRelease.product?.id, 'view']">{{ productRelease.product?.name }}</a>
                     </div>
                 </dd>
             </dl>

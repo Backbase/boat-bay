@@ -85,8 +85,14 @@ public class SourceResourceIT {
     private static final String DEFAULT_VERSION_SP_EL = "AAAAAAAAAA";
     private static final String UPDATED_VERSION_SP_EL = "BBBBBBBBBB";
 
-    private static final String DEFAULT_PRODUCT_RELEASE_SP_EL = "AAAAAAAAAA";
-    private static final String UPDATED_PRODUCT_RELEASE_SP_EL = "BBBBBBBBBB";
+    private static final String DEFAULT_PRODUCT_RELEASE_NAME_SP_EL = "AAAAAAAAAA";
+    private static final String UPDATED_PRODUCT_RELEASE_NAME_SP_EL = "BBBBBBBBBB";
+
+    private static final String DEFAULT_PRODUCT_RELEASE_VERSION_SP_EL = "AAAAAAAAAA";
+    private static final String UPDATED_PRODUCT_RELEASE_VERSION_SP_EL = "BBBBBBBBBB";
+
+    private static final String DEFAULT_PRODUCT_RELEASE_KEY_SP_EL = "AAAAAAAAAA";
+    private static final String UPDATED_PRODUCT_RELEASE_KEY_SP_EL = "BBBBBBBBBB";
 
     private static final Integer DEFAULT_ITEM_LIMIT = 1;
     private static final Integer UPDATED_ITEM_LIMIT = 2;
@@ -130,7 +136,9 @@ public class SourceResourceIT {
             .serviceNameSpEL(DEFAULT_SERVICE_NAME_SP_EL)
             .specKeySpEL(DEFAULT_SPEC_KEY_SP_EL)
             .versionSpEL(DEFAULT_VERSION_SP_EL)
-            .productReleaseSpEL(DEFAULT_PRODUCT_RELEASE_SP_EL)
+            .productReleaseNameSpEL(DEFAULT_PRODUCT_RELEASE_NAME_SP_EL)
+            .productReleaseVersionSpEL(DEFAULT_PRODUCT_RELEASE_VERSION_SP_EL)
+            .productReleaseKeySpEL(DEFAULT_PRODUCT_RELEASE_KEY_SP_EL)
             .itemLimit(DEFAULT_ITEM_LIMIT)
             .overwriteChanges(DEFAULT_OVERWRITE_CHANGES);
         // Add required entity
@@ -180,7 +188,9 @@ public class SourceResourceIT {
             .serviceNameSpEL(UPDATED_SERVICE_NAME_SP_EL)
             .specKeySpEL(UPDATED_SPEC_KEY_SP_EL)
             .versionSpEL(UPDATED_VERSION_SP_EL)
-            .productReleaseSpEL(UPDATED_PRODUCT_RELEASE_SP_EL)
+            .productReleaseNameSpEL(UPDATED_PRODUCT_RELEASE_NAME_SP_EL)
+            .productReleaseVersionSpEL(UPDATED_PRODUCT_RELEASE_VERSION_SP_EL)
+            .productReleaseKeySpEL(UPDATED_PRODUCT_RELEASE_KEY_SP_EL)
             .itemLimit(UPDATED_ITEM_LIMIT)
             .overwriteChanges(UPDATED_OVERWRITE_CHANGES);
         // Add required entity
@@ -242,7 +252,9 @@ public class SourceResourceIT {
         assertThat(testSource.getServiceNameSpEL()).isEqualTo(DEFAULT_SERVICE_NAME_SP_EL);
         assertThat(testSource.getSpecKeySpEL()).isEqualTo(DEFAULT_SPEC_KEY_SP_EL);
         assertThat(testSource.getVersionSpEL()).isEqualTo(DEFAULT_VERSION_SP_EL);
-        assertThat(testSource.getProductReleaseSpEL()).isEqualTo(DEFAULT_PRODUCT_RELEASE_SP_EL);
+        assertThat(testSource.getProductReleaseNameSpEL()).isEqualTo(DEFAULT_PRODUCT_RELEASE_NAME_SP_EL);
+        assertThat(testSource.getProductReleaseVersionSpEL()).isEqualTo(DEFAULT_PRODUCT_RELEASE_VERSION_SP_EL);
+        assertThat(testSource.getProductReleaseKeySpEL()).isEqualTo(DEFAULT_PRODUCT_RELEASE_KEY_SP_EL);
         assertThat(testSource.getItemLimit()).isEqualTo(DEFAULT_ITEM_LIMIT);
         assertThat(testSource.isOverwriteChanges()).isEqualTo(DEFAULT_OVERWRITE_CHANGES);
     }
@@ -352,11 +364,13 @@ public class SourceResourceIT {
             .andExpect(jsonPath("$.[*].serviceNameSpEL").value(hasItem(DEFAULT_SERVICE_NAME_SP_EL)))
             .andExpect(jsonPath("$.[*].specKeySpEL").value(hasItem(DEFAULT_SPEC_KEY_SP_EL)))
             .andExpect(jsonPath("$.[*].versionSpEL").value(hasItem(DEFAULT_VERSION_SP_EL)))
-            .andExpect(jsonPath("$.[*].productReleaseSpEL").value(hasItem(DEFAULT_PRODUCT_RELEASE_SP_EL)))
+            .andExpect(jsonPath("$.[*].productReleaseNameSpEL").value(hasItem(DEFAULT_PRODUCT_RELEASE_NAME_SP_EL)))
+            .andExpect(jsonPath("$.[*].productReleaseVersionSpEL").value(hasItem(DEFAULT_PRODUCT_RELEASE_VERSION_SP_EL)))
+            .andExpect(jsonPath("$.[*].productReleaseKeySpEL").value(hasItem(DEFAULT_PRODUCT_RELEASE_KEY_SP_EL)))
             .andExpect(jsonPath("$.[*].itemLimit").value(hasItem(DEFAULT_ITEM_LIMIT)))
             .andExpect(jsonPath("$.[*].overwriteChanges").value(hasItem(DEFAULT_OVERWRITE_CHANGES.booleanValue())));
     }
-    
+
     @Test
     @Transactional
     public void getSource() throws Exception {
@@ -385,7 +399,9 @@ public class SourceResourceIT {
             .andExpect(jsonPath("$.serviceNameSpEL").value(DEFAULT_SERVICE_NAME_SP_EL))
             .andExpect(jsonPath("$.specKeySpEL").value(DEFAULT_SPEC_KEY_SP_EL))
             .andExpect(jsonPath("$.versionSpEL").value(DEFAULT_VERSION_SP_EL))
-            .andExpect(jsonPath("$.productReleaseSpEL").value(DEFAULT_PRODUCT_RELEASE_SP_EL))
+            .andExpect(jsonPath("$.productReleaseNameSpEL").value(DEFAULT_PRODUCT_RELEASE_NAME_SP_EL))
+            .andExpect(jsonPath("$.productReleaseVersionSpEL").value(DEFAULT_PRODUCT_RELEASE_VERSION_SP_EL))
+            .andExpect(jsonPath("$.productReleaseKeySpEL").value(DEFAULT_PRODUCT_RELEASE_KEY_SP_EL))
             .andExpect(jsonPath("$.itemLimit").value(DEFAULT_ITEM_LIMIT))
             .andExpect(jsonPath("$.overwriteChanges").value(DEFAULT_OVERWRITE_CHANGES.booleanValue()));
     }
@@ -427,7 +443,9 @@ public class SourceResourceIT {
             .serviceNameSpEL(UPDATED_SERVICE_NAME_SP_EL)
             .specKeySpEL(UPDATED_SPEC_KEY_SP_EL)
             .versionSpEL(UPDATED_VERSION_SP_EL)
-            .productReleaseSpEL(UPDATED_PRODUCT_RELEASE_SP_EL)
+            .productReleaseNameSpEL(UPDATED_PRODUCT_RELEASE_NAME_SP_EL)
+            .productReleaseVersionSpEL(UPDATED_PRODUCT_RELEASE_VERSION_SP_EL)
+            .productReleaseKeySpEL(UPDATED_PRODUCT_RELEASE_KEY_SP_EL)
             .itemLimit(UPDATED_ITEM_LIMIT)
             .overwriteChanges(UPDATED_OVERWRITE_CHANGES);
 
@@ -457,7 +475,9 @@ public class SourceResourceIT {
         assertThat(testSource.getServiceNameSpEL()).isEqualTo(UPDATED_SERVICE_NAME_SP_EL);
         assertThat(testSource.getSpecKeySpEL()).isEqualTo(UPDATED_SPEC_KEY_SP_EL);
         assertThat(testSource.getVersionSpEL()).isEqualTo(UPDATED_VERSION_SP_EL);
-        assertThat(testSource.getProductReleaseSpEL()).isEqualTo(UPDATED_PRODUCT_RELEASE_SP_EL);
+        assertThat(testSource.getProductReleaseNameSpEL()).isEqualTo(UPDATED_PRODUCT_RELEASE_NAME_SP_EL);
+        assertThat(testSource.getProductReleaseVersionSpEL()).isEqualTo(UPDATED_PRODUCT_RELEASE_VERSION_SP_EL);
+        assertThat(testSource.getProductReleaseKeySpEL()).isEqualTo(UPDATED_PRODUCT_RELEASE_KEY_SP_EL);
         assertThat(testSource.getItemLimit()).isEqualTo(UPDATED_ITEM_LIMIT);
         assertThat(testSource.isOverwriteChanges()).isEqualTo(UPDATED_OVERWRITE_CHANGES);
     }

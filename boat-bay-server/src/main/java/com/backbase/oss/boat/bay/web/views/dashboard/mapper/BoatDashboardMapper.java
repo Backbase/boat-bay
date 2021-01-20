@@ -1,4 +1,4 @@
-package com.backbase.oss.boat.bay.web.views.dashboard;
+package com.backbase.oss.boat.bay.web.views.dashboard.mapper;
 
 import com.backbase.oss.boat.bay.domain.Capability;
 import com.backbase.oss.boat.bay.domain.LintReport;
@@ -10,15 +10,21 @@ import com.backbase.oss.boat.bay.domain.Product;
 import com.backbase.oss.boat.bay.domain.ProductRelease;
 import com.backbase.oss.boat.bay.domain.ServiceDefinition;
 import com.backbase.oss.boat.bay.domain.Spec;
-import com.backbase.oss.boat.bay.domain.Tag;
-import com.backbase.oss.boat.bay.web.views.lint.BoatLintReport;
-import com.backbase.oss.boat.bay.web.views.lint.BoatLintRule;
-import com.backbase.oss.boat.bay.web.views.lint.BoatViolation;
+import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatCapability;
+import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatLintReport;
+import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatLintRule;
+import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatPortal;
+import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatPortalDashboard;
+import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatProduct;
+import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatProductRelease;
+import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatService;
+import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatSpec;
+import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatViolation;
 import com.fasterxml.jackson.core.JsonPointer;
+import java.net.URI;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,32 +35,14 @@ import java.util.function.Predicate;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import kotlin.ranges.IntRange;
-import org.jetbrains.annotations.NotNull;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.springframework.util.StringUtils;
 import org.zalando.zally.rule.api.RuleSet;
 
 @Mapper(componentModel = "spring")
 public interface BoatDashboardMapper {
 
-    @Mapping(target = "releases", ignore = true)
-    @Mapping(target = "capabilities", ignore = true)
-    BoatLegacyPortal mapPortal(Portal portal);
-
-    BoatLegacyPortal.ProductDto mapProduct(Product product);
-
-    @Mapping(target = "modules", source = "serviceDefinitions")
-    BoatLegacyPortal.CapabilityDto mapCapability(Capability capability);
-
-    BoatLegacyPortal.PortalVersionDto mapPortalVersion(Portal portal);
-
-    @Mapping(target = "XIcon", source = "icon")
-    @Mapping(target = "tags", ignore = true)
-    BoatLegacyPortal.ModuleDto mapModule(ServiceDefinition serviceDefinition);
-
-    @Mapping(target = "grade", source = "spec.lintReport.grade")
-    @Mapping(target = "icon", source = "spec.specType.icon")
-    BoatLegacyPortal.SpecDto mapSpec(Spec spec);
 
     @Mapping(target = "numberOfServices", ignore = true)
     @Mapping(target = "numberOfCapabilities", ignore = true)
@@ -68,63 +56,6 @@ public interface BoatDashboardMapper {
     @Mapping(target = "lastLintReport", ignore = true)
     @Mapping(target = "statistics", ignore = true)
     BoatPortalDashboard mapPortal(Portal portal, Product product);
-
-
-    default Map<String, BoatLegacyPortal.CapabilityDto> mapCapabilities(Portal portal, List<String> allEnabledTags) {
-        return portal.getProducts().stream()
-            .flatMap(p -> p.getCapabilities().stream())
-            .map(capability -> {
-                BoatLegacyPortal.CapabilityDto capabilityDto1 = mapCapability(capability);
-                capabilityDto1.getModules().values().forEach(moduleDto -> moduleDto.setTags(moduleDto.getTags().stream().filter(allEnabledTags::contains).collect(Collectors.toSet())));
-                return capabilityDto1;
-            })
-            .collect(Collectors.toMap(BoatLegacyPortal.CapabilityDto::getKey, capabilityDto -> capabilityDto));
-    }
-
-    default Map<String, BoatLegacyPortal.ModuleDto> mapModules(Set<ServiceDefinition> serviceDefinitions) {
-        Set<String> tags = serviceDefinitions.stream().flatMap(sd -> sd.getSpecs().stream()).flatMap(spec -> spec.getTags().stream()).map(Tag::getName).collect(Collectors.toSet());
-
-        return serviceDefinitions.stream()
-            .map(serviceDefinition -> {
-                BoatLegacyPortal.ModuleDto moduleDto = mapModule(serviceDefinition);
-                moduleDto.setTags(tags);
-                return moduleDto;
-            })
-            .collect(Collectors.toMap(BoatLegacyPortal.ModuleDto::getKey, moduleDto -> moduleDto));
-    }
-
-
-    default Map<Long, BoatLegacyPortal.SpecDto> map(Set<Spec> specs) {
-        return specs.stream()
-            .map(this::mapSpec)
-            .collect(Collectors.toMap(BoatLegacyPortal.SpecDto::getId, specDto -> specDto));
-    }
-
-
-    default Map<String, Map<String, BoatLegacyPortal.ProductReleaseDto>> mapReleases(Portal portal) {
-        Map<String, Map<String, BoatLegacyPortal.ProductReleaseDto>> result = new LinkedHashMap<>();
-        portal.getProductReleases()
-            .forEach(productRelease -> result.put(productRelease.getKey(), mapProductRelease(productRelease)));
-        return result;
-
-    }
-
-    @NotNull
-    private Map<String, BoatLegacyPortal.ProductReleaseDto> mapProductRelease(ProductRelease productRelease) {
-        Map<String, BoatLegacyPortal.ProductReleaseDto> result = new LinkedHashMap<>();
-        productRelease.getSpecs().stream().collect(Collectors.groupingBy(Spec::getProduct)).forEach((product, specs) -> {
-            BoatLegacyPortal.ProductReleaseDto pr = new BoatLegacyPortal.ProductReleaseDto();
-            pr.setKey(productRelease.getKey());
-            pr.setTitle(productRelease.getName());
-            pr.setServices(specs.stream().map(Spec::getServiceDefinition)
-                .sorted(Comparator.comparing(ServiceDefinition::getName))
-                .filter(distinctByKey(ServiceDefinition::getKey))
-                .collect(toLinkedMap(ServiceDefinition::getKey, ServiceDefinition::getName)));
-            pr.setSpecs(specs.stream().map(Spec::getId).collect(Collectors.toSet()));
-            result.put(product.getKey(), pr);
-        });
-        return result;
-    }
 
     static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
         Set<Object> seen = ConcurrentHashMap.newKeySet();
@@ -144,10 +75,6 @@ public interface BoatDashboardMapper {
         );
     }
 
-    default Map<String, BoatLegacyPortal.ProductDto> mapProducts(Set<Product> products) {
-        return products.stream()
-            .collect(Collectors.toMap(Product::getKey, this::mapProduct));
-    }
 
     default List<String> mapCapabilities(Set<Capability> capabilities) {
         return capabilities.stream()
@@ -167,7 +94,7 @@ public interface BoatDashboardMapper {
     BoatCapability mapBoatCapability(Capability capability);
 
     default LocalDateTime map(Instant value) {
-        if(value == null) {
+        if (value == null) {
             return null;
         }
         return LocalDateTime.ofInstant(value, ZoneId.systemDefault());
@@ -187,7 +114,7 @@ public interface BoatDashboardMapper {
 
     @Mapping(target = "version", source = "spec.version")
     @Mapping(target = "openApi", ignore = true)
-    @Mapping(target = "violations",ignore = true)
+    @Mapping(target = "violations", ignore = true)
     BoatLintReport mapReportWithoutViolations(LintReport lintReport);
 
     @Mapping(target = "lines", expression = "java(mapRange(lintRuleViolation))")
@@ -211,6 +138,19 @@ public interface BoatDashboardMapper {
         return JsonPointer.valueOf(value);
     }
 
-    BoatLintRule mapPortalLintRule(PortalLintRule portalLintRule);
+    @Mapping(target = "url", source = "rule.lintRule.externalUrl")
+    @Mapping(target = "title", source = "rule.lintRule.title")
+    @Mapping(target = "severity", source = "rule.lintRule.severity")
+    @Mapping(target = "ruleSet", source = "rule.lintRule.ruleSet.name")
+    BoatLintRule mapPortalLintRule(PortalLintRule rule);
 
+    BoatProductRelease mapBoatProductRelease(ProductRelease productRelease);
+
+    default URI mapUrl(String value) {
+        if(StringUtils.hasText(value)) {
+            return URI.create(value);
+        } else {
+            return null;
+        }
+    };
 }

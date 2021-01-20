@@ -8,7 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -51,7 +51,7 @@ public class ServiceDefinition implements Serializable {
     private String color;
 
     @Column(name = "created_on")
-    private Instant createdOn;
+    private ZonedDateTime createdOn;
 
     @Column(name = "created_by")
     private String createdBy;
@@ -168,16 +168,16 @@ public class ServiceDefinition implements Serializable {
         this.color = color;
     }
 
-    public Instant getCreatedOn() {
+    public ZonedDateTime getCreatedOn() {
         return createdOn;
     }
 
-    public ServiceDefinition createdOn(Instant createdOn) {
+    public ServiceDefinition createdOn(ZonedDateTime createdOn) {
         this.createdOn = createdOn;
         return this;
     }
 
-    public void setCreatedOn(Instant createdOn) {
+    public void setCreatedOn(ZonedDateTime createdOn) {
         this.createdOn = createdOn;
     }
 

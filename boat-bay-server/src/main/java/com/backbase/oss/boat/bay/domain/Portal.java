@@ -7,7 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -47,17 +47,13 @@ public class Portal implements Serializable {
     private String content;
 
     @Column(name = "created_on")
-    private Instant createdOn;
+    private ZonedDateTime createdOn;
 
     @Column(name = "created_by")
     private String createdBy;
 
     @Column(name = "hide")
     private Boolean hide;
-
-    @OneToMany(mappedBy = "portal")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    private Set<ProductRelease> productReleases = new HashSet<>();
 
     @OneToMany(mappedBy = "portal")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -154,16 +150,16 @@ public class Portal implements Serializable {
         this.content = content;
     }
 
-    public Instant getCreatedOn() {
+    public ZonedDateTime getCreatedOn() {
         return createdOn;
     }
 
-    public Portal createdOn(Instant createdOn) {
+    public Portal createdOn(ZonedDateTime createdOn) {
         this.createdOn = createdOn;
         return this;
     }
 
-    public void setCreatedOn(Instant createdOn) {
+    public void setCreatedOn(ZonedDateTime createdOn) {
         this.createdOn = createdOn;
     }
 
@@ -191,31 +187,6 @@ public class Portal implements Serializable {
 
     public void setHide(Boolean hide) {
         this.hide = hide;
-    }
-
-    public Set<ProductRelease> getProductReleases() {
-        return productReleases;
-    }
-
-    public Portal productReleases(Set<ProductRelease> productReleases) {
-        this.productReleases = productReleases;
-        return this;
-    }
-
-    public Portal addProductRelease(ProductRelease productRelease) {
-        this.productReleases.add(productRelease);
-        productRelease.setPortal(this);
-        return this;
-    }
-
-    public Portal removeProductRelease(ProductRelease productRelease) {
-        this.productReleases.remove(productRelease);
-        productRelease.setPortal(null);
-        return this;
-    }
-
-    public void setProductReleases(Set<ProductRelease> productReleases) {
-        this.productReleases = productReleases;
     }
 
     public Set<Product> getProducts() {

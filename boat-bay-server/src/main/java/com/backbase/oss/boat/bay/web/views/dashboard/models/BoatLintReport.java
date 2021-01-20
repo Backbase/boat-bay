@@ -1,7 +1,6 @@
-package com.backbase.oss.boat.bay.web.views.lint;
+package com.backbase.oss.boat.bay.web.views.dashboard.models;
 
-import com.backbase.oss.boat.bay.web.views.dashboard.BoatSpec;
-import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
@@ -16,7 +15,7 @@ public class BoatLintReport {
     private String name;
     private String grade;
     private boolean passed;
-    private Instant lintedOn;
+    private ZonedDateTime lintedOn;
     private String version;
 
     private String openApi;

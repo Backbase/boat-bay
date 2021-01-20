@@ -15,7 +15,7 @@
     },
     {
       "fieldName": "lintedOn",
-      "fieldType": "Instant"
+      "fieldType": "ZonedDateTime"
     }
   ],
   "relationships": [

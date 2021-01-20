@@ -12,6 +12,7 @@ import com.backbase.oss.boat.bay.repository.extended.BoatLintRuleRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatLintRuleViolationRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatSpecRepository;
 import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -48,11 +49,6 @@ public class BoatSpecLinter {
     private final RulesManager rulesManager;
     private final BoatSpecRepository specRepository;
 
-    @Scheduled(fixedRate = 3600000)
-    public void checkSpecsToLint() {
-        specRepository.findAllByLintReportIsNull().forEach(this::scheduleLintJob);
-    }
-
     @Async
     @Transactional
     public void scheduleLintJob(Spec spec) {
@@ -76,7 +72,7 @@ public class BoatSpecLinter {
         lintReport.setName("Lint Report " + spec.getName() + "-" + spec.getVersion());
         String grade = calculateGrade(violations);
         lintReport.setGrade(grade);
-        lintReport.setLintedOn(Instant.now());
+        lintReport.setLintedOn(ZonedDateTime.now());
         lintReportRepository.save(lintReport);
         boatLintRuleViolationRepository.deleteByLintReport(lintReport);
         boatLintRuleViolationRepository.saveAll(violations);

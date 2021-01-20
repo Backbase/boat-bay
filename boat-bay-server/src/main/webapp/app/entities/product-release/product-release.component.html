@@ -25,9 +25,11 @@
                     <th scope="col" ><span>ID</span></th>
                     <th scope="col" ><span>Key</span></th>
                     <th scope="col" ><span>Name</span></th>
+                    <th scope="col" ><span>Version</span></th>
+                    <th scope="col" ><span>Release Date</span></th>
                     <th scope="col" ><span>Hide</span></th>
                     <th scope="col" ><span>Spec</span></th>
-                    <th scope="col" ><span>Portal</span></th>
+                    <th scope="col" ><span>Product</span></th>
                     <th scope="col"></th>
                 </tr>
             </thead>
@@ -36,6 +38,8 @@
                     <td><a [routerLink]="['/product-release', productRelease.id, 'view']">{{ productRelease.id }}</a></td>
                     <td>{{ productRelease.key }}</td>
                     <td>{{ productRelease.name }}</td>
+                    <td>{{ productRelease.version }}</td>
+                    <td>{{ productRelease.releaseDate | date:'medium' }}</td>
                     <td>{{ productRelease.hide }}</td>
                     <td>
                         <span *ngFor="let spec of productRelease.specs; let last = last">
@@ -43,8 +47,8 @@
                         </span>
                     </td>
                     <td>
-                        <div *ngIf="productRelease.portal">
-                            <a [routerLink]="['/portal', productRelease.portal?.id, 'view']" >{{ productRelease.portal?.name }}</a>
+                        <div *ngIf="productRelease.product">
+                            <a [routerLink]="['/product', productRelease.product?.id, 'view']" >{{ productRelease.product?.name }}</a>
                         </div>
                     </td>
                     <td class="text-right">

@@ -8,7 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
-import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -42,7 +42,7 @@ public class Product implements Serializable {
     private String content;
 
     @Column(name = "created_on")
-    private Instant createdOn;
+    private ZonedDateTime createdOn;
 
     @Column(name = "created_by")
     private String createdBy;
@@ -52,6 +52,10 @@ public class Product implements Serializable {
 
     @Column(name = "jira_project_id")
     private String jiraProjectId;
+
+    @OneToMany(mappedBy = "product")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private Set<ProductRelease> productReleases = new HashSet<>();
 
     @OneToMany(mappedBy = "product")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -123,16 +127,16 @@ public class Product implements Serializable {
         this.content = content;
     }
 
-    public Instant getCreatedOn() {
+    public ZonedDateTime getCreatedOn() {
         return createdOn;
     }
 
-    public Product createdOn(Instant createdOn) {
+    public Product createdOn(ZonedDateTime createdOn) {
         this.createdOn = createdOn;
         return this;
     }
 
-    public void setCreatedOn(Instant createdOn) {
+    public void setCreatedOn(ZonedDateTime createdOn) {
         this.createdOn = createdOn;
     }
 
@@ -173,6 +177,31 @@ public class Product implements Serializable {
 
     public void setJiraProjectId(String jiraProjectId) {
         this.jiraProjectId = jiraProjectId;
+    }
+
+    public Set<ProductRelease> getProductReleases() {
+        return productReleases;
+    }
+
+    public Product productReleases(Set<ProductRelease> productReleases) {
+        this.productReleases = productReleases;
+        return this;
+    }
+
+    public Product addProductRelease(ProductRelease productRelease) {
+        this.productReleases.add(productRelease);
+        productRelease.setProduct(this);
+        return this;
+    }
+
+    public Product removeProductRelease(ProductRelease productRelease) {
+        this.productReleases.remove(productRelease);
+        productRelease.setProduct(null);
+        return this;
+    }
+
+    public void setProductReleases(Set<ProductRelease> productReleases) {
+        this.productReleases = productReleases;
     }
 
     public Set<Capability> getCapabilities() {

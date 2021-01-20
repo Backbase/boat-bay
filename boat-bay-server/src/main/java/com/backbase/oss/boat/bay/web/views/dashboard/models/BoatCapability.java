@@ -1,17 +1,12 @@
-package com.backbase.oss.boat.bay.web.views.dashboard;
+package com.backbase.oss.boat.bay.web.views.dashboard.models;
 
 import com.backbase.oss.boat.bay.service.statistics.BoatStatistics;
-import com.backbase.oss.boat.bay.web.views.lint.BoatLintReport;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Data;
 
 @Data
-public class BoatProduct {
-
-
-    private String portalKey;
-    private String portalName;
+public class BoatCapability {
 
     private String id;
     private String key;
@@ -21,11 +16,10 @@ public class BoatProduct {
     private LocalDateTime createdOn;
     private String createdBy;
 
+    private List<BoatService> services;
+
     private BoatLintReport lastLintReport;
 
     private BoatStatistics statistics;
 
-    private String jiraProjectId;
-
 }
-

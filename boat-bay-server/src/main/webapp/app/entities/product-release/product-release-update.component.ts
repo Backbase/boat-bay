@@ -4,15 +4,17 @@ import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+import * as moment from 'moment';
+import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 
 import { IProductRelease, ProductRelease } from 'app/shared/model/product-release.model';
 import { ProductReleaseService } from './product-release.service';
 import { ISpec } from 'app/shared/model/spec.model';
 import { SpecService } from 'app/entities/spec/spec.service';
-import { IPortal } from 'app/shared/model/portal.model';
-import { PortalService } from 'app/entities/portal/portal.service';
+import { IProduct } from 'app/shared/model/product.model';
+import { ProductService } from 'app/entities/product/product.service';
 
-type SelectableEntity = ISpec | IPortal;
+type SelectableEntity = ISpec | IProduct;
 
 @Component({
   selector: 'jhi-product-release-update',
@@ -21,32 +23,39 @@ type SelectableEntity = ISpec | IPortal;
 export class ProductReleaseUpdateComponent implements OnInit {
   isSaving = false;
   specs: ISpec[] = [];
-  portals: IPortal[] = [];
+  products: IProduct[] = [];
 
   editForm = this.fb.group({
     id: [],
     key: [null, [Validators.required]],
     name: [null, [Validators.required]],
+    version: [null, [Validators.required]],
+    releaseDate: [],
     hide: [],
     specs: [],
-    portal: [null, Validators.required],
+    product: [null, Validators.required],
   });
 
   constructor(
     protected productReleaseService: ProductReleaseService,
     protected specService: SpecService,
-    protected portalService: PortalService,
+    protected productService: ProductService,
     protected activatedRoute: ActivatedRoute,
     private fb: FormBuilder
   ) {}
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ productRelease }) => {
+      if (!productRelease.id) {
+        const today = moment().startOf('day');
+        productRelease.releaseDate = today;
+      }
+
       this.updateForm(productRelease);
 
       this.specService.query().subscribe((res: HttpResponse<ISpec[]>) => (this.specs = res.body || []));
 
-      this.portalService.query().subscribe((res: HttpResponse<IPortal[]>) => (this.portals = res.body || []));
+      this.productService.query().subscribe((res: HttpResponse<IProduct[]>) => (this.products = res.body || []));
     });
   }
 
@@ -55,9 +64,11 @@ export class ProductReleaseUpdateComponent implements OnInit {
       id: productRelease.id,
       key: productRelease.key,
       name: productRelease.name,
+      version: productRelease.version,
+      releaseDate: productRelease.releaseDate ? productRelease.releaseDate.format(DATE_TIME_FORMAT) : null,
       hide: productRelease.hide,
       specs: productRelease.specs,
-      portal: productRelease.portal,
+      product: productRelease.product,
     });
   }
 
@@ -81,9 +92,13 @@ export class ProductReleaseUpdateComponent implements OnInit {
       id: this.editForm.get(['id'])!.value,
       key: this.editForm.get(['key'])!.value,
       name: this.editForm.get(['name'])!.value,
+      version: this.editForm.get(['version'])!.value,
+      releaseDate: this.editForm.get(['releaseDate'])!.value
+        ? moment(this.editForm.get(['releaseDate'])!.value, DATE_TIME_FORMAT)
+        : undefined,
       hide: this.editForm.get(['hide'])!.value,
       specs: this.editForm.get(['specs'])!.value,
-      portal: this.editForm.get(['portal'])!.value,
+      product: this.editForm.get(['product'])!.value,
     };
   }
 

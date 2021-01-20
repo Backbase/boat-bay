@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -33,6 +34,13 @@ public class ProductRelease implements Serializable {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @NotNull
+    @Column(name = "version", nullable = false)
+    private String version;
+
+    @Column(name = "release_date")
+    private ZonedDateTime releaseDate;
+
     @Column(name = "hide")
     private Boolean hide;
 
@@ -46,7 +54,7 @@ public class ProductRelease implements Serializable {
     @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties(value = "productReleases", allowSetters = true)
-    private Portal portal;
+    private Product product;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -81,6 +89,32 @@ public class ProductRelease implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public ProductRelease version(String version) {
+        this.version = version;
+        return this;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public ZonedDateTime getReleaseDate() {
+        return releaseDate;
+    }
+
+    public ProductRelease releaseDate(ZonedDateTime releaseDate) {
+        this.releaseDate = releaseDate;
+        return this;
+    }
+
+    public void setReleaseDate(ZonedDateTime releaseDate) {
+        this.releaseDate = releaseDate;
     }
 
     public Boolean isHide() {
@@ -121,17 +155,17 @@ public class ProductRelease implements Serializable {
         this.specs = specs;
     }
 
-    public Portal getPortal() {
-        return portal;
+    public Product getProduct() {
+        return product;
     }
 
-    public ProductRelease portal(Portal portal) {
-        this.portal = portal;
+    public ProductRelease product(Product product) {
+        this.product = product;
         return this;
     }
 
-    public void setPortal(Portal portal) {
-        this.portal = portal;
+    public void setProduct(Product product) {
+        this.product = product;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
@@ -158,6 +192,8 @@ public class ProductRelease implements Serializable {
             "id=" + getId() +
             ", key='" + getKey() + "'" +
             ", name='" + getName() + "'" +
+            ", version='" + getVersion() + "'" +
+            ", releaseDate='" + getReleaseDate() + "'" +
             ", hide='" + isHide() + "'" +
             "}";
     }
