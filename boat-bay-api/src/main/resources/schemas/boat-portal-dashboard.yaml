@@ -22,4 +22,4 @@ BoatPortalDashboard:
     lastLintReport:
       $ref: "../schemas/boat-lint-report.yaml#/BoatLintReport"
     statistics:
-      $ref: "../other-schemas/boat-statistics.yaml#/BoatStatistics"
+      $ref: "../other-schemas/statistics.yaml#/BoatStatistics"

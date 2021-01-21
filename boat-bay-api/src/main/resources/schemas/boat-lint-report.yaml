@@ -21,7 +21,7 @@ BoatLintReport:
     volations:
       type: array
       items:
-        $ref: "#../schemas/boat-lint-report.yaml#/BoatViolation"
+        $ref: "../schemas/boat-lint-report.yaml#/BoatViolation"
     hasViolations:
       type: boolean
 BoatViolation:

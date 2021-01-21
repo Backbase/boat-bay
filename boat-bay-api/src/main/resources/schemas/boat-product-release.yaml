@@ -1,0 +1,12 @@
+BoatProductRelease:
+  type: object
+  properties:
+    id:
+      type: number
+    name:
+      type: string
+    version:
+      type: string
+    date:
+      type: string
+      format: date-time

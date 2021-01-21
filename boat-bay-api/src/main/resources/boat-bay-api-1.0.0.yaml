@@ -5,7 +5,7 @@ info:
     license:
         name: Backbase
 servers:
-    - url:
+    - url: http://boat-bay-server.proto.backbasecloud.com/
 paths:
 
     /api/boat/portals:
@@ -97,6 +97,7 @@ paths:
         get:
             summary: get Portal Specs for given product
             operationId: getProductSpecs
+
             responses:
                 '200':
                     description: list of specs for product
@@ -119,6 +120,42 @@ paths:
               required: true
               schema:
                   type: string
+            - name: capabilityId
+              in: query
+              description: capablility idenifier
+              required: false
+              schema:
+                  type: string
+            - name: productReleaseId
+              in: query
+              description: product release idenifier
+              required: false
+              schema:
+                  type: string
+            - name: serviceId
+              in: query
+              description: service idenifier
+              required: false
+              schema:
+                  type: string
+            - name: grade
+              in: query
+              description: grade of spec
+              required: false
+              schema:
+                  type: string
+            - name: backwardsCompatible
+              in: query
+              description: backwards compatible indicator
+              required: false
+              schema:
+                  type: boolean
+            - name: changed
+              in: query
+              description: changed indicator
+              required: false
+              schema:
+                  type: boolean
     /api/boat/portals/{portalKey}/products/{productKey}/specs/{specId}/lint-report:
         get:
             summary: get Lint Report for spec
@@ -152,6 +189,12 @@ paths:
               required: true
               schema:
                 type: string
+            - name: refresh
+              in: query
+              description: refresh idicator
+              required: false
+              schema:
+                  type: boolean
     /api/boat/portals/{portalKey}/lint-rules:
         get:
             summary: get list of lint rules
@@ -172,7 +215,65 @@ paths:
               required: true
               schema:
                   type: string
-    /api/boat/portals/{portalKey}/lint-rules/{portalLintRuleId}:
+    /api/boat/portals/{portalKey}/products/{productKey}/releases:
+        get:
+            summary: get product releases
+            operationId: getProductReleases
+            responses:
+                '200':
+                    description: list of product releases for product
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "../schemas/boat-product-release.yaml#/BoatProductRelease"
+        parameters:
+            - name: productKey
+              in: path
+              description: id of product
+              required: true
+              schema:
+                  type: string
+            - name: portalKey
+              in: path
+              description: portal idenifier
+              required: true
+              schema:
+                  type: string
+    /api/boat/portals/{portalKey}/products/{productKey}/releases/{releaseKey}/specs:
+        get:
+            summary: get specs for product release
+            operationId: getProductReleaseSpecs
+            responses:
+                '200':
+                    description: list of specs for product release
+                    content:
+                        application/json:
+                            schema:
+                                type: array
+                                items:
+                                    $ref: "../schemas/boat-spec#/BoatSpec"
+        parameters:
+            - name: releaseKey
+              in: path
+              description: key for product release
+              required: true
+              schema:
+                  type: string
+            - name: productKey
+              in: path
+              description: id of product
+              required: true
+              schema:
+                  type: string
+            - name: portalKey
+              in: path
+              description: portal idenifier
+              required: true
+              schema:
+                  type: string
+    /api/boat/portals/{portalKey}/lint-rules/{lintRuleId}:
         post:
             summary: update lint rule for portal
             operationId: updatePortalLintRule
@@ -186,7 +287,7 @@ paths:
                     description: updated successfuly
                     content: {}
         parameters:
-            -   name: portalLintRuleId
+            -   name: lintRuleId
                 in: path
                 description: id of portals lint rule
                 required: true
@@ -284,7 +385,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: "../schema/upload-request-body.yaml"
+                            $ref: "../schemas/upload-request-body.yaml"
             responses:
                 '200':
                     description: list of lint reports for specs

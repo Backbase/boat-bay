@@ -15,4 +15,4 @@ BoatLintRule:
       $ref: "../other-schemas/severity.yaml#/Severity"
     url:
       type: string
-      format: url
+      format: uri

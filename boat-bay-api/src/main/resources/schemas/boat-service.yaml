@@ -17,4 +17,4 @@ BoatService:
     createdBy:
       type: string
     statistics:
-      $ref: "../other-schemas/boat-statistics.yaml#/BoatStatistics"
+      $ref: "../other-schemas/statistics.yaml#/BoatStatistics"

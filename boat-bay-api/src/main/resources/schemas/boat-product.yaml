@@ -19,8 +19,8 @@ BoatProduct:
     createdBy:
       type: string
     lastLingReport:
-      $ref: "../schemas/boat-lint-report#/BoatLintReport"
+      $ref: "../schemas/boat-lint-report.yaml#/BoatLintReport"
     statistics:
-      $ref: "../other-schemas/boat-statistics.yaml#/BoatStatistics"
+      $ref: "../other-schemas/statistics.yaml#/BoatStatistics"
     jiraProjectId:
       type: string
