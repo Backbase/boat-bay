@@ -470,7 +470,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>/Users/sophiej/Documents/Projects/opensauce/fresh-water-boat-bay/boat-bay/boat-bay-api/src/main/resources/boat-bay-api-1.0.0.yaml</inputSpec>
+                            <inputSpec>${project.parent.basedir}/boat-bay-api/src/main/resources/boat-bay-api-1.0.0.yaml</inputSpec>
                             <generatorName>spring</generatorName>
                             <generateApiTests>false</generateApiTests>
                             <generateApis>true</generateApis>
@@ -492,7 +492,7 @@
                             </typeMappings>
                             <importMappings>
                                 <importMapping>Pageable = org.springframework.data.domain.Pageable</importMapping>
-                                <importMapping>BoatViolationLines = kotlin.ranges.IntRange</importMapping>
+                                <importMapping>IntRange = kotlin.ranges.IntRange</importMapping>
                                 <importMapping>BoatStatistics = com.backbase.oss.boat.bay.service.statistics.BoatStatistics</importMapping>
                             </importMappings>
 

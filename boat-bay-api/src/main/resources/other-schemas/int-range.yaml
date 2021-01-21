@@ -2,6 +2,6 @@ IntRange:
   type: object
   properties:
     start:
-      type: int
+      type: integer
     endInclusive:
-      type: int
+      type: integer

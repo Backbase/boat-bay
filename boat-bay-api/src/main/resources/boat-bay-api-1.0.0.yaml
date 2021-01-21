@@ -20,7 +20,7 @@ paths:
                             schema:
                                 type: array
                                 items:
-                                    $ref: "../schemas/boat-portal.yaml#/BoatPortal"
+                                    $ref: "schemas/boat-portal.yaml#/BoatPortal"
     /api/boat/portals/{portalKey}/products:
             get:
                 summary: get products for identified portal
@@ -33,7 +33,7 @@ paths:
                                 schema:
                                     type: array
                                     items:
-                                        $ref: "../schemas/boat-product.yaml#/BoatProduct"
+                                        $ref: "schemas/boat-product.yaml#/BoatProduct"
             parameters:
                 - name: portalKey
                   in: path
@@ -53,13 +53,13 @@ paths:
                             schema:
                                 type: array
                                 items:
-                                    $ref: "../schemas/boat-capability.yaml#/BoatCapability"
+                                    $ref: "schemas/boat-capability.yaml#/BoatCapability"
         parameters:
             - name: pageable
               in: query
               required: false
               schema:
-                $ref: '../other-schemas/pageable.yaml#/Pageable'
+                $ref: 'other-schemas/pageable.yaml#/Pageable'
             - name: productKey
               in: path
               description: product idenifier
@@ -84,13 +84,13 @@ paths:
                             schema:
                                 type: array
                                 items:
-                                    $ref: "../schemas/boat-service.yaml#/BoatService"
+                                    $ref: "schemas/boat-service.yaml#/BoatService"
         parameters:
             - name: pageable
               in: query
               required: false
               schema:
-                $ref: '../other-schemas/pageable.yaml#/Pageable'
+                $ref: 'other-schemas/pageable.yaml#/Pageable'
             - name: productKey
               in: path
               description: product idenifier
@@ -116,13 +116,13 @@ paths:
                             schema:
                                 type: array
                                 items:
-                                    $ref: "../schemas/boat-spec.yaml#/BoatSpec"
+                                    $ref: "schemas/boat-spec.yaml#/BoatSpec"
         parameters:
             - name: pageable
               in: query
               required: false
               schema:
-                $ref: '../other-schemas/pageable.yaml#/Pageable'
+                $ref: 'other-schemas/pageable.yaml#/Pageable'
             - name: productKey
               in: path
               description: product idenifier
@@ -181,7 +181,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: "../schemas/boat-lint-report.yaml#/BoatLintReport"
+                                $ref: "schemas/boat-lint-report.yaml#/BoatLintReport"
         parameters:
             - name: specId
               in: path
@@ -220,7 +220,7 @@ paths:
                             schema:
                                 type: array
                                 items:
-                                    $ref: "../schemas/boat-lint-rule.yaml#/BoatLintRule"
+                                    $ref: "schemas/boat-lint-rule.yaml#/BoatLintRule"
         parameters:
             - name: portalKey
               in: path
@@ -240,7 +240,7 @@ paths:
                             schema:
                                 type: array
                                 items:
-                                    $ref: "../schemas/boat-product-release.yaml#/BoatProductRelease"
+                                    $ref: "schemas/boat-product-release.yaml#/BoatProductRelease"
         parameters:
             - name: productKey
               in: path
@@ -266,7 +266,7 @@ paths:
                             schema:
                                 type: array
                                 items:
-                                    $ref: "../schemas/boat-spec.yaml#/BoatSpec"
+                                    $ref: "schemas/boat-spec.yaml#/BoatSpec"
         parameters:
             - name: releaseKey
               in: path
@@ -294,7 +294,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: '../schemas/boat-lint-rule.yaml#/BoatLintRule'
+                            $ref: 'schemas/boat-lint-rule.yaml#/BoatLintRule'
             responses:
                 '200':
                     description: updated successfuly
@@ -325,7 +325,7 @@ paths:
                             schema:
                                 type: array
                                 items:
-                                    $ref: "../schemas/boat-portal-dashboard.yaml#/BoatPortalDashboard"
+                                    $ref: "schemas/boat-portal-dashboard.yaml#/BoatPortalDashboard"
     /api/boat/dashboard/{projectKey}/{productKey}:
         get:
             summary: get product for dashboard project
@@ -336,7 +336,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: "../schemas/boat-product.yaml#/BoatProduct"
+                                $ref: "schemas/boat-product.yaml#/BoatProduct"
         parameters:
             -   name: projectKey
                 in: path
@@ -362,7 +362,7 @@ paths:
                 schema:
                   type: array
                   items:
-                    $ref: "../schemas/boat-tag.yaml#/BoatTag"
+                    $ref: "schemas/boat-tag.yaml#/BoatTag"
       parameters:
         - name: portalKey
           in: path
@@ -385,7 +385,7 @@ paths:
                 content:
                     application/json:
                         schema:
-                            $ref: "../schemas/upload-request-body.yaml"
+                            $ref: "schemas/upload-request-body.yaml"
             responses:
                 '200':
                     description: list of lint reports for specs
@@ -394,7 +394,7 @@ paths:
                             schema:
                                 type: array
                                 items:
-                                    $ref: "../schemas/boat-lint-report.yaml#/BoatLintReport"
+                                    $ref: "schemas/boat-lint-report.yaml#/BoatLintReport"
         parameters:
             - name: sourceId
               in: path
