@@ -27,6 +27,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { LayoutModule } from '@angular/cdk/layout';
 import { PortalDashboardModule } from "./pages/portal-dashboard/portal-dashboard.module";
 import { ProductDashboardModule } from "./pages/product-dashboard/product-dashboard.module";
+import { TagDashboardModule} from "./pages/tag-dashboard/tag-dashboard.module";
 import { LintReportModule } from "./pages/lint-report/lint-report.module";
 import { DisableRuleModalDialogComponent } from './components/disable-rule-modal-dialog/disable-rule-modal-dialog.component';
 import { MatSnackBarModule } from "@angular/material/snack-bar";
@@ -58,6 +59,7 @@ import { MatSnackBarModule } from "@angular/material/snack-bar";
     MatButtonModule,
     PortalDashboardModule,
     ProductDashboardModule,
+    TagDashboardModule,
     LintReportModule,
     MatGridListModule,
     MatCardModule,

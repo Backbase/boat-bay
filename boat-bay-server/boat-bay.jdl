@@ -16,6 +16,8 @@ entity Portal {
     createdOn ZonedDateTime
     createdBy String
     hide Boolean
+    linted Boolean
+
 }
 
 entity ProductRelease {
@@ -96,6 +98,7 @@ entity Tag {
     name String required unique
     description TextBlob
     hide Boolean
+    color String
 }
 
 entity SpecType {

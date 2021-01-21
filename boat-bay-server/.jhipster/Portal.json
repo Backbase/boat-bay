@@ -44,6 +44,10 @@
     {
       "fieldName": "hide",
       "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "linted",
+      "fieldType": "Boolean"
     }
   ],
   "relationships": [

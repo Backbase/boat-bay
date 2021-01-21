@@ -62,6 +62,9 @@ public class PortalResourceIT {
     private static final Boolean DEFAULT_HIDE = false;
     private static final Boolean UPDATED_HIDE = true;
 
+    private static final Boolean DEFAULT_LINTED = false;
+    private static final Boolean UPDATED_LINTED = true;
+
     @Autowired
     private PortalRepository portalRepository;
 
@@ -89,7 +92,8 @@ public class PortalResourceIT {
             .content(DEFAULT_CONTENT)
             .createdOn(DEFAULT_CREATED_ON)
             .createdBy(DEFAULT_CREATED_BY)
-            .hide(DEFAULT_HIDE);
+            .hide(DEFAULT_HIDE)
+            .linted(DEFAULT_LINTED);
         return portal;
     }
     /**
@@ -108,7 +112,8 @@ public class PortalResourceIT {
             .content(UPDATED_CONTENT)
             .createdOn(UPDATED_CREATED_ON)
             .createdBy(UPDATED_CREATED_BY)
-            .hide(UPDATED_HIDE);
+            .hide(UPDATED_HIDE)
+            .linted(UPDATED_LINTED);
         return portal;
     }
 
@@ -140,6 +145,7 @@ public class PortalResourceIT {
         assertThat(testPortal.getCreatedOn()).isEqualTo(DEFAULT_CREATED_ON);
         assertThat(testPortal.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
         assertThat(testPortal.isHide()).isEqualTo(DEFAULT_HIDE);
+        assertThat(testPortal.isLinted()).isEqualTo(DEFAULT_LINTED);
     }
 
     @Test
@@ -219,7 +225,8 @@ public class PortalResourceIT {
             .andExpect(jsonPath("$.[*].content").value(hasItem(DEFAULT_CONTENT.toString())))
             .andExpect(jsonPath("$.[*].createdOn").value(hasItem(sameInstant(DEFAULT_CREATED_ON))))
             .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
-            .andExpect(jsonPath("$.[*].hide").value(hasItem(DEFAULT_HIDE.booleanValue())));
+            .andExpect(jsonPath("$.[*].hide").value(hasItem(DEFAULT_HIDE.booleanValue())))
+            .andExpect(jsonPath("$.[*].linted").value(hasItem(DEFAULT_LINTED.booleanValue())));
     }
     
     @Test
@@ -241,7 +248,8 @@ public class PortalResourceIT {
             .andExpect(jsonPath("$.content").value(DEFAULT_CONTENT.toString()))
             .andExpect(jsonPath("$.createdOn").value(sameInstant(DEFAULT_CREATED_ON)))
             .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
-            .andExpect(jsonPath("$.hide").value(DEFAULT_HIDE.booleanValue()));
+            .andExpect(jsonPath("$.hide").value(DEFAULT_HIDE.booleanValue()))
+            .andExpect(jsonPath("$.linted").value(DEFAULT_LINTED.booleanValue()));
     }
     @Test
     @Transactional
@@ -272,7 +280,8 @@ public class PortalResourceIT {
             .content(UPDATED_CONTENT)
             .createdOn(UPDATED_CREATED_ON)
             .createdBy(UPDATED_CREATED_BY)
-            .hide(UPDATED_HIDE);
+            .hide(UPDATED_HIDE)
+            .linted(UPDATED_LINTED);
 
         restPortalMockMvc.perform(put("/api/portals")
             .contentType(MediaType.APPLICATION_JSON)
@@ -292,6 +301,7 @@ public class PortalResourceIT {
         assertThat(testPortal.getCreatedOn()).isEqualTo(UPDATED_CREATED_ON);
         assertThat(testPortal.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
         assertThat(testPortal.isHide()).isEqualTo(UPDATED_HIDE);
+        assertThat(testPortal.isLinted()).isEqualTo(UPDATED_LINTED);
     }
 
     @Test

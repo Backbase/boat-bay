@@ -1,11 +1,11 @@
-id;name;description;hide
-1;Branding Jewelery Plastic;../fake-data/blob/hipster.txt;false
-2;program;../fake-data/blob/hipster.txt;false
-3;Concrete white Car;../fake-data/blob/hipster.txt;true
-4;Granite Grocery;../fake-data/blob/hipster.txt;true
-5;Customer;../fake-data/blob/hipster.txt;true
-6;Small Wooden;../fake-data/blob/hipster.txt;false
-7;alliance;../fake-data/blob/hipster.txt;true
-8;Personal Loan Account;../fake-data/blob/hipster.txt;false
-9;open system Rustic Frozen Ball AGP;../fake-data/blob/hipster.txt;true
-10;Haiti bandwidth bluetooth;../fake-data/blob/hipster.txt;true
+id;name;description;hide;color
+1;Branding Jewelery Plastic;../fake-data/blob/hipster.txt;false;mint green
+2;FTP back-end Diverse;../fake-data/blob/hipster.txt;false;mint green
+3;Operations;../fake-data/blob/hipster.txt;false;sky blue
+4;applications;../fake-data/blob/hipster.txt;false;cyan
+5;Dynamic Small;../fake-data/blob/hipster.txt;false;purple
+6;Incredible Steel Cheese;../fake-data/blob/hipster.txt;false;plum
+7;regional open system Rustic Frozen Ball;../fake-data/blob/hipster.txt;true;black
+8;haptic strategize Tunisian Dinar;../fake-data/blob/hipster.txt;true;tan
+9;Wyoming;../fake-data/blob/hipster.txt;true;plum
+10;Human Pizza;../fake-data/blob/hipster.txt;false;lime

@@ -24,7 +24,7 @@ describe('Service Tests', () => {
       httpMock = injector.get(HttpTestingController);
       currentDate = moment();
 
-      elemDefault = new Portal(0, 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', currentDate, 'AAAAAAA', false);
+      elemDefault = new Portal(0, 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', 'AAAAAAA', currentDate, 'AAAAAAA', false, false);
     });
 
     describe('Service methods', () => {
@@ -78,6 +78,7 @@ describe('Service Tests', () => {
             createdOn: currentDate.format(DATE_TIME_FORMAT),
             createdBy: 'BBBBBB',
             hide: true,
+            linted: true,
           },
           elemDefault
         );
@@ -108,6 +109,7 @@ describe('Service Tests', () => {
             createdOn: currentDate.format(DATE_TIME_FORMAT),
             createdBy: 'BBBBBB',
             hide: true,
+            linted: true,
           },
           elemDefault
         );

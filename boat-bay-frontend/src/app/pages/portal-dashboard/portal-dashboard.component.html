@@ -29,6 +29,14 @@
                         </div>
 
                         <div class="portal-container-column">
+                            <a [routerLink]="[portal.portalKey, portal.productKey, 'tag-cloud']">
+                                <mat-icon>loyalty</mat-icon>
+                                <div>Tags</div>
+                            </a>
+                        </div>
+
+
+                        <div class="portal-container-column">
                             <a [routerLink]="[portal.portalKey, portal.productKey, 'documentation']">
                                 <mat-icon>help_outline</mat-icon>
                                 <div>Documentation</div>
@@ -41,6 +49,7 @@
                                 <div>Settings</div>
                             </a>
                         </div>
+
 
                     </div>
 
