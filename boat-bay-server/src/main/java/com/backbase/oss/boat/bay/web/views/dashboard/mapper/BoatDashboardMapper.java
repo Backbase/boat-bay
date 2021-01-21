@@ -9,6 +9,7 @@ import com.backbase.oss.boat.bay.domain.Product;
 import com.backbase.oss.boat.bay.domain.ProductRelease;
 import com.backbase.oss.boat.bay.domain.ServiceDefinition;
 import com.backbase.oss.boat.bay.domain.Spec;
+import com.backbase.oss.boat.bay.domain.Tag;
 import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatCapability;
 import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatLintReport;
 import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatLintRule;
@@ -18,6 +19,7 @@ import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatProduct;
 import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatProductRelease;
 import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatService;
 import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatSpec;
+import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatTag;
 import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatViolation;
 import com.fasterxml.jackson.core.JsonPointer;
 import java.net.URI;
@@ -135,6 +137,14 @@ public interface BoatDashboardMapper {
 
     @Mapping(target = "url", source = "externalUrl")
     BoatLintRule mapPortalLintRule(LintRule rule);
+
+
+    @Mapping(target = "numberOfOccurrences", ignore = true)
+    BoatTag mapTag(Tag tag);
+
+    default int countSpecs(Tag tag) {
+        return tag.getSpecs().size();
+    }
 
     BoatProductRelease mapBoatProductRelease(ProductRelease productRelease);
 

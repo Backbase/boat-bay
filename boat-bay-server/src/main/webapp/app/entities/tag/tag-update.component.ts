@@ -22,6 +22,7 @@ export class TagUpdateComponent implements OnInit {
     name: [null, [Validators.required]],
     description: [],
     hide: [],
+    color: [],
   });
 
   constructor(
@@ -44,6 +45,7 @@ export class TagUpdateComponent implements OnInit {
       name: tag.name,
       description: tag.description,
       hide: tag.hide,
+      color: tag.color,
     });
   }
 
@@ -84,6 +86,7 @@ export class TagUpdateComponent implements OnInit {
       name: this.editForm.get(['name'])!.value,
       description: this.editForm.get(['description'])!.value,
       hide: this.editForm.get(['hide'])!.value,
+      color: this.editForm.get(['color'])!.value,
     };
   }
 

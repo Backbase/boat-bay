@@ -20,7 +20,7 @@ describe('Service Tests', () => {
       service = injector.get(TagService);
       httpMock = injector.get(HttpTestingController);
 
-      elemDefault = new Tag(0, 'AAAAAAA', 'AAAAAAA', false);
+      elemDefault = new Tag(0, 'AAAAAAA', 'AAAAAAA', false, 'AAAAAAA');
     });
 
     describe('Service methods', () => {
@@ -57,6 +57,7 @@ describe('Service Tests', () => {
             name: 'BBBBBB',
             description: 'BBBBBB',
             hide: true,
+            color: 'BBBBBB',
           },
           elemDefault
         );
@@ -76,6 +77,7 @@ describe('Service Tests', () => {
             name: 'BBBBBB',
             description: 'BBBBBB',
             hide: true,
+            color: 'BBBBBB',
           },
           elemDefault
         );

@@ -55,6 +55,9 @@ public class Portal implements Serializable {
     @Column(name = "hide")
     private Boolean hide;
 
+    @Column(name = "linted")
+    private Boolean linted;
+
     @OneToMany(mappedBy = "portal")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<Product> products = new HashSet<>();
@@ -189,6 +192,19 @@ public class Portal implements Serializable {
         this.hide = hide;
     }
 
+    public Boolean isLinted() {
+        return linted;
+    }
+
+    public Portal linted(Boolean linted) {
+        this.linted = linted;
+        return this;
+    }
+
+    public void setLinted(Boolean linted) {
+        this.linted = linted;
+    }
+
     public Set<Product> getProducts() {
         return products;
     }
@@ -270,6 +286,7 @@ public class Portal implements Serializable {
             ", createdOn='" + getCreatedOn() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
             ", hide='" + isHide() + "'" +
+            ", linted='" + isLinted() + "'" +
             "}";
     }
 }

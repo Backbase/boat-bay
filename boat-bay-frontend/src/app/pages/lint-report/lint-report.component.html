@@ -2,11 +2,11 @@
 
     <div class="mdl-grid mdl-cell mdl-cell--12-col mdl-cell--top">
         <div class="mdl-cell mdl-cell--7-col-desktop">
-            <div class="lint-report-info mat-elevation-z8 info-container">
+            <div class="lint-report-info info-container">
                 <app-spec-summary [spec]="lintReport.spec"><</app-spec-summary>
             </div>
 
-            <div class="mat-elevation-z8">
+            <div class="">
                 <div class="openapi-editor ">
                     <ace-editor [contents]="lintReport.openApi"
                                 [annotations]="annotations"
@@ -21,7 +21,7 @@
                           class="violation-card {{violation.severity}}">
                     <mat-card-title><span
                         class="ruleId">{{violation.rule.ruleId}}</span>  {{violation.rule.title}}
-                    </mat-card-title>w
+                    </mat-card-title>
                     <mat-card-subtitle>{{violation.rule.ruleSet}}</mat-card-subtitle>
                     <mat-card-content>{{violation.description}}</mat-card-content>
                     <mat-card-actions>

@@ -17,6 +17,10 @@
     {
       "fieldName": "hide",
       "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "color",
+      "fieldType": "String"
     }
   ],
   "relationships": [

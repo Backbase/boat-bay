@@ -1,0 +1,16 @@
+<ng-container *ngIf="product$ | async as product">
+    <mat-card class="mat-elevation-z8">
+        <mat-card-title>API Specs for {{product.name}}</mat-card-title>
+        <mat-card-content>
+<!--            <div class="specs">-->
+<!--                <div class="specs-filter">-->
+<!--                    <app-spec-filter></app-spec-filter>-->
+<!--                </div>-->
+<!--                <div class="specs-table">-->
+                    <specs-table [product]="product"></specs-table>
+<!--                </div>-->
+<!--            </div>-->
+        </mat-card-content>
+    </mat-card>
+</ng-container>
+

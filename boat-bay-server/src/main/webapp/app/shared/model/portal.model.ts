@@ -13,6 +13,7 @@ export interface IPortal {
   createdOn?: Moment;
   createdBy?: string;
   hide?: boolean;
+  linted?: boolean;
   products?: IProduct[];
   lintRules?: ILintRule[];
 }
@@ -29,9 +30,11 @@ export class Portal implements IPortal {
     public createdOn?: Moment,
     public createdBy?: string,
     public hide?: boolean,
+    public linted?: boolean,
     public products?: IProduct[],
     public lintRules?: ILintRule[]
   ) {
     this.hide = this.hide || false;
+    this.linted = this.linted || false;
   }
 }

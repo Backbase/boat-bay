@@ -36,6 +36,9 @@ public class Tag implements Serializable {
     @Column(name = "hide")
     private Boolean hide;
 
+    @Column(name = "color")
+    private String color;
+
     @ManyToMany(mappedBy = "tags")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnore
@@ -89,6 +92,19 @@ public class Tag implements Serializable {
         this.hide = hide;
     }
 
+    public String getColor() {
+        return color;
+    }
+
+    public Tag color(String color) {
+        this.color = color;
+        return this;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
     public Set<Spec> getSpecs() {
         return specs;
     }
@@ -139,6 +155,7 @@ public class Tag implements Serializable {
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
             ", hide='" + isHide() + "'" +
+            ", color='" + getColor() + "'" +
             "}";
     }
 }

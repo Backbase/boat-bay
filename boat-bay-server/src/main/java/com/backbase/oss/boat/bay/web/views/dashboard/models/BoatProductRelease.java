@@ -10,4 +10,7 @@ public class BoatProductRelease {
     private String version;
     private LocalDateTime date;
 
+
+
+
 }

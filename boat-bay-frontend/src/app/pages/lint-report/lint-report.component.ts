@@ -75,7 +75,7 @@ export class LintReportComponent implements OnInit {
         const lintReport: BoatLintReport = result.data.lintReport;
         const product: BoatProduct = result.data.product;
         this._snackBar.open(`Relinting spec ${lintReport.spec.title} with updated rules. Reloading when done....`);
-        this.boatLintReportService.getReport(product.portalKey, product.key, lintReport.spec.id, true).pipe(map(({body}) => body))
+        this.boatLintReportService.getLintReport(product.portalKey, product.key, lintReport.spec.id, true).pipe(map(({body}) => body))
           .subscribe(updatedReport => {
             window.location.reload();
           });
