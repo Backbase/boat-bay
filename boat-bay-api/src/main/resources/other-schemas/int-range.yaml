@@ -1,0 +1,7 @@
+IntRange:
+  type: object
+  properties:
+    start:
+      type: int
+    endInclusive:
+      type: int

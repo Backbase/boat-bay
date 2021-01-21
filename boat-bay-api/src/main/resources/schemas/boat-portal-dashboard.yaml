@@ -14,9 +14,11 @@ BoatPortalDashboard:
     productName:
       type: string
     numberOfServices:
-      type: number
+      type: integer
+      format: int64
     numberOfCapabilities:
-      type: number
+      type: integer
+      format: int64
     productDescription:
       type: string
     lastLintReport:

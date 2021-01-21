@@ -18,7 +18,7 @@ BoatLintReport:
       type: string
     grade:
       type: string
-    volations:
+    violations:
       type: array
       items:
         $ref: "../schemas/boat-lint-report.yaml#/BoatViolation"
@@ -34,11 +34,6 @@ BoatViolation:
     severity:
       $ref: "../other-schemas/severity.yaml#/Severity"
     lines:
-      type: object
-      properties:
-        start:
-          type: int
-        endInclusive:
-          type: int
+      $ref: "../other-schemas/int-range.yaml#/IntRange"
     pointer:
       type: string

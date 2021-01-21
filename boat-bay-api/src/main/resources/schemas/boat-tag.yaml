@@ -1,0 +1,13 @@
+BoatTag:
+  type: object
+  properties:
+    name:
+      type: string
+    description:
+      type: string
+    hide:
+      type: boolean
+    color:
+      type: string
+    numberOfOccurrences:
+      type: integer

@@ -383,6 +383,12 @@
             <artifactId>simpleclient_pushgateway</artifactId>
             <version>0.9.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+            <version>0.2.1</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -453,6 +459,47 @@
                 <artifactId>properties-maven-plugin</artifactId>
             </plugin>
             <!-- jhipster-needle-maven-add-plugin -->
+            <plugin>
+                <groupId>com.backbase.oss</groupId>
+                <artifactId>boat-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>java-server</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>/Users/sophiej/Documents/Projects/opensauce/fresh-water-boat-bay/boat-bay/boat-bay-api/src/main/resources/boat-bay-api-1.0.0.yaml</inputSpec>
+                            <generatorName>spring</generatorName>
+                            <generateApiTests>false</generateApiTests>
+                            <generateApis>true</generateApis>
+                            <generateModels>true</generateModels>
+                            <generateSupportingFiles>false</generateSupportingFiles>
+                            <configOptions>
+                                <library>spring-boot</library>
+                                <reactive>false</reactive>
+                                <java8>true</java8>
+                                <dateLibrary>java8</dateLibrary>
+                                <interfaceOnly>true</interfaceOnly>
+                                <skipDefaultInterface>true</skipDefaultInterface>
+                                <useBeanValidation>false</useBeanValidation>
+                            </configOptions>
+                            <modelPackage>com.backbase.oss.boat.bay.service.model</modelPackage>
+                            <apiPackage>com.backbase.oss.boat.bay.service.api</apiPackage>
+                            <typeMappings>
+                                <typeMapping>Double=java.math.BigDecimal</typeMapping>
+                            </typeMappings>
+                            <importMappings>
+                                <importMapping>Pageable = org.springframework.data.domain.Pageable</importMapping>
+                                <importMapping>BoatViolationLines = kotlin.ranges.IntRange</importMapping>
+                                <importMapping>BoatStatistics = com.backbase.oss.boat.bay.service.statistics.BoatStatistics</importMapping>
+                            </importMappings>
+
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
         <pluginManagement>
             <plugins>
