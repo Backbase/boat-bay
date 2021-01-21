@@ -11,7 +11,7 @@ import { BoatDashboardService } from "../../services/boat-dashboard.service";
   styleUrls: ['tag-cloud-dashboard.component.scss'],
 })
 export class TagCloudDashboardComponent implements OnInit {
-  product$: Observable<BoatProduct>;
+  product$: Observable<BoatProduct> | null;
 
   constructor(protected activatedRoute: ActivatedRoute, protected dashboardService: BoatDashboardService) {
     this.product$ = activatedRoute.data.pipe(map(({product}) => product));

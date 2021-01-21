@@ -11,25 +11,18 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { DiffDashboardComponent } from "./diff-dashboard.component";
-import { CapabilityTableComponent } from "../../components/capability-table/capability-table.component";
-import { ServiceDefinitionTableComponent } from "../../components/service-definition-table/service-definition-table.component";
 import { PortalDashboardModule } from "../portal-dashboard/portal-dashboard.module";
-import { SpecsTableComponent } from "../../components/specs-table/specs-table.component";
-import { SpecFilterComponent } from "../../components/spec-filter/spec-filter.component";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatSelectModule } from "@angular/material/select";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatListModule } from "@angular/material/list";
+import { MatOptionModule } from "@angular/material/core";
 
 
 @NgModule({
   declarations: [
     DiffDashboardComponent,
-    CapabilityTableComponent,
-    ServiceDefinitionTableComponent,
-    SpecsTableComponent,
-    SpecFilterComponent,
   ],
   imports: [
     CommonModule,
@@ -50,6 +43,7 @@ import { MatListModule } from "@angular/material/list";
     MatCheckboxModule,
     MatListModule,
     FormsModule,
+    MatOptionModule
   ]
 })
-export class ProductDashboardModule { }
+export class DiffDashboardModule { }

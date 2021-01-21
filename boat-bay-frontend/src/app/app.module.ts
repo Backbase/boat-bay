@@ -31,6 +31,7 @@ import { TagDashboardModule} from "./pages/tag-dashboard/tag-dashboard.module";
 import { LintReportModule } from "./pages/lint-report/lint-report.module";
 import { DisableRuleModalDialogComponent } from './components/disable-rule-modal-dialog/disable-rule-modal-dialog.component';
 import { MatSnackBarModule } from "@angular/material/snack-bar";
+import { DiffDashboardModule } from "./pages/diff-dashboard/diff-dashboard.module";
 
 @NgModule({
   declarations: [
@@ -59,6 +60,7 @@ import { MatSnackBarModule } from "@angular/material/snack-bar";
     MatButtonModule,
     PortalDashboardModule,
     ProductDashboardModule,
+    DiffDashboardModule,
     TagDashboardModule,
     LintReportModule,
     MatGridListModule,

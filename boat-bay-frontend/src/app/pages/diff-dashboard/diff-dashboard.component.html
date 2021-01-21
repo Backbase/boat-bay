@@ -1,16 +1,44 @@
 <ng-container *ngIf="product$ | async as product">
-    <mat-card class="mat-elevation-z8">
-        <mat-card-title>API Specs for {{product.name}}</mat-card-title>
-        <mat-card-content>
-<!--            <div class="specs">-->
-<!--                <div class="specs-filter">-->
-<!--                    <app-spec-filter></app-spec-filter>-->
-<!--                </div>-->
-<!--                <div class="specs-table">-->
-                    <specs-table [product]="product"></specs-table>
-<!--                </div>-->
-<!--            </div>-->
-        </mat-card-content>
-    </mat-card>
-</ng-container>
 
+    <div class="mdl-grid mdl-cell mdl-cell--12-col mdl-cell--top">
+
+        <div class="mdl-cell mdl-cell--3-col mat-elevation-z8">
+            <div class="release-container">
+                <div class="release-selector">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Release</mat-label>
+                        <mat-select>
+                            <mat-option *ngFor="let release of releases1" [value]="release">
+                                {{release.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <div class="release-items">
+
+                    </div>
+                </div>
+
+
+                <div class="release-selector">
+                    <mat-form-field appearance="fill">
+                        <mat-label>Release</mat-label>
+                        <mat-select>
+                            <mat-option *ngFor="let release of releases2" [value]="release">
+                                {{release.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="mdl-cell  mdl-cell--9-col  mat-elevation-z8">
+            <h1>Release notes per changed spec</h1>
+
+        </div>
+
+
+    </div>
+</ng-container>

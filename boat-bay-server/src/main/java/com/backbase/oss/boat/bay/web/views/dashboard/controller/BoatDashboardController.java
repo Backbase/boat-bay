@@ -10,7 +10,6 @@ import com.backbase.oss.boat.bay.domain.ServiceDefinition;
 import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.domain.Tag;
 import com.backbase.oss.boat.bay.repository.LintRuleRepository;
-import com.backbase.oss.boat.bay.repository.TagRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatCapabilityRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatDashboardRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatLintReportRepository;
@@ -24,8 +23,8 @@ import com.backbase.oss.boat.bay.repository.extended.BoatSpecRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatTagRepository;
 import com.backbase.oss.boat.bay.service.lint.BoatSpecLinter;
 import com.backbase.oss.boat.bay.service.statistics.BoatStatisticsCollector;
+import com.backbase.oss.boat.bay.web.views.dashboard.config.BoatCacheManager;
 import com.backbase.oss.boat.bay.web.views.dashboard.mapper.BoatDashboardMapper;
-import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatTag;
 import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatCapability;
 import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatLintReport;
 import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatLintRule;
@@ -35,6 +34,7 @@ import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatProduct;
 import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatProductRelease;
 import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatService;
 import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatSpec;
+import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatTag;
 import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatViolation;
 import io.github.jhipster.web.util.PaginationUtil;
 import java.util.ArrayList;
@@ -43,7 +43,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -94,7 +93,7 @@ public class BoatDashboardController {
     private final BoatTagRepository tagRepository;
 
     private final BoatStatisticsCollector boatStatisticsCollector;
-
+    private final BoatSpecQuerySpecs boatSpecQuerySpecs;
     private final BoatSpecLinter boatSpecLinter;
     private Map<Severity, Integer> severityOrder;
 
@@ -104,7 +103,28 @@ public class BoatDashboardController {
             .collect(Collectors.toList());
     }
 
+    @GetMapping("dashboard")
+    @Cacheable(BoatCacheManager.PORTAL)
+    @Deprecated
+    public ResponseEntity<List<BoatPortalDashboard>> getDashboard() {
 
+        List<BoatPortalDashboard> portals = boatPortalRepository.findAll().stream()
+            .flatMap(portal -> portal.getProducts().stream().map(this::mapPortalDashboard))
+            .collect(Collectors.toList());
+
+        return ResponseEntity.ok(portals);
+    }
+
+    @GetMapping("dashboard/{projectKey}/{productKey}")
+    @Cacheable(BoatCacheManager.PORTAL_PRODUCT)
+    @Deprecated
+    public ResponseEntity<BoatProduct> getProductDashboard(@PathVariable String projectKey, @PathVariable String productKey) {
+
+        Product product = getProduct(projectKey, productKey);
+        BoatProduct boatProduct = mapProduct(product);
+
+        return ResponseEntity.ok(boatProduct);
+    }
 
     @GetMapping("/portals")
     public ResponseEntity<List<BoatPortal>> getPortals() {
@@ -163,17 +183,19 @@ public class BoatDashboardController {
         return ResponseEntity.accepted().build();
     }
 
+    @Cacheable(BoatCacheManager.PRODUCT_RELEASES)
     @GetMapping("/portals/{portalKey}/products/{productKey}/releases")
     public ResponseEntity<List<BoatProductRelease>> getProductReleases(@PathVariable String portalKey, @PathVariable String productKey) {
 
         Product product = getProduct(portalKey, productKey);
 
-        List<ProductRelease> productRelease = boatProductReleaseRepository.findAllByProduct(product);
+        List<ProductRelease> productRelease = boatProductReleaseRepository.findAllByProductOrderByReleaseDate(product);
         List<BoatProductRelease> boatProductReleases = productRelease.stream().map(dashboardMapper::mapBoatProductRelease).collect(Collectors.toList());
 
         return ResponseEntity.ok(boatProductReleases);
     }
 
+    @Cacheable(BoatCacheManager.PRODUCT_SPECS)
     @GetMapping("/portals/{portalKey}/products/{productKey}/releases/{releaseKey}/specs")
     public ResponseEntity<List<BoatSpec>> getProductReleaseSpecs(@PathVariable String portalKey, @PathVariable String productKey, @PathVariable String releaseKey) {
 
@@ -185,7 +207,7 @@ public class BoatDashboardController {
     }
 
     @GetMapping("/portals/{portalKey}/products/{productKey}/tags")
-    @Cacheable(TAGS)
+    @Cacheable(BoatCacheManager.PRODUCT_TAGS)
     public ResponseEntity<List<BoatTag>> getProductTags(@PathVariable String portalKey, @PathVariable String productKey) {
 
         Product product = getProduct(portalKey, productKey);
@@ -212,12 +234,12 @@ public class BoatDashboardController {
         return ResponseEntity.ok(tags);
     }
 
-    @NotNull
     private List<Spec> getSpecsForProduct(Product product) {
         return boatSpecRepository.findAll(boatSpecQuerySpecs.hasProduct(product.getId()));
     }
 
 
+    @Cacheable(BoatCacheManager.PRODUCT_CAPABILITIES)
     @GetMapping("/portals/{portalKey}/products/{productKey}/capabilities")
     public ResponseEntity<List<BoatCapability>> getPortalProducts(@PathVariable String portalKey, @PathVariable String productKey, Pageable pageable) {
 
@@ -230,6 +252,7 @@ public class BoatDashboardController {
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
+    @Cacheable(BoatCacheManager.PRODUCT_SERVICES)
     @GetMapping("/portals/{portalKey}/products/{productKey}/services")
     public ResponseEntity<List<BoatService>> getPortalServices(@PathVariable String portalKey, @PathVariable String productKey, Pageable pageable) {
         Product product = getProduct(portalKey, productKey);
@@ -242,8 +265,8 @@ public class BoatDashboardController {
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
-    private final BoatSpecQuerySpecs boatSpecQuerySpecs;
 
+    @Cacheable(BoatCacheManager.PRODUCT_SPECS)
     @GetMapping("/portals/{portalKey}/products/{productKey}/specs")
     public ResponseEntity<List<BoatSpec>> getPortalSpecs(@PathVariable String portalKey, @PathVariable String productKey,
                                                          @RequestParam(required = false) String capabilityId,
@@ -269,15 +292,19 @@ public class BoatDashboardController {
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
+
     @GetMapping("/portals/{portalKey}/products/{productKey}/specs/{specId}/lint-report")
     public ResponseEntity<BoatLintReport> getLintReportForSpec(@PathVariable String portalKey, @PathVariable String productKey, @PathVariable String specId, @RequestParam(required = false) Boolean refresh) {
         Product product = getProduct(portalKey, productKey);
+
+        log.info("Get lint report for spec: {} in product: {}", specId, product.getName());
 
         Spec spec = boatSpecRepository.findById(Long.valueOf(specId)).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         LintReport specReport;
         if(refresh != null && refresh) {
             specReport = boatSpecLinter.lint(spec);
+
         } else {
             specReport = Optional.ofNullable(spec.getLintReport()).orElseGet(() -> boatSpecLinter.lint(spec));
         }
@@ -296,6 +323,8 @@ public class BoatDashboardController {
 
         return ResponseEntity.ok(lintReport);
     }
+
+
 
 
 
@@ -332,28 +361,7 @@ public class BoatDashboardController {
     }
 
 
-    @GetMapping("dashboard")
-    @Cacheable(VIEWS)
-    public ResponseEntity<List<BoatPortalDashboard>> getDashboard() {
 
-        List<BoatPortalDashboard> portals = boatPortalRepository.findAll().stream()
-            .flatMap(portal -> portal.getProducts().stream().map(this::mapPortalDashboard))
-            .collect(Collectors.toList());
-
-        return ResponseEntity.ok(portals);
-    }
-
-    @GetMapping("dashboard/{projectKey}/{productKey}")
-    @Cacheable(VIEWS)
-    public ResponseEntity<BoatProduct> getProductDashboard(@PathVariable String projectKey, @PathVariable String productKey) {
-
-
-        Product product = getProduct(projectKey, productKey);
-
-        BoatProduct boatProduct = mapProduct(product);
-
-        return ResponseEntity.ok(boatProduct);
-    }
 
     @NotNull
     private BoatPortal mapPortal(Portal portal) {
