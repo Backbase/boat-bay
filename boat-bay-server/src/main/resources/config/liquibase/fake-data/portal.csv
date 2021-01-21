@@ -1,11 +1,11 @@
-id;jhi_key;name;sub_title;logo_url;logo_link;content;created_on;created_by;hide
-1;Functionality Configuration Fresh;Tasty Steel Chips Madagascar;Generic Concrete Sausages;Outdoors invoice;Home Loan Account;../fake-data/blob/hipster.txt;2020-12-22T11:15:25;Maryland;false
-2;Arkansas system Versatile;synergistic;Senior Innovative Home;core Street Regional;Secured fault-tolerant;../fake-data/blob/hipster.txt;2020-12-22T23:48:10;HDD calculating;true
-3;ivory Factors;Wooden synthesize;Jewelery;redundant frame bypassing;HTTP Principal sexy;../fake-data/blob/hipster.txt;2020-12-22T22:11:16;IB Cape groupware;false
-4;withdrawal Fantastic Plastic Car;withdrawal;Cambridgeshire Central intuitive;portal Persevering application;Berkshire function New Jersey;../fake-data/blob/hipster.txt;2020-12-23T03:48:48;technologies gold open-source;false
-5;USB efficient Incredible;Chips;wireless Manat web-readiness;Borders parse;input Curve;../fake-data/blob/hipster.txt;2020-12-22T12:29:17;Avon Mountains repurpose;true
-6;sexy Group;Spain morph unleash;Designer;Buckinghamshire Regional haptic;action-items eco-centric;../fake-data/blob/hipster.txt;2020-12-22T12:58:40;purple Plastic;false
-7;Identity silver payment;Nevada channels Sleek;plug-and-play optical Soft;Light;Hat;../fake-data/blob/hipster.txt;2020-12-22T14:12:35;whiteboard Checking Account Money Market Account;true
-8;transparent Assurance;infomediaries Technician Savings Account;Point;optical Baby Operations;National;../fake-data/blob/hipster.txt;2020-12-22T17:08:09;Regional aggregate asymmetric;true
-9;Dong;silver bluetooth;Home Loan Account initiatives Intelligent;Direct;Metical card;../fake-data/blob/hipster.txt;2020-12-22T14:55:39;Developer violet California;false
-10;Idaho;upward-trending calculating Car;teal Coordinator;Bedfordshire Intelligent motivating;white Computer;../fake-data/blob/hipster.txt;2020-12-23T10:00:10;Lock Engineer;false
+id;jhi_key;name;sub_title;logo_url;logo_link;content;created_on;created_by;hide;linted
+1;Functionality Configuration Fresh;Tasty Steel Chips Madagascar;Generic Concrete Sausages;Outdoors invoice;Home Loan Account;../fake-data/blob/hipster.txt;2020-12-22T11:15:25;Maryland;false;true
+2;Handmade communities;Future-proofed circuit Senior;utilize;SQL;Street;../fake-data/blob/hipster.txt;2020-12-22T12:41:55;Bedfordshire open-source;false;false
+3;HDD calculating;reinvent parse District;Cheese;Advanced mobile redundant;next-generation;../fake-data/blob/hipster.txt;2020-12-23T08:13:13;HTTP Principal sexy;true;true
+4;indexing Incredible Cotton Shirt Prairie;Fantastic Plastic Car Handcrafted Granite Fish;Agent Hill;Paradigm;Persevering application Lithuanian Litas;../fake-data/blob/hipster.txt;2020-12-22T23:27:16;mesh;true;false
+5;technologies gold open-source;Human;efficient Incredible Mouse;synthesizing Serbian Dinar redundant;Berkshire;../fake-data/blob/hipster.txt;2020-12-22T19:19:07;Planner input Curve;true;true
+6;Sleek Granite Shirt alarm;sexy Group;Spain morph unleash;Designer;Buckinghamshire Regional haptic;../fake-data/blob/hipster.txt;2020-12-22T21:05:04;end-to-end success;true;false
+7;Plastic;parsing;silver payment;Nevada channels Sleek;plug-and-play optical Soft;../fake-data/blob/hipster.txt;2020-12-23T06:31:00;platforms Hat;true;true
+8;Rial Omani Rubber;Operations transparent;matrix infomediaries Technician;Wooden Point;optical Baby Operations;../fake-data/blob/hipster.txt;2020-12-23T05:21:01;synergistic solid state seize;false;false
+9;deposit;THX silver bluetooth;Home Loan Account initiatives Intelligent;Direct;Metical card;../fake-data/blob/hipster.txt;2020-12-22T14:55:39;Developer violet California;false;false
+10;fuchsia upward-trending;Chilean Peso Unidades de fomento Generic Concrete Mouse Coordinator;Bedfordshire Intelligent motivating;white Computer;Investment Account;../fake-data/blob/hipster.txt;2020-12-22T23:38:00;Inverse hacking XSS;false;true

@@ -39,6 +39,9 @@ public class TagResourceIT {
     private static final Boolean DEFAULT_HIDE = false;
     private static final Boolean UPDATED_HIDE = true;
 
+    private static final String DEFAULT_COLOR = "AAAAAAAAAA";
+    private static final String UPDATED_COLOR = "BBBBBBBBBB";
+
     @Autowired
     private TagRepository tagRepository;
 
@@ -60,7 +63,8 @@ public class TagResourceIT {
         Tag tag = new Tag()
             .name(DEFAULT_NAME)
             .description(DEFAULT_DESCRIPTION)
-            .hide(DEFAULT_HIDE);
+            .hide(DEFAULT_HIDE)
+            .color(DEFAULT_COLOR);
         return tag;
     }
     /**
@@ -73,7 +77,8 @@ public class TagResourceIT {
         Tag tag = new Tag()
             .name(UPDATED_NAME)
             .description(UPDATED_DESCRIPTION)
-            .hide(UPDATED_HIDE);
+            .hide(UPDATED_HIDE)
+            .color(UPDATED_COLOR);
         return tag;
     }
 
@@ -99,6 +104,7 @@ public class TagResourceIT {
         assertThat(testTag.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testTag.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testTag.isHide()).isEqualTo(DEFAULT_HIDE);
+        assertThat(testTag.getColor()).isEqualTo(DEFAULT_COLOR);
     }
 
     @Test
@@ -153,7 +159,8 @@ public class TagResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(tag.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
-            .andExpect(jsonPath("$.[*].hide").value(hasItem(DEFAULT_HIDE.booleanValue())));
+            .andExpect(jsonPath("$.[*].hide").value(hasItem(DEFAULT_HIDE.booleanValue())))
+            .andExpect(jsonPath("$.[*].color").value(hasItem(DEFAULT_COLOR)));
     }
     
     @Test
@@ -169,7 +176,8 @@ public class TagResourceIT {
             .andExpect(jsonPath("$.id").value(tag.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
-            .andExpect(jsonPath("$.hide").value(DEFAULT_HIDE.booleanValue()));
+            .andExpect(jsonPath("$.hide").value(DEFAULT_HIDE.booleanValue()))
+            .andExpect(jsonPath("$.color").value(DEFAULT_COLOR));
     }
     @Test
     @Transactional
@@ -194,7 +202,8 @@ public class TagResourceIT {
         updatedTag
             .name(UPDATED_NAME)
             .description(UPDATED_DESCRIPTION)
-            .hide(UPDATED_HIDE);
+            .hide(UPDATED_HIDE)
+            .color(UPDATED_COLOR);
 
         restTagMockMvc.perform(put("/api/tags")
             .contentType(MediaType.APPLICATION_JSON)
@@ -208,6 +217,7 @@ public class TagResourceIT {
         assertThat(testTag.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testTag.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testTag.isHide()).isEqualTo(UPDATED_HIDE);
+        assertThat(testTag.getColor()).isEqualTo(UPDATED_COLOR);
     }
 
     @Test
