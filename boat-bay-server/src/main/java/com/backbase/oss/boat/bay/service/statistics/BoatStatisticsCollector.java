@@ -10,13 +10,13 @@ import com.backbase.oss.boat.bay.repository.ProductRepository;
 import com.backbase.oss.boat.bay.repository.ServiceDefinitionRepository;
 import com.backbase.oss.boat.bay.repository.SpecRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatLintRuleViolationRepository;
+import static com.backbase.oss.boat.bay.web.views.dashboard.config.BoatCacheManager.STATISTICS;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class BoatStatisticsCollector {
 
-    public static final String STATISTICS = "STATISTICS";
     private final List<BoatStatisticsPublisher> publisherList;
 
     private final BoatLintRuleViolationRepository boatLintRuleViolationRepository;
@@ -34,7 +33,7 @@ public class BoatStatisticsCollector {
     private final ServiceDefinitionRepository serviceDefinitionRepository;
     private final SpecRepository specRepository;
 
-    @Scheduled(fixedRateString = "PT15M")
+//    @Scheduled(fixedRateString = "PT15M")
     @Transactional
     public void publish() {
         productRepository.findAll().forEach(this::publish);

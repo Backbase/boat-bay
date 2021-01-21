@@ -1,9 +1,7 @@
 package com.backbase.oss.boat.bay.config;
 
 import com.backbase.oss.boat.bay.service.lint.BoatLintRuleValidatorFactory;
-import static com.backbase.oss.boat.bay.service.statistics.BoatStatisticsCollector.STATISTICS;
-import com.backbase.oss.boat.bay.web.views.dashboard.controller.BoatDashboardController;
-import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatTag;
+import com.backbase.oss.boat.bay.web.views.dashboard.config.BoatCacheManager;
 import io.github.jhipster.config.JHipsterProperties;
 import io.github.jhipster.config.cache.PrefixedKeyGenerator;
 import java.time.Duration;
@@ -94,11 +92,20 @@ public class CacheConfiguration {
             createCache(cm, com.backbase.oss.boat.bay.domain.Product.class.getName() + ".productReleases");
             createCache(cm, com.backbase.oss.boat.bay.domain.Portal.class.getName() + ".lintRules");
             // jhipster-needle-ehcache-add-entry
+
             createCache(cm, BoatLintRuleValidatorFactory.API_VALIDATORS);
             createCache(cm, BoatLintRuleValidatorFactory.API_RULE_POLICY);
-            createCache(cm, BoatDashboardController.VIEWS);
-            createCache(cm, BoatDashboardController.TAGS);
-            createCache(cm, STATISTICS);
+            createCache(cm, BoatCacheManager.PORTAL);
+            createCache(cm, BoatCacheManager.PORTAL_PRODUCT);
+            createCache(cm, BoatCacheManager.PORTAL_PRODUCT);
+            createCache(cm, BoatCacheManager.PORTAL_PRODUCT);
+            createCache(cm, BoatCacheManager.PRODUCT_TAGS);
+            createCache(cm, BoatCacheManager.PRODUCT_SPECS);
+            createCache(cm, BoatCacheManager.PRODUCT_SERVICES);
+            createCache(cm, BoatCacheManager.PRODUCT_CAPABILITIES);
+            createCache(cm, BoatCacheManager.SPEC_LINT_REPORT);
+            createCache(cm, BoatCacheManager.STATISTICS);
+
         };
     }
 

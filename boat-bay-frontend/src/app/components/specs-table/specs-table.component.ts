@@ -3,10 +3,18 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTable } from '@angular/material/table';
 import { SpecsDataSource } from './specs-data-source';
-import { tap } from "rxjs/operators";
+import { map, switchMap, tap } from "rxjs/operators";
 import { BoatDashboardService } from "../../services/boat-dashboard.service";
-import { BoatCapability, BoatProduct, BoatSpec } from "../../models/";
-import { merge } from "rxjs";
+import { BoatCapability, BoatProduct, BoatService, BoatSpec } from "../../models/";
+import { merge, Observable } from "rxjs";
+import { BoatProductRelease } from "../../models/boat-product-release";
+
+export interface SpecFilter {
+  capabilities?: BoatCapability[]
+  services?: BoatService[]
+  releases?: BoatProductRelease[]
+  backwardsCompatible?: boolean
+}
 
 @Component({
   selector: 'specs-table',
@@ -29,16 +37,23 @@ export class SpecsTableComponent implements AfterViewInit, OnInit {
   @ViewChild(MatTable) table!: MatTable<BoatSpec>;
   dataSource!: SpecsDataSource;
 
+  public capabilities$: Observable<BoatCapability[]> | null = null
+  public services$: Observable<BoatService[]> | null = null
+
   private _product!: BoatProduct;
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns = [ 'title','version', 'capability', 'serviceDefinition','grade', 'changed', 'backwardsCompatible', 'createdOn', 'createdBy', 'violationsMust', 'violationsShould', 'violationsMay', 'violationsHint'];
+  selectedCapabilities: any;
 
   constructor(private boatDashboardService: BoatDashboardService) {
+
   }
 
   ngOnInit() {
     this.dataSource = new SpecsDataSource(this.boatDashboardService);
+    this.capabilities$ = this.boatDashboardService.getBoatCapabilities(this._product.portalKey, this._product.key, 0, 100, 'name', 'asc').pipe(map(response => response.body ? response.body : []));
+    this.services$ = this.boatDashboardService.getBoatServices(this._product.portalKey, this._product.key, 0, 100, 'name', 'asc').pipe(map(response => response.body ? response.body : []));
   }
 
   ngAfterViewInit() {

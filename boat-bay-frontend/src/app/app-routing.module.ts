@@ -5,8 +5,8 @@ import { ProductDashboardComponent } from "./pages/product-dashboard/product-das
 import { LintReportComponent } from "./pages/lint-report/lint-report.component";
 import { BoatProductResolver } from "./resolvers/boat-product.resolver";
 import { LintReportResolver } from "./resolvers/lint-report.resolver";
-import { SpecTagCloudComponent } from "./components/tag-cloud/spec-tag-cloud.component";
 import { TagCloudDashboardComponent } from "./pages/tag-dashboard/tag-cloud-dashboard.component";
+import { DiffDashboardComponent } from "./pages/diff-dashboard/diff-dashboard.component";
 
 
 const routes: Routes = [
@@ -47,7 +47,7 @@ const routes: Routes = [
   },
   {
     path: ':portalKey/:productKey/diff-reports',
-    component: ProductDashboardComponent,
+    component: DiffDashboardComponent,
     data: {
       pageTitle: 'Boat Bay',
     },

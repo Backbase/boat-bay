@@ -19,7 +19,8 @@
             <div class="violations" *ngIf="product$ | async as product">
                 <mat-card *ngFor="let violation of lintReport.violations"
                           class="violation-card {{violation.severity}}">
-                    <mat-card-title><span
+                    <mat-card-title>
+                        <span class="severity severity-{{violation.rule.severity}}">{{violation.rule.severity}}</span> - <span
                         class="ruleId">{{violation.rule.ruleId}}</span>  {{violation.rule.title}}
                     </mat-card-title>
                     <mat-card-subtitle>{{violation.rule.ruleSet}}</mat-card-subtitle>

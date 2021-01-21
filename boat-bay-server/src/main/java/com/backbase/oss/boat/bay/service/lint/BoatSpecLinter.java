@@ -9,6 +9,7 @@ import com.backbase.oss.boat.bay.repository.extended.BoatLintReportRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatLintRuleRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatLintRuleViolationRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatSpecRepository;
+import com.backbase.oss.boat.bay.web.views.dashboard.config.BoatCacheManager;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -43,6 +44,7 @@ public class BoatSpecLinter {
     private final RulesManager rulesManager;
     private final BoatSpecRepository specRepository;
 
+    private final BoatCacheManager boatCacheManager;
 
     @Async
     @Transactional
@@ -60,7 +62,6 @@ public class BoatSpecLinter {
         Map<String, LintRule> applicableRules = boatLintRuleValidatorFactory.getAllByPortalAndEnabled(spec.getPortal()).stream().collect(Collectors.toMap(LintRule::getRuleId, Function.identity()));
 
         List<Result> validate = apiValidator.validate(spec.getOpenApi(), rulesPolicy, null);
-
 
 
         LintReport lintReport = lintReportRepository.findBySpec(spec).orElse(new LintReport().spec(spec));
@@ -81,7 +82,7 @@ public class BoatSpecLinter {
 
         spec.setGrade(grade);
         specRepository.save(spec);
-
+        boatCacheManager.clearCache();
         return lintReport;
     }
 
@@ -120,7 +121,7 @@ public class BoatSpecLinter {
     }
 
     @NotNull
-    private LintRuleViolation mapResult(LintReport lintReport, Result result, Map<String, LintRule>  applicableRules) {
+    private LintRuleViolation mapResult(LintReport lintReport, Result result, Map<String, LintRule> applicableRules) {
         LintRule lintRule = applicableRules.get(result.getId());
 
         LintRuleViolation lintRuleViolation = new LintRuleViolation();

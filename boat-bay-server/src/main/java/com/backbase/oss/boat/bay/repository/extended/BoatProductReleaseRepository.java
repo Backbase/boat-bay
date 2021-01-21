@@ -9,9 +9,7 @@ import java.util.Optional;
 public interface BoatProductReleaseRepository extends ProductReleaseRepository {
 
 
-
-
-    List<ProductRelease> findAllByProduct(Product product);
+    List<ProductRelease> findAllByProductOrderByReleaseDate(Product product);
 
 
     Optional<ProductRelease> findByProductAndKey(Product product, String key);
