@@ -58,7 +58,7 @@
   "changelogDate": "20201223103115",
   "entityTableName": "lint_rule_violation",
   "dto": "no",
-  "pagination": "no",
+  "pagination": "pagination",
   "service": "no",
   "jpaMetamodelFiltering": false,
   "fluentMethods": true,

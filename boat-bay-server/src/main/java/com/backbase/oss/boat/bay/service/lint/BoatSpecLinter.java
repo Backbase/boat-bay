@@ -13,6 +13,7 @@ import com.backbase.oss.boat.bay.repository.extended.BoatLintRuleViolationReposi
 import com.backbase.oss.boat.bay.repository.extended.BoatSpecRepository;
 import java.time.Instant;
 import java.time.ZonedDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -69,7 +70,12 @@ public class BoatSpecLinter {
         Map<String, LintRule> applicableRules = boatLintRuleValidatorFactory.getAllByPortalAndEnabled(spec.getPortal()).stream().collect(Collectors.toMap(LintRule::getRuleId, Function.identity()));
 
         List<Result> validate = apiValidator.validate(spec.getOpenApi(), rulesPolicy, null);
+
+
+
         LintReport lintReport = lintReportRepository.findBySpec(spec).orElse(new LintReport().spec(spec));
+        lintReport.setViolations(new HashSet<>());
+        lintReportRepository.save(lintReport);
 
         // Collect new Violations
         Set<LintRuleViolation> violations = validate.stream()
@@ -125,9 +131,12 @@ public class BoatSpecLinter {
 
     @NotNull
     private LintRuleViolation mapResult(LintReport lintReport, Result result, Map<String, LintRule>  applicableRules) {
+        LintRule lintRule = applicableRules.get(result.getId());
+
         LintRuleViolation lintRuleViolation = new LintRuleViolation();
         lintRuleViolation.lintReport(lintReport);
-        lintRuleViolation.setLintRule(applicableRules.get(result.getId()));
+        lintRuleViolation.setLintRule(lintRule);
+        lintRuleViolation.setSeverity(lintRule.getSeverity());
         lintRuleViolation.setName(result.getTitle());
         lintRuleViolation.setDescription(result.getDescription());
         lintRuleViolation.setLineStart(result.getLines().getStart());
