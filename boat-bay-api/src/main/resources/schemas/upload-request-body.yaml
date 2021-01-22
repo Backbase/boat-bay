@@ -3,7 +3,7 @@ properties:
   specs:
     type: array
     items:
-      $ref: '../schemas/upload-spec.yaml#/UploadSpec'
+      $ref: 'upload-spec.yaml#/UploadSpec'
   location:
     type: string
   projectId:

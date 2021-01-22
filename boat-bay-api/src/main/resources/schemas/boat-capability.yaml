@@ -15,6 +15,6 @@ BoatCapability:
     createdBy:
       type: string
     lastLintReport:
-      $ref: "../schemas/boat-lint-report.yaml#/BoatLintReport"
+      $ref: "boat-lint-report.yaml#/BoatLintReport"
     statistics:
-      $ref: "../other-schemas/statistics.yaml#/BoatStatistics"
+      $ref: "boat-statistics.yaml#/BoatStatistics"

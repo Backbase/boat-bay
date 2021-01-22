@@ -23,12 +23,12 @@ BoatSpec:
     createdBy:
       type: string
     statistics:
-      $ref: "../other-schemas/statistics.yaml#/BoatStatistics"
+      $ref: "boat-statistics.yaml#/BoatStatistics"
     backwardsCompatible:
       type: boolean
     changed:
       type: boolean
     capability:
-      $ref: "../schemas/boat-capability.yaml#/BoatCapability"
+      $ref: "boat-capability.yaml#/BoatCapability"
     serviceDefinition:
-      $ref: "../schemas/boat-service.yaml#/BoatService"
+      $ref: "boat-service.yaml#/BoatService"

@@ -4,7 +4,7 @@ BoatLintReport:
     id:
       type: number
     spec:
-      $ref: "../schemas/boat-spec.yaml#/BoatSpec"
+      $ref: "boat-spec.yaml#/BoatSpec"
     name:
       type: string
     passed:
@@ -21,14 +21,14 @@ BoatLintReport:
     violations:
       type: array
       items:
-        $ref: "../schemas/boat-lint-report.yaml#/BoatViolation"
+        $ref: "boat-lint-report.yaml#/BoatViolation"
     hasViolations:
       type: boolean
 BoatViolation:
   type: object
   properties:
     rule:
-      $ref: "../schemas/boat-lint-rule.yaml#/BoatLintRule"
+      $ref: "boat-lint-rule.yaml#/BoatLintRule"
     description:
       type: string
     severity:
