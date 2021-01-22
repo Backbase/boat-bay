@@ -1,6 +1,7 @@
 export interface BoatProductRelease {
   id: number;
-  name: string
+  key: string,
+  name: string,
   version: string,
   releaseDate: Date
 }

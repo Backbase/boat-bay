@@ -18,9 +18,10 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
     CreateJiraIssueButtonComponent,
     SpecSummaryComponent
   ],
-  exports: [
-    LintReportComponent
-  ],
+    exports: [
+        LintReportComponent,
+        SpecSummaryComponent
+    ],
   imports: [
     MatCardModule,
     MatButtonModule,

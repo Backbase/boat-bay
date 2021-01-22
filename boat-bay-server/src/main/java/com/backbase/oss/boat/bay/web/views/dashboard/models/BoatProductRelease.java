@@ -7,6 +7,7 @@ import lombok.Data;
 public class BoatProductRelease {
 
     private Long id;
+    private String key;
     private String name;
     private String version;
     private LocalDateTime releaseDate;
