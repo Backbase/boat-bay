@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { LegacyPortalView } from "../models/dashboard/v1";
 import { BoatDashboard } from "../models/boat-dashboard";
@@ -10,7 +10,8 @@ import {
   BoatPortal,
   BoatProduct,
   BoatService,
-  BoatSpec, BoatTag
+  BoatSpec,
+  BoatTag
 } from "../models";
 import { BoatProductRelease } from "../models/boat-product-release";
 
@@ -84,18 +85,21 @@ export class BoatDashboardService {
   }
 
   getLintReport(portalKey: string, productKey: string, id: number, refresh: boolean = false): Observable<HttpResponse<BoatLintReport>> {
-    return this.http.get<BoatLintReport>(`${this.resourceUrl}/portals/${portalKey}/products/${productKey}/specs/${id}/lint-report?refresh=${refresh}`, { observe: 'response' });
+    return this.http.get<BoatLintReport>(`${this.resourceUrl}/portals/${portalKey}/products/${productKey}/specs/${id}/lint-report?refresh=${refresh}`, {observe: 'response'});
   }
 
-  getTags(portalKey: string, productKey: string):Observable<HttpResponse<BoatTag[]>> {
-    return this.http.get<BoatTag[]>(`${this.resourceUrl}/portals/${portalKey}/products/${productKey}/tags`, { observe: 'response' });
+  getTags(portalKey: string, productKey: string): Observable<HttpResponse<BoatTag[]>> {
+    return this.http.get<BoatTag[]>(`${this.resourceUrl}/portals/${portalKey}/products/${productKey}/tags`, {observe: 'response'});
   }
 
 
-  getReleases(portalKey: string, productKey: string):Observable<HttpResponse<BoatProductRelease[]>> {
-    return this.http.get<BoatProductRelease[]>(`${this.resourceUrl}/portals/${portalKey}/products/${productKey}/releases`, { observe: 'response' });
+  getProductReleases(portalKey: string, productKey: string): Observable<HttpResponse<BoatProductRelease[]>> {
+    return this.http.get<BoatProductRelease[]>(`${this.resourceUrl}/portals/${portalKey}/products/${productKey}/releases`, {observe: 'response'});
   }
 
+  getProductReleaseSpecs(portalKey: string, productKey: string, releaseKey: string): Observable<HttpResponse<BoatSpec[]>> {
+    return this.http.get<BoatSpec[]>(`${this.resourceUrl}/portals/${portalKey}/products/${productKey}/releases/${releaseKey}/specs`, {observe: 'response'});
+  }
 
   getPortalLintRules(portalKey: string): Observable<HttpResponse<BoatLintRule[]>> {
 
@@ -104,6 +108,17 @@ export class BoatDashboardService {
 
   postPortalLintRule(portalKey: string, lintRule: BoatLintRule): Observable<HttpResponse<void>> {
     return this.http.post<void>(`${this.resourceUrl}/portals/${portalKey}/lint-rules/${lintRule.id}`, lintRule, {observe: 'response'});
+  }
+
+  getSpecDiffReportAsHtml(portalKey: string, productKey: string, spec1Id: number, spec2Id: number): Observable<string> {
+    const headers = new HttpHeaders().set('Content-Type', 'text/plain; charset=utf-8');
+
+    return this.http.get(`${this.resourceUrl}/portals/${portalKey}/products/${productKey}/diff-report.html?spec1Id=${spec1Id}&spec2Id=${spec2Id}`,
+      {
+        headers,
+        responseType: 'text'
+      })
+
   }
 
 

@@ -137,6 +137,16 @@ entity SourcePath {
     name String
 }
 
+entity SourceCapabilityMapping {
+    from String
+    to String
+}
+
+entity SourceServiceMapping {
+    from String
+    to String
+}
+
 entity LintRule {
     ruleId String required
     title String required
@@ -196,6 +206,8 @@ relationship OneToMany {
 	LintReport{violations} to LintRuleViolation{lintReport(name)}
 	Portal to LintRule{portal(name) required}
 	Source to SourcePath{source(name)}
+	Source to SourceCapabilityMapping{source(name)}
+	Source to SourceServiceMapping{source(name)}
 
 }
 

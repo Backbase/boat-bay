@@ -18,11 +18,18 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatListModule } from "@angular/material/list";
 import { MatOptionModule } from "@angular/material/core";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { LintReportModule } from "../lint-report/lint-report.module";
+import { SpecDiffComponent } from "../../components/spec-diff/spec-diff.component";
+import { SpecDiffDialogComponent } from "../../components/spec-diff-dialog/spec-diff-dialog.component";
+import { MatDialogModule } from "@angular/material/dialog";
 
 
 @NgModule({
   declarations: [
     DiffDashboardComponent,
+    SpecDiffComponent,
+    SpecDiffDialogComponent
   ],
   imports: [
     CommonModule,
@@ -43,7 +50,10 @@ import { MatOptionModule } from "@angular/material/core";
     MatCheckboxModule,
     MatListModule,
     FormsModule,
-    MatOptionModule
+    MatOptionModule,
+    MatSlideToggleModule,
+    LintReportModule,
+    MatDialogModule
   ]
 })
 export class DiffDashboardModule { }

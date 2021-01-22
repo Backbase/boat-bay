@@ -97,12 +97,12 @@ public class CacheConfiguration {
             createCache(cm, BoatLintRuleValidatorFactory.API_RULE_POLICY);
             createCache(cm, BoatCacheManager.PORTAL);
             createCache(cm, BoatCacheManager.PORTAL_PRODUCT);
-            createCache(cm, BoatCacheManager.PORTAL_PRODUCT);
+            createCache(cm, BoatCacheManager.PRODUCT_CAPABILITIES);
+            createCache(cm, BoatCacheManager.PRODUCT_SERVICES);
+            createCache(cm, BoatCacheManager.PRODUCT_RELEASES);
             createCache(cm, BoatCacheManager.PORTAL_PRODUCT);
             createCache(cm, BoatCacheManager.PRODUCT_TAGS);
             createCache(cm, BoatCacheManager.PRODUCT_SPECS);
-            createCache(cm, BoatCacheManager.PRODUCT_SERVICES);
-            createCache(cm, BoatCacheManager.PRODUCT_CAPABILITIES);
             createCache(cm, BoatCacheManager.SPEC_LINT_REPORT);
             createCache(cm, BoatCacheManager.STATISTICS);
 

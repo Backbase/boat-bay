@@ -2,7 +2,7 @@ import { CollectionViewer, DataSource } from '@angular/cdk/collections';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from "rxjs/operators";
 import { BoatDashboardService } from "../../services/boat-dashboard.service";
-import { BoatSpec } from "../../models/dashboard/boat-spec";
+import { BoatLintRule } from "../../models";
 
 
 /**
@@ -10,9 +10,9 @@ import { BoatSpec } from "../../models/dashboard/boat-spec";
  * encapsulate all logic for fetching and manipulating the displayed data
  * (including sorting, pagination, and filtering).
  */
-export class PortalLintRuleDataSource implements DataSource<BoatSpec> {
+export class PortalLintRuleDataSource implements DataSource<BoatLintRule> {
 
-  private servicesSubject = new BehaviorSubject<BoatSpec[]>([]);
+  private servicesSubject = new BehaviorSubject<BoatLintRule[]>([]);
   private loadingSubject = new BehaviorSubject<boolean>(false);
   private countSubject = new BehaviorSubject<number>(0);
 
@@ -27,7 +27,7 @@ export class PortalLintRuleDataSource implements DataSource<BoatSpec> {
    * the returned stream emits new items.
    * @returns A stream of the items to be rendered.
    */
-  connect(collectionViewer: CollectionViewer): Observable<BoatSpec[]> {
+  connect(collectionViewer: CollectionViewer): Observable<BoatLintRule[]> {
     return this.servicesSubject.asObservable();
   }
 
@@ -41,9 +41,9 @@ export class PortalLintRuleDataSource implements DataSource<BoatSpec> {
     this.loadingSubject.complete();
   }
 
-  loadServicesForProduct(portalKey: string, productKey: string, sortProperty: string, sortDirection: string, pageIndex = 0, pageSize = 3): void {
+  loadLintRulesForPortal(portalKey: string):void {
     this.loadingSubject.next(true);
-    this.boatService.getBoatSpecs(portalKey, productKey, pageIndex, pageSize, sortProperty, sortDirection).pipe(
+    this.boatService.getPortalLintRules(portalKey).pipe(
       map(response => {
         if(response.body) {
           this.countSubject.next(Number(response.headers.get('X-Total-Count')))
