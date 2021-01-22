@@ -12,6 +12,7 @@ import {
   BoatService,
   BoatSpec, BoatTag
 } from "../models";
+import { BoatProductRelease } from "../models/boat-product-release";
 
 @Injectable({providedIn: 'root'})
 export class BoatDashboardService {
@@ -91,7 +92,13 @@ export class BoatDashboardService {
   }
 
 
+  getReleases(portalKey: string, productKey: string):Observable<HttpResponse<BoatProductRelease[]>> {
+    return this.http.get<BoatProductRelease[]>(`${this.resourceUrl}/portals/${portalKey}/products/${productKey}/releases`, { observe: 'response' });
+  }
+
+
   getPortalLintRules(portalKey: string): Observable<HttpResponse<BoatLintRule[]>> {
+
     return this.http.get<BoatLintRule[]>(`${this.resourceUrl}/portals/${portalKey}/lint-rules`, {observe: "response"});
   }
 

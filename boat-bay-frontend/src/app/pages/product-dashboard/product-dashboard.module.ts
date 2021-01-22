@@ -15,7 +15,6 @@ import { CapabilityTableComponent } from "../../components/capability-table/capa
 import { ServiceDefinitionTableComponent } from "../../components/service-definition-table/service-definition-table.component";
 import { PortalDashboardModule } from "../portal-dashboard/portal-dashboard.module";
 import { SpecsTableComponent } from "../../components/specs-table/specs-table.component";
-import { SpecFilterComponent } from "../../components/spec-filter/spec-filter.component";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatSelectModule } from "@angular/material/select";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
@@ -29,7 +28,6 @@ import { MatListModule } from "@angular/material/list";
     CapabilityTableComponent,
     ServiceDefinitionTableComponent,
     SpecsTableComponent,
-    SpecFilterComponent,
   ],
   imports: [
     CommonModule,
