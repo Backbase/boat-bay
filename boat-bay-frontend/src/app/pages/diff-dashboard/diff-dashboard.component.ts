@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { empty, Observable, ReplaySubject, zip } from 'rxjs';
+import { Observable, of, ReplaySubject, zip } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
 import { BoatCapability, BoatProduct, BoatSpec } from "../../models/";
@@ -15,7 +15,7 @@ export enum ChangeState {
 
 export class ReleaseSpec {
 
-  constructor(public spec1: BoatSpec | null, public spec2: BoatSpec | null = null) {
+  constructor(public product: BoatProduct, public spec1: BoatSpec | null, public spec2: BoatSpec | null = null) {
   }
 
   public state(): ChangeState {
@@ -36,7 +36,7 @@ export class ReleaseSpec {
 
 class ReleaseCapability {
 
-  constructor(public capability: BoatCapability, public isNew: boolean, public specs: ReleaseSpec[] = []) {
+  constructor(public boatProduct: BoatProduct, public capability: BoatCapability, public isNew: boolean, public specs: ReleaseSpec[] = []) {
   }
 
   hasChanges(): boolean {
@@ -44,7 +44,7 @@ class ReleaseCapability {
   }
 
   addSpec(spec: BoatSpec) {
-    let releaseSpec: ReleaseSpec = new ReleaseSpec(spec);
+    let releaseSpec: ReleaseSpec = new ReleaseSpec(this.boatProduct, spec);
     this.specs.push(releaseSpec);
   }
 
@@ -66,7 +66,6 @@ class ReleaseCapability {
 })
 export class DiffDashboardComponent implements OnInit {
   product$: Observable<BoatProduct>;
-  private _product: BoatProduct | null = null;
   releases1: BoatProductRelease[] = [];
   releases2: BoatProductRelease[] = [];
 
@@ -86,29 +85,34 @@ export class DiffDashboardComponent implements OnInit {
   constructor(protected activatedRoute: ActivatedRoute,
               protected dashboardService: BoatDashboardService,
               public matDialog: MatDialog) {
-    this.product$ = activatedRoute.data.pipe(map(({product}) => product));
+    this.product$ = activatedRoute.data.pipe(
+      map(({product}) => product),
+      tap(product => {
 
-    this.release1Control.valueChanges.subscribe(() => {
-      this.loadSpecs(this.release1Control.value, this.release2Control.value);
-    });
-    this.release2Control.valueChanges.subscribe(() => {
-      this.loadSpecs(this.release1Control.value, this.release2Control.value);
-    });
+          this.release1Control.valueChanges.subscribe(() => {
+            this.loadSpecs(product, this.release1Control.value, this.release2Control.value);
+          });
+          this.release2Control.valueChanges.subscribe(() => {
+            this.loadSpecs(product, this.release1Control.value, this.release2Control.value);
+          });
+        }
+      ));
 
-    this.changeLogReport  = this.releaseSpec$.pipe(
+
+    this.changeLogReport = this.releaseSpec$.pipe(
       switchMap((releaseSpec) => {
-        if (this._product && releaseSpec && releaseSpec.spec1 && releaseSpec.spec2) {
+        if (releaseSpec && releaseSpec.spec1 && releaseSpec.spec2) {
           return this.dashboardService.getSpecDiffReportAsHtml(
-            this._product.portalKey,
-            this._product.key, releaseSpec.spec1.id, releaseSpec.spec2.id)
+            releaseSpec.product.portalKey,
+            releaseSpec.product.key, releaseSpec.spec1.id, releaseSpec.spec2.id)
         } else {
-          return empty()
-        }}));
+          return of('');
+        }
+      }));
   }
 
   ngOnInit(): void {
     this.product$.pipe(
-      tap(product => this._product = product),
       switchMap((product) => this.dashboardService.getProductReleases(product.portalKey, product.key)),
       map((response) => response.body ? response.body : []),
       tap((releases) => {
@@ -120,14 +124,14 @@ export class DiffDashboardComponent implements OnInit {
       })).subscribe();
   }
 
-  loadSpecs(release1: BoatProductRelease | null, release2: BoatProductRelease | null): void {
-    if (!this.isLoading && this._product && release1 && release2) {
+  loadSpecs(product: BoatProduct, release1: BoatProductRelease | null, release2: BoatProductRelease | null): void {
+    if (!this.isLoading && release1 && release2) {
       this.isLoading = true;
       this.capabilities = [];
 
-      const specs1$: Observable<BoatSpec[]> = this.dashboardService.getProductReleaseSpecs(this._product.portalKey, this._product.key, release1.key)
+      const specs1$: Observable<BoatSpec[]> = this.dashboardService.getProductReleaseSpecs(product.portalKey, product.key, release1.key)
         .pipe(map(({body}) => body ? body : []));
-      const specs2$: Observable<BoatSpec[]> = this.dashboardService.getProductReleaseSpecs(this._product.portalKey, this._product.key, release2.key)
+      const specs2$: Observable<BoatSpec[]> = this.dashboardService.getProductReleaseSpecs(product.portalKey, product.key, release2.key)
         .pipe(map(({body}) => body ? body : []));
 
 
@@ -135,21 +139,21 @@ export class DiffDashboardComponent implements OnInit {
         const specs1 = specsResults[0];
         const specs2 = specsResults[1];
 
-        this.processSpecs(specs1, specs2);
+        this.processSpecs(product, specs1, specs2);
       });
     }
 
   }
 
-  private processSpecs(specs1: BoatSpec[], specs2: BoatSpec[]) {
+  private processSpecs(product: BoatProduct, specs1: BoatSpec[], specs2: BoatSpec[]) {
     this.capabilities = [];
     for (const spec of specs1) {
-      const capability = this.getReleaseCapability(spec, false);
+      const capability = this.getReleaseCapability(product, spec, false);
       capability.addSpec(spec);
     }
 
     for (const spec of specs2) {
-      const capability = this.getReleaseCapability(spec, true);
+      const capability = this.getReleaseCapability(product, spec, true);
       capability.compareSpec(spec);
     }
 
@@ -176,20 +180,26 @@ export class DiffDashboardComponent implements OnInit {
     this.isLoading = false;
   }
 
-  getReleaseCapability(spec: BoatSpec, isNew: boolean): ReleaseCapability {
+  getReleaseCapability(product: BoatProduct, spec: BoatSpec, isNew: boolean): ReleaseCapability {
     let find = this.capabilities.find(value => value.capability.id === spec.capability.id);
     if (find) {
       return find;
     } else {
-      const capability = new ReleaseCapability(spec.capability, isNew);
+      const capability = new ReleaseCapability(product, spec.capability, isNew);
       this.capabilities.push(capability);
       return capability;
     }
   }
 
-  showDiff(releaseSpec: ReleaseSpec) {
+  showDiff(product:BoatProduct,  releaseSpec: ReleaseSpec) {
 
-    this.matDialog.open(SpecDiffDialogComponent, { data: releaseSpec })
+    this.matDialog.open(SpecDiffDialogComponent, {
+      data: {
+        product: product,
+        releaseSpec: releaseSpec
+      }
+
+    })
 
   }
 }

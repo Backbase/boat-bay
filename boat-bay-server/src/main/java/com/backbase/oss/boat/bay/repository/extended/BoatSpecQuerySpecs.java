@@ -3,9 +3,7 @@ package com.backbase.oss.boat.bay.repository.extended;
 import com.backbase.oss.boat.bay.domain.Capability;
 import com.backbase.oss.boat.bay.domain.Product;
 import com.backbase.oss.boat.bay.domain.ProductRelease;
-import com.backbase.oss.boat.bay.domain.ProductRelease_;
 import com.backbase.oss.boat.bay.domain.Spec;
-import com.backbase.oss.boat.bay.domain.Spec_;
 import javax.persistence.criteria.Join;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
@@ -30,7 +28,7 @@ public class BoatSpecQuerySpecs {
 
     public Specification<Spec> inProductRelease(String productReleaseId) {
         return ((root, query, builder) -> {
-            Join<Spec, ProductRelease> specProductReleaseJoin = root.join(Spec_.PRODUCT_RELEASES);
+            Join<Spec, ProductRelease> specProductReleaseJoin = root.join("productRelease");
             return (builder.equal(specProductReleaseJoin.get("id"), productReleaseId));
         });
     }

@@ -28,5 +28,6 @@ public class BoatSpec {
     private BoatCapability capability;
     private BoatService serviceDefinition;
 
+    private String openApi;
 }
 

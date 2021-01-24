@@ -37,4 +37,21 @@ public interface BoatSpecRepository extends SpecRepository, JpaSpecificationExec
     List<Spec> findAllByNameAndServiceDefinitionAndVersionIsNotNull(String name, ServiceDefinition serviceDefinition);
 
 
+    List<Spec> findByPortalKeyAndProductKeyAndCapabilityKeyAndServiceDefinitionKeyAndKey(
+        String portalKey,
+        String productKey,
+        String capabilityKey,
+        String serviceDefinitionKey,
+        String specKey
+    );
+
+
+    Optional<Spec> findByPortalKeyAndProductKeyAndCapabilityKeyAndServiceDefinitionKeyAndKeyAndVersion(
+        String portalKey,
+        String productKey,
+        String capabilityKey,
+        String serviceDefinitionKey,
+        String specKey,
+        String version);
+
 }

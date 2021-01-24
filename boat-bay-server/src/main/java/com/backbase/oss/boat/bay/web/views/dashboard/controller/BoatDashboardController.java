@@ -38,6 +38,8 @@ import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatSpec;
 import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatTag;
 import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatViolation;
 import io.github.jhipster.web.util.PaginationUtil;
+import java.io.StringBufferInputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -52,6 +54,9 @@ import org.openapitools.openapidiff.core.OpenApiCompare;
 import org.openapitools.openapidiff.core.model.ChangedOpenApi;
 import org.openapitools.openapidiff.core.output.HtmlRender;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -328,6 +333,51 @@ public class BoatDashboardController {
                 Comparator.comparingInt(severityIntegerMap::get)));
 
         return ResponseEntity.ok(lintReport);
+    }
+
+    @GetMapping("/portals/{portalKey}/products/{productKey}/capabilities/{capabilityKey}/services/{serviceKey}/specs/{specKey}/{version}/download")
+    public ResponseEntity<Resource> getSpecAsOpenAPI(@PathVariable String portalKey,
+                                                     @PathVariable String productKey,
+                                                     @PathVariable String capabilityKey,
+                                                     @PathVariable String serviceKey,
+                                                     @PathVariable String specKey,
+                                                     @PathVariable String version) {
+
+        Spec spec = boatSpecRepository.findByPortalKeyAndProductKeyAndCapabilityKeyAndServiceDefinitionKeyAndKeyAndVersion(
+            portalKey,productKey,capabilityKey,serviceKey,specKey,version).orElseThrow((() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
+
+        HttpHeaders header = new HttpHeaders();
+        header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + spec.getFilename());
+        header.add("Cache-Control", "no-cache, no-store, must-revalidate");
+        header.add("Pragma", "no-cache");
+        header.add("Expires", "0");
+
+        ByteArrayResource openApiBody = new ByteArrayResource(spec.getOpenApi().getBytes(StandardCharsets.UTF_8));
+
+        return ResponseEntity.ok()
+            .headers(header)
+            .contentLength(spec.getOpenApi().length())
+            .contentType(MediaType.valueOf("application/vnd.oai.openapi"))
+            .body(openApiBody);
+
+    }
+
+    @GetMapping("/portals/{portalKey}/products/{productKey}/capabilities/{capabilityKey}/services/{serviceKey}/specs/{specKey}/{version}")
+    public ResponseEntity<BoatSpec> downloadSpec(@PathVariable String portalKey,
+                                                     @PathVariable String productKey,
+                                                     @PathVariable String capabilityKey,
+                                                     @PathVariable String serviceKey,
+                                                     @PathVariable String specKey,
+                                                     @PathVariable String version) {
+
+        Spec spec = boatSpecRepository.findByPortalKeyAndProductKeyAndCapabilityKeyAndServiceDefinitionKeyAndKeyAndVersion(
+            portalKey,productKey,capabilityKey,serviceKey,specKey,version).orElseThrow((() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
+
+        BoatSpec body = dashboardMapper.mapBoatSpec(spec);
+        body.setOpenApi(spec.getOpenApi());
+
+        return ResponseEntity.ok(body);
+
     }
 
     @GetMapping("/portals/{portalKey}/products/{productKey}/diff-report")
