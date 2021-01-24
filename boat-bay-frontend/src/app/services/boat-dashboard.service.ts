@@ -121,5 +121,18 @@ export class BoatDashboardService {
 
   }
 
+  getSpecBySpec(product:BoatProduct, boatSpec:BoatSpec):Observable<HttpResponse<BoatSpec>> {
+    return this.getSpec(product.portalKey, product.key, boatSpec.capability.key, boatSpec.serviceDefinition.key,boatSpec.key, boatSpec.version);
+  }
+
+
+  getSpec(portalKey: string, productKey: string, capabilityKey: string, serviceDefinitionKey: string, specKey: string, version: string):Observable<HttpResponse<BoatSpec>> {
+    return this.http.get<BoatSpec>(`${this.resourceUrl}/portals/${portalKey}/products/${productKey}/capabilities/${capabilityKey}/services/${serviceDefinitionKey}/specs/${specKey}/${version}`, {observe: "response"});
+
+
+
+  }
+
+
 
 }

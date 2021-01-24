@@ -23,6 +23,7 @@ import { LintReportModule } from "../lint-report/lint-report.module";
 import { SpecDiffComponent } from "../../components/spec-diff/spec-diff.component";
 import { SpecDiffDialogComponent } from "../../components/spec-diff-dialog/spec-diff-dialog.component";
 import { MatDialogModule } from "@angular/material/dialog";
+import { MatIconModule } from "@angular/material/icon";
 
 
 @NgModule({
@@ -31,29 +32,30 @@ import { MatDialogModule } from "@angular/material/dialog";
     SpecDiffComponent,
     SpecDiffDialogComponent
   ],
-  imports: [
-    CommonModule,
-    MatTabsModule,
-    MatCardModule,
-    RouterModule,
-    MatButtonModule,
-    MatExpansionModule,
-    MatGridListModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatProgressSpinnerModule,
-    PortalDashboardModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    ReactiveFormsModule,
-    MatCheckboxModule,
-    MatListModule,
-    FormsModule,
-    MatOptionModule,
-    MatSlideToggleModule,
-    LintReportModule,
-    MatDialogModule
-  ]
+    imports: [
+        CommonModule,
+        MatTabsModule,
+        MatCardModule,
+        RouterModule,
+        MatButtonModule,
+        MatExpansionModule,
+        MatGridListModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatProgressSpinnerModule,
+        PortalDashboardModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        ReactiveFormsModule,
+        MatCheckboxModule,
+        MatListModule,
+        FormsModule,
+        MatOptionModule,
+        MatSlideToggleModule,
+        LintReportModule,
+        MatDialogModule,
+        MatIconModule
+    ]
 })
 export class DiffDashboardModule { }
