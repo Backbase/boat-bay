@@ -5,6 +5,7 @@ import com.backbase.oss.boat.bay.domain.LintRule;
 import com.backbase.oss.boat.bay.domain.LintRuleViolation;
 import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.domain.enumeration.Severity;
+import com.backbase.oss.boat.bay.repository.SpecRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatLintReportRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatLintRuleRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatLintRuleViolationRepository;
@@ -23,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.zalando.zally.core.ApiValidator;
 import org.zalando.zally.core.Result;
@@ -47,15 +49,22 @@ public class BoatSpecLinter {
     private final BoatCacheManager boatCacheManager;
 
     @Async
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void scheduleLintJob(Spec spec) {
-        log.info("Scheduling linting of spec: {}", spec.getTitle());
         lint(spec);
     }
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public LintReport lint(Spec input) {
 
-    public LintReport lint(Spec spec) {
-        log.info("Linting Spec: {}", spec.getName());
+        Spec spec = specRepository.findById(input.getId()).orElseThrow();
+
+        log.info("Start Lint Spec: {}", spec.getName());
+        if(spec.isValid() == null || spec.getServiceDefinition() == null) {
+            log.warn("I should never ever exists");
+        }
+
+
         ApiValidator apiValidator = getApiValidator(spec);
         RulesPolicy rulesPolicy = getRulesPolicy(spec);
 
@@ -64,26 +73,45 @@ public class BoatSpecLinter {
         List<Result> validate = apiValidator.validate(spec.getOpenApi(), rulesPolicy, null);
 
 
-        LintReport lintReport = lintReportRepository.findBySpec(spec).orElse(new LintReport().spec(spec));
-        lintReport.setViolations(new HashSet<>());
-        lintReportRepository.save(lintReport);
+        if(spec.getLintReport() != null) {
+            spec = deleteExistingLintReport(spec);
+        }
 
+        LintReport lintReport = new LintReport();
+        lintReport.setViolations(new HashSet<>());
         // Collect new Violations
-        Set<LintRuleViolation> violations = validate.stream()
-            .map(result -> mapResult(lintReport, result, applicableRules))
-            .collect(Collectors.toSet());
-        lintReport.setName("Lint Report " + spec.getName() + "-" + spec.getVersion());
+        Set<LintRuleViolation> violations = new HashSet<>();
+        for (Result result : validate) {
+            LintRuleViolation lintRuleViolation = mapResult(lintReport, result, applicableRules);
+            violations.add(lintRuleViolation);
+        }
+
         String grade = calculateGrade(violations);
+
+        lintReport.setName(spec.getFilename());
         lintReport.setGrade(grade);
         lintReport.setLintedOn(ZonedDateTime.now());
-        lintReportRepository.save(lintReport);
-        boatLintRuleViolationRepository.deleteByLintReport(lintReport);
+
+        lintReport = lintReportRepository.save(lintReport);
         boatLintRuleViolationRepository.saveAll(violations);
 
+        spec.setLintReport(lintReport);
+
         spec.setGrade(grade);
-        specRepository.save(spec);
-        boatCacheManager.clearCache();
+        specRepository.saveAndFlush(spec);
+
+        log.info("Finished Linting Spec: {}", spec.getName());
         return lintReport;
+    }
+
+    @NotNull
+    private Spec deleteExistingLintReport(Spec spec) {
+        LintReport existingLintReport = spec.getLintReport();
+        boatLintRuleViolationRepository.deleteByLintReport(existingLintReport);
+        lintReportRepository.delete(existingLintReport);
+        spec.setLintReport(null);
+        spec = specRepository.save(spec);
+        return spec;
     }
 
     public List<RuleDetails> getApplicableRuleDetails(Spec spec) {

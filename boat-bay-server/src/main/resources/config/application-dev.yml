@@ -16,8 +16,9 @@
 logging:
   level:
     ROOT: info
-    io.github.jhipster: DEBUG
-    com.backbase.oss.boat.bay: DEBUG
+    io.github.jhipster: info
+    com.backbase.oss.boat.bay: info
+    org.springframework.orm.jpa.JpaTransactionManager: INFO
     io.swagger.v3.parser.OpenAPIV3Parser: OFF
 
 spring:

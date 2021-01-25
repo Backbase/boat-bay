@@ -24,8 +24,7 @@ export interface BoatSpec {
   icon: string;
   grade: string;
 
-  backwardsCompatible: boolean;
-  changed: boolean;
+  changes: string;
 
   capability: BoatCapability;
   serviceDefinition: BoatService;
