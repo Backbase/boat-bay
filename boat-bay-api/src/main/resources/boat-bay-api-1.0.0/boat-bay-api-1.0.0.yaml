@@ -1,17 +1,22 @@
 openapi: 3.0.0
 info:
     version: 1.0.0
-    title: Boat Bay Client Api
+    title: Boat Bay Client
+    description: Endpoints for the boat bay operations
     license:
         name: Backbase
 servers:
     - url: http://boat-bay-server.proto.backbasecloud.com/
+tags:
+  - name: dashboard
+  - name: upload-plugin
 paths:
-
     /api/boat/portals:
         get:
             summary: get list of portals
             operationId: getPortals
+            tags:
+              - dashboard
             responses:
                 '200':
                     description: boat legacy portal
@@ -25,6 +30,8 @@ paths:
             get:
                 summary: get products for identified portal
                 operationId: getPortalProducts
+                tags:
+                  - dashboard
                 responses:
                     '200':
                         description: list of protals products
@@ -45,6 +52,8 @@ paths:
         get:
             summary: get Portal Products Capabalities
             operationId: getPortalCapabilities
+            tags:
+              - dashboard
             responses:
                 '200':
                     description: list of capabilities for product
@@ -76,6 +85,8 @@ paths:
         get:
             summary: get Portal services for a given product
             operationId: getPortalServices
+            tags:
+              - dashboard
             responses:
                 '200':
                     description: list of services for product
@@ -107,7 +118,8 @@ paths:
         get:
             summary: get Portal Specs for given product
             operationId: getPortalSpecs
-
+            tags:
+              - dashboard
             responses:
                 '200':
                     description: list of specs for product
@@ -175,6 +187,8 @@ paths:
         get:
             summary: get Lint Report for spec
             operationId: getLintReportForSpec
+            tags:
+              - dashboard
             responses:
                 '200':
                     description: lint report for spec
@@ -212,6 +226,8 @@ paths:
         get:
             summary: get list of lint rules
             operationId: getPortalLintRules
+            tags:
+              - dashboard
             responses:
                 '200':
                     description: list of lint rules for portal
@@ -232,6 +248,8 @@ paths:
         get:
             summary: get product releases
             operationId: getProductReleases
+            tags:
+              - dashboard
             responses:
                 '200':
                     description: list of product releases for product
@@ -258,6 +276,8 @@ paths:
         get:
             summary: get specs for product release
             operationId: getProductReleaseSpecs
+            tags:
+              - dashboard
             responses:
                 '200':
                     description: list of specs for product release
@@ -290,6 +310,8 @@ paths:
         post:
             summary: update lint rule for portal
             operationId: updatePortalLintRule
+            tags:
+              - dashboard
             requestBody:
                 content:
                     application/json:
@@ -317,6 +339,8 @@ paths:
         get:
             summary: get list of boat portal dashboards
             operationId: getDashboard
+            tags:
+              - dashboard
             responses:
                 '200':
                     description: list of boat portal dashboards
@@ -330,6 +354,8 @@ paths:
         get:
             summary: get product for dashboard project
             operationId: getProductDashboard
+            tags:
+              - dashboard
             responses:
                 '200':
                     description: product for dashboard
@@ -354,6 +380,8 @@ paths:
       get:
         summary: get tags for product
         operationId: getProductTags
+        tags:
+          - dashboard
         responses:
           '200':
             description: list of product tags
@@ -380,6 +408,8 @@ paths:
         put:
             summary: upload and lint specs
             operationId: uploadSpec
+            tags:
+              - upload-plugin
             requestBody:
                 required: true
                 content:

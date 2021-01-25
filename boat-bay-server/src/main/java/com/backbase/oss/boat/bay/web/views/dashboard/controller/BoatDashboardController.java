@@ -16,7 +16,7 @@ import com.backbase.oss.boat.bay.repository.extended.BoatProductRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatServiceRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatSpecQuerySpecs;
 import com.backbase.oss.boat.bay.repository.extended.BoatSpecRepository;
-import com.backbase.oss.boat.bay.service.api.ApiApi;
+import com.backbase.oss.boat.bay.service.api.ApiBoatBay;
 import com.backbase.oss.boat.bay.service.export.ExportOptions;
 import com.backbase.oss.boat.bay.service.export.ExportType;
 import com.backbase.oss.boat.bay.service.export.impl.FileSystemExporter;
@@ -31,17 +31,7 @@ import com.backbase.oss.boat.bay.web.rest.SpecResource;
 import com.backbase.oss.boat.bay.web.rest.errors.BadRequestAlertException;
 
 import com.backbase.oss.boat.bay.web.views.dashboard.mapper.BoatDashboardMapper;
-import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatCapability;
-import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatLintReport;
-import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatLintRule;
-import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatPortal;
-import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatPortalDashboard;
-import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatProduct;
-import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatProductRelease;
-import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatService;
-import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatSpec;
-import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatTag;
-import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatViolation;
+
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
 
@@ -82,7 +72,7 @@ import javax.validation.Valid;
 @Transactional
 @RequiredArgsConstructor
 @Slf4j
-public class BoatDashboardController implements ApiApi {
+public class BoatDashboardController implements ApiBoatBay {
 
     public static final String VIEWS = "views";
     public static final String TAGS = "tags";
@@ -281,10 +271,6 @@ public class BoatDashboardController implements ApiApi {
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
-
-
-
-    private final BoatSpecQuerySpecs boatSpecQuerySpecs;
 
     @Cacheable(BoatCacheManager.PRODUCT_SPECS)
     @GetMapping("/portals/{portalKey}/products/{productKey}/specs")

@@ -10,8 +10,7 @@ BoatLintReport:
     passed:
       type: boolean
     lintedOn:
-      type: string
-      format: date-time
+      $ref: "../other-schemas/local-date-time.yaml#/LocalDateTime"
     openApi:
       type: string
     version:

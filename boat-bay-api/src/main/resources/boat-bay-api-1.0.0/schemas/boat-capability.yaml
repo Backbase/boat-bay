@@ -1,20 +1,19 @@
-BoatService:
+BoatCapability:
   type: object
   properties:
+    id:
+      type: number
     key:
       type: string
     name:
       type: string
-    description:
-      type: string
-    icon:
-      type: string
-    color:
+    content:
       type: string
     createdOn:
-      type: string
-      format: date-time
+      $ref: "../other-schemas/local-date-time.yaml#/LocalDateTime"
     createdBy:
       type: string
+    lastLintReport:
+      $ref: "boat-lint-report.yaml#/BoatLintReport"
     statistics:
       $ref: "boat-statistics.yaml#/BoatStatistics"

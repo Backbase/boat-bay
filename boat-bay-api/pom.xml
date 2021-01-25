@@ -15,6 +15,33 @@
 
     <packaging>pom</packaging>
 
+    <build>
+        <defaultGoal>spring-boot:run</defaultGoal>
+        <plugins>
+            <plugin>
+                <groupId>com.backbase.oss</groupId>
+                <artifactId>boat-maven-plugin</artifactId>
+                <executions>
+                     <execution>
+                        <id>bundle</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>bundle</goal>
+                        </goals>
+                        <configuration>
+                            <input>${project.basedir}/src/main/resources/boat-bay-api-1.0.0/boat-bay-api-1.0.0.yaml</input>
+                            <output>${project.basedir}/src/main/resources/bundled-boat-bay-api/boat-bay-api-1.0.1.yaml</output>
+                        </configuration>
+                     </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+
+
+
+
 
 </project>
 

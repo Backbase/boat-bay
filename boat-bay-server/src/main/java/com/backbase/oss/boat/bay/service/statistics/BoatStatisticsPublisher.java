@@ -4,6 +4,7 @@ import com.backbase.oss.boat.bay.domain.Capability;
 import com.backbase.oss.boat.bay.domain.Product;
 import com.backbase.oss.boat.bay.domain.ServiceDefinition;
 import com.backbase.oss.boat.bay.domain.Spec;
+import com.backbase.oss.boat.bay.service.model.BoatStatistics;
 
 public interface BoatStatisticsPublisher {
 

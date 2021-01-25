@@ -26,7 +26,7 @@
     <properties>
         <!-- Build properties -->
         <maven.version>3.3.9</maven.version>
-        <java.version>11</java.version>
+        <java.version>1.8</java.version>
         <node.version>v12.16.1</node.version>
         <npm.version>6.14.5</npm.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -459,6 +459,7 @@
                 <artifactId>properties-maven-plugin</artifactId>
             </plugin>
             <!-- jhipster-needle-maven-add-plugin -->
+
             <plugin>
                 <groupId>com.backbase.oss</groupId>
                 <artifactId>boat-maven-plugin</artifactId>
@@ -470,13 +471,15 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.parent.basedir}/boat-bay-api/src/main/resources/boat-bay-api-1.0.0.yaml</inputSpec>
+                            <inputSpec>${project.parent.basedir}/boat-bay-api/src/main/resources/bundled-boat-bay-api/boat-bay-api-1.0.1.yaml</inputSpec>
                             <generatorName>spring</generatorName>
+
                             <generateApiTests>false</generateApiTests>
                             <generateApis>true</generateApis>
                             <generateModels>true</generateModels>
                             <generateSupportingFiles>false</generateSupportingFiles>
                             <configOptions>
+                                <bundleSpec>true</bundleSpec>
                                 <library>spring-boot</library>
                                 <reactive>false</reactive>
                                 <java8>true</java8>
@@ -487,10 +490,12 @@
                             </configOptions>
                             <modelPackage>com.backbase.oss.boat.bay.service.model</modelPackage>
                             <apiPackage>com.backbase.oss.boat.bay.service.api</apiPackage>
+                            <apiNameSuffix>BoatBay</apiNameSuffix>
                             <typeMappings>
                                 <typeMapping>Double=java.math.BigDecimal</typeMapping>
                             </typeMappings>
                             <importMappings>
+                                <importMapping>LocalDateTime = java.time.LocalDateTime</importMapping>
                                 <importMapping>Pageable = org.springframework.data.domain.Pageable</importMapping>
                                 <importMapping>IntRange = kotlin.ranges.IntRange</importMapping>
                             </importMappings>

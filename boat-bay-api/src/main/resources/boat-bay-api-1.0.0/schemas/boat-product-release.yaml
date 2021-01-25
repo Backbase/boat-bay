@@ -7,6 +7,6 @@ BoatProductRelease:
       type: string
     version:
       type: string
-    date:
-      type: string
-      format: date-time
+    releaseDate:
+      $ref: "../other-schemas/local-date-time.yaml#/LocalDateTime"
+

@@ -1,0 +1,17 @@
+BoatStatistics:
+  type: object
+  properties:
+    updatedOn:
+      $ref: "../other-schemas/local-date-time.yaml#/LocalDateTime"
+    mustViolationsCount:
+      type: integer
+      format: int64
+    shouldViolationsCount:
+      type: integer
+      format: int64
+    mayViolationsCount:
+      type: integer
+      format: int64
+    hintViolationsCount:
+      type: integer
+      format: int64

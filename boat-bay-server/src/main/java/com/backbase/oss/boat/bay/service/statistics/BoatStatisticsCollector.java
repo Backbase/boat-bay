@@ -13,6 +13,8 @@ import com.backbase.oss.boat.bay.repository.extended.BoatLintRuleViolationReposi
 import static com.backbase.oss.boat.bay.web.views.dashboard.config.BoatCacheManager.STATISTICS;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import com.backbase.oss.boat.bay.service.model.BoatStatistics;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CachePut;

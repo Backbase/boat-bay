@@ -10,7 +10,6 @@ BoatPortal:
     content:
       type: string
     createdOn:
-      type: string
-      format: date-time
+      $ref: "../other-schemas/local-date-time.yaml#/LocalDateTime"
     createdBy:
       type: string
