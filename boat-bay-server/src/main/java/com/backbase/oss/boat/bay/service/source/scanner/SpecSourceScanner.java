@@ -10,6 +10,8 @@ public interface SpecSourceScanner {
 
     void setSource(Source source);
 
+    void setScannerOptions(SourceScannerOptions sourceScannerOptions);
+
     Source getSource();
 
     ScanResult scan();

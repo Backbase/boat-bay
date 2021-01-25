@@ -8,6 +8,7 @@ import { ITag } from 'app/shared/model/tag.model';
 import { ILintReport } from 'app/shared/model/lint-report.model';
 import { IServiceDefinition } from 'app/shared/model/service-definition.model';
 import { IProductRelease } from 'app/shared/model/product-release.model';
+import { Changes } from 'app/shared/model/enumerations/changes.model';
 
 export interface ISpec {
   id?: number;
@@ -28,8 +29,7 @@ export interface ISpec {
   externalDocs?: string;
   hide?: boolean;
   grade?: string;
-  backwardsCompatible?: boolean;
-  changed?: boolean;
+  changes?: Changes;
   sourcePath?: string;
   sourceName?: string;
   sourceUrl?: string;
@@ -68,8 +68,7 @@ export class Spec implements ISpec {
     public externalDocs?: string,
     public hide?: boolean,
     public grade?: string,
-    public backwardsCompatible?: boolean,
-    public changed?: boolean,
+    public changes?: Changes,
     public sourcePath?: string,
     public sourceName?: string,
     public sourceUrl?: string,
@@ -89,7 +88,5 @@ export class Spec implements ISpec {
   ) {
     this.valid = this.valid || false;
     this.hide = this.hide || false;
-    this.backwardsCompatible = this.backwardsCompatible || false;
-    this.changed = this.changed || false;
   }
 }

@@ -4,9 +4,11 @@ import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+import { JhiDataUtils, JhiFileLoadError, JhiEventManager, JhiEventWithContent } from 'ng-jhipster';
 
 import { ISource, Source } from 'app/shared/model/source.model';
 import { SourceService } from './source.service';
+import { AlertError } from 'app/shared/alert/alert-error.model';
 import { IPortal } from 'app/shared/model/portal.model';
 import { PortalService } from 'app/entities/portal/portal.service';
 import { IProduct } from 'app/shared/model/product.model';
@@ -54,6 +56,7 @@ export class SourceUpdateComponent implements OnInit {
     productReleaseKeySpEL: [],
     itemLimit: [],
     overwriteChanges: [],
+    options: [],
     portal: [null, Validators.required],
     product: [null, Validators.required],
     capability: [],
@@ -61,6 +64,8 @@ export class SourceUpdateComponent implements OnInit {
   });
 
   constructor(
+    protected dataUtils: JhiDataUtils,
+    protected eventManager: JhiEventManager,
     protected sourceService: SourceService,
     protected portalService: PortalService,
     protected productService: ProductService,
@@ -111,10 +116,27 @@ export class SourceUpdateComponent implements OnInit {
       productReleaseKeySpEL: source.productReleaseKeySpEL,
       itemLimit: source.itemLimit,
       overwriteChanges: source.overwriteChanges,
+      options: source.options,
       portal: source.portal,
       product: source.product,
       capability: source.capability,
       serviceDefinition: source.serviceDefinition,
+    });
+  }
+
+  byteSize(base64String: string): string {
+    return this.dataUtils.byteSize(base64String);
+  }
+
+  openFile(contentType: string, base64String: string): void {
+    this.dataUtils.openFile(contentType, base64String);
+  }
+
+  setFileData(event: any, field: string, isImage: boolean): void {
+    this.dataUtils.loadFileToForm(event, this.editForm, field, isImage).subscribe(null, (err: JhiFileLoadError) => {
+      this.eventManager.broadcast(
+        new JhiEventWithContent<AlertError>('boatBayApp.error', { message: err.message })
+      );
     });
   }
 
@@ -158,6 +180,7 @@ export class SourceUpdateComponent implements OnInit {
       productReleaseKeySpEL: this.editForm.get(['productReleaseKeySpEL'])!.value,
       itemLimit: this.editForm.get(['itemLimit'])!.value,
       overwriteChanges: this.editForm.get(['overwriteChanges'])!.value,
+      options: this.editForm.get(['options'])!.value,
       portal: this.editForm.get(['portal'])!.value,
       product: this.editForm.get(['product'])!.value,
       capability: this.editForm.get(['capability'])!.value,

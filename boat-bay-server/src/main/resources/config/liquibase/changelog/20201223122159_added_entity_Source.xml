@@ -82,6 +82,9 @@
             <column name="overwrite_changes" type="boolean">
                 <constraints nullable="true" />
             </column>
+            <column name="options" type="${clobType}">
+                <constraints nullable="true" />
+            </column>
             <column name="portal_id" type="bigint">
                 <constraints nullable="false" />
             </column>
@@ -139,6 +142,7 @@
             <column name="product_release_key_sp_el" type="string"/>
             <column name="item_limit" type="numeric"/>
             <column name="overwrite_changes" type="boolean"/>
+            <column name="options" type="clob"/>
             <column name="portal_id" type="numeric"/>
             <column name="product_id" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->

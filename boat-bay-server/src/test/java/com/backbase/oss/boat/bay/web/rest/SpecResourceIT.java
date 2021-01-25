@@ -39,6 +39,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.backbase.oss.boat.bay.domain.enumeration.Changes;
 /**
  * Integration tests for the {@link SpecResource} REST controller.
  */
@@ -99,11 +100,8 @@ public class SpecResourceIT {
     private static final String DEFAULT_GRADE = "AAAAAAAAAA";
     private static final String UPDATED_GRADE = "BBBBBBBBBB";
 
-    private static final Boolean DEFAULT_BACKWARDS_COMPATIBLE = false;
-    private static final Boolean UPDATED_BACKWARDS_COMPATIBLE = true;
-
-    private static final Boolean DEFAULT_CHANGED = false;
-    private static final Boolean UPDATED_CHANGED = true;
+    private static final Changes DEFAULT_CHANGES = Changes.NOT_APPLICABLE;
+    private static final Changes UPDATED_CHANGES = Changes.UNCHANGED;
 
     private static final String DEFAULT_SOURCE_PATH = "AAAAAAAAAA";
     private static final String UPDATED_SOURCE_PATH = "BBBBBBBBBB";
@@ -165,8 +163,7 @@ public class SpecResourceIT {
             .externalDocs(DEFAULT_EXTERNAL_DOCS)
             .hide(DEFAULT_HIDE)
             .grade(DEFAULT_GRADE)
-            .backwardsCompatible(DEFAULT_BACKWARDS_COMPATIBLE)
-            .changed(DEFAULT_CHANGED)
+            .changes(DEFAULT_CHANGES)
             .sourcePath(DEFAULT_SOURCE_PATH)
             .sourceName(DEFAULT_SOURCE_NAME)
             .sourceUrl(DEFAULT_SOURCE_URL)
@@ -251,8 +248,7 @@ public class SpecResourceIT {
             .externalDocs(UPDATED_EXTERNAL_DOCS)
             .hide(UPDATED_HIDE)
             .grade(UPDATED_GRADE)
-            .backwardsCompatible(UPDATED_BACKWARDS_COMPATIBLE)
-            .changed(UPDATED_CHANGED)
+            .changes(UPDATED_CHANGES)
             .sourcePath(UPDATED_SOURCE_PATH)
             .sourceName(UPDATED_SOURCE_NAME)
             .sourceUrl(UPDATED_SOURCE_URL)
@@ -349,8 +345,7 @@ public class SpecResourceIT {
         assertThat(testSpec.getExternalDocs()).isEqualTo(DEFAULT_EXTERNAL_DOCS);
         assertThat(testSpec.isHide()).isEqualTo(DEFAULT_HIDE);
         assertThat(testSpec.getGrade()).isEqualTo(DEFAULT_GRADE);
-        assertThat(testSpec.isBackwardsCompatible()).isEqualTo(DEFAULT_BACKWARDS_COMPATIBLE);
-        assertThat(testSpec.isChanged()).isEqualTo(DEFAULT_CHANGED);
+        assertThat(testSpec.getChanges()).isEqualTo(DEFAULT_CHANGES);
         assertThat(testSpec.getSourcePath()).isEqualTo(DEFAULT_SOURCE_PATH);
         assertThat(testSpec.getSourceName()).isEqualTo(DEFAULT_SOURCE_NAME);
         assertThat(testSpec.getSourceUrl()).isEqualTo(DEFAULT_SOURCE_URL);
@@ -560,8 +555,7 @@ public class SpecResourceIT {
             .andExpect(jsonPath("$.[*].externalDocs").value(hasItem(DEFAULT_EXTERNAL_DOCS)))
             .andExpect(jsonPath("$.[*].hide").value(hasItem(DEFAULT_HIDE.booleanValue())))
             .andExpect(jsonPath("$.[*].grade").value(hasItem(DEFAULT_GRADE)))
-            .andExpect(jsonPath("$.[*].backwardsCompatible").value(hasItem(DEFAULT_BACKWARDS_COMPATIBLE.booleanValue())))
-            .andExpect(jsonPath("$.[*].changed").value(hasItem(DEFAULT_CHANGED.booleanValue())))
+            .andExpect(jsonPath("$.[*].changes").value(hasItem(DEFAULT_CHANGES.toString())))
             .andExpect(jsonPath("$.[*].sourcePath").value(hasItem(DEFAULT_SOURCE_PATH)))
             .andExpect(jsonPath("$.[*].sourceName").value(hasItem(DEFAULT_SOURCE_NAME)))
             .andExpect(jsonPath("$.[*].sourceUrl").value(hasItem(DEFAULT_SOURCE_URL)))
@@ -619,8 +613,7 @@ public class SpecResourceIT {
             .andExpect(jsonPath("$.externalDocs").value(DEFAULT_EXTERNAL_DOCS))
             .andExpect(jsonPath("$.hide").value(DEFAULT_HIDE.booleanValue()))
             .andExpect(jsonPath("$.grade").value(DEFAULT_GRADE))
-            .andExpect(jsonPath("$.backwardsCompatible").value(DEFAULT_BACKWARDS_COMPATIBLE.booleanValue()))
-            .andExpect(jsonPath("$.changed").value(DEFAULT_CHANGED.booleanValue()))
+            .andExpect(jsonPath("$.changes").value(DEFAULT_CHANGES.toString()))
             .andExpect(jsonPath("$.sourcePath").value(DEFAULT_SOURCE_PATH))
             .andExpect(jsonPath("$.sourceName").value(DEFAULT_SOURCE_NAME))
             .andExpect(jsonPath("$.sourceUrl").value(DEFAULT_SOURCE_URL))
@@ -667,8 +660,7 @@ public class SpecResourceIT {
             .externalDocs(UPDATED_EXTERNAL_DOCS)
             .hide(UPDATED_HIDE)
             .grade(UPDATED_GRADE)
-            .backwardsCompatible(UPDATED_BACKWARDS_COMPATIBLE)
-            .changed(UPDATED_CHANGED)
+            .changes(UPDATED_CHANGES)
             .sourcePath(UPDATED_SOURCE_PATH)
             .sourceName(UPDATED_SOURCE_NAME)
             .sourceUrl(UPDATED_SOURCE_URL)
@@ -703,8 +695,7 @@ public class SpecResourceIT {
         assertThat(testSpec.getExternalDocs()).isEqualTo(UPDATED_EXTERNAL_DOCS);
         assertThat(testSpec.isHide()).isEqualTo(UPDATED_HIDE);
         assertThat(testSpec.getGrade()).isEqualTo(UPDATED_GRADE);
-        assertThat(testSpec.isBackwardsCompatible()).isEqualTo(UPDATED_BACKWARDS_COMPATIBLE);
-        assertThat(testSpec.isChanged()).isEqualTo(UPDATED_CHANGED);
+        assertThat(testSpec.getChanges()).isEqualTo(UPDATED_CHANGES);
         assertThat(testSpec.getSourcePath()).isEqualTo(UPDATED_SOURCE_PATH);
         assertThat(testSpec.getSourceName()).isEqualTo(UPDATED_SOURCE_NAME);
         assertThat(testSpec.getSourceUrl()).isEqualTo(UPDATED_SOURCE_URL);

@@ -100,12 +100,9 @@
       "fieldType": "String"
     },
     {
-      "fieldName": "backwardsCompatible",
-      "fieldType": "Boolean"
-    },
-    {
-      "fieldName": "changed",
-      "fieldType": "Boolean"
+      "fieldName": "changes",
+      "fieldType": "Changes",
+      "fieldValues": "NOT_APPLICABLE,UNCHANGED,COMPATIBLE,BREAKING"
     },
     {
       "fieldName": "sourcePath",

@@ -173,15 +173,13 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-control-label" for="field_backwardsCompatible">Backwards Compatible</label>
-                    <input type="checkbox" class="form-control" name="backwardsCompatible" id="field_backwardsCompatible"
-                           formControlName="backwardsCompatible"/>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-control-label" for="field_changed">Changed</label>
-                    <input type="checkbox" class="form-control" name="changed" id="field_changed"
-                           formControlName="changed"/>
+                    <label class="form-control-label" for="field_changes">Changes</label>
+                    <select class="form-control" name="changes" formControlName="changes" id="field_changes">
+                        <option value="NOT_APPLICABLE">NOT_APPLICABLE</option>
+                        <option value="UNCHANGED">UNCHANGED</option>
+                        <option value="COMPATIBLE">COMPATIBLE</option>
+                        <option value="BREAKING">BREAKING</option>
+                    </select>
                 </div>
 
                 <div class="form-group">

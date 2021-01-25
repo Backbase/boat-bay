@@ -149,3 +149,4 @@ Desktop.ini
 
 /src/main/resources/config/liquibase/backbase/
 JFrogSpecSourceIT.java
+/boat-bay-server/node/

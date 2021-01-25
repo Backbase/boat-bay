@@ -48,7 +48,8 @@ describe('Service Tests', () => {
         'AAAAAAA',
         'AAAAAAA',
         0,
-        false
+        false,
+        'AAAAAAA'
       );
     });
 
@@ -116,6 +117,7 @@ describe('Service Tests', () => {
             productReleaseKeySpEL: 'BBBBBB',
             itemLimit: 1,
             overwriteChanges: true,
+            options: 'BBBBBB',
           },
           elemDefault
         );
@@ -159,6 +161,7 @@ describe('Service Tests', () => {
             productReleaseKeySpEL: 'BBBBBB',
             itemLimit: 1,
             overwriteChanges: true,
+            options: 'BBBBBB',
           },
           elemDefault
         );

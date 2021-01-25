@@ -98,6 +98,10 @@ public class Source implements Serializable {
     @Column(name = "overwrite_changes")
     private Boolean overwriteChanges;
 
+    @Lob
+    @Column(name = "options")
+    private String options;
+
     @OneToMany(mappedBy = "source")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<SourcePath> sourcePaths = new HashSet<>();
@@ -415,6 +419,19 @@ public class Source implements Serializable {
         this.overwriteChanges = overwriteChanges;
     }
 
+    public String getOptions() {
+        return options;
+    }
+
+    public Source options(String options) {
+        this.options = options;
+        return this;
+    }
+
+    public void setOptions(String options) {
+        this.options = options;
+    }
+
     public Set<SourcePath> getSourcePaths() {
         return sourcePaths;
     }
@@ -536,6 +553,7 @@ public class Source implements Serializable {
             ", productReleaseKeySpEL='" + getProductReleaseKeySpEL() + "'" +
             ", itemLimit=" + getItemLimit() +
             ", overwriteChanges='" + isOverwriteChanges() + "'" +
+            ", options='" + getOptions() + "'" +
             "}";
     }
 }

@@ -5,8 +5,16 @@ import com.backbase.oss.boat.bay.domain.Source;
 import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.events.SpecSourceUpdatedEvent;
 import com.backbase.oss.boat.bay.repository.extended.BoatSourceRepository;
+import com.backbase.oss.boat.bay.service.source.scanner.SourceScannerOptions;
 import com.backbase.oss.boat.bay.service.source.scanner.SpecSourceScanner;
 import com.backbase.oss.boat.bay.service.source.scanner.impl.JFrogSpecSourceScanner;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,6 +84,8 @@ public class SpecSourceScheduler {
 
     @SuppressWarnings({"java:S1301", "SwitchStatementWithTooFewBranches"})
     public SpecSourceScanner createScanner(Source source) {
+        SourceScannerOptions scannerOptions = getScannerOptions(source);
+
         SpecSourceScanner specSourceScanner;
         switch (source.getType()) {
             case JFROG:
@@ -85,8 +95,30 @@ public class SpecSourceScheduler {
                 throw new IllegalArgumentException("No Implementation available for source: " + source);
         }
         specSourceScanner.setSource(source);
+        specSourceScanner.setScannerOptions(scannerOptions);
 
         return specSourceScanner;
+    }
+
+    private SourceScannerOptions getScannerOptions(Source source) {
+        SourceScannerOptions scannerOptions;
+        if (source.getOptions() != null) {
+            ObjectMapper objectMapper = new ObjectMapper(YAMLFactory.builder().build());
+            objectMapper.registerModule(new JavaTimeModule());
+            objectMapper.registerModule(new Jdk8Module());
+            objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+            try {
+                scannerOptions = objectMapper.readValue(source.getOptions(), SourceScannerOptions.class);
+            } catch (JsonProcessingException e) {
+                throw new IllegalStateException("Source configuration: " + source.getName() + " contains invalid options: " + source.getOptions() + " that cannot be mapped to : " + SourceScannerOptions.class);
+            }
+        }
+        else {
+            scannerOptions = new SourceScannerOptions();
+        }
+        return scannerOptions;
     }
 
     // Schedule Task to be executed every night at 00 or 12 am

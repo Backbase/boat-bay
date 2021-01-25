@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Base64Utils;
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -100,6 +101,9 @@ public class SourceResourceIT {
     private static final Boolean DEFAULT_OVERWRITE_CHANGES = false;
     private static final Boolean UPDATED_OVERWRITE_CHANGES = true;
 
+    private static final String DEFAULT_OPTIONS = "AAAAAAAAAA";
+    private static final String UPDATED_OPTIONS = "BBBBBBBBBB";
+
     @Autowired
     private SourceRepository sourceRepository;
 
@@ -140,7 +144,8 @@ public class SourceResourceIT {
             .productReleaseVersionSpEL(DEFAULT_PRODUCT_RELEASE_VERSION_SP_EL)
             .productReleaseKeySpEL(DEFAULT_PRODUCT_RELEASE_KEY_SP_EL)
             .itemLimit(DEFAULT_ITEM_LIMIT)
-            .overwriteChanges(DEFAULT_OVERWRITE_CHANGES);
+            .overwriteChanges(DEFAULT_OVERWRITE_CHANGES)
+            .options(DEFAULT_OPTIONS);
         // Add required entity
         Portal portal;
         if (TestUtil.findAll(em, Portal.class).isEmpty()) {
@@ -192,7 +197,8 @@ public class SourceResourceIT {
             .productReleaseVersionSpEL(UPDATED_PRODUCT_RELEASE_VERSION_SP_EL)
             .productReleaseKeySpEL(UPDATED_PRODUCT_RELEASE_KEY_SP_EL)
             .itemLimit(UPDATED_ITEM_LIMIT)
-            .overwriteChanges(UPDATED_OVERWRITE_CHANGES);
+            .overwriteChanges(UPDATED_OVERWRITE_CHANGES)
+            .options(UPDATED_OPTIONS);
         // Add required entity
         Portal portal;
         if (TestUtil.findAll(em, Portal.class).isEmpty()) {
@@ -257,6 +263,7 @@ public class SourceResourceIT {
         assertThat(testSource.getProductReleaseKeySpEL()).isEqualTo(DEFAULT_PRODUCT_RELEASE_KEY_SP_EL);
         assertThat(testSource.getItemLimit()).isEqualTo(DEFAULT_ITEM_LIMIT);
         assertThat(testSource.isOverwriteChanges()).isEqualTo(DEFAULT_OVERWRITE_CHANGES);
+        assertThat(testSource.getOptions()).isEqualTo(DEFAULT_OPTIONS);
     }
 
     @Test
@@ -368,7 +375,8 @@ public class SourceResourceIT {
             .andExpect(jsonPath("$.[*].productReleaseVersionSpEL").value(hasItem(DEFAULT_PRODUCT_RELEASE_VERSION_SP_EL)))
             .andExpect(jsonPath("$.[*].productReleaseKeySpEL").value(hasItem(DEFAULT_PRODUCT_RELEASE_KEY_SP_EL)))
             .andExpect(jsonPath("$.[*].itemLimit").value(hasItem(DEFAULT_ITEM_LIMIT)))
-            .andExpect(jsonPath("$.[*].overwriteChanges").value(hasItem(DEFAULT_OVERWRITE_CHANGES.booleanValue())));
+            .andExpect(jsonPath("$.[*].overwriteChanges").value(hasItem(DEFAULT_OVERWRITE_CHANGES.booleanValue())))
+            .andExpect(jsonPath("$.[*].options").value(hasItem(DEFAULT_OPTIONS.toString())));
     }
     
     @Test
@@ -403,7 +411,8 @@ public class SourceResourceIT {
             .andExpect(jsonPath("$.productReleaseVersionSpEL").value(DEFAULT_PRODUCT_RELEASE_VERSION_SP_EL))
             .andExpect(jsonPath("$.productReleaseKeySpEL").value(DEFAULT_PRODUCT_RELEASE_KEY_SP_EL))
             .andExpect(jsonPath("$.itemLimit").value(DEFAULT_ITEM_LIMIT))
-            .andExpect(jsonPath("$.overwriteChanges").value(DEFAULT_OVERWRITE_CHANGES.booleanValue()));
+            .andExpect(jsonPath("$.overwriteChanges").value(DEFAULT_OVERWRITE_CHANGES.booleanValue()))
+            .andExpect(jsonPath("$.options").value(DEFAULT_OPTIONS.toString()));
     }
     @Test
     @Transactional
@@ -447,7 +456,8 @@ public class SourceResourceIT {
             .productReleaseVersionSpEL(UPDATED_PRODUCT_RELEASE_VERSION_SP_EL)
             .productReleaseKeySpEL(UPDATED_PRODUCT_RELEASE_KEY_SP_EL)
             .itemLimit(UPDATED_ITEM_LIMIT)
-            .overwriteChanges(UPDATED_OVERWRITE_CHANGES);
+            .overwriteChanges(UPDATED_OVERWRITE_CHANGES)
+            .options(UPDATED_OPTIONS);
 
         restSourceMockMvc.perform(put("/api/sources")
             .contentType(MediaType.APPLICATION_JSON)
@@ -480,6 +490,7 @@ public class SourceResourceIT {
         assertThat(testSource.getProductReleaseKeySpEL()).isEqualTo(UPDATED_PRODUCT_RELEASE_KEY_SP_EL);
         assertThat(testSource.getItemLimit()).isEqualTo(UPDATED_ITEM_LIMIT);
         assertThat(testSource.isOverwriteChanges()).isEqualTo(UPDATED_OVERWRITE_CHANGES);
+        assertThat(testSource.getOptions()).isEqualTo(UPDATED_OPTIONS);
     }
 
     @Test

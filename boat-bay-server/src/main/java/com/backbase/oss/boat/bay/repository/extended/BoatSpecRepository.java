@@ -32,9 +32,11 @@ public interface BoatSpecRepository extends SpecRepository, JpaSpecificationExec
     Page<Spec> findAllByCapabilityAndServiceDefinition(Capability capability, ServiceDefinition serviceDefinition, Pageable pageable);
 
 
-    List<Spec> findAllByBackwardsCompatibleIsNull();
+    List<Spec> findAllByChangesIsNull();
 
     List<Spec> findAllByNameAndServiceDefinitionAndVersionIsNotNull(String name, ServiceDefinition serviceDefinition);
+
+    List<Spec> findAllByKeyAndServiceDefinitionAndVersionIsNotNull(String key, ServiceDefinition serviceDefinition);
 
 
     List<Spec> findByPortalKeyAndProductKeyAndCapabilityKeyAndServiceDefinitionKeyAndKey(
