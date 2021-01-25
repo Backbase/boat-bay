@@ -171,6 +171,12 @@
                 </div>
 
                 <div class="form-group">
+                    <label class="form-control-label" for="field_options">Options</label>
+                    <textarea class="form-control" name="options" id="field_options"
+                              formControlName="options"></textarea>
+                </div>
+
+                <div class="form-group">
                     <label class="form-control-label" for="field_portal">Portal</label>
                     <select class="form-control" id="field_portal" name="portal" formControlName="portal">
                         <option *ngIf="!editForm.get('portal')!.value" [ngValue]="null" selected></option>

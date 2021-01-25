@@ -1,6 +1,7 @@
 package com.backbase.oss.boat.bay.service.backwardscompatible;
 
 import com.backbase.oss.boat.bay.domain.Spec;
+import com.backbase.oss.boat.bay.domain.enumeration.Changes;
 import com.backbase.oss.boat.bay.repository.extended.BoatSpecRepository;
 import com.github.zafarkhaja.semver.Version;
 import java.util.List;
@@ -26,7 +27,7 @@ public class BoatBackwardsCompatibleChecker {
 
     @Scheduled(fixedRate = 3600000)
     public void checkSpecsToLint() {
-        specRepository.findAllByBackwardsCompatibleIsNull().forEach(this::scheduleBackwardsCompatibleCheck);
+        specRepository.findAllByChangesIsNull().forEach(this::scheduleBackwardsCompatibleCheck);
     }
 
     @Async
@@ -36,10 +37,10 @@ public class BoatBackwardsCompatibleChecker {
     }
 
     public void checkBackwardsCompatibility(Spec spec) {
-        List<Spec> specs = specRepository.findAllByNameAndServiceDefinitionAndVersionIsNotNull(spec.getName(), spec.getServiceDefinition());
+        List<Spec> specs = specRepository.findAllByKeyAndServiceDefinitionAndVersionIsNotNull(spec.getKey(), spec.getServiceDefinition());
 
         if (specs.size() == 1 && specs.get(0).getId().equals(spec.getId())) {
-            setBackwardsCompatible(spec, true);
+            spec.setChanges(Changes.NOT_APPLICABLE);
         } else if (specs.size() > 1) {
             Optional<Spec> first = specs.stream()
                 .filter(s -> !s.equals(spec))
@@ -54,18 +55,16 @@ public class BoatBackwardsCompatibleChecker {
                 String previousOpenAPI = first.get().getOpenApi();
                 ChangedOpenApi diff = OpenApiCompare.fromContents(previousOpenAPI, currentOpenAPI);
 
-                spec.setChanged(diff.isDifferent());
-                setBackwardsCompatible(spec, diff.isCompatible());
+                if(diff.isUnchanged()) {
+                    spec.setChanges(Changes.UNCHANGED);
+                } else if (diff.isCompatible()) {
+                    spec.setChanges(Changes.COMPATIBLE);
+                } else if (diff.isIncompatible()) {
+                    spec.setChanges(Changes.BREAKING);
+                }
             }
         }
-
-
-    }
-
-    private void setBackwardsCompatible(Spec spec, boolean backwardsCompatible) {
-        spec.setBackwardsCompatible(backwardsCompatible);
         specRepository.save(spec);
     }
-
 
 }

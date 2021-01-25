@@ -1,0 +1,22 @@
+
+<script src="../ace-editor/ace-editor.component.ts"></script>
+<button mat-icon-button  class="prev" (click)="previous()"><mat-icon>arrow_back</mat-icon></button>
+<button mat-icon-button class="next" (click)="next()"><mat-icon>arrow_forward</mat-icon></button>
+<div style="display: flex">
+    <div style="flex-grow: 1">
+        <app-spec-summary [spec]="specRelease.spec1"></app-spec-summary>
+    </div>
+    <div style="flex-grow: 1">
+        <app-spec-summary [spec]="specRelease.spec2"></app-spec-summary>
+    </div>
+
+</div>
+
+<div
+    class="ace-diff"
+    #aceDiff
+    style="
+
+    position: relative;
+    width: 1400px;height: 400px;"
+></div>

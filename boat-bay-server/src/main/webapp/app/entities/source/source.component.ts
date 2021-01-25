@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { Subscription } from 'rxjs';
-import { JhiEventManager } from 'ng-jhipster';
+import { JhiEventManager, JhiDataUtils } from 'ng-jhipster';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { ISource } from 'app/shared/model/source.model';
@@ -16,7 +16,12 @@ export class SourceComponent implements OnInit, OnDestroy {
   sources?: ISource[];
   eventSubscriber?: Subscription;
 
-  constructor(protected sourceService: SourceService, protected eventManager: JhiEventManager, protected modalService: NgbModal) {}
+  constructor(
+    protected sourceService: SourceService,
+    protected dataUtils: JhiDataUtils,
+    protected eventManager: JhiEventManager,
+    protected modalService: NgbModal
+  ) {}
 
   loadAll(): void {
     this.sourceService.query().subscribe((res: HttpResponse<ISource[]>) => (this.sources = res.body || []));
@@ -36,6 +41,14 @@ export class SourceComponent implements OnInit, OnDestroy {
   trackId(index: number, item: ISource): number {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
     return item.id!;
+  }
+
+  byteSize(base64String: string): string {
+    return this.dataUtils.byteSize(base64String);
+  }
+
+  openFile(contentType = '', base64String: string): void {
+    return this.dataUtils.openFile(contentType, base64String);
   }
 
   registerChangeInSources(): void {

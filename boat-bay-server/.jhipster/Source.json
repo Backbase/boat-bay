@@ -98,6 +98,11 @@
     {
       "fieldName": "overwriteChanges",
       "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "options",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text"
     }
   ],
   "relationships": [

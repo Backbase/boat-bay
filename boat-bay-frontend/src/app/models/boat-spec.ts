@@ -9,6 +9,7 @@ export interface BoatSpec {
   key: string;
   name: string;
   content?: string;
+  openApi?: string;
 
   createdOn: Date;
   createdBy: String;
@@ -25,7 +26,6 @@ export interface BoatSpec {
 
   backwardsCompatible: boolean;
   changed: boolean;
-
 
   capability: BoatCapability;
   serviceDefinition: BoatService;

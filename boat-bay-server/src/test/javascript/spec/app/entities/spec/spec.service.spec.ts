@@ -4,6 +4,7 @@ import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { SpecService } from 'app/entities/spec/spec.service';
 import { ISpec, Spec } from 'app/shared/model/spec.model';
+import { Changes } from 'app/shared/model/enumerations/changes.model';
 
 describe('Service Tests', () => {
   describe('Spec Service', () => {
@@ -43,8 +44,7 @@ describe('Service Tests', () => {
         'AAAAAAA',
         false,
         'AAAAAAA',
-        false,
-        false,
+        Changes.NOT_APPLICABLE,
         'AAAAAAA',
         'AAAAAAA',
         'AAAAAAA',
@@ -120,8 +120,7 @@ describe('Service Tests', () => {
             externalDocs: 'BBBBBB',
             hide: true,
             grade: 'BBBBBB',
-            backwardsCompatible: true,
-            changed: true,
+            changes: 'BBBBBB',
             sourcePath: 'BBBBBB',
             sourceName: 'BBBBBB',
             sourceUrl: 'BBBBBB',
@@ -169,8 +168,7 @@ describe('Service Tests', () => {
             externalDocs: 'BBBBBB',
             hide: true,
             grade: 'BBBBBB',
-            backwardsCompatible: true,
-            changed: true,
+            changes: 'BBBBBB',
             sourcePath: 'BBBBBB',
             sourceName: 'BBBBBB',
             sourceUrl: 'BBBBBB',

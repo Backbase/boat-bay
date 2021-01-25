@@ -96,6 +96,7 @@ public interface BoatDashboardMapper {
     BoatService mapBoatService(ServiceDefinition serviceDefinition);
 
     @Mapping(target = "statistics", ignore = true)
+    @Mapping(target = "openApi", ignore = true)
     BoatSpec mapBoatSpec(Spec spec);
 
     @Mapping(target = "version", source = "spec.version")

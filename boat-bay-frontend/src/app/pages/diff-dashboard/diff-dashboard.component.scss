@@ -1,11 +1,68 @@
 
-
 .release-container {
   display: flex;
+  padding: 15px;
 }
 
 .release-selector {
   flex-grow: 1;
 
+  .mat-form-field {
+    width: 100%;
+  }
 }
 
+
+.change-log {
+  padding: 15px;
+
+}
+
+.mat-expansion-panel-header {
+  height: 30px;
+}
+
+.mat-list.mat-list-base .mat-list-item {
+  font-size: 14px;
+  height: 30px;
+  padding: 4px 0;
+}
+
+mat-list {
+
+  font-size: 10px;
+
+  mat-list-item {
+    cursor: pointer;
+  }
+
+  mat-list-item:hover {
+    background-color: #a2a2a2;
+  }
+
+  .spec-left {
+    text-align: left;
+    display: inline-block;
+    width: 100%;
+  }
+
+  .spec-comparator {
+    display: inline-block;
+  }
+
+  .spec-right {
+    text-align: right;
+    display: inline-block;
+    width: 100%;
+  }
+
+}
+
+
+.spec-overview {
+  display: flex;
+}
+
+.spec-overview-column {
+  flex-grow: 1;
+}

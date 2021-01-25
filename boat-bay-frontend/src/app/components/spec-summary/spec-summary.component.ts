@@ -8,7 +8,7 @@ import { BoatSpec } from "../../models";
 })
 export class SpecSummaryComponent implements OnInit {
 
-  @Input() spec!: BoatSpec
+  @Input() spec: BoatSpec | null = null;
 
   constructor() { }
 

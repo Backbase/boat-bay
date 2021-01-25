@@ -18,32 +18,44 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatListModule } from "@angular/material/list";
 import { MatOptionModule } from "@angular/material/core";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+import { LintReportModule } from "../lint-report/lint-report.module";
+import { SpecDiffComponent } from "../../components/spec-diff/spec-diff.component";
+import { SpecDiffDialogComponent } from "../../components/spec-diff-dialog/spec-diff-dialog.component";
+import { MatDialogModule } from "@angular/material/dialog";
+import { MatIconModule } from "@angular/material/icon";
 
 
 @NgModule({
   declarations: [
     DiffDashboardComponent,
+    SpecDiffComponent,
+    SpecDiffDialogComponent
   ],
-  imports: [
-    CommonModule,
-    MatTabsModule,
-    MatCardModule,
-    RouterModule,
-    MatButtonModule,
-    MatExpansionModule,
-    MatGridListModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatProgressSpinnerModule,
-    PortalDashboardModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    ReactiveFormsModule,
-    MatCheckboxModule,
-    MatListModule,
-    FormsModule,
-    MatOptionModule
-  ]
+    imports: [
+        CommonModule,
+        MatTabsModule,
+        MatCardModule,
+        RouterModule,
+        MatButtonModule,
+        MatExpansionModule,
+        MatGridListModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatProgressSpinnerModule,
+        PortalDashboardModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        ReactiveFormsModule,
+        MatCheckboxModule,
+        MatListModule,
+        FormsModule,
+        MatOptionModule,
+        MatSlideToggleModule,
+        LintReportModule,
+        MatDialogModule,
+        MatIconModule
+    ]
 })
 export class DiffDashboardModule { }

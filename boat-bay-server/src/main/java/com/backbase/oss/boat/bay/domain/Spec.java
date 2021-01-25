@@ -13,6 +13,8 @@ import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.backbase.oss.boat.bay.domain.enumeration.Changes;
+
 /**
  * A Spec.
  */
@@ -90,11 +92,9 @@ public class Spec implements Serializable {
     @Column(name = "grade")
     private String grade;
 
-    @Column(name = "backwards_compatible")
-    private Boolean backwardsCompatible;
-
-    @Column(name = "changed")
-    private Boolean changed;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "changes")
+    private Changes changes;
 
     @Column(name = "source_path")
     private String sourcePath;
@@ -392,30 +392,17 @@ public class Spec implements Serializable {
         this.grade = grade;
     }
 
-    public Boolean isBackwardsCompatible() {
-        return backwardsCompatible;
+    public Changes getChanges() {
+        return changes;
     }
 
-    public Spec backwardsCompatible(Boolean backwardsCompatible) {
-        this.backwardsCompatible = backwardsCompatible;
+    public Spec changes(Changes changes) {
+        this.changes = changes;
         return this;
     }
 
-    public void setBackwardsCompatible(Boolean backwardsCompatible) {
-        this.backwardsCompatible = backwardsCompatible;
-    }
-
-    public Boolean isChanged() {
-        return changed;
-    }
-
-    public Spec changed(Boolean changed) {
-        this.changed = changed;
-        return this;
-    }
-
-    public void setChanged(Boolean changed) {
-        this.changed = changed;
+    public void setChanges(Changes changes) {
+        this.changes = changes;
     }
 
     public String getSourcePath() {
@@ -689,8 +676,7 @@ public class Spec implements Serializable {
             ", externalDocs='" + getExternalDocs() + "'" +
             ", hide='" + isHide() + "'" +
             ", grade='" + getGrade() + "'" +
-            ", backwardsCompatible='" + isBackwardsCompatible() + "'" +
-            ", changed='" + isChanged() + "'" +
+            ", changes='" + getChanges() + "'" +
             ", sourcePath='" + getSourcePath() + "'" +
             ", sourceName='" + getSourceName() + "'" +
             ", sourceUrl='" + getSourceUrl() + "'" +

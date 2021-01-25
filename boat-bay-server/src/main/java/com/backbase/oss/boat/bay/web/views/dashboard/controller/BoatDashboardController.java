@@ -27,6 +27,7 @@ import com.backbase.oss.boat.bay.service.source.SpecSourceResolver;
 import com.backbase.oss.boat.bay.service.source.scanner.ScanResult;
 import com.backbase.oss.boat.bay.service.statistics.BoatStatisticsCollector;
 import com.backbase.oss.boat.bay.web.views.dashboard.config.BoatCacheManager;
+import com.backbase.oss.boat.bay.web.views.dashboard.diff.DiffReportRenderer;
 import com.backbase.oss.boat.bay.web.rest.SpecResource;
 import com.backbase.oss.boat.bay.web.rest.errors.BadRequestAlertException;
 
@@ -34,6 +35,8 @@ import com.backbase.oss.boat.bay.web.views.dashboard.mapper.BoatDashboardMapper;
 
 import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
+import java.io.StringBufferInputStream;
+import java.nio.charset.StandardCharsets;
 
 import java.net.URISyntaxException;
 import java.time.ZonedDateTime;
@@ -50,13 +53,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.openapitools.openapidiff.core.OpenApiCompare;
+import org.openapitools.openapidiff.core.model.ChangedOpenApi;
+import org.openapitools.openapidiff.core.output.HtmlRender;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -95,7 +105,6 @@ public class BoatDashboardController implements ApiBoatBay {
     private final BoatLintRuleViolationRepository boatLintRuleViolationRepository;
     private final BoatProductReleaseRepository boatProductReleaseRepository;
     private final BoatDashboardRepository dashboardRepository;
-
     private final BoatDashboardMapper dashboardMapper;
     private final BoatTagRepository tagRepository;
 
@@ -209,7 +218,9 @@ public class BoatDashboardController implements ApiBoatBay {
         Product product = getProduct(portalKey, productKey);
         ProductRelease productRelease = boatProductReleaseRepository.findByProductAndKey(product, releaseKey).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        List<BoatSpec> specs = productRelease.getSpecs().stream().map(this::mapSpec).collect(Collectors.toList());
+        List<BoatSpec> specs = productRelease.getSpecs().stream()
+            .map(this::mapSpec)
+            .collect(Collectors.toList());
         return ResponseEntity.ok(specs);
     }
 
@@ -330,9 +341,84 @@ public class BoatDashboardController implements ApiBoatBay {
         return ResponseEntity.ok(lintReport);
     }
 
+    @GetMapping("/portals/{portalKey}/products/{productKey}/capabilities/{capabilityKey}/services/{serviceKey}/specs/{specKey}/{version}/download")
+    public ResponseEntity<Resource> getSpecAsOpenAPI(@PathVariable String portalKey,
+                                                     @PathVariable String productKey,
+                                                     @PathVariable String capabilityKey,
+                                                     @PathVariable String serviceKey,
+                                                     @PathVariable String specKey,
+                                                     @PathVariable String version) {
+
+        Spec spec = boatSpecRepository.findByPortalKeyAndProductKeyAndCapabilityKeyAndServiceDefinitionKeyAndKeyAndVersion(
+            portalKey,productKey,capabilityKey,serviceKey,specKey,version).orElseThrow((() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
+
+        HttpHeaders header = new HttpHeaders();
+        header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + spec.getFilename());
+        header.add("Cache-Control", "no-cache, no-store, must-revalidate");
+        header.add("Pragma", "no-cache");
+        header.add("Expires", "0");
+
+        ByteArrayResource openApiBody = new ByteArrayResource(spec.getOpenApi().getBytes(StandardCharsets.UTF_8));
+
+        return ResponseEntity.ok()
+            .headers(header)
+            .contentLength(spec.getOpenApi().length())
+            .contentType(MediaType.valueOf("application/vnd.oai.openapi"))
+            .body(openApiBody);
+
+    }
+
+    @GetMapping("/portals/{portalKey}/products/{productKey}/capabilities/{capabilityKey}/services/{serviceKey}/specs/{specKey}/{version}")
+    public ResponseEntity<BoatSpec> downloadSpec(@PathVariable String portalKey,
+                                                     @PathVariable String productKey,
+                                                     @PathVariable String capabilityKey,
+                                                     @PathVariable String serviceKey,
+                                                     @PathVariable String specKey,
+                                                     @PathVariable String version) {
+
+        Spec spec = boatSpecRepository.findByPortalKeyAndProductKeyAndCapabilityKeyAndServiceDefinitionKeyAndKeyAndVersion(
+            portalKey,productKey,capabilityKey,serviceKey,specKey,version).orElseThrow((() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
+
+        BoatSpec body = dashboardMapper.mapBoatSpec(spec);
+        body.setOpenApi(spec.getOpenApi());
+
+        return ResponseEntity.ok(body);
+
+    }
+
+    @GetMapping("/portals/{portalKey}/products/{productKey}/diff-report")
+    public ResponseEntity<ChangedOpenApi> getLintReportForSpec(@PathVariable String portalKey,
+                                                               @PathVariable String productKey,
+                                                               @RequestParam String spec1Id,
+                                                               @RequestParam String spec2Id) {
+        ChangedOpenApi changedOpenApi = getChangedOpenApi(portalKey, productKey, spec1Id, spec2Id);
 
 
+        return ResponseEntity.ok(changedOpenApi);
+    }
 
+    @GetMapping(value = "/portals/{portalKey}/products/{productKey}/diff-report.html", produces = MediaType.TEXT_HTML_VALUE)
+    public ResponseEntity<String> getLintReportForSpecAsHtml(@PathVariable String portalKey,
+                                                               @PathVariable String productKey,
+                                                               @RequestParam String spec1Id,
+                                                               @RequestParam String spec2Id) {
+        ChangedOpenApi changedOpenApi = getChangedOpenApi(portalKey, productKey, spec1Id, spec2Id);
+        DiffReportRenderer htmlRender = new DiffReportRenderer();
+
+        return ResponseEntity.ok(htmlRender.render(changedOpenApi));
+    }
+
+    @NotNull
+    private ChangedOpenApi getChangedOpenApi(@PathVariable String portalKey, @PathVariable String productKey, @RequestParam String spec1Id, @RequestParam String spec2Id) {
+        Product product = getProduct(portalKey, productKey);
+
+        Spec spec1 = boatSpecRepository.findById(Long.valueOf(spec1Id)).orElseThrow();
+        Spec spec2 = boatSpecRepository.findById(Long.valueOf(spec2Id)).orElseThrow();
+
+        log.info("Creating diff reports from specs: {} and {} in {}", spec1.getName(), spec2.getName(), product.getName());
+
+        return OpenApiCompare.fromContents(spec1.getOpenApi(), spec2.getOpenApi());
+    }
 
     private Product getProduct(@PathVariable String portalKey, @PathVariable String productKey) {
         return boatProductRepository.findByKeyAndPortalKey(productKey, portalKey)
@@ -345,8 +431,6 @@ public class BoatDashboardController implements ApiBoatBay {
         return boatSpec;
     }
 
-
-
     private Map<Severity, Integer> getSeverityOrder() {
         if(severityOrder == null) {
             severityOrder = new HashMap<>();
@@ -354,20 +438,14 @@ public class BoatDashboardController implements ApiBoatBay {
                 severityOrder.put(Severity.values()[i], i);
             }
         }
-
         return severityOrder;
-
     }
-
 
     private BoatService mapService(ServiceDefinition serviceDefinition) {
         BoatService boatService = dashboardMapper.mapBoatService(serviceDefinition);
         boatService.setStatistics(boatStatisticsCollector.collect(serviceDefinition));
         return boatService;
     }
-
-
-
 
     @NotNull
     private BoatPortal mapPortal(Portal portal) {
