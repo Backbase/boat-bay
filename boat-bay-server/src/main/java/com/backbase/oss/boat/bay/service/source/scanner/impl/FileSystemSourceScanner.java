@@ -20,6 +20,7 @@ import com.backbase.oss.boat.bay.repository.SpecRepository;
 import com.backbase.oss.boat.bay.repository.SpecTypeRepository;
 import com.backbase.oss.boat.bay.repository.TagRepository;
 import com.backbase.oss.boat.bay.service.source.scanner.ScanResult;
+import com.backbase.oss.boat.bay.service.source.scanner.SourceScannerOptions;
 import com.backbase.oss.boat.bay.service.source.scanner.SpecSourceScanner;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -54,28 +55,28 @@ import org.springframework.data.domain.Example;
 @RequiredArgsConstructor
 public class FileSystemSourceScanner implements SpecSourceScanner {
 
-    @Autowired
     private final PortalRepository portalRepository;
-    @Autowired
     private final ProductRepository productRepository;
-    @Autowired
     private final CapabilityRepository capabilityRepository;
-    @Autowired
     private final ServiceDefinitionRepository serviceDefinitionRepository;
-    @Autowired
     private final SpecRepository specRepository;
-    @Autowired
     private final ProductReleaseRepository productReleaseRepository;
-    @Autowired
     private final SpecTypeRepository specTypeRepository;
-    @Autowired
     private final TagRepository tagRepository;
+
     @Getter
     @Setter
     private Source source;
 
     private final ObjectMapper objectMapper;
 
+    private SourceScannerOptions sourceScannerOptions;
+
+
+    @Override
+    public void setScannerOptions(SourceScannerOptions sourceScannerOptions) {
+        this.sourceScannerOptions = sourceScannerOptions;
+    }
 
     public ScanResult scan() {
 
@@ -90,7 +91,7 @@ public class FileSystemSourceScanner implements SpecSourceScanner {
             Path scanPath;
 
             try {
-                scanPath= Path.of(p.getName());
+                scanPath = Path.of(p.getName());
 
                 List<Portal> portalsScanned = Files.walk(scanPath)
                     .filter(Files::isRegularFile)
@@ -112,10 +113,9 @@ public class FileSystemSourceScanner implements SpecSourceScanner {
             }
         }
 
-        return new ScanResult(source, specs);
+        return new ScanResult(source, sourceScannerOptions, specs);
 
     }
-
 
 
     private Optional<Portal> mapPortal(Path scanPath, Path path) {
@@ -163,7 +163,7 @@ public class FileSystemSourceScanner implements SpecSourceScanner {
                 product.setId(null);
                 productRepository.save(product);
                 product.setId(productRepository.findOne(Example.of(product)).get().getId());
-            }else {
+            } else {
                 productRepository.save(product);
             }
 
@@ -203,7 +203,7 @@ public class FileSystemSourceScanner implements SpecSourceScanner {
                 capability.setId(null);
                 capabilityRepository.save(capability);
                 capability.setId(capabilityRepository.findOne(Example.of(capability)).get().getId());
-            }else {
+            } else {
                 capabilityRepository.save(capability);
             }
 
@@ -244,7 +244,7 @@ public class FileSystemSourceScanner implements SpecSourceScanner {
                 service.setId(null);
                 serviceDefinitionRepository.save(service);
                 service.setId(serviceDefinitionRepository.findOne(Example.of(service)).get().getId());
-            }else {
+            } else {
                 serviceDefinitionRepository.save(service);
             }
 
@@ -297,7 +297,7 @@ public class FileSystemSourceScanner implements SpecSourceScanner {
             List<Tag> tags = new ArrayList<>();
             tags.addAll(spec.getTags());
 
-            for (Tag t : tags){
+            for (Tag t : tags) {
                 spec.removeTag(t);
 
                 t.setId(null);
@@ -321,8 +321,6 @@ public class FileSystemSourceScanner implements SpecSourceScanner {
 
         return Optional.of(spec);
     }
-
-
 
 
     @Override

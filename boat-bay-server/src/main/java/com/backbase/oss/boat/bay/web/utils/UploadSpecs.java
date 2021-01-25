@@ -11,11 +11,19 @@ import com.backbase.oss.boat.bay.service.export.impl.FileSystemExporter;
 import com.backbase.oss.boat.bay.service.lint.BoatSpecLinter;
 import com.backbase.oss.boat.bay.service.source.SpecSourceResolver;
 import com.backbase.oss.boat.bay.service.source.scanner.ScanResult;
+import com.backbase.oss.boat.bay.service.source.scanner.SourceScannerOptions;
 import com.backbase.oss.boat.bay.web.rest.SpecResource;
 import com.backbase.oss.boat.bay.web.rest.errors.BadRequestAlertException;
-import com.backbase.oss.boat.bay.web.views.lint.BoatLintReport;
-import com.backbase.oss.boat.bay.web.views.lint.LintReportMapper;
+import com.backbase.oss.boat.bay.web.views.dashboard.mapper.BoatDashboardMapper;
+import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatLintReport;
 import io.github.jhipster.web.util.HeaderUtil;
+import java.net.URISyntaxException;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,15 +31,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Example;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.net.URISyntaxException;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
@@ -46,7 +50,7 @@ public class UploadSpecs {
     private final FileSystemExporter fileSystemExporter;
     private final SpecRepository specRepository;
     private final BoatSpecLinter boatSpecLinter;
-    private final LintReportMapper lintReportMapper;
+    private final BoatDashboardMapper lintReportMapper;
 
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
@@ -91,7 +95,7 @@ public class UploadSpecs {
             spec.setSource(source);
             spec.setSourceName(spec.getFilename());
             spec.setCreatedBy(SPEC_CREATOR);
-            spec.setCreatedOn(Instant.now());
+            spec.setCreatedOn(ZonedDateTime.now());
             spec.setSourcePath("/" +
                 requestBody.getProjectId().substring(
                     requestBody.getProjectId().lastIndexOf(".")+1)
@@ -109,7 +113,7 @@ public class UploadSpecs {
 
         }
 
-        ScanResult scanResult = new ScanResult(source, specs);
+        ScanResult scanResult = new ScanResult(source, new SourceScannerOptions(), specs);
         specSourceResolver.process(scanResult);
 
         String location = (requestBody.getLocation()).concat("/"+requestBody.getProjectId()).concat("/" + requestBody.getArtifactId()).concat("/" + source.getPortal().getName());
@@ -120,8 +124,8 @@ public class UploadSpecs {
         exportSpec.setExportType(ExportType.FILE_SYSTEM);
         fileSystemExporter.export(exportSpec);
 
-        List<Spec> specsProcessed = specRepository.findAll().stream().filter(spec -> spec.getSource().getId().equals(sourceId)).collect(Collectors.toList());
-        List<BoatLintReport> lintReports = specsProcessed.stream().map(spec -> boatSpecLinter.lint(spec)).map(lintReport -> lintReportMapper.mapReport(lintReport)).collect(Collectors.toList());
+        List<Spec> specsProcessed = specRepository.findAll().stream().filter(spec -> false).collect(Collectors.toList());
+        List<BoatLintReport> lintReports = specsProcessed.stream().map(boatSpecLinter::lint).map(lintReportMapper::mapReport).collect(Collectors.toList());
 
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, "SOURCE", source.getId().toString()))

@@ -30,6 +30,7 @@ export interface ISource {
   productReleaseKeySpEL?: string;
   itemLimit?: number;
   overwriteChanges?: boolean;
+  options?: any;
   sourcePaths?: ISourcePath[];
   portal?: IPortal;
   product?: IProduct;
@@ -62,6 +63,7 @@ export class Source implements ISource {
     public productReleaseKeySpEL?: string,
     public itemLimit?: number,
     public overwriteChanges?: boolean,
+    public options?: any,
     public sourcePaths?: ISourcePath[],
     public portal?: IPortal,
     public product?: IProduct,

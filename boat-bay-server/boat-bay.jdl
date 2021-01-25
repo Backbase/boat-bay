@@ -82,8 +82,7 @@ entity Spec {
     externalDocs String
     hide Boolean
     grade String
-    backwardsCompatible Boolean
-    changed Boolean
+    changes Changes
     sourcePath String
     sourceName String
     sourceUrl String
@@ -131,20 +130,11 @@ entity Source {
     productReleaseKeySpEL String
     itemLimit Integer
     overwriteChanges Boolean
+    options TextBlob
 }
 
 entity SourcePath {
     name String
-}
-
-entity SourceCapabilityMapping {
-    from String
-    to String
-}
-
-entity SourceServiceMapping {
-    from String
-    to String
 }
 
 entity LintRule {
@@ -179,6 +169,10 @@ enum Severity {
 	MUST SHOULD MAY HINT
 }
 
+enum Changes {
+    NOT_APPLICABLE UNCHANGED COMPATIBLE BREAKING
+}
+
 enum TypeSeverity {
 	BUG CODE_SMELL VULNERABILITY SECURITY_HOTSPOT
 }
@@ -206,9 +200,6 @@ relationship OneToMany {
 	LintReport{violations} to LintRuleViolation{lintReport(name)}
 	Portal to LintRule{portal(name) required}
 	Source to SourcePath{source(name)}
-	Source to SourceCapabilityMapping{source(name)}
-	Source to SourceServiceMapping{source(name)}
-
 }
 
 relationship ManyToOne {

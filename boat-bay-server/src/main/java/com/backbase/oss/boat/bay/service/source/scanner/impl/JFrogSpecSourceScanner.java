@@ -5,8 +5,8 @@ import com.backbase.oss.boat.bay.domain.Source;
 import com.backbase.oss.boat.bay.domain.SourcePath;
 import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.domain.enumeration.SourceType;
-import com.backbase.oss.boat.bay.repository.extended.BoatSourceRepository;
 import com.backbase.oss.boat.bay.service.source.scanner.ScanResult;
+import com.backbase.oss.boat.bay.service.source.scanner.SourceScannerOptions;
 import com.backbase.oss.boat.bay.service.source.scanner.SpecSourceScanner;
 import com.backbase.oss.boat.bay.util.SpringExpressionUtils;
 import java.io.ByteArrayOutputStream;
@@ -18,20 +18,16 @@ import java.nio.charset.Charset;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
-import liquibase.pro.packaged.Z;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -54,6 +50,7 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
     private String repository;
     private String baseUrl;
     private final Set<SourcePath> paths = new LinkedHashSet<>();
+    private SourceScannerOptions scannerOptions;
 
     byte[] buffer = new byte[2048];
 
@@ -69,13 +66,18 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
     }
 
     @Override
+    public void setScannerOptions(SourceScannerOptions scannerOptions) {
+        this.scannerOptions = scannerOptions;
+    }
+
+    @Override
     public Source getSource() {
         return source;
     }
 
     public ScanResult scan() {
 
-        ScanResult scanResult = new ScanResult(source);
+        ScanResult scanResult = new ScanResult(source, scannerOptions);
 
         log.info("Scanning Artifactory Source: {}", source.getName());
         Searches searchQuery = getArtifactory().searches()
@@ -98,7 +100,7 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
             .sorted(comparing.reversed())
             .collect(Collectors.toList());
 
-        if(source.getItemLimit() != null) {
+        if (source.getItemLimit() != null) {
             items = items.subList(0, source.getItemLimit());
         }
         log.info("Processing  items: {}", items.size());
@@ -170,14 +172,14 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
                 ZipEntry zipEntry = zipInputStream.getNextEntry();
                 Set<Spec> specsInZip = new HashSet<>();
 
-                while(zipEntry != null) {
+                while (zipEntry != null) {
                     Optional<Spec> spec = process(item, zipInputStream, zipEntry);
                     spec.ifPresent(specsInZip::add);
                     zipEntry = zipInputStream.getNextEntry();
                 }
                 zipInputStream.close();
 
-                if(!specsInZip.isEmpty()) {
+                if (!specsInZip.isEmpty()) {
                     String name = SpringExpressionUtils.parseName(source.getProductReleaseNameSpEL(), item, item.info().getName());
                     String key = SpringExpressionUtils.parseName(source.getProductReleaseKeySpEL(), item, item.info().getName());
                     String version = SpringExpressionUtils.parseName(source.getProductReleaseVersionSpEL(), item, item.info().getName());
@@ -205,7 +207,7 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
     private Optional<Spec> process(ItemHandle item, ZipInputStream stream, ZipEntry zipEntry) throws IOException {
         File file = item.info();
 
-        if(!zipEntry.isDirectory() && zipEntry.getName().endsWith(".yaml")) {
+        if (!zipEntry.isDirectory() && zipEntry.getName().endsWith(".yaml")) {
             log.info("Creating spec from zip entry: {}", zipEntry.getName());
             String openApi = getOpenApiFromZipStream(stream);
 
@@ -241,13 +243,11 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
     private String getOpenApiFromZipStream(ZipInputStream stream) throws IOException {
         ByteArrayOutputStream boas = new ByteArrayOutputStream();
         int len;
-        while((len = stream.read(buffer)) > 0) {
-            boas.write(buffer,0, len);
+        while ((len = stream.read(buffer)) > 0) {
+            boas.write(buffer, 0, len);
         }
         boas.close();
-        ;
-        String openApi = boas.toString(Charset.defaultCharset());
-        return openApi;
+        return boas.toString(Charset.defaultCharset());
     }
 
     private Spec getSpec(ItemHandle item) {
@@ -295,5 +295,6 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
     public SourceType getSourceType() {
         return SourceType.JFROG;
     }
+
 
 }

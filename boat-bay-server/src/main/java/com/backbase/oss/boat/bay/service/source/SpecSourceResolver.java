@@ -19,6 +19,7 @@ import com.backbase.oss.boat.bay.repository.extended.BoatTagRepository;
 import com.backbase.oss.boat.bay.service.backwardscompatible.BoatBackwardsCompatibleChecker;
 import com.backbase.oss.boat.bay.service.lint.BoatSpecLinter;
 import com.backbase.oss.boat.bay.service.source.scanner.ScanResult;
+import com.backbase.oss.boat.bay.service.source.scanner.SourceScannerOptions;
 import com.backbase.oss.boat.bay.util.SpringExpressionUtils;
 import com.backbase.oss.boat.loader.OpenAPILoader;
 import com.backbase.oss.boat.loader.OpenAPILoaderException;
@@ -114,23 +115,13 @@ public class SpecSourceResolver {
     }
 
     @NotNull
-    private ProductRelease createProductRelease(Product product, ProductRelease productRelease) {
-
-
-        productRelease.setReleaseDate(ZonedDateTime.now());
-        productRelease.setProduct(product);
-        return productReleaseRepository.save(productRelease);
-    }
-
-    @NotNull
     @Transactional
     public List<Spec> processSpecs(ScanResult scan) {
         log.info("Processing {} specs from scan result from source: {}", scan.getSpecs().size(), scan.getSource().getName());
 
-        List<Spec> processedSpecs = scan.getSpecs().stream()
-            .map(this::processSpec)
+        return scan.getSpecs().stream()
+            .map(spec -> processSpec(spec, scan.getScannerOptions()))
             .collect(Collectors.toList());
-        return processedSpecs;
     }
 
     @NotNull
@@ -143,7 +134,7 @@ public class SpecSourceResolver {
     }
 
     @SuppressWarnings("java:S5411")
-    private Spec processSpec(Spec spec) {
+    private Spec processSpec(Spec spec, SourceScannerOptions scannerOptions) {
         Source source = spec.getSource();
 
         String md5 = spec.getChecksum();
@@ -165,7 +156,7 @@ public class SpecSourceResolver {
         }
         setInformationFromSpec(spec, source);
         setProduct(spec, source);
-        setCapability(spec, source);
+        setCapability(spec, source, scannerOptions);
         setServiceDefinition(spec, source);
         setSpecType(spec);
 
@@ -252,14 +243,26 @@ public class SpecSourceResolver {
         }
     }
 
-    private void setCapability(Spec spec, Source source) {
+    private void setCapability(Spec spec, Source source, SourceScannerOptions scannerOptions) {
         if (spec.getCapability() == null || source.isOverwriteChanges()) {
-            String key = SpringExpressionUtils.parseName(source.getCapabilityKeySpEL(), spec, "unknown");
+            String key = getCapabilityKey(spec, source, scannerOptions);
+
             Capability capability = capabilityRepository.findByProductAndKey(spec.getProduct(), key)
                 .orElseGet(() -> createCapabilityForSpecWithKey(spec, key));
             log.info("Assigning capability: {} to spec: {}", capability.getName(), spec.getName());
             spec.setCapability(capability);
         }
+    }
+
+    private String getCapabilityKey(Spec spec, Source source, SourceScannerOptions scannerOptions) {
+        String key = SpringExpressionUtils.parseName(source.getCapabilityKeySpEL(), spec, "unknown");
+
+        if(scannerOptions != null && scannerOptions.getCapabilityMappingOverrides().containsKey(key)) {
+            String override = scannerOptions.getCapabilityMappingOverrides().get(key);
+            log.info("Overriding capability key: {} with configuration override: {}", key, override);
+            key = override;
+        }
+        return key;
     }
 
     private ServiceDefinition createServiceDefinition(Spec spec, String key) {
@@ -279,15 +282,12 @@ public class SpecSourceResolver {
     private Capability createCapabilityForSpecWithKey(Spec spec, String key) {
         log.info("Creating capability: {} for spec: {}", key, spec.getName());
         Optional<String> capabilityNameSpEL = Optional.ofNullable(spec.getSource().getCapabilityNameSpEL());
-
         Capability capability = new Capability();
-
         capability.setProduct(spec.getProduct());
         capability.setKey(key);
         capability.setCreatedBy(spec.getSource().getName());
         capability.setCreatedOn(ZonedDateTime.now());
-
-        capability.setName(capabilityNameSpEL.map(exp -> SpringExpressionUtils.parseName(exp, spec, key)).orElse(key));
+        capability.setName(StringUtils.capitalize(capabilityNameSpEL.map(exp -> SpringExpressionUtils.parseName(exp, spec, key)).orElse(key).replaceAll("-", " ")));
         return capabilityRepository.save(capability);
     }
 

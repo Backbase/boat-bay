@@ -45,6 +45,7 @@
                     <th scope="col" ><span>Product Release Key Sp EL</span></th>
                     <th scope="col" ><span>Item Limit</span></th>
                     <th scope="col" ><span>Overwrite Changes</span></th>
+                    <th scope="col" ><span>Options</span></th>
                     <th scope="col" ><span>Portal</span></th>
                     <th scope="col" ><span>Product</span></th>
                     <th scope="col" ><span>Capability</span></th>
@@ -77,6 +78,7 @@
                     <td>{{ source.productReleaseKeySpEL }}</td>
                     <td>{{ source.itemLimit }}</td>
                     <td>{{ source.overwriteChanges }}</td>
+                    <td>{{ source.options }}</td>
                     <td>
                         <div *ngIf="source.portal">
                             <a [routerLink]="['/portal', source.portal?.id, 'view']" >{{ source.portal?.name }}</a>

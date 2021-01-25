@@ -11,18 +11,21 @@ import lombok.Data;
 public class ScanResult {
 
     private final Source source;
+    private final SourceScannerOptions scannerOptions;
     private final List<Spec> specs;
     private final List<ProductRelease> productReleases;
 
-    public ScanResult(Source source) {
+    public ScanResult(Source source, SourceScannerOptions sourceScannerOptions) {
         this.source = source;
+        this.scannerOptions = sourceScannerOptions;
         this.specs = new ArrayList<>();
         this.productReleases = new ArrayList<>();
 
     }
 
-    public ScanResult(Source source, List<Spec> specs) {
+    public ScanResult(Source source, SourceScannerOptions sourceScannerOptions, List<Spec> specs) {
         this.source = source;
+        this.scannerOptions = sourceScannerOptions;
         this.specs = specs;
         this.productReleases = new ArrayList<>();
     }
