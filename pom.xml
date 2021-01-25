@@ -408,6 +408,7 @@
         <module>boat-bay-api</module>
         <module>boat-bay-client</module>
         <module>boat-bay-server</module>
+        <module>boat-bay-frontend</module>
     </modules>
 </project>
 

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+    <groupId>com.backbase.oss.boat.bay</groupId>
+    <artifactId>boat-bay</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>boat-bay-frontend</artifactId>
+
+    <name>Boat Bay :: FrontEnd</name>
+
+    <packaging>jar</packaging>
+
+    <properties>
+        <codegen.outputFile>target/generated-sources</codegen.outputFile>
+        <codegen.libFolder>target/lib</codegen.libFolder>
+        <codegen.npmPackage.name>@boat/boat-bay-http-ang</codegen.npmPackage.name>
+        <codegen.buildDist>dist/libs/boat-bay-http-ang</codegen.buildDist>
+        <codegen.npmPackage.version>2.2.0</codegen.npmPackage.version>
+        <codegen.generateMocks>false</codegen.generateMocks>
+        <codegen.apiModulePrefix>BoatBay</codegen.apiModulePrefix>
+        <codegen.serviceSuffix>HttpService</codegen.serviceSuffix>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.backbase.oss</groupId>
+                <artifactId>boat-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>angular</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.parent.basedir}/boat-bay-api/src/main/resources/bundled-boat-bay-api/boat-bay-api-1.0.1.yaml</inputSpec>
+                            <generatorName>boat-angular</generatorName>
+                            <output>${project.basedir}/target/http-module</output>
+                            <reservedWordsMappings>delete=delete,function=function,new=new</reservedWordsMappings>
+                            <additionalProperties>npmName=${codegen.npmPackage.name},npmVersion=${codegen.npmPackage.version},withMocks=${codegen.generateMocks},buildDist=${codegen.buildDist},serviceSuffix=${codegen.serviceSuffix},apiModulePrefix=${codegen.apiModulePrefix}</additionalProperties>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>1.10.4</version>
+                <configuration>
+                    <workingDirectory>${project.basedir}/target/http-module</workingDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>install node and npm</id>
+                        <goals>
+                            <goal>install-node-and-npm</goal>
+                        </goals>
+                        <configuration>
+                            <nodeVersion>v12.19.0</nodeVersion>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>npm install</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>install</arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <phase>verify</phase>
+                        <id>npm run-script build</id>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>run-script build</arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+
+
+</project>
