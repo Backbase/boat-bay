@@ -78,21 +78,14 @@
                 class="grade grade-{{row.grade}}">{{row.grade}}</span></td>
         </ng-container>
 
-        <ng-container matColumnDef="backwardsCompatible">
+        <ng-container matColumnDef="changes">
             <th mat-header-cell *matHeaderCellDef mat-sort-header class="mdl-typography--text-center">Backwards
                 Compatible
             </th>
             <td mat-cell *matCellDef="let row" class="mdl-typography--text-center"><span
-                class="backwards-compatible backwards-compatible-{{row.backwardsCompatible}}">{{row.backwardsCompatible ? 'BACKWARDS COMPATIBLE' : 'BREAKING CHANGES'}}</span>
+                class="backwards-compatible backwards-compatible-{{row.changes}}">{{row.changes}}</span>
             </td>
         </ng-container>
-
-        <ng-container matColumnDef="changed">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="mdl-typography--text-center">Changed</th>
-            <td mat-cell *matCellDef="let row" class="mdl-typography--text-center"><span
-                class="changed changed-{{row.changed}}">{{row.changed ? 'YES' : 'NO'}}</span></td>
-        </ng-container>
-
 
         <ng-container matColumnDef="createdOn">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>Created On</th>

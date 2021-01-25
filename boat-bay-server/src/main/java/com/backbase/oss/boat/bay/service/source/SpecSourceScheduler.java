@@ -1,8 +1,6 @@
 package com.backbase.oss.boat.bay.service.source;
 
-import com.backbase.oss.boat.bay.domain.ProductRelease;
 import com.backbase.oss.boat.bay.domain.Source;
-import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.events.SpecSourceUpdatedEvent;
 import com.backbase.oss.boat.bay.repository.extended.BoatSourceRepository;
 import com.backbase.oss.boat.bay.service.source.scanner.SourceScannerOptions;
@@ -16,9 +14,13 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ScheduledFuture;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -36,7 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-@DependsOn({"liquibase","boatBayBootstrap"})
+@DependsOn({"liquibase", "boatBayBootstrap"})
 @ConditionalOnProperty(value = "boat.scheduler.source.scanner.enabled", havingValue = "true")
 public class SpecSourceScheduler {
 
@@ -44,11 +46,15 @@ public class SpecSourceScheduler {
     private final TaskScheduler scheduler;
     private final BoatSourceRepository boatSourceRepository;
     private final SpecSourceResolver specSourceResolver;
+    private final EntityManagerFactory entityManagerFactory;
 
+    final Set<SpecSourceScanner> scanners = new HashSet<>();
     final Map<Long, ScheduledFuture<?>> jobsMap = new HashMap<>();
 
-    @EventListener(SpecSourceUpdatedEvent.class)
+    @EventListener({ContextRefreshedEvent.class, SpecSourceUpdatedEvent.class})
+    @Transactional(readOnly = true)
     public void scheduleTasks() {
+
         log.info("Setting up Scanner Tasks");
         jobsMap.forEach((jobId, job) -> removeTaskFromScheduler(jobId));
         boatSourceRepository.findAllByCronExpressionIsNotNullAndActiveIsTrue()
@@ -58,20 +64,26 @@ public class SpecSourceScheduler {
                 CronTrigger trigger = new CronTrigger(source.getCronExpression());
                 log.info("Setup Source Scanner: {} with cron expression: {}. First execution: {}", source.getName(), trigger.getExpression(), trigger.nextExecutionTime(new SimpleTriggerContext()));
                 addTaskToScheduler(source.getId(), job, trigger);
+                scanners.add(scanner);
             });
 
     }
 
-
     @EventListener({ContextRefreshedEvent.class})
     @Async
-    @Transactional
+    public void runOnStartup() {
+        log.info("Executing scanners on startup");
+        scanners.stream().filter(scanner -> scanner.getSource().isRunOnStartup())
+            .forEach(scanner -> {
+                EntityTransaction transaction = entityManagerFactory.createEntityManager().getTransaction();
+                log.info("Executing Scanner: {} in transaction: {}", scanner.getSourceType(), transaction);
+                specSourceResolver.process(scanner.scan());
+            });
+    }
+
+
     public void setupScheduledTasks() {
         scheduleTasks();
-        boatSourceRepository.findAllByActiveIsTrueAndRunOnStartupIsTrue().forEach(source -> {
-            SpecSourceScanner scanner = createScanner(source);
-            specSourceResolver.process(scanner.scan());
-        });
     }
 
     private Runnable setupSpecScannerJob(SpecSourceScanner scanner) {
@@ -79,10 +91,10 @@ public class SpecSourceScheduler {
             log.info("Executing scheduled scanner: {} with source: {}", scanner.getSourceType(), scanner.getSource());
             specSourceResolver.process(scanner.scan());
         };
-
     }
 
     @SuppressWarnings({"java:S1301", "SwitchStatementWithTooFewBranches"})
+
     public SpecSourceScanner createScanner(Source source) {
         SourceScannerOptions scannerOptions = getScannerOptions(source);
 
@@ -114,8 +126,7 @@ public class SpecSourceScheduler {
             } catch (JsonProcessingException e) {
                 throw new IllegalStateException("Source configuration: " + source.getName() + " contains invalid options: " + source.getOptions() + " that cannot be mapped to : " + SourceScannerOptions.class);
             }
-        }
-        else {
+        } else {
             scannerOptions = new SourceScannerOptions();
         }
         return scannerOptions;

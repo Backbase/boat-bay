@@ -1,8 +1,10 @@
 package com.backbase.oss.boat.bay.web.views.dashboard.models;
 
+import com.backbase.oss.boat.bay.domain.enumeration.Changes;
 import com.backbase.oss.boat.bay.service.statistics.BoatStatistics;
 import java.time.LocalDateTime;
 import lombok.Data;
+import org.openapitools.openapidiff.core.model.schema.ChangedEnum;
 
 @Data
 public class BoatSpec {
@@ -21,9 +23,7 @@ public class BoatSpec {
 
     private BoatStatistics statistics;
 
-    private boolean backwardsCompatible;
-    private boolean changed;
-
+    private Changes changes;
 
     private BoatCapability capability;
     private BoatService serviceDefinition;

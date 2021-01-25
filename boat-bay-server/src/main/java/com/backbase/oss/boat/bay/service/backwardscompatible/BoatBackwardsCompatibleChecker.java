@@ -14,6 +14,7 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
@@ -24,19 +25,10 @@ public class BoatBackwardsCompatibleChecker {
 
     private final BoatSpecRepository specRepository;
 
+    public void checkBackwardsCompatibility(Spec input) {
+        Spec spec = specRepository.findById(input.getId()).get();
 
-    @Scheduled(fixedRate = 3600000)
-    public void checkSpecsToLint() {
-        specRepository.findAllByChangesIsNull().forEach(this::scheduleBackwardsCompatibleCheck);
-    }
-
-    @Async
-    @Transactional
-    public void scheduleBackwardsCompatibleCheck(Spec spec) {
-        checkBackwardsCompatibility(spec);
-    }
-
-    public void checkBackwardsCompatibility(Spec spec) {
+        log.info("Checking Changes for Spec: {}", spec.getName());
         List<Spec> specs = specRepository.findAllByKeyAndServiceDefinitionAndVersionIsNotNull(spec.getKey(), spec.getServiceDefinition());
 
         if (specs.size() == 1 && specs.get(0).getId().equals(spec.getId())) {
@@ -53,18 +45,25 @@ public class BoatBackwardsCompatibleChecker {
             if(first.isPresent()) {
                 String currentOpenAPI = spec.getOpenApi();
                 String previousOpenAPI = first.get().getOpenApi();
-                ChangedOpenApi diff = OpenApiCompare.fromContents(previousOpenAPI, currentOpenAPI);
-
-                if(diff.isUnchanged()) {
-                    spec.setChanges(Changes.UNCHANGED);
-                } else if (diff.isCompatible()) {
-                    spec.setChanges(Changes.COMPATIBLE);
-                } else if (diff.isIncompatible()) {
-                    spec.setChanges(Changes.BREAKING);
+                ChangedOpenApi diff = null;
+                try {
+                    diff = OpenApiCompare.fromContents(previousOpenAPI, currentOpenAPI);
+                    if(diff.isUnchanged()) {
+                        spec.setChanges(Changes.UNCHANGED);
+                    } else if (diff.isCompatible()) {
+                        spec.setChanges(Changes.COMPATIBLE);
+                    } else if (diff.isIncompatible()) {
+                        spec.setChanges(Changes.BREAKING);
+                    }
+                } catch (Exception e) {
+                    spec.setParseError(e.getMessage());
+                    spec.setChanges(Changes.ERROR_COMPARING);
                 }
+
+
             }
         }
-        specRepository.save(spec);
+        specRepository.saveAndFlush(spec);
     }
 
 }

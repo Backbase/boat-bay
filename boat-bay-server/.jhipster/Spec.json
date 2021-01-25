@@ -102,7 +102,7 @@
     {
       "fieldName": "changes",
       "fieldType": "Changes",
-      "fieldValues": "NOT_APPLICABLE,UNCHANGED,COMPATIBLE,BREAKING"
+      "fieldValues": "NOT_APPLICABLE,ERROR_COMPARING,UNCHANGED,COMPATIBLE,BREAKING"
     },
     {
       "fieldName": "sourcePath",
