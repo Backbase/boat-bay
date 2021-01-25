@@ -123,7 +123,7 @@ public class BoatDashboardController {
 
         return ResponseEntity.ok(portals);
     }
-
+//project = portal
     @GetMapping("dashboard/{projectKey}/{productKey}")
     @Cacheable(BoatCacheManager.PORTAL_PRODUCT)
     @Deprecated
