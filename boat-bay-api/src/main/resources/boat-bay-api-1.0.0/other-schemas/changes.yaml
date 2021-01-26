@@ -1,0 +1,8 @@
+Changes:
+  type: string
+  enum:
+    - NOT_APPLICABLE
+    - ERROR_COMPARING
+    - UNCHANGED
+    - COMPATIBLE
+    - BREAKING

@@ -25,8 +25,8 @@ BoatSpec:
       $ref: "boat-statistics.yaml#/BoatStatistics"
     backwardsCompatible:
       type: boolean
-    changed:
-      type: boolean
+    changes:
+      $ref: "../other-schemas/changes.yaml#/Changes"
     capability:
       $ref: "boat-capability.yaml#/BoatCapability"
     serviceDefinition:
