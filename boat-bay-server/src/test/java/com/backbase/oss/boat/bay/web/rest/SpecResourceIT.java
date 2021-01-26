@@ -101,7 +101,7 @@ public class SpecResourceIT {
     private static final String UPDATED_GRADE = "BBBBBBBBBB";
 
     private static final Changes DEFAULT_CHANGES = Changes.NOT_APPLICABLE;
-    private static final Changes UPDATED_CHANGES = Changes.UNCHANGED;
+    private static final Changes UPDATED_CHANGES = Changes.ERROR_COMPARING;
 
     private static final String DEFAULT_SOURCE_PATH = "AAAAAAAAAA";
     private static final String UPDATED_SOURCE_PATH = "BBBBBBBBBB";

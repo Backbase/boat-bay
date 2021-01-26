@@ -56,7 +56,6 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
 
     @SuppressWarnings("UseBulkOperation")
     @Override
-    @Transactional
     public void setSource(Source source) {
         this.source = source;
         URI uri = URI.create(source.getBaseUrl());
