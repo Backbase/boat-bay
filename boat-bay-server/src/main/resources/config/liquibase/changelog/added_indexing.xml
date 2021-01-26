@@ -12,6 +12,23 @@
         <createIndex indexName="idx_portal_key" tableName="portal">
             <column descending="true" name="jhi_key"/>
         </createIndex>
+
+        <createIndex indexName="idx_capability_key" tableName="capability">
+            <column descending="true" name="jhi_key"/>
+        </createIndex>
+
+        <createIndex indexName="idx_service_key" tableName="service_definition">
+            <column descending="true" name="jhi_key"/>
+        </createIndex>
+
+        <createIndex indexName="idx_spec_key" tableName="spec">
+            <column descending="true" name="jhi_key"/>
+        </createIndex>
+
+        <createIndex indexName="idx_service_key" tableName="service_definition">
+            <column descending="true" name="jhi_key"/>
+        </createIndex>
+        <!--not sure-->
 <!--        jira_project_id or portal key-->
         <createIndex tableName="product" indexName="idx_boat_product_keys">
             <column descending="true" name="jhi_key"/>
@@ -20,36 +37,24 @@
 
 <!--        not sure-->
         <createIndex tableName="capability" indexName="inx_capability_by_product">
+            <column descending="true" name="jhi_key"/>
             <column descending="true" name="product_id"/>
         </createIndex>
 
-        <createIndex indexName="idx_capability_key" tableName="capability">
+        <createIndex indexName="idx_product_key" tableName="product">
             <column descending="true" name="jhi_key"/>
         </createIndex>
-<!--not sure-->
-        <createIndex tableName="spec" indexName="idx_portal_product_capability_service_version">
-            <column descending="true" name="jhi_key"/>
-            <column descending="true" name="version"/>
-            <column descending="true" name="portal_id"/>
-            <column descending="true" name="product_id"/>
-            <column descending="true" name="capability_id"/>
-            <column descending="true" name="service_definition_id"/>
-        </createIndex>
-        <createIndex indexName="idx_spec_key" tableName="spec">
+
+        <createIndex indexName="idx_release_key" tableName="product_release">
             <column descending="true" name="jhi_key"/>
         </createIndex>
-        <createIndex tableName="spec" indexName="idx_version">
-            <column descending="true" name="version"/>
-        </createIndex>
+
+
 
         <createIndex indexName="idx_lint_key" tableName="lint_rule">
             <column descending="true" name="rule_id"/>
         </createIndex>
 <!--not sure-->
-        <createIndex tableName="lint_report" indexName="idx_report_by_product">
-            <column descending="true" name="product"/>
-        </createIndex>
-
         <createIndex indexName="idx_report_key" tableName="lint_report">
             <column descending="true" name="name"/>
         </createIndex>
@@ -62,13 +67,38 @@
             <column descending="true" name="name"/>
         </createIndex>
 
-        <createIndex tableName="service_definition" indexName="inx_by_capability_product">
+
+
+        <createIndex tableName="lint_report" indexName="idx_report_by_product">
             <column descending="true" name="product"/>
         </createIndex>
 
-        <createIndex indexName="idx_service_key" tableName="service_definition">
+        <createIndex tableName="spec" indexName="idx_portal_product_capability_service_version">
             <column descending="true" name="jhi_key"/>
+            <column descending="true" name="version"/>
+            <column descending="true" name="portal_id"/>
+            <column descending="true" name="product_id"/>
+            <column descending="true" name="capability_id"/>
+            <column descending="true" name="service_definition_id"/>
         </createIndex>
+
+        <createIndex tableName="spec" indexName="idx_version">
+            <column descending="true" name="jhi_key"/>
+            <column descending="true" name="version"/>
+        </createIndex>
+
+
+
+        <createIndex tableName="service_definition" indexName="inx_by_capability_product">
+            <column descending="true" name="jhi_key"/>
+            <column descending="true" name="product"/>
+        </createIndex>
+
+        <createIndex tableName="product_release" indexName="idx_release_by_product">
+            <column descending="true" name="jhi_key"/>
+            <column descending="true" name="product_id"/>
+        </createIndex>
+
 
 <!--        <createIndex indexName="idx_key" tableName="portal_lint_rule_set">-->
 
@@ -78,9 +108,6 @@
 <!--        </createIndex>-->
 
 
-        <createIndex indexName="idx_product_key" tableName="product">
-            <column descending="true" name="jhi_key"/>
-        </createIndex>
 
 <!--        <createIndex indexName="idx_dashboard_key" tableName="dashboard">-->
 <!--            <column descending="true" name="name"/>-->
@@ -90,14 +117,9 @@
 <!--            <column descending="true" name="name"/>-->
 <!--        </createIndex>-->
 
-        <createIndex indexName="idx_release_key" tableName="product_release">
-            <column descending="true" name="jhi_key"/>
-        </createIndex>
+
 <!--        not sure-->
-        <createIndex tableName="product_release" indexName="idx_release_by_product">
-            <column descending="true" name="jhi_key"/>
-            <column descending="true" name="product_id"/>
-        </createIndex>
+
 
 <!--        <createIndex indexName="idx_key" tableName="source_path">-->
 <!--            <column descending="true" name="name"/>-->
