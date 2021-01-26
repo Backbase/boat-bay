@@ -37,13 +37,9 @@ spring:
     serialization:
       indent-output: true
   datasource:
-    type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:h2:file:./target/h2db/db/boatbay;DB_CLOSE_DELAY=-1
-    username: BoatBay
-    password:
-    hikari:
-      poolName: Hikari
-      auto-commit: false
+    url: jdbc:mysql://localhost:3306/boat-bay-test
+    username: root
+    password: FuKnMa7chPl3453
   h2:
     console:
       enabled: false

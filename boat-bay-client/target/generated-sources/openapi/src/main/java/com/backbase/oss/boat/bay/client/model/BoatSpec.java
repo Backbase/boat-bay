@@ -45,9 +45,10 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
   BoatSpec.JSON_PROPERTY_BACKWARDS_COMPATIBLE,
   BoatSpec.JSON_PROPERTY_CHANGED,
   BoatSpec.JSON_PROPERTY_CAPABILITY,
-  BoatSpec.JSON_PROPERTY_SERVICE_DEFINITION
+  BoatSpec.JSON_PROPERTY_SERVICE_DEFINITION,
+  BoatSpec.JSON_PROPERTY_OPEN_API
 })
-@javax.annotation.processing.Generated(value = "com.backbase.oss.codegen.java.BoatJavaCodeGen", date = "2021-01-25T07:58:49.054921Z[Europe/London]")
+@javax.annotation.processing.Generated(value = "com.backbase.oss.codegen.java.BoatJavaCodeGen", date = "2021-01-26T08:06:02.548182Z[Europe/London]")
 public class BoatSpec {
   public static final String JSON_PROPERTY_ID = "id";
   private BigDecimal id;
@@ -93,6 +94,9 @@ public class BoatSpec {
 
   public static final String JSON_PROPERTY_SERVICE_DEFINITION = "serviceDefinition";
   private BoatService serviceDefinition;
+
+  public static final String JSON_PROPERTY_OPEN_API = "openApi";
+  private String openApi;
 
 
   public BoatSpec id(BigDecimal id) {
@@ -470,6 +474,31 @@ public class BoatSpec {
   }
 
 
+  public BoatSpec openApi(String openApi) {
+    
+    this.openApi = openApi;
+    return this;
+  }
+
+   /**
+   * Get openApi
+   * @return openApi
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+  @JsonProperty(JSON_PROPERTY_OPEN_API)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getOpenApi() {
+    return openApi;
+  }
+
+
+  public void setOpenApi(String openApi) {
+    this.openApi = openApi;
+  }
+
+
   @Override
   public boolean equals(java.lang.Object o) {
     if (this == o) {
@@ -493,12 +522,13 @@ public class BoatSpec {
         Objects.equals(this.backwardsCompatible, boatSpec.backwardsCompatible) &&
         Objects.equals(this.changed, boatSpec.changed) &&
         Objects.equals(this.capability, boatSpec.capability) &&
-        Objects.equals(this.serviceDefinition, boatSpec.serviceDefinition);
+        Objects.equals(this.serviceDefinition, boatSpec.serviceDefinition) &&
+        Objects.equals(this.openApi, boatSpec.openApi);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, key, name, title, description, icon, version, grade, createdOn, createdBy, statistics, backwardsCompatible, changed, capability, serviceDefinition);
+    return Objects.hash(id, key, name, title, description, icon, version, grade, createdOn, createdBy, statistics, backwardsCompatible, changed, capability, serviceDefinition, openApi);
   }
 
 
@@ -521,6 +551,7 @@ public class BoatSpec {
     sb.append("    changed: ").append(toIndentedString(changed)).append("\n");
     sb.append("    capability: ").append(toIndentedString(capability)).append("\n");
     sb.append("    serviceDefinition: ").append(toIndentedString(serviceDefinition)).append("\n");
+    sb.append("    openApi: ").append(toIndentedString(openApi)).append("\n");
     sb.append("}");
     return sb.toString();
   }

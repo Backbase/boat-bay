@@ -3,6 +3,8 @@ BoatProductRelease:
   properties:
     id:
       type: number
+    key:
+      type: string
     name:
       type: string
     version:

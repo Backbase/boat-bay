@@ -8,6 +8,7 @@ com/backbase/oss/boat/bay/client/api/DashboardApi$11.class
 com/backbase/oss/boat/bay/client/ApiClient.class
 com/backbase/oss/boat/bay/client/api/DashboardApi$2.class
 com/backbase/oss/boat/bay/client/model/BoatSpec.class
+com/backbase/oss/boat/bay/client/api/LintApi$2.class
 com/backbase/oss/boat/bay/client/api/DashboardApi$6.class
 com/backbase/oss/boat/bay/client/model/BoatStatistics.class
 com/backbase/oss/boat/bay/client/Pair.class
@@ -15,12 +16,15 @@ com/backbase/oss/boat/bay/client/api/DashboardApi$10.class
 com/backbase/oss/boat/bay/client/model/Severity.class
 com/backbase/oss/boat/bay/client/api/DashboardApi$5.class
 com/backbase/oss/boat/bay/client/model/UploadRequestBody.class
+com/backbase/oss/boat/bay/client/api/LintApi.class
+com/backbase/oss/boat/bay/client/api/DashboardApi$13.class
 com/backbase/oss/boat/bay/client/model/UploadSpec.class
 com/backbase/oss/boat/bay/client/api/DashboardApi$8.class
 com/backbase/oss/boat/bay/client/api/DashboardApi$3.class
 com/backbase/oss/boat/bay/client/api/DashboardApi.class
 com/backbase/oss/boat/bay/client/api/DashboardApi$12.class
 com/backbase/oss/boat/bay/client/model/BoatProduct.class
+com/backbase/oss/boat/bay/client/api/LintApi$1.class
 com/backbase/oss/boat/bay/client/model/BoatLintRule.class
 com/backbase/oss/boat/bay/client/api/DashboardApi$1.class
 com/backbase/oss/boat/bay/client/model/BoatLintReport.class
@@ -31,4 +35,5 @@ com/backbase/oss/boat/bay/client/model/BoatViolation.class
 com/backbase/oss/boat/bay/client/model/BoatPortal.class
 com/backbase/oss/boat/bay/client/api/DashboardApi$7.class
 com/backbase/oss/boat/bay/client/api/DashboardApi$4.class
+com/backbase/oss/boat/bay/client/api/DashboardApi$14.class
 com/backbase/oss/boat/bay/client/model/BoatCapability.class

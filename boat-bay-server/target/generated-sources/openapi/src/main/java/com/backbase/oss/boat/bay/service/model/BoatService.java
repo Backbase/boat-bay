@@ -22,7 +22,7 @@ import com.fasterxml.jackson.annotation.*;
 /**
  * BoatService
  */
-@javax.annotation.Generated(value = "com.backbase.oss.codegen.java.BoatSpringCodeGen", date = "2021-01-25T07:38:28.242919Z[Europe/London]")
+@javax.annotation.Generated(value = "com.backbase.oss.codegen.java.BoatSpringCodeGen", date = "2021-01-26T08:05:16.337980Z[Europe/London]")
 
 
 public class BoatService 

@@ -42,7 +42,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
   BoatProduct.JSON_PROPERTY_STATISTICS,
   BoatProduct.JSON_PROPERTY_JIRA_PROJECT_ID
 })
-@javax.annotation.processing.Generated(value = "com.backbase.oss.codegen.java.BoatJavaCodeGen", date = "2021-01-25T07:58:49.054921Z[Europe/London]")
+@javax.annotation.processing.Generated(value = "com.backbase.oss.codegen.java.BoatJavaCodeGen", date = "2021-01-26T08:06:02.548182Z[Europe/London]")
 public class BoatProduct {
   public static final String JSON_PROPERTY_PORTAL_KEY = "portalKey";
   private String portalKey;

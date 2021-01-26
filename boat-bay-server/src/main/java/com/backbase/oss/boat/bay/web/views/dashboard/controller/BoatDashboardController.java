@@ -25,6 +25,7 @@ import com.backbase.oss.boat.bay.service.lint.BoatSpecLinter;
 import com.backbase.oss.boat.bay.service.model.*;
 import com.backbase.oss.boat.bay.service.source.SpecSourceResolver;
 import com.backbase.oss.boat.bay.service.source.scanner.ScanResult;
+import com.backbase.oss.boat.bay.service.source.scanner.SourceScannerOptions;
 import com.backbase.oss.boat.bay.service.statistics.BoatStatisticsCollector;
 import com.backbase.oss.boat.bay.web.views.dashboard.config.BoatCacheManager;
 import com.backbase.oss.boat.bay.web.views.dashboard.diff.DiffReportRenderer;
@@ -387,7 +388,7 @@ public class BoatDashboardController implements ApiBoatBay {
     }
 
     @GetMapping("/portals/{portalKey}/products/{productKey}/diff-report")
-    public ResponseEntity<ChangedOpenApi> getLintReportForSpec(@PathVariable String portalKey,
+    public ResponseEntity<ChangedOpenApi> getApiChangesForSpec(@PathVariable String portalKey,
                                                                @PathVariable String productKey,
                                                                @RequestParam String spec1Id,
                                                                @RequestParam String spec2Id) {
@@ -540,8 +541,8 @@ public class BoatDashboardController implements ApiBoatBay {
             }
 
         }
-
-        ScanResult scanResult = new ScanResult(source, specs);
+        SourceScannerOptions scannerOptions = new SourceScannerOptions();
+        ScanResult scanResult = new ScanResult(source,scannerOptions, specs);
         specSourceResolver.process(scanResult);
 
         String location = (requestBody.getLocation()).concat("/"+requestBody.getProjectId()).concat("/" + requestBody.getArtifactId()).concat("/" + source.getPortal().getName());

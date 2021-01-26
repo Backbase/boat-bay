@@ -36,7 +36,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
   UploadRequestBody.JSON_PROPERTY_ARTIFACT_ID,
   UploadRequestBody.JSON_PROPERTY_VERSION
 })
-@javax.annotation.processing.Generated(value = "com.backbase.oss.codegen.java.BoatJavaCodeGen", date = "2021-01-25T07:58:49.054921Z[Europe/London]")
+@javax.annotation.processing.Generated(value = "com.backbase.oss.codegen.java.BoatJavaCodeGen", date = "2021-01-26T08:06:02.548182Z[Europe/London]")
 public class UploadRequestBody {
   public static final String JSON_PROPERTY_SPECS = "specs";
   private List<UploadSpec> specs = null;

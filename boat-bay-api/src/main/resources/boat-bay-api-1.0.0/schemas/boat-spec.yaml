@@ -31,3 +31,5 @@ BoatSpec:
       $ref: "boat-capability.yaml#/BoatCapability"
     serviceDefinition:
       $ref: "boat-service.yaml#/BoatService"
+    openApi:
+      type: string

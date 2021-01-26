@@ -404,7 +404,194 @@ paths:
           required: true
           schema:
             type: string
-    /api/boat-maven-plugin/{sourceId}/upload:
+    /api/boat/portals/{portalKey}/products/{productKey}/capabilities/{capabilityKey}/services/{serviceKey}/specs/{specKey}/{version}/download:
+      get:
+        summary: get spec as openapi
+        operationId: getSpecAsOpenAPI
+        tags:
+          - dashboard
+        responses:
+          '200':
+            description: openApi of spec
+            headers:
+              Content-Disposition:
+                schema:
+                  type: string
+                description: name of file
+              Cache-Control:
+                schema:
+                  type: string
+              Pragma:
+                schema:
+                  type: string
+              Expires:
+                schema:
+                  type: string
+            content:
+              application/vnd.oai.openapi:
+                schema:
+                    $ref: "other-schemas/resource.yaml#/Resource"
+        parameters:
+          - name: portalKey
+            in: path
+            description: portal idenifier
+            required: true
+            schema:
+              type: string
+          - name: productKey
+            in: path
+            description: product identifier
+            required: true
+            schema:
+              type: string
+          - name: capabilityKey
+            in: path
+            description: capability identifier
+            required: true
+            schema:
+              type: string
+          - name: serviceKey
+            in: path
+            description: service identifier
+            required: true
+            schema:
+              type: string
+          - name: specKey
+            in: path
+            description: spec identifier
+            required: true
+            schema:
+              type: string
+          - name: version
+            in: path
+            description: version of spec
+            required: true
+            schema:
+              type: string
+    /api/boat/portals/{portalKey}/products/{productKey}/capabilities/{capabilityKey}/services/{serviceKey}/specs/{specKey}/{version}:
+      get:
+        summary: download spec
+        operationId: downloadSpec
+        tags:
+          - dashboard
+        responses:
+          '200':
+            description: spec with open api
+            content:
+              application/json:
+                schema:
+                  $ref: "schemas/boat-spec.yaml#/BoatSpec"
+        parameters:
+          - name: portalKey
+            in: path
+            description: portal idenifier
+            required: true
+            schema:
+              type: string
+          - name: productKey
+            in: path
+            description: product identifier
+            required: true
+            schema:
+              type: string
+          - name: capabilityKey
+            in: path
+            description: capability identifier
+            required: true
+            schema:
+              type: string
+          - name: serviceKey
+            in: path
+            description: service identifier
+            required: true
+            schema:
+              type: string
+          - name: specKey
+            in: path
+            description: spec identifier
+            required: true
+            schema:
+              type: string
+          - name: version
+            in: path
+            description: version of spec
+            required: true
+            schema:
+              type: string
+
+    /api/boat/portals/{portalKey}/products/{productKey}/diff-report:
+      get:
+        summary: get lint report for spec
+        operationId: getApiChangesForSpec
+        tags:
+          - lint
+        responses:
+          '200':
+            description: changed openApi
+            content:
+              application/json:
+                schema:
+                  $ref: "other-schemas/changed-openapi-object.yaml#/ChangedOpenApiObject"
+        parameters:
+          - name: portalKey
+            in: path
+            description: portal idenifier
+            required: true
+            schema:
+              type: string
+          - name: productKey
+            in: path
+            description: product identifier
+            required: true
+            schema:
+              type: string
+          - name: spec1Id
+            description: identifies first comparitable api
+            in: query
+            schema:
+              type: string
+          - name: spec2Id
+            description: identifies second comparitable api
+            in: query
+            schema:
+              type: string
+    /api/boat/portals/{portalKey}/products/{productKey}/diff-report.html:
+      get:
+        summary: get lint report for spec as html
+        operationId: getLintReportForSpecAsHtml
+        tags:
+          - lint
+        responses:
+          '200':
+            description: changed openApi as html
+            content:
+              application/json:
+                schema:
+                  type: string
+        parameters:
+          - name: portalKey
+            in: path
+            description: portal idenifier
+            required: true
+            schema:
+              type: string
+          - name: productKey
+            in: path
+            description: product identifier
+            required: true
+            schema:
+              type: string
+          - name: spec1Id
+            description: identifies first comparitable api
+            in: query
+            schema:
+              type: string
+          - name: spec2Id
+            description: identifies second comparitable api
+            in: query
+            schema:
+              type: string
+    /api/boat/boat-maven-plugin/{sourceId}/upload:
         put:
             summary: upload and lint specs
             operationId: uploadSpec

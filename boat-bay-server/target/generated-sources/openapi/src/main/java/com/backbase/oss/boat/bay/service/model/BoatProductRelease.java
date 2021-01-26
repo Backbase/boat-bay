@@ -22,13 +22,16 @@ import com.fasterxml.jackson.annotation.*;
 /**
  * BoatProductRelease
  */
-@javax.annotation.Generated(value = "com.backbase.oss.codegen.java.BoatSpringCodeGen", date = "2021-01-25T07:38:28.242919Z[Europe/London]")
+@javax.annotation.Generated(value = "com.backbase.oss.codegen.java.BoatSpringCodeGen", date = "2021-01-26T08:05:16.337980Z[Europe/London]")
 
 
 public class BoatProductRelease 
  {
     @JsonProperty("id")
     private BigDecimal id;
+
+    @JsonProperty("key")
+    private String key;
 
     @JsonProperty("name")
     private String name;
@@ -57,6 +60,26 @@ public class BoatProductRelease
 
     public void setId(BigDecimal id) {
         this.id = id;
+    }
+
+
+    public BoatProductRelease key(String key) {
+        this.key = key;
+        return this;
+    }
+
+    /**
+     * Get key
+     * @return key
+     */
+    @ApiModelProperty(value = "")
+    
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
 
@@ -130,6 +153,7 @@ public class BoatProductRelease
         }
         BoatProductRelease boatProductRelease = (BoatProductRelease) o;
         return Objects.equals(this.id, boatProductRelease.id) &&
+                Objects.equals(this.key, boatProductRelease.key) &&
                 Objects.equals(this.name, boatProductRelease.name) &&
                 Objects.equals(this.version, boatProductRelease.version) &&
                 Objects.equals(this.releaseDate, boatProductRelease.releaseDate);
@@ -139,6 +163,7 @@ public class BoatProductRelease
     public int hashCode() {
         return Objects.hash(
             id,
+            key,
             name,
             version,
             releaseDate
@@ -151,6 +176,7 @@ public class BoatProductRelease
         sb.append("class BoatProductRelease {\n");
         
         sb.append("        id: ").append(toIndentedString(id)).append("\n");
+        sb.append("        key: ").append(toIndentedString(key)).append("\n");
         sb.append("        name: ").append(toIndentedString(name)).append("\n");
         sb.append("        version: ").append(toIndentedString(version)).append("\n");
         sb.append("        releaseDate: ").append(toIndentedString(releaseDate)).append("\n");

@@ -42,16 +42,98 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-@javax.annotation.Generated(value = "com.backbase.oss.codegen.java.BoatSpringCodeGen", date = "2021-01-25T07:38:28.242919Z[Europe/London]")
+@javax.annotation.Generated(value = "com.backbase.oss.codegen.java.BoatSpringCodeGen", date = "2021-01-26T08:05:16.337980Z[Europe/London]")
 @Api(value = "api", description = "the api API")
 public interface ApiBoatBay {
+
+    /**
+     * GET /api/boat/portals/{portalKey}/products/{productKey}/capabilities/{capabilityKey}/services/{serviceKey}/specs/{specKey}/{version} : download spec
+     *
+     * @param portalKey portal idenifier (required)
+     * @param productKey product identifier (required)
+     * @param capabilityKey capability identifier (required)
+     * @param serviceKey service identifier (required)
+     * @param specKey spec identifier (required)
+     * @param version version of spec (required)
+     * @return spec with open api (status code 200)
+     */
+    @ApiOperation(value = "download spec", nickname = "downloadSpec", notes = "", response = BoatSpec.class, tags={ "dashboard", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "spec with open api", response = BoatSpec.class) })
+    @RequestMapping(value = "/api/boat/portals/{portalKey}/products/{productKey}/capabilities/{capabilityKey}/services/{serviceKey}/specs/{specKey}/{version}",
+        produces = { "application/json" }, 
+        method = RequestMethod.GET)
+    ResponseEntity<BoatSpec> downloadSpec(
+            @ApiParam(value = "portal idenifier",required=true)
+            @PathVariable("portalKey")
+            String portalKey
+,
+                    @ApiParam(value = "product identifier",required=true)
+            @PathVariable("productKey")
+            String productKey
+,
+                    @ApiParam(value = "capability identifier",required=true)
+            @PathVariable("capabilityKey")
+            String capabilityKey
+,
+                    @ApiParam(value = "service identifier",required=true)
+            @PathVariable("serviceKey")
+            String serviceKey
+,
+                    @ApiParam(value = "spec identifier",required=true)
+            @PathVariable("specKey")
+            String specKey
+,
+                    @ApiParam(value = "version of spec",required=true)
+            @PathVariable("version")
+            String version
+
+    );
+
+
+    /**
+     * GET /api/boat/portals/{portalKey}/products/{productKey}/diff-report : get lint report for spec
+     *
+     * @param portalKey portal idenifier (required)
+     * @param productKey product identifier (required)
+     * @param spec1Id identifies first comparitable api (optional)
+     * @param spec2Id identifies second comparitable api (optional)
+     * @return changed openApi (status code 200)
+     */
+    @ApiOperation(value = "get lint report for spec", nickname = "getApiChangesForSpec", notes = "", response = org.openapitools.openapidiff.core.model.ChangedOpenApi.class, tags={ "lint", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "changed openApi", response = org.openapitools.openapidiff.core.model.ChangedOpenApi.class) })
+    @RequestMapping(value = "/api/boat/portals/{portalKey}/products/{productKey}/diff-report",
+        produces = { "application/json" }, 
+        method = RequestMethod.GET)
+    ResponseEntity<org.openapitools.openapidiff.core.model.ChangedOpenApi> getApiChangesForSpec(
+            @ApiParam(value = "portal idenifier",required=true)
+            @PathVariable("portalKey")
+            String portalKey
+,
+                    @ApiParam(value = "product identifier",required=true)
+            @PathVariable("productKey")
+            String productKey
+,
+                    @ApiParam(value = "identifies first comparitable api") 
+            @RequestParam(value = "spec1Id", required = false)
+            
+            String spec1Id
+,
+                    @ApiParam(value = "identifies second comparitable api") 
+            @RequestParam(value = "spec2Id", required = false)
+            
+            String spec2Id
+
+    );
+
 
     /**
      * GET /api/boat/dashboard : get list of boat portal dashboards
      *
      * @return list of boat portal dashboards (status code 200)
      */
-    @ApiOperation(value = "get list of boat portal dashboards", nickname = "getDashboard", notes = "", response = BoatPortalDashboard.class, responseContainer = "List", tags={ "dashboard-api", })
+    @ApiOperation(value = "get list of boat portal dashboards", nickname = "getDashboard", notes = "", response = BoatPortalDashboard.class, responseContainer = "List", tags={ "dashboard", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "list of boat portal dashboards", response = BoatPortalDashboard.class, responseContainer = "List") })
     @RequestMapping(value = "/api/boat/dashboard",
@@ -71,7 +153,7 @@ public interface ApiBoatBay {
      * @param refresh refresh idicator (optional)
      * @return lint report for spec (status code 200)
      */
-    @ApiOperation(value = "get Lint Report for spec", nickname = "getLintReportForSpec", notes = "", response = BoatLintReport.class, tags={ "dashboard-api", })
+    @ApiOperation(value = "get Lint Report for spec", nickname = "getLintReportForSpec", notes = "", response = BoatLintReport.class, tags={ "dashboard", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "lint report for spec", response = BoatLintReport.class) })
     @RequestMapping(value = "/api/boat/portals/{portalKey}/products/{productKey}/specs/{specId}/lint-report",
@@ -99,6 +181,43 @@ public interface ApiBoatBay {
 
 
     /**
+     * GET /api/boat/portals/{portalKey}/products/{productKey}/diff-report.html : get lint report for spec as html
+     *
+     * @param portalKey portal idenifier (required)
+     * @param productKey product identifier (required)
+     * @param spec1Id identifies first comparitable api (optional)
+     * @param spec2Id identifies second comparitable api (optional)
+     * @return changed openApi as html (status code 200)
+     */
+    @ApiOperation(value = "get lint report for spec as html", nickname = "getLintReportForSpecAsHtml", notes = "", response = String.class, tags={ "lint", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "changed openApi as html", response = String.class) })
+    @RequestMapping(value = "/api/boat/portals/{portalKey}/products/{productKey}/diff-report.html",
+        produces = { "application/json" }, 
+        method = RequestMethod.GET)
+    ResponseEntity<String> getLintReportForSpecAsHtml(
+            @ApiParam(value = "portal idenifier",required=true)
+            @PathVariable("portalKey")
+            String portalKey
+,
+                    @ApiParam(value = "product identifier",required=true)
+            @PathVariable("productKey")
+            String productKey
+,
+                    @ApiParam(value = "identifies first comparitable api") 
+            @RequestParam(value = "spec1Id", required = false)
+            
+            String spec1Id
+,
+                    @ApiParam(value = "identifies second comparitable api") 
+            @RequestParam(value = "spec2Id", required = false)
+            
+            String spec2Id
+
+    );
+
+
+    /**
      * GET /api/boat/portals/{portalKey}/products/{productKey}/capabilities : get Portal Products Capabalities
      *
      * @param productKey product idenifier (required)
@@ -106,7 +225,7 @@ public interface ApiBoatBay {
      * @param pageable  (optional)
      * @return list of capabilities for product (status code 200)
      */
-    @ApiOperation(value = "get Portal Products Capabalities", nickname = "getPortalCapabilities", notes = "", response = BoatCapability.class, responseContainer = "List", tags={ "dashboard-api", })
+    @ApiOperation(value = "get Portal Products Capabalities", nickname = "getPortalCapabilities", notes = "", response = BoatCapability.class, responseContainer = "List", tags={ "dashboard", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "list of capabilities for product", response = BoatCapability.class, responseContainer = "List") })
     @RequestMapping(value = "/api/boat/portals/{portalKey}/products/{productKey}/capabilities",
@@ -134,7 +253,7 @@ public interface ApiBoatBay {
      * @param portalKey portal idenifier (required)
      * @return list of lint rules for portal (status code 200)
      */
-    @ApiOperation(value = "get list of lint rules", nickname = "getPortalLintRules", notes = "", response = BoatLintRule.class, responseContainer = "List", tags={ "dasboard-api", })
+    @ApiOperation(value = "get list of lint rules", nickname = "getPortalLintRules", notes = "", response = BoatLintRule.class, responseContainer = "List", tags={ "dashboard", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "list of lint rules for portal", response = BoatLintRule.class, responseContainer = "List") })
     @RequestMapping(value = "/api/boat/portals/{portalKey}/lint-rules",
@@ -154,7 +273,7 @@ public interface ApiBoatBay {
      * @param portalKey portal idenifier (required)
      * @return list of protals products (status code 200)
      */
-    @ApiOperation(value = "get products for identified portal", nickname = "getPortalProducts", notes = "", response = BoatProduct.class, responseContainer = "List", tags={ "dashboard-api", })
+    @ApiOperation(value = "get products for identified portal", nickname = "getPortalProducts", notes = "", response = BoatProduct.class, responseContainer = "List", tags={ "dashboard", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "list of protals products", response = BoatProduct.class, responseContainer = "List") })
     @RequestMapping(value = "/api/boat/portals/{portalKey}/products",
@@ -176,7 +295,7 @@ public interface ApiBoatBay {
      * @param pageable  (optional)
      * @return list of services for product (status code 200)
      */
-    @ApiOperation(value = "get Portal services for a given product", nickname = "getPortalServices", notes = "", response = BoatService.class, responseContainer = "List", tags={ "dashboard-api", })
+    @ApiOperation(value = "get Portal services for a given product", nickname = "getPortalServices", notes = "", response = BoatService.class, responseContainer = "List", tags={ "dashboard", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "list of services for product", response = BoatService.class, responseContainer = "List") })
     @RequestMapping(value = "/api/boat/portals/{portalKey}/products/{productKey}/services",
@@ -212,7 +331,7 @@ public interface ApiBoatBay {
      * @param changed changed indicator (optional)
      * @return list of specs for product (status code 200)
      */
-    @ApiOperation(value = "get Portal Specs for given product", nickname = "getPortalSpecs", notes = "", response = BoatSpec.class, responseContainer = "List", tags={ "dashboard-api", })
+    @ApiOperation(value = "get Portal Specs for given product", nickname = "getPortalSpecs", notes = "", response = BoatSpec.class, responseContainer = "List", tags={ "dashboard", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "list of specs for product", response = BoatSpec.class, responseContainer = "List") })
     @RequestMapping(value = "/api/boat/portals/{portalKey}/products/{productKey}/specs",
@@ -269,7 +388,7 @@ public interface ApiBoatBay {
      *
      * @return boat legacy portal (status code 200)
      */
-    @ApiOperation(value = "get list of portals", nickname = "getPortals", notes = "", response = BoatPortal.class, responseContainer = "List", tags={ "dashboard-api", })
+    @ApiOperation(value = "get list of portals", nickname = "getPortals", notes = "", response = BoatPortal.class, responseContainer = "List", tags={ "dashboard", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "boat legacy portal", response = BoatPortal.class, responseContainer = "List") })
     @RequestMapping(value = "/api/boat/portals",
@@ -287,7 +406,7 @@ public interface ApiBoatBay {
      * @param productKey product idenifier (required)
      * @return product for dashboard (status code 200)
      */
-    @ApiOperation(value = "get product for dashboard project", nickname = "getProductDashboard", notes = "", response = BoatProduct.class, tags={ "dashboard-api", })
+    @ApiOperation(value = "get product for dashboard project", nickname = "getProductDashboard", notes = "", response = BoatProduct.class, tags={ "dashboard", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "product for dashboard", response = BoatProduct.class) })
     @RequestMapping(value = "/api/boat/dashboard/{projectKey}/{productKey}",
@@ -313,7 +432,7 @@ public interface ApiBoatBay {
      * @param portalKey portal idenifier (required)
      * @return list of specs for product release (status code 200)
      */
-    @ApiOperation(value = "get specs for product release", nickname = "getProductReleaseSpecs", notes = "", response = BoatSpec.class, responseContainer = "List", tags={ "dashboard-api", })
+    @ApiOperation(value = "get specs for product release", nickname = "getProductReleaseSpecs", notes = "", response = BoatSpec.class, responseContainer = "List", tags={ "dashboard", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "list of specs for product release", response = BoatSpec.class, responseContainer = "List") })
     @RequestMapping(value = "/api/boat/portals/{portalKey}/products/{productKey}/releases/{releaseKey}/specs",
@@ -342,7 +461,7 @@ public interface ApiBoatBay {
      * @param portalKey portal idenifier (required)
      * @return list of product releases for product (status code 200)
      */
-    @ApiOperation(value = "get product releases", nickname = "getProductReleases", notes = "", response = BoatProductRelease.class, responseContainer = "List", tags={ "dashboard-api", })
+    @ApiOperation(value = "get product releases", nickname = "getProductReleases", notes = "", response = BoatProductRelease.class, responseContainer = "List", tags={ "dashboard", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "list of product releases for product", response = BoatProductRelease.class, responseContainer = "List") })
     @RequestMapping(value = "/api/boat/portals/{portalKey}/products/{productKey}/releases",
@@ -367,7 +486,7 @@ public interface ApiBoatBay {
      * @param productKey product idenifier (required)
      * @return list of product tags (status code 200)
      */
-    @ApiOperation(value = "get tags for product", nickname = "getProductTags", notes = "", response = BoatTag.class, responseContainer = "List", tags={ "dashboard-api", })
+    @ApiOperation(value = "get tags for product", nickname = "getProductTags", notes = "", response = BoatTag.class, responseContainer = "List", tags={ "dashboard", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "list of product tags", response = BoatTag.class, responseContainer = "List") })
     @RequestMapping(value = "/api/boat/portals/{portalKey}/products/{productKey}/tags",
@@ -386,6 +505,51 @@ public interface ApiBoatBay {
 
 
     /**
+     * GET /api/boat/portals/{portalKey}/products/{productKey}/capabilities/{capabilityKey}/services/{serviceKey}/specs/{specKey}/{version}/download : get spec as openapi
+     *
+     * @param portalKey portal idenifier (required)
+     * @param productKey product identifier (required)
+     * @param capabilityKey capability identifier (required)
+     * @param serviceKey service identifier (required)
+     * @param specKey spec identifier (required)
+     * @param version version of spec (required)
+     * @return openApi of spec (status code 200)
+     */
+    @ApiOperation(value = "get spec as openapi", nickname = "getSpecAsOpenAPI", notes = "", response = org.springframework.core.io.Resource.class, tags={ "dashboard", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "openApi of spec", response = org.springframework.core.io.Resource.class) })
+    @RequestMapping(value = "/api/boat/portals/{portalKey}/products/{productKey}/capabilities/{capabilityKey}/services/{serviceKey}/specs/{specKey}/{version}/download",
+        produces = { "application/vnd.oai.openapi" }, 
+        method = RequestMethod.GET)
+    ResponseEntity<org.springframework.core.io.Resource> getSpecAsOpenAPI(
+            @ApiParam(value = "portal idenifier",required=true)
+            @PathVariable("portalKey")
+            String portalKey
+,
+                    @ApiParam(value = "product identifier",required=true)
+            @PathVariable("productKey")
+            String productKey
+,
+                    @ApiParam(value = "capability identifier",required=true)
+            @PathVariable("capabilityKey")
+            String capabilityKey
+,
+                    @ApiParam(value = "service identifier",required=true)
+            @PathVariable("serviceKey")
+            String serviceKey
+,
+                    @ApiParam(value = "spec identifier",required=true)
+            @PathVariable("specKey")
+            String specKey
+,
+                    @ApiParam(value = "version of spec",required=true)
+            @PathVariable("version")
+            String version
+
+    );
+
+
+    /**
      * POST /api/boat/portals/{portalKey}/lint-rules/{lintRuleId} : update lint rule for portal
      *
      * @param lintRuleId id of portals lint rule (required)
@@ -393,7 +557,7 @@ public interface ApiBoatBay {
      * @param boatLintRule  (optional)
      * @return updated successfuly (status code 200)
      */
-    @ApiOperation(value = "update lint rule for portal", nickname = "updatePortalLintRule", notes = "", tags={ "dashboard-api", })
+    @ApiOperation(value = "update lint rule for portal", nickname = "updatePortalLintRule", notes = "", tags={ "dashboard", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "updated successfuly") })
     @RequestMapping(value = "/api/boat/portals/{portalKey}/lint-rules/{lintRuleId}",
@@ -416,7 +580,7 @@ public interface ApiBoatBay {
 
 
     /**
-     * PUT /api/boat-maven-plugin/{sourceId}/upload : upload and lint specs
+     * PUT /api/boat/boat-maven-plugin/{sourceId}/upload : upload and lint specs
      *
      * @param sourceId source idenifier (required)
      * @param uploadRequestBody  (required)
@@ -425,7 +589,7 @@ public interface ApiBoatBay {
     @ApiOperation(value = "upload and lint specs", nickname = "uploadSpec", notes = "", response = BoatLintReport.class, responseContainer = "List", tags={ "upload-plugin", })
     @ApiResponses(value = { 
         @ApiResponse(code = 200, message = "list of lint reports for specs", response = BoatLintReport.class, responseContainer = "List") })
-    @RequestMapping(value = "/api/boat-maven-plugin/{sourceId}/upload",
+    @RequestMapping(value = "/api/boat/boat-maven-plugin/{sourceId}/upload",
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.PUT)

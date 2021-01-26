@@ -29,14 +29,18 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
  */
 @JsonPropertyOrder({
   BoatProductRelease.JSON_PROPERTY_ID,
+  BoatProductRelease.JSON_PROPERTY_KEY,
   BoatProductRelease.JSON_PROPERTY_NAME,
   BoatProductRelease.JSON_PROPERTY_VERSION,
   BoatProductRelease.JSON_PROPERTY_RELEASE_DATE
 })
-@javax.annotation.processing.Generated(value = "com.backbase.oss.codegen.java.BoatJavaCodeGen", date = "2021-01-25T07:58:49.054921Z[Europe/London]")
+@javax.annotation.processing.Generated(value = "com.backbase.oss.codegen.java.BoatJavaCodeGen", date = "2021-01-26T08:06:02.548182Z[Europe/London]")
 public class BoatProductRelease {
   public static final String JSON_PROPERTY_ID = "id";
   private BigDecimal id;
+
+  public static final String JSON_PROPERTY_KEY = "key";
+  private String key;
 
   public static final String JSON_PROPERTY_NAME = "name";
   private String name;
@@ -70,6 +74,31 @@ public class BoatProductRelease {
 
   public void setId(BigDecimal id) {
     this.id = id;
+  }
+
+
+  public BoatProductRelease key(String key) {
+    
+    this.key = key;
+    return this;
+  }
+
+   /**
+   * Get key
+   * @return key
+  **/
+  @javax.annotation.Nullable
+  @ApiModelProperty(value = "")
+  @JsonProperty(JSON_PROPERTY_KEY)
+  @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+
+  public String getKey() {
+    return key;
+  }
+
+
+  public void setKey(String key) {
+    this.key = key;
   }
 
 
@@ -158,6 +187,7 @@ public class BoatProductRelease {
     }
     BoatProductRelease boatProductRelease = (BoatProductRelease) o;
     return Objects.equals(this.id, boatProductRelease.id) &&
+        Objects.equals(this.key, boatProductRelease.key) &&
         Objects.equals(this.name, boatProductRelease.name) &&
         Objects.equals(this.version, boatProductRelease.version) &&
         Objects.equals(this.releaseDate, boatProductRelease.releaseDate);
@@ -165,7 +195,7 @@ public class BoatProductRelease {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, name, version, releaseDate);
+    return Objects.hash(id, key, name, version, releaseDate);
   }
 
 
@@ -174,6 +204,7 @@ public class BoatProductRelease {
     StringBuilder sb = new StringBuilder();
     sb.append("class BoatProductRelease {\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    key: ").append(toIndentedString(key)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    version: ").append(toIndentedString(version)).append("\n");
     sb.append("    releaseDate: ").append(toIndentedString(releaseDate)).append("\n");

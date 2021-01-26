@@ -25,7 +25,7 @@ import com.fasterxml.jackson.annotation.*;
 /**
  * BoatSpec
  */
-@javax.annotation.Generated(value = "com.backbase.oss.codegen.java.BoatSpringCodeGen", date = "2021-01-25T07:38:28.242919Z[Europe/London]")
+@javax.annotation.Generated(value = "com.backbase.oss.codegen.java.BoatSpringCodeGen", date = "2021-01-26T08:05:16.337980Z[Europe/London]")
 
 
 public class BoatSpec 
@@ -74,6 +74,9 @@ public class BoatSpec
 
     @JsonProperty("serviceDefinition")
     private BoatService serviceDefinition;
+
+    @JsonProperty("openApi")
+    private String openApi;
 
 
     public BoatSpec id(BigDecimal id) {
@@ -376,6 +379,26 @@ public class BoatSpec
     }
 
 
+    public BoatSpec openApi(String openApi) {
+        this.openApi = openApi;
+        return this;
+    }
+
+    /**
+     * Get openApi
+     * @return openApi
+     */
+    @ApiModelProperty(value = "")
+    
+    public String getOpenApi() {
+        return openApi;
+    }
+
+    public void setOpenApi(String openApi) {
+        this.openApi = openApi;
+    }
+
+
     @Override
     public boolean equals(java.lang.Object o) {
         if (this == o) {
@@ -399,7 +422,8 @@ public class BoatSpec
                 Objects.equals(this.backwardsCompatible, boatSpec.backwardsCompatible) &&
                 Objects.equals(this.changed, boatSpec.changed) &&
                 Objects.equals(this.capability, boatSpec.capability) &&
-                Objects.equals(this.serviceDefinition, boatSpec.serviceDefinition);
+                Objects.equals(this.serviceDefinition, boatSpec.serviceDefinition) &&
+                Objects.equals(this.openApi, boatSpec.openApi);
     }
 
     @Override
@@ -419,7 +443,8 @@ public class BoatSpec
             backwardsCompatible,
             changed,
             capability,
-            serviceDefinition
+            serviceDefinition,
+            openApi
         );
     }
 
@@ -443,6 +468,7 @@ public class BoatSpec
         sb.append("        changed: ").append(toIndentedString(changed)).append("\n");
         sb.append("        capability: ").append(toIndentedString(capability)).append("\n");
         sb.append("        serviceDefinition: ").append(toIndentedString(serviceDefinition)).append("\n");
+        sb.append("        openApi: ").append(toIndentedString(openApi)).append("\n");
         sb.append("}");
         return sb.toString();
     }

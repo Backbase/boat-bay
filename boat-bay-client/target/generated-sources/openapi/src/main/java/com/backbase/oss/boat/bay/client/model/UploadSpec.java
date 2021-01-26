@@ -32,7 +32,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
   UploadSpec.JSON_PROPERTY_KEY,
   UploadSpec.JSON_PROPERTY_NAME
 })
-@javax.annotation.processing.Generated(value = "com.backbase.oss.codegen.java.BoatJavaCodeGen", date = "2021-01-25T07:58:49.054921Z[Europe/London]")
+@javax.annotation.processing.Generated(value = "com.backbase.oss.codegen.java.BoatJavaCodeGen", date = "2021-01-26T08:06:02.548182Z[Europe/London]")
 public class UploadSpec {
   public static final String JSON_PROPERTY_FILE_NAME = "fileName";
   private String fileName;

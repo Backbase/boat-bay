@@ -43,7 +43,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
   BoatLintReport.JSON_PROPERTY_VIOLATIONS,
   BoatLintReport.JSON_PROPERTY_HAS_VIOLATIONS
 })
-@javax.annotation.processing.Generated(value = "com.backbase.oss.codegen.java.BoatJavaCodeGen", date = "2021-01-25T07:58:49.054921Z[Europe/London]")
+@javax.annotation.processing.Generated(value = "com.backbase.oss.codegen.java.BoatJavaCodeGen", date = "2021-01-26T08:06:02.548182Z[Europe/London]")
 public class BoatLintReport {
   public static final String JSON_PROPERTY_ID = "id";
   private BigDecimal id;

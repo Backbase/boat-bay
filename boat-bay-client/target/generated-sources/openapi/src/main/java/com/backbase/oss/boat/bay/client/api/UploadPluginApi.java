@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Map;
 
 
-@javax.annotation.processing.Generated(value = "com.backbase.oss.codegen.java.BoatJavaCodeGen", date = "2021-01-25T07:58:49.054921Z[Europe/London]")
+@javax.annotation.processing.Generated(value = "com.backbase.oss.codegen.java.BoatJavaCodeGen", date = "2021-01-26T08:06:02.548182Z[Europe/London]")
 public class UploadPluginApi {
   private final HttpClient memberVarHttpClient;
   private final ObjectMapper memberVarObjectMapper;
@@ -79,7 +79,7 @@ public class UploadPluginApi {
 
     HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
 
-    String localVarPath = "/api/boat-maven-plugin/{sourceId}/upload"
+    String localVarPath = "/api/boat/boat-maven-plugin/{sourceId}/upload"
         .replace("{sourceId}", ApiClient.urlEncode(sourceId.toString()));
 
     localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));

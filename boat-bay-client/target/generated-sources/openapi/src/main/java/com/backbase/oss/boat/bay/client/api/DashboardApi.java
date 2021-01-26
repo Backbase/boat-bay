@@ -45,7 +45,7 @@ import java.util.List;
 import java.util.Map;
 
 
-@javax.annotation.processing.Generated(value = "com.backbase.oss.codegen.java.BoatJavaCodeGen", date = "2021-01-25T07:58:49.054921Z[Europe/London]")
+@javax.annotation.processing.Generated(value = "com.backbase.oss.codegen.java.BoatJavaCodeGen", date = "2021-01-26T08:06:02.548182Z[Europe/London]")
 public class DashboardApi {
   private final HttpClient memberVarHttpClient;
   private final ObjectMapper memberVarObjectMapper;
@@ -67,6 +67,87 @@ public class DashboardApi {
     memberVarResponseInterceptor = apiClient.getResponseInterceptor();
   }
 
+  /**
+   * download spec
+   * 
+   * @param portalKey portal idenifier (required)
+   * @param productKey product identifier (required)
+   * @param capabilityKey capability identifier (required)
+   * @param serviceKey service identifier (required)
+   * @param specKey spec identifier (required)
+   * @param version version of spec (required)
+   * @return BoatSpec
+   * @throws ApiException if fails to make API call
+   */
+  public BoatSpec downloadSpec (String portalKey, String productKey, String capabilityKey, String serviceKey, String specKey, String version) throws ApiException {
+    // verify the required parameter 'portalKey' is set
+    if (portalKey == null) {
+        throw new ApiException(400, "Missing the required parameter 'portalKey' when calling downloadSpec");
+    }
+    // verify the required parameter 'productKey' is set
+    if (productKey == null) {
+        throw new ApiException(400, "Missing the required parameter 'productKey' when calling downloadSpec");
+    }
+    // verify the required parameter 'capabilityKey' is set
+    if (capabilityKey == null) {
+        throw new ApiException(400, "Missing the required parameter 'capabilityKey' when calling downloadSpec");
+    }
+    // verify the required parameter 'serviceKey' is set
+    if (serviceKey == null) {
+        throw new ApiException(400, "Missing the required parameter 'serviceKey' when calling downloadSpec");
+    }
+    // verify the required parameter 'specKey' is set
+    if (specKey == null) {
+        throw new ApiException(400, "Missing the required parameter 'specKey' when calling downloadSpec");
+    }
+    // verify the required parameter 'version' is set
+    if (version == null) {
+        throw new ApiException(400, "Missing the required parameter 'version' when calling downloadSpec");
+    }
+
+    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
+
+    String localVarPath = "/api/boat/portals/{portalKey}/products/{productKey}/capabilities/{capabilityKey}/services/{serviceKey}/specs/{specKey}/{version}"
+        .replace("{portalKey}", ApiClient.urlEncode(portalKey.toString()))
+        .replace("{productKey}", ApiClient.urlEncode(productKey.toString()))
+        .replace("{capabilityKey}", ApiClient.urlEncode(capabilityKey.toString()))
+        .replace("{serviceKey}", ApiClient.urlEncode(serviceKey.toString()))
+        .replace("{specKey}", ApiClient.urlEncode(specKey.toString()))
+        .replace("{version}", ApiClient.urlEncode(version.toString()));
+
+    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+
+    localVarRequestBuilder.header("Accept", "application/json");
+
+    try {
+      localVarRequestBuilder.method("GET", HttpRequest.BodyPublishers.noBody());
+      if (memberVarReadTimeout != null) {
+        localVarRequestBuilder.timeout(memberVarReadTimeout);
+      }
+      if (memberVarInterceptor != null) {
+        memberVarInterceptor.accept(localVarRequestBuilder);
+      }
+      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
+      localVarRequestBuilder.build(),
+      HttpResponse.BodyHandlers.ofInputStream());
+      if (memberVarResponseInterceptor != null) {
+        memberVarResponseInterceptor.accept(localVarResponse);
+      }          
+      if (localVarResponse.statusCode()/ 100 != 2) {
+          throw new ApiException(localVarResponse.statusCode(),
+              "downloadSpec call received non-success response",
+              localVarResponse.headers(),
+              localVarResponse.body() == null ? null : new String(localVarResponse.body().readAllBytes()));
+      }
+      return memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<BoatSpec>() {});
+    } catch (IOException e) {
+      throw new ApiException(e);
+    }
+    catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new ApiException(e);
+    }
+  }
   /**
    * get list of boat portal dashboards
    * 
@@ -771,6 +852,87 @@ public class DashboardApi {
               localVarResponse.body() == null ? null : new String(localVarResponse.body().readAllBytes()));
       }
       return memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<BoatTag>>() {});
+    } catch (IOException e) {
+      throw new ApiException(e);
+    }
+    catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new ApiException(e);
+    }
+  }
+  /**
+   * get spec as openapi
+   * 
+   * @param portalKey portal idenifier (required)
+   * @param productKey product identifier (required)
+   * @param capabilityKey capability identifier (required)
+   * @param serviceKey service identifier (required)
+   * @param specKey spec identifier (required)
+   * @param version version of spec (required)
+   * @return List&lt;byte[]&gt;
+   * @throws ApiException if fails to make API call
+   */
+  public List<byte[]> getSpecAsOpenAPI (String portalKey, String productKey, String capabilityKey, String serviceKey, String specKey, String version) throws ApiException {
+    // verify the required parameter 'portalKey' is set
+    if (portalKey == null) {
+        throw new ApiException(400, "Missing the required parameter 'portalKey' when calling getSpecAsOpenAPI");
+    }
+    // verify the required parameter 'productKey' is set
+    if (productKey == null) {
+        throw new ApiException(400, "Missing the required parameter 'productKey' when calling getSpecAsOpenAPI");
+    }
+    // verify the required parameter 'capabilityKey' is set
+    if (capabilityKey == null) {
+        throw new ApiException(400, "Missing the required parameter 'capabilityKey' when calling getSpecAsOpenAPI");
+    }
+    // verify the required parameter 'serviceKey' is set
+    if (serviceKey == null) {
+        throw new ApiException(400, "Missing the required parameter 'serviceKey' when calling getSpecAsOpenAPI");
+    }
+    // verify the required parameter 'specKey' is set
+    if (specKey == null) {
+        throw new ApiException(400, "Missing the required parameter 'specKey' when calling getSpecAsOpenAPI");
+    }
+    // verify the required parameter 'version' is set
+    if (version == null) {
+        throw new ApiException(400, "Missing the required parameter 'version' when calling getSpecAsOpenAPI");
+    }
+
+    HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
+
+    String localVarPath = "/api/boat/portals/{portalKey}/products/{productKey}/capabilities/{capabilityKey}/services/{serviceKey}/specs/{specKey}/{version}/download"
+        .replace("{portalKey}", ApiClient.urlEncode(portalKey.toString()))
+        .replace("{productKey}", ApiClient.urlEncode(productKey.toString()))
+        .replace("{capabilityKey}", ApiClient.urlEncode(capabilityKey.toString()))
+        .replace("{serviceKey}", ApiClient.urlEncode(serviceKey.toString()))
+        .replace("{specKey}", ApiClient.urlEncode(specKey.toString()))
+        .replace("{version}", ApiClient.urlEncode(version.toString()));
+
+    localVarRequestBuilder.uri(URI.create(memberVarBaseUri + localVarPath));
+
+    localVarRequestBuilder.header("Accept", "application/json");
+
+    try {
+      localVarRequestBuilder.method("GET", HttpRequest.BodyPublishers.noBody());
+      if (memberVarReadTimeout != null) {
+        localVarRequestBuilder.timeout(memberVarReadTimeout);
+      }
+      if (memberVarInterceptor != null) {
+        memberVarInterceptor.accept(localVarRequestBuilder);
+      }
+      HttpResponse<InputStream> localVarResponse = memberVarHttpClient.send(
+      localVarRequestBuilder.build(),
+      HttpResponse.BodyHandlers.ofInputStream());
+      if (memberVarResponseInterceptor != null) {
+        memberVarResponseInterceptor.accept(localVarResponse);
+      }          
+      if (localVarResponse.statusCode()/ 100 != 2) {
+          throw new ApiException(localVarResponse.statusCode(),
+              "getSpecAsOpenAPI call received non-success response",
+              localVarResponse.headers(),
+              localVarResponse.body() == null ? null : new String(localVarResponse.body().readAllBytes()));
+      }
+      return memberVarObjectMapper.readValue(localVarResponse.body(), new TypeReference<List<byte[]>>() {});
     } catch (IOException e) {
       throw new ApiException(e);
     }

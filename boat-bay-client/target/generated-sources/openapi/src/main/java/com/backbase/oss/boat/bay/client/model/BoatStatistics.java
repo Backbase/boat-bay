@@ -33,7 +33,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
   BoatStatistics.JSON_PROPERTY_MAY_VIOLATIONS_COUNT,
   BoatStatistics.JSON_PROPERTY_HINT_VIOLATIONS_COUNT
 })
-@javax.annotation.processing.Generated(value = "com.backbase.oss.codegen.java.BoatJavaCodeGen", date = "2021-01-25T07:58:49.054921Z[Europe/London]")
+@javax.annotation.processing.Generated(value = "com.backbase.oss.codegen.java.BoatJavaCodeGen", date = "2021-01-26T08:06:02.548182Z[Europe/London]")
 public class BoatStatistics {
   public static final String JSON_PROPERTY_UPDATED_ON = "updatedOn";
   private java.time.LocalDateTime updatedOn;
