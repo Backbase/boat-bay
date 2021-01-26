@@ -43,7 +43,7 @@ export class SpecsTableComponent implements AfterViewInit, OnInit {
   private _product!: BoatProduct;
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = [ 'title','version', 'capability', 'serviceDefinition','grade', 'changed', 'backwardsCompatible', 'createdOn', 'createdBy', 'violationsMust', 'violationsShould', 'violationsMay', 'violationsHint'];
+  displayedColumns = [ 'title','version', 'capability', 'serviceDefinition','grade', 'changes', 'createdOn', 'createdBy', 'violationsMust', 'violationsShould', 'violationsMay', 'violationsHint'];
   selectedCapabilities: any;
 
   constructor(private boatDashboardService: BoatDashboardService) {

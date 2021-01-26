@@ -28,16 +28,20 @@ import io.swagger.v3.oas.models.info.Info;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Example;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
@@ -63,21 +67,28 @@ public class SpecSourceResolver {
     private final BoatBackwardsCompatibleChecker boatBackwardsCompatibleChecker;
 
     public void process(ScanResult scan) {
+        log.info("Processing Scan Result: {} from source: {}", scan.getSpecs().size() , scan.getSource().getName());
         Source source = scan.getSource();
         List<Spec> processedSpecs = processSpecs(scan);
         processReleases(scan, source, processedSpecs);
-        lintSpecs(processedSpecs, scan);
-        checkBackwardsCompatibility(processedSpecs, scan);
+        checkSpecs(processedSpecs, scan);
+        log.info("Finished Processing Scan Result: {} from source: {}", scan.getSpecs().size() , scan.getSource().getName());
     }
 
-    private void checkBackwardsCompatibility(List<Spec> processedSpecs, ScanResult scan) {
-        log.info("Checking backwards compatibility for {} specs from scan result from source: {}", processedSpecs.size(), scan.getSource().getName());
-        processedSpecs.forEach(boatBackwardsCompatibleChecker::scheduleBackwardsCompatibleCheck);
-    }
+    @Transactional
+    public void checkSpecs(List<Spec> processedSpecs, ScanResult scan){
+        log.info("Checking Specs");
+        for (Spec processedSpec : processedSpecs) {
 
-    private void lintSpecs(List<Spec> processedSpecs, ScanResult scan) {
-        log.info("Linting {} specs from scan result from source: {}", processedSpecs.size(), scan.getSource().getName());
-        processedSpecs.forEach(boatSpecLinter::scheduleLintJob);
+
+            if(processedSpec.getLintReport() == null) {
+                boatSpecLinter.lint(processedSpec);
+            }
+            if(processedSpec.getChanges() == null) {
+                boatBackwardsCompatibleChecker.checkBackwardsCompatibility(processedSpec);
+            }
+        }
+        log.info("Finished Checking Specs");
     }
 
     @Transactional
@@ -100,6 +111,7 @@ public class SpecSourceResolver {
                 log.info("Processed release: {}", productRelease.getName());
             });
         }
+        log.info("Finished processing {} releases from scan result from source: {}", scan.getProductReleases().size(), scan.getSource().getName());
     }
 
     @NotNull
@@ -119,9 +131,12 @@ public class SpecSourceResolver {
     public List<Spec> processSpecs(ScanResult scan) {
         log.info("Processing {} specs from scan result from source: {}", scan.getSpecs().size(), scan.getSource().getName());
 
-        return scan.getSpecs().stream()
-            .map(spec -> processSpec(spec, scan.getScannerOptions()))
-            .collect(Collectors.toList());
+        List<Spec> list = new ArrayList<>();
+        for (Spec spec : scan.getSpecs()) {
+            Spec processSpec = processSpec(spec, scan.getScannerOptions());
+            list.add(processSpec);
+        }
+        return list;
     }
 
     @NotNull
@@ -134,7 +149,10 @@ public class SpecSourceResolver {
     }
 
     @SuppressWarnings("java:S5411")
-    private Spec processSpec(Spec spec, SourceScannerOptions scannerOptions) {
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public Spec processSpec(Spec spec, SourceScannerOptions scannerOptions) {
+        log.info("Processing spec: {}", spec.getName());
+
         Source source = spec.getSource();
 
         String md5 = spec.getChecksum();
@@ -149,10 +167,10 @@ public class SpecSourceResolver {
             spec.setId(existingSpec.get().getId());
             return spec;
         } else if (existingSpec.isPresent() && source.isOverwriteChanges()) {
-            log.info("Updating spec: {}", spec.getName());
+            log.debug("Updating spec: {}", spec.getName());
             spec.setId(existingSpec.get().getId());
         } else {
-            log.info("Spec: {} is not yet in BOAT BAY. Creating new Spec", spec.getName());
+            log.debug("Spec: {} is not yet in BOAT BAY. Creating new Spec", spec.getName());
         }
         setInformationFromSpec(spec, source);
         setProduct(spec, source);
@@ -160,14 +178,15 @@ public class SpecSourceResolver {
         setServiceDefinition(spec, source);
         setSpecType(spec);
 
-        log.info("Storing spec: {}", spec.getName());
-        return specRepository.save(spec);
+        Spec newSpec = specRepository.saveAndFlush(spec);
+        log.debug("Finished processing spec: {}", newSpec.getName());
+        return newSpec;
     }
 
     private void setProduct(Spec spec, Source source) {
         Product product = source.getProduct();
         spec.setProduct(product);
-        log.info("Adding spec: {} to product: {}", spec.getName(), product.getName());
+        log.debug("Adding spec: {} to product: {}", spec.getName(), product.getName());
     }
 
     private void setInformationFromSpec(Spec spec, Source source) {
@@ -197,7 +216,7 @@ public class SpecSourceResolver {
             spec.setParseError(parseErrorMessage);
             spec.setValid(false);
             spec.setVersion("");
-            log.info("Failed to parse OpenAPI for item: {}", spec.getName());
+            log.error("Failed to parse OpenAPI for item: {}", spec.getName());
         }
 
         spec.setKey(SpringExpressionUtils.parseName(source.getSpecKeySpEL(), spec, spec.getKey()));
@@ -215,7 +234,7 @@ public class SpecSourceResolver {
             .filter(st -> SpringExpressionUtils.match(st.getMatchSpEL(), spec))
             .findFirst()
             .orElseGet(this::genericSpecType);
-        log.info("Assigning specType: {} to spec: {}", specType.getName(), spec.getName());
+        log.debug("Assigning specType: {} to spec: {}", specType.getName(), spec.getName());
         spec.setSpecType(specType);
     }
 
@@ -238,7 +257,7 @@ public class SpecSourceResolver {
             String key = SpringExpressionUtils.parseName(source.getServiceNameSpEL(), spec, spec.getFilename().substring(0, spec.getFilename().lastIndexOf(".")));
             ServiceDefinition serviceDefinition = boatServiceRepository.findByCapabilityAndKey(spec.getCapability(), key)
                 .orElseGet(() -> createServiceDefinition(spec, key));
-            log.info("Assigning service: {} to spec: {}", serviceDefinition.getName(), spec.getName());
+            log.debug("Assigning service: {} to spec: {}", serviceDefinition.getName(), spec.getName());
             spec.setServiceDefinition(serviceDefinition);
         }
     }
@@ -249,7 +268,7 @@ public class SpecSourceResolver {
 
             Capability capability = capabilityRepository.findByProductAndKey(spec.getProduct(), key)
                 .orElseGet(() -> createCapabilityForSpecWithKey(spec, key));
-            log.info("Assigning capability: {} to spec: {}", capability.getName(), spec.getName());
+            log.debug("Assigning capability: {} to spec: {}", capability.getName(), spec.getName());
             spec.setCapability(capability);
         }
     }
@@ -259,14 +278,14 @@ public class SpecSourceResolver {
 
         if(scannerOptions != null && scannerOptions.getCapabilityMappingOverrides().containsKey(key)) {
             String override = scannerOptions.getCapabilityMappingOverrides().get(key);
-            log.info("Overriding capability key: {} with configuration override: {}", key, override);
+            log.debug("Overriding capability key: {} with configuration override: {}", key, override);
             key = override;
         }
         return key;
     }
 
     private ServiceDefinition createServiceDefinition(Spec spec, String key) {
-        log.info("Creating service: {} for spec: {}", key, spec.getName());
+        log.debug("Creating service: {} for spec: {}", key, spec.getName());
         Optional<String> serviceNameSpEL = Optional.ofNullable(spec.getSource().getServiceNameSpEL());
 
         ServiceDefinition serviceDefinition = new ServiceDefinition();
@@ -280,7 +299,7 @@ public class SpecSourceResolver {
     }
 
     private Capability createCapabilityForSpecWithKey(Spec spec, String key) {
-        log.info("Creating capability: {} for spec: {}", key, spec.getName());
+        log.debug("Creating capability: {} for spec: {}", key, spec.getName());
         Optional<String> capabilityNameSpEL = Optional.ofNullable(spec.getSource().getCapabilityNameSpEL());
         Capability capability = new Capability();
         capability.setProduct(spec.getProduct());
