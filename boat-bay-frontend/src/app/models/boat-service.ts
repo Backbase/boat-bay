@@ -1,5 +1,6 @@
 import { BoatLintReport } from "./boat-lint-report";
 import { BoatStatistics } from "./boat-dashboard";
+import { BoatCapability } from "./boat-capability";
 
 export interface BoatService {
   id: number;
@@ -13,4 +14,6 @@ export interface BoatService {
   lastLintReport?: BoatLintReport;
 
   statistics: BoatStatistics;
+
+  capability: BoatCapability;
 }

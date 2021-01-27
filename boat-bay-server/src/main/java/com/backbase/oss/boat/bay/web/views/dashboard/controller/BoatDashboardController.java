@@ -38,7 +38,6 @@ import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatSpec;
 import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatTag;
 import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatViolation;
 import io.github.jhipster.web.util.PaginationUtil;
-import java.io.StringBufferInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -52,10 +51,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.openapitools.openapidiff.core.OpenApiCompare;
 import org.openapitools.openapidiff.core.model.ChangedOpenApi;
-import org.openapitools.openapidiff.core.output.HtmlRender;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -264,6 +261,22 @@ public class BoatDashboardController {
     }
 
     @Cacheable(BoatCacheManager.PRODUCT_SERVICES)
+    @GetMapping("/portals/{portalKey}/products/{productKey}/capabilities/{capabilityKey}/services")
+    public ResponseEntity<List<BoatService>> getPortalServices(
+        @PathVariable String portalKey,
+        @PathVariable String productKey,
+        @PathVariable String capabilityKey) {
+        Product product = getProduct(portalKey, productKey);
+
+        Capability capability = boatCapabilityRepository.findByProductAndKey(product, capabilityKey).orElseThrow();
+
+        List<BoatService> services = capability.getServiceDefinitions().stream().map(this::mapService).collect(Collectors.toList());
+
+        return ResponseEntity.ok(services);
+    }
+
+
+    @Cacheable(BoatCacheManager.PRODUCT_SERVICES)
     @GetMapping("/portals/{portalKey}/products/{productKey}/services")
     public ResponseEntity<List<BoatService>> getPortalServices(@PathVariable String portalKey, @PathVariable String productKey, Pageable pageable) {
         Product product = getProduct(portalKey, productKey);
@@ -280,9 +293,10 @@ public class BoatDashboardController {
     @Cacheable(BoatCacheManager.PRODUCT_SPECS)
     @GetMapping("/portals/{portalKey}/products/{productKey}/specs")
     public ResponseEntity<List<BoatSpec>> getPortalSpecs(@PathVariable String portalKey, @PathVariable String productKey,
-                                                         @RequestParam(required = false) String capabilityId,
-                                                         @RequestParam(required = false) String productReleaseId,
-                                                         @RequestParam(required = false) String serviceId,
+                                                         @RequestParam(required = false) String[] capability,
+                                                         @RequestParam(required = false) String[] service,
+                                                         @RequestParam(required = false) String release,
+
                                                          @RequestParam(required = false) String grade,
                                                          @RequestParam(required = false) boolean backwardsCompatible,
                                                          @RequestParam(required = false) boolean changed,
@@ -291,12 +305,26 @@ public class BoatDashboardController {
 
         Specification<Spec> specification = boatSpecQuerySpecs.hasProduct(product.getId());
 
-        if(productReleaseId != null) {
-            specification = specification.and(boatSpecQuerySpecs.inProductRelease(productReleaseId));
+        if(release != null) {
+            specification = specification.and(boatSpecQuerySpecs.inProductRelease(release));
         }
-        if(capabilityId != null) {
-            specification = specification.and(boatSpecQuerySpecs.hasCapability(capabilityId));
+
+        if(capability != null) {
+            Specification<Spec> capabilitySpecification = boatSpecQuerySpecs.hasCapabilityKey(capability[0]);
+            for(int i = 1; i < capability.length; i++) {
+                capabilitySpecification = capabilitySpecification.or(boatSpecQuerySpecs.hasCapabilityKey(capability[i]));
+            }
+            specification = specification.and(capabilitySpecification);
         }
+
+        if(service != null) {
+            Specification<Spec> serviceDefinitionSpecification = boatSpecQuerySpecs.hasServiceDefinition(service[0]);
+            for(int i = 1; i < service.length; i++) {
+                serviceDefinitionSpecification = serviceDefinitionSpecification.or(boatSpecQuerySpecs.hasServiceDefinition(service[i]));
+            }
+            specification = specification.and(serviceDefinitionSpecification);
+        }
+
         Page<Spec> all = boatSpecRepository.findAll(specification, pageable);
         Page<BoatSpec> page = all.map(this::mapSpec);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
@@ -411,7 +439,13 @@ public class BoatDashboardController {
 
         log.info("Creating diff reports from specs: {} and {} in {}", spec1.getName(), spec2.getName(), product.getName());
 
-        return OpenApiCompare.fromContents(spec1.getOpenApi(), spec2.getOpenApi());
+        ChangedOpenApi changedOpenApi = null;
+        try {
+            changedOpenApi = OpenApiCompare.fromContents(spec1.getOpenApi(), spec2.getOpenApi());
+        } catch (Exception e) {
+            throw new IllegalStateException(e.getMessage());
+        }
+        return changedOpenApi;
     }
 
     private Product getProduct(@PathVariable String portalKey, @PathVariable String productKey) {

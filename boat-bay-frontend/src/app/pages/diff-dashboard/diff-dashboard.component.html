@@ -28,7 +28,7 @@
             </div>
             <div style="text-align: right; width: 100%; margin-right: 20px;">
                 <div style="padding-right: 20px">
-                    <mat-slide-toggle>Only show changes</mat-slide-toggle>
+                    <mat-slide-toggle [checked]="onlyShowChanges">Only show changes</mat-slide-toggle>
                 </div>
             </div>
 
@@ -44,7 +44,7 @@
                             <div class="spec-left"><span>{{spec.spec1?.name}}</span></div>
                             <div class="spec-comparator" [ngSwitch]="spec.state()">
                                 <div *ngSwitchCase="state.CHANGED">Changed</div>
-                                <div *ngSwitchCase="state.UNCHANGED">Samesies</div>
+                                <div *ngSwitchCase="state.UNCHANGED">No Changes</div>
                                 <div *ngSwitchCase="state.NEW">New</div>
                                 <div *ngSwitchCase="state.DELETED">Deleted</div>
                             </div>
@@ -65,10 +65,10 @@
         <div class="mdl-cell  mdl-cell--6-col change-log mat-elevation-z8" *ngIf="releaseSpec$ | async as changeLogSpecs">
             <div class="spec-overview" >
                 <div class="spec-overview-column">
-                    <app-spec-summary *ngIf="changeLogSpecs.spec1" [spec]="changeLogSpecs.spec1"></app-spec-summary>
+                    <app-spec-summary *ngIf="changeLogSpecs.spec1" [spec]="changeLogSpecs.spec1" [product]="product"></app-spec-summary>
                 </div>
                 <div class="spec-overview-column">
-                    <app-spec-summary *ngIf="changeLogSpecs.spec2" [spec]="changeLogSpecs.spec2"></app-spec-summary>
+                    <app-spec-summary *ngIf="changeLogSpecs.spec2" [spec]="changeLogSpecs.spec2" [product]="product"></app-spec-summary>
                 </div>
             </div>
 

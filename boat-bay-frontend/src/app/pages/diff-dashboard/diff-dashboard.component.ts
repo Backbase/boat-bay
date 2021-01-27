@@ -81,6 +81,7 @@ export class DiffDashboardComponent implements OnInit {
   releaseSpec$: Observable<ReleaseSpec> = this.releaseSpec.asObservable();
 
   changeLogReport: Observable<string>;
+  onlyShowChanges: boolean = false;
 
   constructor(protected activatedRoute: ActivatedRoute,
               protected dashboardService: BoatDashboardService,
@@ -119,7 +120,14 @@ export class DiffDashboardComponent implements OnInit {
         this.releases1 = releases;
         this.releases2 = releases;
         this.release1Control.setValue(releases[0]);
-        this.release2Control.setValue(releases[1]);
+
+        if(releases.length==1) {
+          this.release2Control.setValue(releases[0]);
+        } else {
+          this.release2Control.setValue(releases[1]);
+        }
+
+
 
       })).subscribe();
   }
@@ -169,7 +177,7 @@ export class DiffDashboardComponent implements OnInit {
     });
 
     let releaseCapabilities = this.capabilities.filter(capability => capability.hasChanges());
-    if (releaseCapabilities) {
+    if (releaseCapabilities && this.capabilities.length < 0) {
       let releaseCapability = releaseCapabilities[0];
       let releaseSpecs = releaseCapability.specs.filter(spec => spec.state() == ChangeState.CHANGED);
       if (releaseSpecs) {

@@ -3,7 +3,7 @@
     <div class="mdl-grid mdl-cell mdl-cell--12-col mdl-cell--top">
         <div class="mdl-cell mdl-cell--7-col-desktop">
             <div class="lint-report-info info-container">
-                <app-spec-summary [spec]="lintReport.spec"><</app-spec-summary>
+                <app-spec-summary [spec]="lintReport.spec" [product]="product$ | async"><</app-spec-summary>
             </div>
 
             <div class="">
