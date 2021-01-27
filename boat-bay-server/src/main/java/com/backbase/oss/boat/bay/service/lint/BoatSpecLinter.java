@@ -5,12 +5,11 @@ import com.backbase.oss.boat.bay.domain.LintRule;
 import com.backbase.oss.boat.bay.domain.LintRuleViolation;
 import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.domain.enumeration.Severity;
-import com.backbase.oss.boat.bay.repository.SpecRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatLintReportRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatLintRuleRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatLintRuleViolationRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatSpecRepository;
-import com.backbase.oss.boat.bay.web.views.dashboard.config.BoatCacheManager;
+import com.backbase.oss.boat.bay.config.BoatCacheManager;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -91,7 +90,7 @@ public class BoatSpecLinter {
         lintReport.setName(spec.getFilename());
         lintReport.setGrade(grade);
         lintReport.setLintedOn(ZonedDateTime.now());
-
+        lintReport.setViolations(violations);
         lintReport = lintReportRepository.save(lintReport);
         boatLintRuleViolationRepository.saveAll(violations);
 

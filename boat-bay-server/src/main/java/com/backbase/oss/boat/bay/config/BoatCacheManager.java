@@ -1,4 +1,4 @@
-package com.backbase.oss.boat.bay.web.views.dashboard.config;
+package com.backbase.oss.boat.bay.config;
 
 
 import java.util.Arrays;
