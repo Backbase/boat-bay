@@ -8,6 +8,8 @@ import lombok.Data;
 public class BoatService {
 
 
+
+
     private String key;
     private String name;
     private String description;
@@ -17,6 +19,8 @@ public class BoatService {
     private String createdBy;
 
     private BoatStatistics statistics;
+
+    private BoatCapability capability;
 
 }
 

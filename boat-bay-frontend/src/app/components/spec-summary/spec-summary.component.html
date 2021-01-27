@@ -1,4 +1,4 @@
-<div class="lint-report-info" *ngIf="spec">
+<div class="lint-report-info" *ngIf="spec && product">
     <div class="info">
         <dl>
             <dt>Name</dt>
@@ -17,10 +17,11 @@
             <dd>{{spec.createdOn | date}}</dd>
 
             <dt>Capability</dt>
-            <dd>{{spec.capability.name}}</dd>
-
+            <dd><a [routerLink]="['/', product.portalKey, product.key, 'lint-reports']"
+                   [queryParams]="{ capability: spec.capability.key}">{{spec.capability.name}}</a></dd>
             <dt>Service</dt>
-            <dd>{{spec.serviceDefinition.name}}</dd>
+            <dd><a [routerLink]="['/',product.portalKey, product.key, 'lint-reports']"
+                   [queryParams]="{ service: spec.serviceDefinition.key}">{{spec.serviceDefinition.name}}</a></dd>
         </dl>
     </div>
     <div class="info">

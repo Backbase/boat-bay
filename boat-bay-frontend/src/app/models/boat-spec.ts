@@ -3,6 +3,10 @@ import { BoatStatistics } from './boat-dashboard';
 import { BoatCapability } from "./boat-capability";
 import { BoatService } from "./boat-service";
 
+export enum Changes {
+  NOT_APPLICABLE= 'NOT_APPLICABLE', ERROR_COMPARING = 'ERROR_COMPARING', UNCHANGED = "UNCHANGED", COMPATIBLE = "COMPATIBLE", BREAKING = "BREAKING"
+}
+
 export interface BoatSpec {
 
   id: number;
@@ -24,7 +28,7 @@ export interface BoatSpec {
   icon: string;
   grade: string;
 
-  changes: string;
+  changes: Changes;
 
   capability: BoatCapability;
   serviceDefinition: BoatService;

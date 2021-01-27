@@ -9,6 +9,7 @@ import { CreateJiraIssueButtonComponent } from "../../components/create-jira-iss
 import { SpecSummaryComponent } from "../../components/spec-summary/spec-summary.component";
 import { MatListModule } from "@angular/material/list";
 import { MatCheckboxModule } from "@angular/material/checkbox";
+import { RouterModule } from "@angular/router";
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
     CommonModule,
     MatTabsModule,
     MatListModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    RouterModule
   ]
 })
 export class LintReportModule {
