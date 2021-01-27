@@ -3,12 +3,12 @@
     <div class="mdl-grid mdl-cell mdl-cell--12-col mdl-cell--top">
 
         <div class="mdl-cell mdl-cell--6-col mat-elevation-z8">
-            <div class="release-container">
+            <div class="release-container" *ngIf="releases$ | async as releases">
                 <div class="release-selector">
                     <mat-form-field appearance="fill">
                         <mat-label>Release</mat-label>
-                        <mat-select [formControl]="release1Control">
-                            <mat-option *ngFor="let release of releases1" [value]="release">
+                        <mat-select [formControl]="release1Control" [compareWith]="compareRelease">
+                            <mat-option   *ngFor="let release of releases" [value]="release">
                                 {{release.name}}
                             </mat-option>
                         </mat-select>
@@ -18,8 +18,8 @@
                 <div class="release-selector">
                     <mat-form-field appearance="fill">
                         <mat-label>Release</mat-label>
-                        <mat-select [formControl]="release2Control">
-                            <mat-option *ngFor="let release of releases2" [value]="release">
+                        <mat-select [formControl]="release2Control" [compareWith]="compareRelease">
+                            <mat-option *ngFor="let release of releases" [value]="release">
                                 {{release.name}}
                             </mat-option>
                         </mat-select>
@@ -28,14 +28,23 @@
             </div>
             <div style="text-align: right; width: 100%; margin-right: 20px;">
                 <div style="padding-right: 20px">
-                    <mat-slide-toggle [checked]="onlyShowChanges">Only show changes</mat-slide-toggle>
+                    <button mat-icon-button (click)="expandAll = false" label="Expand All">
+                        <mat-icon>expand_less</mat-icon>
+                    </button>
+                    <button mat-icon-button (click)="expandAll = true">
+                        <mat-icon>expand_more</mat-icon>
+                    </button>
+                    <mat-slide-toggle (toggleChange)="onlyShowChanges = !onlyShowChanges">Only show changes
+                    </mat-slide-toggle>
                 </div>
             </div>
 
             <mat-spinner *ngIf="isLoading"></mat-spinner>
 
             <mat-accordion multi>
-                <mat-expansion-panel *ngFor="let capability of capabilities" [expanded]="capability.hasChanges()">
+                <mat-expansion-panel *ngFor="let capability of capabilities"
+                                     [expanded]="capability.hasChanges() || this.expandAll"
+                                     [class]="onlyShowChanges && !capability.hasChanges() ? 'hidden' : ''">
                     <mat-expansion-panel-header>
                         <mat-panel-title>{{capability.capability.name}}</mat-panel-title>
                     </mat-expansion-panel-header>
@@ -52,29 +61,38 @@
                         </mat-list-item>
 
                     </mat-list>
+<!--                    <mat-nav-list>-->
+<!--                        <a mat-list-item [routerLink]="[]"-->
+<!--                           *ngFor="let spec of capability.specs"-->
+<!--                           [queryParams]="{releaseSpec: spec.key()}"-->
+<!--                           [queryParamsHandling]="'merge'"-->
+<!--                        >-->
+<!--                            <span class="left">{{spec.spec1?.name}}</span>-->
+<!--                            <span class="comparator">{{spec.state()}}</span>-->
+<!--                            <span class="right">{{spec.spec2?.name}}</span>-->
+<!--                        </a>-->
+<!--                    </mat-nav-list>-->
 
                 </mat-expansion-panel>
-
-
             </mat-accordion>
         </div>
 
-
-
-
-        <div class="mdl-cell  mdl-cell--6-col change-log mat-elevation-z8" *ngIf="releaseSpec$ | async as changeLogSpecs">
-            <div class="spec-overview" >
+        <div class="mdl-cell  mdl-cell--6-col change-log mat-elevation-z8"
+             *ngIf="releaseSpec$ | async as changeLogSpecs">
+            <div class="spec-overview">
                 <div class="spec-overview-column">
-                    <app-spec-summary *ngIf="changeLogSpecs.spec1" [spec]="changeLogSpecs.spec1" [product]="product"></app-spec-summary>
+                    <app-spec-summary *ngIf="changeLogSpecs.spec1" [spec]="changeLogSpecs.spec1"
+                                      [product]="product"></app-spec-summary>
                 </div>
                 <div class="spec-overview-column">
-                    <app-spec-summary *ngIf="changeLogSpecs.spec2" [spec]="changeLogSpecs.spec2" [product]="product"></app-spec-summary>
+                    <app-spec-summary *ngIf="changeLogSpecs.spec2" [spec]="changeLogSpecs.spec2"
+                                      [product]="product"></app-spec-summary>
                 </div>
             </div>
 
             <button mat-button (click)="showDiff(product, changeLogSpecs)">Show Differences</button>
 
-            <div [innerHTML]="changeLogReport | async" ></div>
+            <div [innerHTML]="changeLogReport | async"></div>
         </div>
     </div>
 

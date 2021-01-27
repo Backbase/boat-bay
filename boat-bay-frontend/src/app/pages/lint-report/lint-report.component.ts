@@ -45,12 +45,6 @@ export class LintReportComponent implements OnInit {
       })).subscribe();
   }
 
-  // constructor(private httpClient: HttpClient) {
-  //   this.lintReport$ = httpClient.get('/assets/mock/lint-report.json').pipe(map(value => value as BoatLintReport));
-  //
-  // }
-
-
   ngOnInit(): void {
   }
 

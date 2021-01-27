@@ -1,21 +1,26 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, of, ReplaySubject, zip } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
-import { ActivatedRoute } from '@angular/router';
+import { BehaviorSubject, combineLatest, Observable, of, ReplaySubject, zip } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { BoatCapability, BoatProduct, BoatSpec } from "../../models/";
 import { BoatDashboardService } from "../../services/boat-dashboard.service";
 import { BoatProductRelease } from "../../models/boat-product-release";
 import { FormControl } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { SpecDiffDialogComponent } from "../../components/spec-diff-dialog/spec-diff-dialog.component";
+import { ProductRelease } from "../../models/dashboard/v1";
 
 export enum ChangeState {
-  NEW, DELETED, CHANGED, UNCHANGED
+  NEW = 'NEW', DELETED = 'DELETED', CHANGED = 'CHANGED', UNCHANGED = 'UNCHANGED'
 }
 
 export class ReleaseSpec {
 
   constructor(public product: BoatProduct, public spec1: BoatSpec | null, public spec2: BoatSpec | null = null) {
+  }
+
+  public key() {
+    return this.spec1?.name + ":" + this.spec2?.name;
   }
 
   public state(): ChangeState {
@@ -66,13 +71,17 @@ class ReleaseCapability {
 })
 export class DiffDashboardComponent implements OnInit {
   product$: Observable<BoatProduct>;
-  releases1: BoatProductRelease[] = [];
-  releases2: BoatProductRelease[] = [];
+  _product!: BoatProduct;
+
+  releases$: Observable<BoatProductRelease[]>;
+  _releaseSpec!: ReleaseSpec;
 
   release1Control = new FormControl();
   release2Control = new FormControl();
+  releaseSpecControl = new FormControl();
 
   isLoading: boolean = false;
+  isLoading$ = new BehaviorSubject(this.isLoading);
   state = ChangeState;
 
   capabilities: ReleaseCapability[] = [];
@@ -80,25 +89,21 @@ export class DiffDashboardComponent implements OnInit {
   releaseSpec = new ReplaySubject<ReleaseSpec>(1);
   releaseSpec$: Observable<ReleaseSpec> = this.releaseSpec.asObservable();
 
+
   changeLogReport: Observable<string>;
   onlyShowChanges: boolean = false;
+  expandAll: boolean = false;
 
   constructor(protected activatedRoute: ActivatedRoute,
               protected dashboardService: BoatDashboardService,
-              public matDialog: MatDialog) {
+              public matDialog: MatDialog,
+              public router: Router) {
     this.product$ = activatedRoute.data.pipe(
-      map(({product}) => product),
-      tap(product => {
+      map(({product}) => product));
 
-          this.release1Control.valueChanges.subscribe(() => {
-            this.loadSpecs(product, this.release1Control.value, this.release2Control.value);
-          });
-          this.release2Control.valueChanges.subscribe(() => {
-            this.loadSpecs(product, this.release1Control.value, this.release2Control.value);
-          });
-        }
-      ));
-
+    this.releases$ = this.product$.pipe(
+      switchMap((product) => this.dashboardService.getProductReleases(product.portalKey, product.key)),
+      map((response) => response.body ? response.body : []));
 
     this.changeLogReport = this.releaseSpec$.pipe(
       switchMap((releaseSpec) => {
@@ -110,31 +115,95 @@ export class DiffDashboardComponent implements OnInit {
           return of('');
         }
       }));
+
   }
 
   ngOnInit(): void {
-    this.product$.pipe(
-      switchMap((product) => this.dashboardService.getProductReleases(product.portalKey, product.key)),
-      map((response) => response.body ? response.body : []),
-      tap((releases) => {
-        this.releases1 = releases;
-        this.releases2 = releases;
-        this.release1Control.setValue(releases[0]);
 
-        if(releases.length==1) {
-          this.release2Control.setValue(releases[0]);
-        } else {
-          this.release2Control.setValue(releases[1]);
+    this.release1Control.valueChanges.subscribe(() => {
+      this.updateRouter();
+
+    });
+    this.release2Control.valueChanges.subscribe(() => {
+      this.updateRouter();
+    });
+
+    // this.releaseSpec$.subscribe(releaseSpec => {
+    //   this.updateRouter();
+    // })
+
+    this.isLoading$.subscribe(isLoading => this.isLoading = isLoading);
+
+
+    combineLatest([this.activatedRoute.queryParams, this.releases$, this.product$])
+      .subscribe(sources => {
+          console.log("parse query params");
+
+          const params: Params = sources[0];
+          const releases: BoatProductRelease[] = sources[1];
+          const product = sources[2];
+
+          const release1Param = params["release1"];
+          const release2Param = params["release2"];
+          const releaseSpec = params["releaseSpec"];
+
+
+          let isReleaseChanged = false;
+          if (release1Param) {
+            let value = releases.find(release => release.key === release1Param);
+            this.release1Control.setValue(value);
+          }
+          if (release2Param) {
+            let value1 = releases.find(release => release.key === release2Param);
+            this.release2Control.setValue(value1);
+          }
+          else if (!release1Param && !release2Param) {
+            this.release1Control.setValue(releases[releases.length == 1 ? 0 : releases.length-2])
+            this.release2Control.setValue(releases[releases.length-1])
+          }
+        if (this.release2Control.value && this.release1Control.value) {
+          this.loadSpecs(product, this.release1Control.value, this.release2Control.value);
         }
 
 
-
-      })).subscribe();
+        }
+      );
+    //   this.product$.pipe(
+    //     switchMap((product) => this.dashboardService.getProductReleases(product.portalKey, product.key)),
+    //     map((response) => response.body ? response.body : []),
+    //     tap((releases) => {
+    //
+    //       this.release1Control.setValue(releases[0]);
+    //
+    //       if (releases.length == 1) {
+    //         this.release2Control.setValue(releases[0]);
+    //       } else {
+    //         this.release2Control.setValue(releases[1]);
+    //       }
+    //
+    //     })).subscribe();
   }
+
+  updateRouter(): void {
+    const release1: BoatProductRelease = this.release1Control.value;
+    const release2: BoatProductRelease = this.release2Control.value;
+    this.router.navigate([], {
+        queryParams: {
+          releaseSpec: this._releaseSpec?.key(),
+          release1: release1?.key,
+          release2: release2?.key
+        },
+        queryParamsHandling: "merge"
+      }
+    );
+
+  }
+
 
   loadSpecs(product: BoatProduct, release1: BoatProductRelease | null, release2: BoatProductRelease | null): void {
     if (!this.isLoading && release1 && release2) {
-      this.isLoading = true;
+      this.isLoading$.next(true);
+
       this.capabilities = [];
 
       const specs1$: Observable<BoatSpec[]> = this.dashboardService.getProductReleaseSpecs(product.portalKey, product.key, release1.key)
@@ -185,7 +254,7 @@ export class DiffDashboardComponent implements OnInit {
       }
     }
 
-    this.isLoading = false;
+    this.isLoading$.next(false);
   }
 
   getReleaseCapability(product: BoatProduct, spec: BoatSpec, isNew: boolean): ReleaseCapability {
@@ -199,7 +268,7 @@ export class DiffDashboardComponent implements OnInit {
     }
   }
 
-  showDiff(product:BoatProduct,  releaseSpec: ReleaseSpec) {
+  showDiff(product: BoatProduct, releaseSpec: ReleaseSpec) {
 
     this.matDialog.open(SpecDiffDialogComponent, {
       data: {
@@ -210,4 +279,9 @@ export class DiffDashboardComponent implements OnInit {
     })
 
   }
+
+  compareRelease(o1: BoatProductRelease, o2: BoatProductRelease) {
+    return o1 != null && o2 != null && o1.key === o2.key;
+  }
+
 }
