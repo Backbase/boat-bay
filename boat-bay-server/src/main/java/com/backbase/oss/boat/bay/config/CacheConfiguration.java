@@ -1,7 +1,6 @@
 package com.backbase.oss.boat.bay.config;
 
 import com.backbase.oss.boat.bay.service.lint.BoatLintRuleValidatorFactory;
-import com.backbase.oss.boat.bay.web.views.dashboard.config.BoatCacheManager;
 import io.github.jhipster.config.JHipsterProperties;
 import io.github.jhipster.config.cache.PrefixedKeyGenerator;
 import java.time.Duration;
