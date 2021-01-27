@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from "rxjs/operators";
 import { BoatDashboardService } from "../../services/boat-dashboard.service";
 import { BoatSpec } from "../../models/";
+import { SpecFilter } from "./specs-table.component";
 
 
 /**
@@ -19,7 +20,7 @@ export class SpecsDataSource implements DataSource<BoatSpec> {
   public loading$ = this.loadingSubject.asObservable();
   public length = this.countSubject.asObservable();
 
-  constructor(private boatService: BoatDashboardService) {
+    constructor(private boatService: BoatDashboardService) {
   }
 
   /**
@@ -41,9 +42,9 @@ export class SpecsDataSource implements DataSource<BoatSpec> {
     this.loadingSubject.complete();
   }
 
-  loadServicesForProduct(portalKey: string, productKey: string, sortProperty: string, sortDirection: string, pageIndex = 0, pageSize = 3): void {
+  loadSpecs(specFilter: SpecFilter, sortProperty: string, sortDirection: string, pageIndex = 0, pageSize = 3): void {
     this.loadingSubject.next(true);
-    this.boatService.getBoatSpecs(portalKey, productKey, pageIndex, pageSize, sortProperty, sortDirection).pipe(
+    this.boatService.getBoatSpecs(specFilter, pageIndex, pageSize, sortProperty, sortDirection).pipe(
       map(response => {
         if(response.body) {
           this.countSubject.next(Number(response.headers.get('X-Total-Count')))

@@ -4,10 +4,10 @@
 <button mat-icon-button class="next" (click)="next()"><mat-icon>arrow_forward</mat-icon></button>
 <div style="display: flex">
     <div style="flex-grow: 1">
-        <app-spec-summary [spec]="specRelease.spec1"></app-spec-summary>
+        <app-spec-summary [spec]="specRelease.spec1" [product]="product"></app-spec-summary>
     </div>
     <div style="flex-grow: 1">
-        <app-spec-summary [spec]="specRelease.spec2"></app-spec-summary>
+        <app-spec-summary [spec]="specRelease.spec2" [product]="product"></app-spec-summary>
     </div>
 
 </div>

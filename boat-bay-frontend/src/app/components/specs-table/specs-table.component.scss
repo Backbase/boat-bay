@@ -6,3 +6,11 @@
   width: 100%;
 }
 
+.spec-filter-column {
+  display: inline-block;
+
+  mat-form-field {
+    width: 300px;
+    margin-right: 10px;
+  }
+}

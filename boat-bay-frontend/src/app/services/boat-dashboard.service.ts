@@ -14,6 +14,7 @@ import {
   BoatTag
 } from "../models";
 import { BoatProductRelease } from "../models/boat-product-release";
+import { SpecFilter } from "../components/specs-table/specs-table.component";
 
 @Injectable({providedIn: 'root'})
 export class BoatDashboardService {
@@ -64,25 +65,47 @@ export class BoatDashboardService {
       .set("size", size.toString())
       .set("sort", sort + "," + direction)
 
-    return this.http.get<BoatCapability[]>(`${this.resourceUrl}/portals/${portalKey}/products/${productKey}/services`, {
-
+    return this.http.get<BoatService[]>(`${this.resourceUrl}/portals/${portalKey}/products/${productKey}/services`, {
       params: params,
       observe: 'response'
     });
   }
 
-  getBoatSpecs(portalKey: string, productKey: string, page: number, size: number, sort: string, direction: string): Observable<HttpResponse<BoatSpec[]>> {
+  getBoatSpecs(specFilter: SpecFilter, page: number, size: number, sort: string, direction: string): Observable<HttpResponse<BoatSpec[]>> {
     if (sort === undefined) {
       sort = "name";
     }
-    let params = new HttpParams().set("page", page.toString())
+    let params = new HttpParams()
+      .set("page", page.toString())
       .set("size", size.toString())
       .set("sort", sort + "," + direction)
-    return this.http.get<BoatSpec[]>(`${this.resourceUrl}/portals/${portalKey}/products/${productKey}/specs`, {
+
+    if (specFilter.capabilities) {
+      specFilter.capabilities.forEach(item => {
+        params = params.append("capability", item.key);
+      })
+    }
+
+    if (specFilter.services) {
+      specFilter.services.forEach(item => {
+        params = params.append("service", item.key)
+      });
+    }
+
+    if(specFilter.release) {
+      params = params.set("release", specFilter.release.key);
+    }
+
+    return this.http.get<BoatSpec[]>(`${this.resourceUrl}/portals/${specFilter.portalKey}/products/${specFilter.productKey}/specs`, {
       params: params,
       observe: 'response'
     });
   }
+
+  getProductReleaseSpecs(portalKey: string, productKey: string, releaseKey: string): Observable<HttpResponse<BoatSpec[]>> {
+    return this.http.get<BoatSpec[]>(`${this.resourceUrl}/portals/${portalKey}/products/${productKey}/releases/${releaseKey}/specs`, {observe: 'response'});
+  }
+
 
   getLintReport(portalKey: string, productKey: string, id: number, refresh: boolean = false): Observable<HttpResponse<BoatLintReport>> {
     return this.http.get<BoatLintReport>(`${this.resourceUrl}/portals/${portalKey}/products/${productKey}/specs/${id}/lint-report?refresh=${refresh}`, {observe: 'response'});
@@ -95,10 +118,6 @@ export class BoatDashboardService {
 
   getProductReleases(portalKey: string, productKey: string): Observable<HttpResponse<BoatProductRelease[]>> {
     return this.http.get<BoatProductRelease[]>(`${this.resourceUrl}/portals/${portalKey}/products/${productKey}/releases`, {observe: 'response'});
-  }
-
-  getProductReleaseSpecs(portalKey: string, productKey: string, releaseKey: string): Observable<HttpResponse<BoatSpec[]>> {
-    return this.http.get<BoatSpec[]>(`${this.resourceUrl}/portals/${portalKey}/products/${productKey}/releases/${releaseKey}/specs`, {observe: 'response'});
   }
 
   getPortalLintRules(portalKey: string): Observable<HttpResponse<BoatLintRule[]>> {
@@ -118,21 +137,15 @@ export class BoatDashboardService {
         headers,
         responseType: 'text'
       })
-
   }
 
-  getSpecBySpec(product:BoatProduct, boatSpec:BoatSpec):Observable<HttpResponse<BoatSpec>> {
-    return this.getSpec(product.portalKey, product.key, boatSpec.capability.key, boatSpec.serviceDefinition.key,boatSpec.key, boatSpec.version);
+  getSpecBySpec(product: BoatProduct, boatSpec: BoatSpec): Observable<HttpResponse<BoatSpec>> {
+    return this.getSpec(product.portalKey, product.key, boatSpec.capability.key, boatSpec.serviceDefinition.key, boatSpec.key, boatSpec.version);
   }
 
 
-  getSpec(portalKey: string, productKey: string, capabilityKey: string, serviceDefinitionKey: string, specKey: string, version: string):Observable<HttpResponse<BoatSpec>> {
+  getSpec(portalKey: string, productKey: string, capabilityKey: string, serviceDefinitionKey: string, specKey: string, version: string): Observable<HttpResponse<BoatSpec>> {
     return this.http.get<BoatSpec>(`${this.resourceUrl}/portals/${portalKey}/products/${productKey}/capabilities/${capabilityKey}/services/${serviceDefinitionKey}/specs/${specKey}/${version}`, {observe: "response"});
-
-
-
   }
-
-
 
 }

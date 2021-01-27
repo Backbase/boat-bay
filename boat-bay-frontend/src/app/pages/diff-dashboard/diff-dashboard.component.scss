@@ -28,18 +28,31 @@
   padding: 4px 0;
 }
 
+mat-nav-list {
+  a {
+    .left {
+      width: 100%;
+    }
+
+    .right {
+      width: 100%;
+      text-align: right;
+    }
+  }
+}
+
+
 mat-list {
 
   font-size: 10px;
 
   mat-list-item {
-    cursor: pointer;
+    a {
+      display: inline;
+      width: 100%;
+      text-wrap: none;
+    }
   }
-
-  mat-list-item:hover {
-    background-color: #a2a2a2;
-  }
-
   .spec-left {
     text-align: left;
     display: inline-block;
@@ -48,6 +61,7 @@ mat-list {
 
   .spec-comparator {
     display: inline-block;
+    white-space: nowrap;
   }
 
   .spec-right {

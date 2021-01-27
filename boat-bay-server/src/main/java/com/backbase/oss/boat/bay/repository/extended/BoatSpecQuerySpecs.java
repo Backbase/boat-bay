@@ -3,6 +3,7 @@ package com.backbase.oss.boat.bay.repository.extended;
 import com.backbase.oss.boat.bay.domain.Capability;
 import com.backbase.oss.boat.bay.domain.Product;
 import com.backbase.oss.boat.bay.domain.ProductRelease;
+import com.backbase.oss.boat.bay.domain.ServiceDefinition;
 import com.backbase.oss.boat.bay.domain.Spec;
 import javax.persistence.criteria.Join;
 import org.springframework.data.jpa.domain.Specification;
@@ -18,18 +19,24 @@ public class BoatSpecQuerySpecs {
         });
     }
 
-    public Specification<Spec> hasCapability(String capabilityId) {
+    public Specification<Spec> hasCapabilityKey(String key) {
         return ((root, query, builder) -> {
-            Join<Spec, Capability> specCapability = root.join("capability");
-            return (builder.equal(specCapability.get("id"), capabilityId));
+            Join<Spec, Capability> join = root.join("capability");
+            return (builder.equal(join.get("key"), key));
         });
-
     }
 
-    public Specification<Spec> inProductRelease(String productReleaseId) {
+    public Specification<Spec> inProductRelease(String key) {
         return ((root, query, builder) -> {
-            Join<Spec, ProductRelease> specProductReleaseJoin = root.join("productRelease");
-            return (builder.equal(specProductReleaseJoin.get("id"), productReleaseId));
+            Join<Spec, ProductRelease> join = root.join("productReleases");
+            return (builder.equal(join.get("key"), key));
+        });
+    }
+
+    public Specification<Spec> hasServiceDefinition(String key) {
+        return ((root, query, builder) -> {
+            Join<Spec, ServiceDefinition> join = root.join("serviceDefinition");
+            return (builder.equal(join.get("key"), key));
         });
     }
 }

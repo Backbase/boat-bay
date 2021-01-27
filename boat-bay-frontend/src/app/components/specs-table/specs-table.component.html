@@ -1,21 +1,47 @@
-<div class="table-wrapper">
+<div class="table-wrapper" *ngIf="product$ | async as product">
     <div class="spinner-container" *ngIf="dataSource.loading$ | async">
         <mat-spinner></mat-spinner>
     </div>
 
-<!--    <mat-form-field appearance="fill" *ngIf="capabilities$ | async as capabilities">-->
-<!--        <mat-label>Capability</mat-label>-->
-<!--        <mat-select [formControl]="selectedCapabilities" multiple>-->
-<!--            <mat-select-trigger>-->
-<!--                {{selectedCapabilities.value ? selectedCapabilities.value[0].name : ''}}-->
-<!--                <span *ngIf="selectedCapabilities.value?.length > 1" class="">-->
-<!--                        (+{{selectedCapabilities.value.length - 1}} {{selectedCapabilities.value?.length === 2 ? 'other' : 'others'}})-->
-<!--                      </span>-->
-<!--            </mat-select-trigger>-->
-<!--            <mat-option *ngFor="let capability of capabilities"-->
-<!--                        [value]="capability">{{capability.name}}</mat-option>-->
-<!--        </mat-select>-->
-<!--    </mat-form-field>-->
+
+    <div class="spec-filter-row">
+        <div class="spec-filter-column">
+            <mat-form-field appearance="fill" *ngIf="capabilities$ | async as capabilities">
+                <mat-label>Capability</mat-label>
+                <mat-select [formControl]="selectedCapabilities" multiple [compareWith]="compareCap" >
+                    <mat-option *ngFor="let capability of capabilities"
+                                [value]="capability">{{capability.name}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="spec-filter-column">
+            <mat-form-field appearance="fill"  *ngIf="services$ | async as services">
+                <mat-label>Service</mat-label>
+                <mat-select [formControl]="selectedServices" [compareWith]="compareService" multiple>
+                    <mat-option *ngFor="let service of services"
+                                [value]="service"
+                                [disabled]="!inSelectedCapability(service)"
+
+                    >{{service.name}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="spec-filter-column">
+            <mat-form-field appearance="fill"  *ngIf="releases$ | async as releases">
+                <mat-label>Release</mat-label>
+                <mat-select [formControl]="selectedRelease" [compareWith]="compareService">
+                    <mat-option *ngFor="let release of releases"
+                                [value]="release"
+                    >{{release.name}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+
+        <div class="spec-filter-column">
+            <button mat-button (click)="resetFilter()">Reset</button>
+
+        </div>
+    </div>
 
 
     <table mat-table class="full-width-table" matSort aria-label="Specs" [dataSource]="dataSource">
@@ -126,7 +152,7 @@
     <mat-paginator
         [length]="dataSource.length | async"
         [pageIndex]="0"
-        [pageSize]="10"
-        [pageSizeOptions]="[10, 50, 100]">
+        [pageSize]="pageSize"
+        [pageSizeOptions]="[25, 50, 100]">
     </mat-paginator>
 </div>
