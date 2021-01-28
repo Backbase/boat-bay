@@ -13,6 +13,11 @@ BoatCapability:
       $ref: "../other-schemas/local-date-time.yaml#/LocalDateTime"
     createdBy:
       type: string
+
+    services:
+      type: array
+      items:
+        $ref: "boat-service.yaml#/BoatService"
     lastLintReport:
       $ref: "boat-lint-report.yaml#/BoatLintReport"
     statistics:
