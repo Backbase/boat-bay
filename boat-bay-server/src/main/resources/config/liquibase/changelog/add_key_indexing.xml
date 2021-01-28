@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+
+    <changeSet id="add-key-indexing" author="sophiej">
+
+
+
+        <createIndex indexName="idx_portal_key" tableName="portal">
+            <column descending="true" name="jhi_key"/>
+        </createIndex>
+
+        <createIndex indexName="idx_capability_key" tableName="capability">
+            <column descending="true" name="jhi_key"/>
+        </createIndex>
+
+        <createIndex tableName="product" indexName="idx_product_keys">
+            <column descending="true" name="jhi_key"/>
+        </createIndex>
+
+        <createIndex indexName="idx_spec_key" tableName="spec">
+            <column descending="true" name="jhi_key"/>
+        </createIndex>
+
+        <createIndex indexName="idx_report_key" tableName="lint_report">
+            <column descending="true" name="name"/>
+        </createIndex>
+
+        <createIndex indexName="idx_violation_key" tableName="lint_rule_violation">
+            <column descending="true" name="name"/>
+        </createIndex>
+
+        <createIndex indexName="idx_source_key" tableName="source">
+            <column descending="true" name="name"/>
+        </createIndex>
+
+        <createIndex indexName="idx_service_key" tableName="service_definition">
+            <column descending="true" name="jhi_key"/>
+        </createIndex>
+
+
+        <createIndex indexName="idx_release_key" tableName="product_release">
+            <column descending="true" name="jhi_key"/>
+        </createIndex>
+
+
+    </changeSet>
+
+</databaseChangeLog>

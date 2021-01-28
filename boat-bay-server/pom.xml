@@ -483,7 +483,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.parent.basedir}/boat-bay-api/src/main/resources/bundled-boat-bay-api/boat-bay-api-1.0.1.yaml</inputSpec>
+                            <inputSpec>${project.parent.basedir}/boat-bay-api/src/main/resources/swagger/api.yml</inputSpec>
                             <generatorName>spring</generatorName>
 
                             <generateApiTests>false</generateApiTests>
@@ -491,7 +491,6 @@
                             <generateModels>true</generateModels>
                             <generateSupportingFiles>false</generateSupportingFiles>
                             <configOptions>
-                                <bundleSpec>true</bundleSpec>
                                 <library>spring-boot</library>
                                 <reactive>false</reactive>
                                 <java8>true</java8>

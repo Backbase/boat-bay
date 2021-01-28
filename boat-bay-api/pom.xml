@@ -30,7 +30,7 @@
                         </goals>
                         <configuration>
                             <input>${project.basedir}/src/main/resources/boat-bay-api-1.0.0/boat-bay-api-1.0.0.yaml</input>
-                            <output>${project.basedir}/src/main/resources/bundled-boat-bay-api/boat-bay-api-1.0.1.yaml</output>
+                            <output>src/main/resources/swagger/api.yml</output>
                         </configuration>
                      </execution>
                 </executions>

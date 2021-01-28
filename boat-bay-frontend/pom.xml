@@ -39,7 +39,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.parent.basedir}/boat-bay-api/src/main/resources/bundled-boat-bay-api/boat-bay-api-1.0.1.yaml</inputSpec>
+                            <inputSpec>${project.parent.basedir}/boat-bay-api/src/main/resources/swagger/api.yml</inputSpec>
                             <generatorName>boat-angular</generatorName>
                             <output>${project.basedir}/target/http-module</output>
                             <reservedWordsMappings>delete=delete,function=function,new=new</reservedWordsMappings>

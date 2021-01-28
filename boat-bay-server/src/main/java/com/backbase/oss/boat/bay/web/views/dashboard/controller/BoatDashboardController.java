@@ -1,58 +1,29 @@
 package com.backbase.oss.boat.bay.web.views.dashboard.controller;
 
 import com.backbase.oss.boat.ExportException;
+import com.backbase.oss.boat.bay.config.BoatCacheManager;
 import com.backbase.oss.boat.bay.domain.*;
 import com.backbase.oss.boat.bay.repository.LintRuleRepository;
 import com.backbase.oss.boat.bay.repository.SourceRepository;
 import com.backbase.oss.boat.bay.repository.SpecRepository;
-import com.backbase.oss.boat.bay.repository.TagRepository;
-import com.backbase.oss.boat.bay.repository.extended.BoatCapabilityRepository;
-import com.backbase.oss.boat.bay.repository.extended.BoatDashboardRepository;
-import com.backbase.oss.boat.bay.repository.extended.BoatLintReportRepository;
-import com.backbase.oss.boat.bay.repository.extended.BoatLintRuleViolationRepository;
-import com.backbase.oss.boat.bay.repository.extended.BoatPortalRepository;
-import com.backbase.oss.boat.bay.repository.extended.BoatProductReleaseRepository;
-import com.backbase.oss.boat.bay.repository.extended.BoatProductRepository;
-import com.backbase.oss.boat.bay.repository.extended.BoatServiceRepository;
-import com.backbase.oss.boat.bay.repository.extended.BoatSpecQuerySpecs;
-import com.backbase.oss.boat.bay.repository.extended.BoatSpecRepository;
+import com.backbase.oss.boat.bay.repository.extended.*;
 import com.backbase.oss.boat.bay.service.api.ApiBoatBay;
 import com.backbase.oss.boat.bay.service.export.ExportOptions;
 import com.backbase.oss.boat.bay.service.export.ExportType;
 import com.backbase.oss.boat.bay.service.export.impl.FileSystemExporter;
-import com.backbase.oss.boat.bay.repository.extended.BoatTagRepository;
 import com.backbase.oss.boat.bay.service.lint.BoatSpecLinter;
 import com.backbase.oss.boat.bay.service.model.*;
 import com.backbase.oss.boat.bay.service.source.SpecSourceResolver;
 import com.backbase.oss.boat.bay.service.source.scanner.ScanResult;
 import com.backbase.oss.boat.bay.service.source.scanner.SourceScannerOptions;
 import com.backbase.oss.boat.bay.service.statistics.BoatStatisticsCollector;
-import com.backbase.oss.boat.bay.config.BoatCacheManager;
-import com.backbase.oss.boat.bay.web.views.dashboard.diff.DiffReportRenderer;
-import com.backbase.oss.boat.bay.web.rest.SpecResource;
 import com.backbase.oss.boat.bay.web.rest.errors.BadRequestAlertException;
-
+import com.backbase.oss.boat.bay.web.views.dashboard.diff.DiffReportRenderer;
 import com.backbase.oss.boat.bay.web.views.dashboard.mapper.BoatDashboardMapper;
-
-import io.github.jhipster.web.util.HeaderUtil;
 import io.github.jhipster.web.util.PaginationUtil;
-import java.nio.charset.StandardCharsets;
-
-import java.net.URISyntaxException;
-import java.time.ZonedDateTime;
-import java.util.*;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.openapitools.openapidiff.core.OpenApiCompare;
 import org.openapitools.openapidiff.core.model.ChangedOpenApi;
 import org.springframework.cache.annotation.Cacheable;
@@ -73,6 +44,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.zalando.zally.rule.api.Severity;
 
 import javax.validation.Valid;
+import java.nio.charset.StandardCharsets;
+import java.time.ZonedDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -100,9 +75,7 @@ public class BoatDashboardController implements ApiBoatBay {
     private final BoatSpecRepository boatSpecRepository;
     private final LintRuleRepository lintRuleRepository;
     private final BoatLintReportRepository boatLintReportRepository;
-    private final BoatLintRuleViolationRepository boatLintRuleViolationRepository;
     private final BoatProductReleaseRepository boatProductReleaseRepository;
-    private final BoatDashboardRepository dashboardRepository;
     private final BoatDashboardMapper dashboardMapper;
     private final BoatTagRepository tagRepository;
 
@@ -297,17 +270,24 @@ public class BoatDashboardController implements ApiBoatBay {
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
+    @Override
+    public ResponseEntity<List<BoatSpec>> getPortalSpecs(String productKey, String portalKey, Pageable pageable, String release, String grade, List<String> capability, List<String> service, Boolean backwardsCompatible, Boolean changed) {
+        return null;
+    }
+
+
     @Cacheable(BoatCacheManager.PRODUCT_SPECS)
     @GetMapping("/portals/{portalKey}/products/{productKey}/specs")
-    public ResponseEntity<List<BoatSpec>> getPortalSpecs(@PathVariable String portalKey, @PathVariable String productKey,
-                                                         @RequestParam(required = false) String[] capability,
-                                                         @RequestParam(required = false) String[] service,
+    public ResponseEntity<List<BoatSpec>> getPortalSpecs(@PathVariable String productKey,
+                                                         @PathVariable String portalKey,
+                                                         Pageable pageable,
                                                          @RequestParam(required = false) String release,
-
                                                          @RequestParam(required = false) String grade,
+                                                         @RequestParam(required = false) List<String> capability,
+                                                         @RequestParam(required = false) List<String> service,
                                                          @RequestParam(required = false) boolean backwardsCompatible,
-                                                         @RequestParam(required = false) boolean changed,
-                                                         Pageable pageable) {
+                                                         @RequestParam(required = false) boolean changed
+                                                         ) {
         Product product = getProduct(portalKey, productKey);
 
         Specification<Spec> specification = boatSpecQuerySpecs.hasProduct(product.getId());
@@ -317,17 +297,17 @@ public class BoatDashboardController implements ApiBoatBay {
         }
 
         if(capability != null) {
-            Specification<Spec> capabilitySpecification = boatSpecQuerySpecs.hasCapabilityKey(capability[0]);
-            for(int i = 1; i < capability.length; i++) {
-                capabilitySpecification = capabilitySpecification.or(boatSpecQuerySpecs.hasCapabilityKey(capability[i]));
+            Specification<Spec> capabilitySpecification = boatSpecQuerySpecs.hasCapabilityKey(capability.get(0));
+            for(int i = 1; i < capability.size(); i++) {
+                capabilitySpecification = capabilitySpecification.or(boatSpecQuerySpecs.hasCapabilityKey(capability.get(i)));
             }
             specification = specification.and(capabilitySpecification);
         }
 
         if(service != null) {
-            Specification<Spec> serviceDefinitionSpecification = boatSpecQuerySpecs.hasServiceDefinition(service[0]);
-            for(int i = 1; i < service.length; i++) {
-                serviceDefinitionSpecification = serviceDefinitionSpecification.or(boatSpecQuerySpecs.hasServiceDefinition(service[i]));
+            Specification<Spec> serviceDefinitionSpecification = boatSpecQuerySpecs.hasServiceDefinition(service.get(0));
+            for(int i = 1; i < service.size(); i++) {
+                serviceDefinitionSpecification = serviceDefinitionSpecification.or(boatSpecQuerySpecs.hasServiceDefinition(service.get(i)));
             }
             specification = specification.and(serviceDefinitionSpecification);
         }
