@@ -27,7 +27,7 @@ import com.backbase.oss.boat.bay.service.source.SpecSourceResolver;
 import com.backbase.oss.boat.bay.service.source.scanner.ScanResult;
 import com.backbase.oss.boat.bay.service.source.scanner.SourceScannerOptions;
 import com.backbase.oss.boat.bay.service.statistics.BoatStatisticsCollector;
-import com.backbase.oss.boat.bay.web.views.dashboard.config.BoatCacheManager;
+import com.backbase.oss.boat.bay.config.BoatCacheManager;
 import com.backbase.oss.boat.bay.web.views.dashboard.diff.DiffReportRenderer;
 import com.backbase.oss.boat.bay.web.rest.SpecResource;
 import com.backbase.oss.boat.bay.web.rest.errors.BadRequestAlertException;
@@ -340,7 +340,10 @@ public class BoatDashboardController implements ApiBoatBay {
 
 
     @GetMapping("/portals/{portalKey}/products/{productKey}/specs/{specId}/lint-report")
-    public ResponseEntity<BoatLintReport> getLintReportForSpec(@PathVariable String portalKey, @PathVariable String productKey, @PathVariable String specId, @RequestParam(required = false) Boolean refresh) {
+    public ResponseEntity<BoatLintReport> getLintReportForSpec(@PathVariable String portalKey,
+                                                               @PathVariable String productKey,
+                                                               @PathVariable String specId,
+                                                               @RequestParam(required = false) Boolean refresh) {
         Product product = getProduct(portalKey, productKey);
 
         log.info("Get lint report for spec: {} in product: {}", specId, product.getName());
@@ -348,16 +351,17 @@ public class BoatDashboardController implements ApiBoatBay {
         Spec spec = boatSpecRepository.findById(Long.valueOf(specId)).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         LintReport specReport;
-        if(refresh != null && refresh) {
+//        if(refresh != null && refresh) {
             specReport = boatSpecLinter.lint(spec);
 
-        } else {
-            specReport = Optional.ofNullable(spec.getLintReport()).orElseGet(() -> boatSpecLinter.lint(spec));
-        }
+//        } else {
+//            specReport = Optional.ofNullable(spec.getLintReport()).orElseGet(() -> boatSpecLinter.lint(spec));
+//        }
 
         Map<Severity, Integer> severityIntegerMap = getSeverityOrder();
 
         BoatLintReport lintReport = dashboardMapper.mapReport(specReport);
+        lintReport.setOpenApi(spec.getOpenApi());
 
         lintReport.getViolations()
             .sort(Comparator.comparing(boatViolation -> boatViolation.getRule().getRuleId()));

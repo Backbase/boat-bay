@@ -10,7 +10,7 @@ import com.backbase.oss.boat.bay.repository.ProductRepository;
 import com.backbase.oss.boat.bay.repository.ServiceDefinitionRepository;
 import com.backbase.oss.boat.bay.repository.SpecRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatLintRuleViolationRepository;
-import static com.backbase.oss.boat.bay.web.views.dashboard.config.BoatCacheManager.STATISTICS;
+import static com.backbase.oss.boat.bay.config.BoatCacheManager.STATISTICS;
 import java.time.LocalDateTime;
 import java.util.List;
 
