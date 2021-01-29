@@ -10,7 +10,6 @@ import { combineLatest, merge, Observable } from "rxjs";
 import { BoatProductRelease } from "../../models/boat-product-release";
 import { ActivatedRoute, Params, Router } from "@angular/router";
 import { FormControl } from "@angular/forms";
-import { BoatProductResolver } from "../../resolvers/boat-product.resolver";
 
 export interface SpecFilter {
   portalKey: string,
