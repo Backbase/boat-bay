@@ -33,6 +33,10 @@ public class Source implements Serializable {
     private String name;
 
     @NotNull
+    @Column(name = "jhi_key", nullable = false)
+    private String key;
+
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
     private SourceType type;
@@ -144,6 +148,19 @@ public class Source implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public Source key(String key) {
+        this.key = key;
+        return this;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public SourceType getType() {
@@ -532,6 +549,7 @@ public class Source implements Serializable {
         return "Source{" +
             "id=" + getId() +
             ", name='" + getName() + "'" +
+            ", key='" + getKey() + "'" +
             ", type='" + getType() + "'" +
             ", baseUrl='" + getBaseUrl() + "'" +
             ", active='" + isActive() + "'" +

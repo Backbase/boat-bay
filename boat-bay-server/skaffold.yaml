@@ -5,7 +5,7 @@ build:
   - image: boat-bay-server
     context: .
     jib: {
-      args: [ "-Pno-liquibase" ]
+      args: [ "-Pno-liquibase,prod" ]
     }
   tagPolicy:
     sha256: {}
@@ -15,4 +15,4 @@ deploy:
     - ./kubernetes-manifests/**.yaml
     flags:
       global:
-      - --namespace=dope
+      - --namespace=boat-bay

@@ -122,3 +122,8 @@ jhipster:
 # ===================================================================
 
 # application:
+boat:
+  scheduler:
+    source:
+      scanner:
+        enabled: true

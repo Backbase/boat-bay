@@ -19,6 +19,9 @@
             <column name="name" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
+            <column name="jhi_key" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
             <column name="type" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
@@ -121,6 +124,7 @@
                   tableName="source">
             <column name="id" type="numeric"/>
             <column name="name" type="string"/>
+            <column name="jhi_key" type="string"/>
             <column name="type" type="string"/>
             <column name="base_url" type="string"/>
             <column name="active" type="boolean"/>

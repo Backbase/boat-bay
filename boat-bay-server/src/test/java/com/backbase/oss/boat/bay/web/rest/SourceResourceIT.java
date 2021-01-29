@@ -38,6 +38,9 @@ public class SourceResourceIT {
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
 
+    private static final String DEFAULT_KEY = "AAAAAAAAAA";
+    private static final String UPDATED_KEY = "BBBBBBBBBB";
+
     private static final SourceType DEFAULT_TYPE = SourceType.GIT;
     private static final SourceType UPDATED_TYPE = SourceType.JFROG;
 
@@ -124,6 +127,7 @@ public class SourceResourceIT {
     public static Source createEntity(EntityManager em) {
         Source source = new Source()
             .name(DEFAULT_NAME)
+            .key(DEFAULT_KEY)
             .type(DEFAULT_TYPE)
             .baseUrl(DEFAULT_BASE_URL)
             .active(DEFAULT_ACTIVE)
@@ -177,6 +181,7 @@ public class SourceResourceIT {
     public static Source createUpdatedEntity(EntityManager em) {
         Source source = new Source()
             .name(UPDATED_NAME)
+            .key(UPDATED_KEY)
             .type(UPDATED_TYPE)
             .baseUrl(UPDATED_BASE_URL)
             .active(UPDATED_ACTIVE)
@@ -242,6 +247,7 @@ public class SourceResourceIT {
         assertThat(sourceList).hasSize(databaseSizeBeforeCreate + 1);
         Source testSource = sourceList.get(sourceList.size() - 1);
         assertThat(testSource.getName()).isEqualTo(DEFAULT_NAME);
+        assertThat(testSource.getKey()).isEqualTo(DEFAULT_KEY);
         assertThat(testSource.getType()).isEqualTo(DEFAULT_TYPE);
         assertThat(testSource.getBaseUrl()).isEqualTo(DEFAULT_BASE_URL);
         assertThat(testSource.isActive()).isEqualTo(DEFAULT_ACTIVE);
@@ -307,6 +313,25 @@ public class SourceResourceIT {
 
     @Test
     @Transactional
+    public void checkKeyIsRequired() throws Exception {
+        int databaseSizeBeforeTest = sourceRepository.findAll().size();
+        // set the field null
+        source.setKey(null);
+
+        // Create the Source, which fails.
+
+
+        restSourceMockMvc.perform(post("/api/sources")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtil.convertObjectToJsonBytes(source)))
+            .andExpect(status().isBadRequest());
+
+        List<Source> sourceList = sourceRepository.findAll();
+        assertThat(sourceList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void checkTypeIsRequired() throws Exception {
         int databaseSizeBeforeTest = sourceRepository.findAll().size();
         // set the field null
@@ -355,6 +380,7 @@ public class SourceResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(source.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
+            .andExpect(jsonPath("$.[*].key").value(hasItem(DEFAULT_KEY)))
             .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())))
             .andExpect(jsonPath("$.[*].baseUrl").value(hasItem(DEFAULT_BASE_URL)))
             .andExpect(jsonPath("$.[*].active").value(hasItem(DEFAULT_ACTIVE.booleanValue())))
@@ -391,6 +417,7 @@ public class SourceResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(source.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
+            .andExpect(jsonPath("$.key").value(DEFAULT_KEY))
             .andExpect(jsonPath("$.type").value(DEFAULT_TYPE.toString()))
             .andExpect(jsonPath("$.baseUrl").value(DEFAULT_BASE_URL))
             .andExpect(jsonPath("$.active").value(DEFAULT_ACTIVE.booleanValue()))
@@ -436,6 +463,7 @@ public class SourceResourceIT {
         em.detach(updatedSource);
         updatedSource
             .name(UPDATED_NAME)
+            .key(UPDATED_KEY)
             .type(UPDATED_TYPE)
             .baseUrl(UPDATED_BASE_URL)
             .active(UPDATED_ACTIVE)
@@ -469,6 +497,7 @@ public class SourceResourceIT {
         assertThat(sourceList).hasSize(databaseSizeBeforeUpdate);
         Source testSource = sourceList.get(sourceList.size() - 1);
         assertThat(testSource.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testSource.getKey()).isEqualTo(UPDATED_KEY);
         assertThat(testSource.getType()).isEqualTo(UPDATED_TYPE);
         assertThat(testSource.getBaseUrl()).isEqualTo(UPDATED_BASE_URL);
         assertThat(testSource.isActive()).isEqualTo(UPDATED_ACTIVE);
