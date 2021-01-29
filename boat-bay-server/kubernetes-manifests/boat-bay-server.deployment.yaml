@@ -20,6 +20,7 @@ spec:
       containers:
         - name: boat-bay-server
           image: boat-bay-server
+          imagePullPolicy: Always
           ports:
             - name: http
               containerPort: 8080
