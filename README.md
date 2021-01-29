@@ -19,16 +19,143 @@ Your file should look like the example below:
 
 ```yaml
 portals:
-  - key: 'repo'
-    name: 'repo.backbase.com'
-  - key: 'maven-plugin-test'
-    name: 'com.backbase.oss.boat'
+  - key: "repo"
+    name: "repo.backbase.com"
+    lintRules:
+      - ruleId: 150
+      - ruleId: B001
+      - ruleId: B002
+      - ruleId: B003
+      - ruleId: B004
+      - ruleId: B005
+      - ruleId: B006
+      - ruleId: B007
+      - ruleId: B008
+      - ruleId: B009
+      - ruleId: B010
+      - ruleId: M0012
+
+  - key: "artifacts"
+    name: "artifacts.backbase.com"
+    lintRules:
+      - ruleId: 150
+      - ruleId: B001
+        severity: SHOULD
+      - ruleId: B002
+      - ruleId: B003
+      - ruleId: B004
+      - ruleId: B005
+      - ruleId: B006
+      - ruleId: B007
+      - ruleId: B008
+      - ruleId: B009
+      - ruleId: B010
+      - ruleId: M0012
+
 sources:
+  - name: artifacts.backbase.com - Digital Banking
+    baseUrl: https://artifacts.backbase.com/staging
+    type: JFROG
+    active: true
+    filterArtifactsName: "banking-services-bom-*-api.zip"
+    filterArtifactsCreatedSince: 2020-01-01
+    sourcePaths:
+      - name:  /com/backbase/dbs/banking-services-bom/
+    username: ***REMOVED***
+    password: ***REMOVED***
+    cronExpression: 0 0 13 * * *
+    capabilityKeySpEL: sourcePath.substring(0, sourcePath.indexOf('/'))
+    capabilityNameSpEL: sourcePath.substring(0, sourcePath.indexOf('/'))
+    serviceKeySpEL: sourceName.substring(0, sourceName.lastIndexOf('-')).replaceAll('-([a-z]*?)-api', '').replaceAll('-integration([-a-z]*)', '')
+    serviceNameSpEL: sourceName.substring(0, sourceName.lastIndexOf('-')).replaceAll('-([a-z]*?)-api', '').replaceAll('-integration([-a-z]*)', '')
+    specKeySpEL: sourceName.substring(0, sourceName.lastIndexOf('-'))
+    specFilterSpEL: sourcePath.contains('common-types') || sourcePath.substring(1, sourcePath.indexOf('/', 1)).contains('integration') ||  sourcePath.substring(1, sourcePath.indexOf('/', 1)).contains('persistence')
+    productReleaseKeySpEL: info.name.replaceAll('-api.zip', '')
+    productReleaseVersionSpEL: info.name.replaceAll('banking-services-bom-', '').replaceAll('-api.zip', '')
+    productReleaseNameSpEL: info.name.replaceAll('-api.zip', '')
+    overwriteChanges: false
+    runOnStartup: true
+    itemLimit: 5
+    portal:
+      key: "artifacts"
+    product:
+      key: "digital-banking"
+      name: "Digital Banking"
+      jiraProjectId: 10235
+  - name: repo.backbase.com - Digital Banking
+    baseUrl: https://repo.backbase.com/specs
+    type: JFROG
+    active: true
+    filterArtifactsName: "*.yaml"
+    sourcePaths:
+      - name: /account-statement/
+      - name: /action/
+      - name: /approval/
+      - name: /arrangement-manager/
+      - name: /billpay-integrator/
+      - name: /budget-planner/
+      - name: /card-manager/
+      - name: /cash-flow-forecasting
+      - name: /cash-management/
+      - name: /consent/
+      - name: /contact-manager/
+      - name: /employee/
+      - name: /financial-institution-manager/
+      - name: /limit/
+      - name: /message/
+      - name: /payment/
+      - name: /place-manager/
+      - name: /portfolio-summary/
+      - name: /saving-goal-planner/
+      - name: /stop-checks/
+      - name: /tradingfx/
+      - name: /transaction-category-collector/
+      - name: /transaction-manager/
+    username: {username}
+    password: {password}
+    cronExpression: 0 0 12 * * *
+    capabilityKeySpEL: sourcePath.substring(1, sourcePath.indexOf('/', 1))
+    capabilityNameSpEL: sourcePath.substring(1, sourcePath.indexOf('/', 1))
+    serviceKeySpEL: sourceName.substring(0, sourceName.lastIndexOf('-')).replaceAll('-([a-z]*?)-api', '').replaceAll('-integration([-a-z]*)', '')
+    serviceNameSpEL: sourceName.substring(0, sourceName.lastIndexOf('-')).replaceAll('-([a-z]*?)-api', '').replaceAll('-integration([-a-z]*)', '')
+    specKeySpEL: sourceName.substring(0, sourceName.lastIndexOf('-'))
+    specFilterSpEL: sourcePath.contains('common-types') || sourcePath.substring(1, sourcePath.indexOf('/', 1)).contains('integration') ||  sourcePath.substring(1, sourcePath.indexOf('/', 1)).contains('persistence')
+    overwriteChanges: false
+    runOnStartup: true
+    portal:
+      key: "repo"
+    product:
+      key: "digital-banking"
+      name: "Digital Banking"
+      jiraProjectId: 10235
+  - name: repo.backbase.com - Digital Sales
+    baseUrl: https://repo.backbase.com/specs
+    type: JFROG
+    active: true
+    filterArtifactsName: "*.yaml"
+    sourcePaths:
+      - name: /flow/
+    username: ***REMOVED***
+    password: ***REMOVED***
+    cronExpression: 0 5 12 * * *
+    capabilityKeySpEL: sourcePath.substring(1, sourcePath.indexOf('/', 1))
+    capabilityNameSpEL: sourcePath.substring(1, sourcePath.indexOf('/', 1))
+    serviceKeySpEL: sourceName.substring(0, sourceName.lastIndexOf('-')).replaceAll('-([a-z]*?)-api', '')
+    serviceNameSpEL: sourceName.substring(0, sourceName.lastIndexOf('-')).replaceAll('-([a-z]*?)-api', '')
+    specFilterSpEL: "sourcePath.contains('common-types') || sourcePath.substring(1, sourcePath.indexOf('/', 1)).contains('integration') ||  sourcePath.substring(1, sourcePath.indexOf('/', 1)).contains('persistence')"
+    specKeySpEL: sourceName.substring(0, sourceName.lastIndexOf('-'))
+    overwriteChanges: false
+    runOnStartup: true
+    portal:
+      key: "repo"
+    product:
+      key: "digital-sales"
+      name: "Digital Sales"
   - name: repo.backbase.com - Platform
     baseUrl: https://repo.backbase.com/specs
     type: JFROG
     active: true
-    filterArtifactsName: '*.yaml'
+    filterArtifactsName: "*.yaml"
     sourcePaths:
       - name: /access-control/
       - name: /audit/
@@ -45,8 +172,8 @@ sources:
       - name: /user-manager/
       - name: /user-profile-manager/
       - name: /versionmanagement-persistence/
-    username: 'sophiej'
-    password: { pasword }
+    username: ***REMOVED***
+    password: ***REMOVED***
     cronExpression: 0 10 12 * * *
     capabilityKeySpEL: sourcePath.substring(1, sourcePath.indexOf('/', 1))
     capabilityNameSpEL: sourcePath.substring(1, sourcePath.indexOf('/', 1))
@@ -57,38 +184,16 @@ sources:
     overwriteChanges: false
     runOnStartup: true
     portal:
-      key: 'repo'
+      key: "repo"
     product:
       key: platform
-      name: 'Platform'
-  - name: maven.plugin.boat.test - Petstore
-    baseUrl: https://repo.backbase.com/specs
-    type: BOAT_MAVEN_PLUGIN
-    active: true
-    filterArtifactsName: '*.yaml'
-    sourcePaths:
-      - name: /petstore/
-    username: 'sophiej'
-    password: { password }
-    cronExpression: 0 10 12 * * *
-    capabilityKeySpEL: sourcePath.substring(1, sourcePath.indexOf('/', 1))
-    capabilityNameSpEL: sourcePath.substring(1, sourcePath.indexOf('/', 1))
-    serviceKeySpEL: sourceName.substring(0, sourceName.lastIndexOf('-')).replaceAll('-([a-z]*?)-api', '')
-    serviceNameSpEL: sourceName.substring(0, sourceName.lastIndexOf('-')).replaceAll('-([a-z]*?)-api', '')
-    specFilterSpEL: "sourcePath.contains('common-types') || sourcePath.substring(1, sourcePath.indexOf('/', 1)).contains('integration') ||  sourcePath.substring(1, sourcePath.indexOf('/', 1)).contains('persistence')"
-    specKeySpEL: sourceName.substring(0, sourceName.lastIndexOf('-'))
-    overwriteChanges: false
-    runOnStartup: false
-    portal:
-      key: 'maven-plugin-test'
-      name: 'com.backbase.oss.boat'
-    product:
-      key: 'petstore'
-      name: 'Pet Store'
+      name: "Platform"
+      jiraProjectId: 10235
+
 dashboard:
   name: OpenAPI Quality Dashboard
   defaultPortal:
-    key: 'repo'
+    key: "repo"
 
 specTypes:
   - name: Client API
@@ -112,6 +217,9 @@ specTypes:
   - name: Persistence
     matchSpEL: sourceName.contains('persistence') || sourceName.contains('pandp')
     icon: storage
+
+
+
 ```
 
 This is where you can configure and set up product sources.
@@ -128,7 +236,7 @@ The example above show the configuration for 2 sources. Break down of the source
   - name: /{capability_name}/
 - username: username of user
 - password: password of user
-- cronExpression: ???
+- cronExpression: schedule for scanning the source for updates and changes
 - capabilityKeySpEL: this is the spring expression language that will be used to
   format/produce the keys for capabilities, recommend use of this example's expressions
 - capabilityNameSpEL: spring expression language that is used to generate the capability names
@@ -152,7 +260,7 @@ Run clean install in boat-bay-api project first, a bundled version of the spec n
 Run clean install in boat-bay-server, the models ad interfaces must be generated from the bundled spec.  
 Run clean install in boat-bay-client and angular to generate their code.
 
-### Running
+### Running Locally
 
 To run the application it is fairly simple. First add the following parameters to your run configuration :
 
