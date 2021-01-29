@@ -41,6 +41,23 @@ $grade-radius: 20px;
   color: white;
 }
 
+.violation-card.MUST {
+  border-top-color: $must; //#D4333F
+}
+
+.violation-card.SHOULD {
+  border-top-color: $should; //#ED7D20
+}
+
+.violation-card.MAY {
+  border-top-color: $may; //#EABE06
+}
+
+.violation-card.HINT {
+  border-top-color: $hint; //#B0D513
+}
+
+
 .backwards-compatible {
   border-width: 1px;
   border-style: solid;
@@ -81,3 +98,5 @@ $grade-radius: 20px;
 .spinner-container {
   text-align: center;
 }
+
+
