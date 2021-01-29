@@ -61,8 +61,8 @@ sources:
     filterArtifactsCreatedSince: 2020-01-01
     sourcePaths:
       - name:  /com/backbase/dbs/banking-services-bom/
-    username: "bartv"
-    password: "AP8rdgKcR5wwSHMizhDtcHnayDU"
+    username: {username}
+    password: {password}
     cronExpression: 0 0 13 * * *
     capabilityKeySpEL: sourcePath.substring(0, sourcePath.indexOf('/'))
     capabilityNameSpEL: sourcePath.substring(0, sourcePath.indexOf('/'))
@@ -135,8 +135,8 @@ sources:
     filterArtifactsName: "*.yaml"
     sourcePaths:
       - name: /flow/
-    username: "bartv"
-    password: "AP44rJ6rPdHp4Eya5ftoNTHCfPx"
+    username: {username}
+    password: {password}
     cronExpression: 0 5 12 * * *
     capabilityKeySpEL: sourcePath.substring(1, sourcePath.indexOf('/', 1))
     capabilityNameSpEL: sourcePath.substring(1, sourcePath.indexOf('/', 1))
@@ -172,8 +172,8 @@ sources:
       - name: /user-manager/
       - name: /user-profile-manager/
       - name: /versionmanagement-persistence/
-    username: "bartv"
-    password: "AP44rJ6rPdHp4Eya5ftoNTHCfPx"
+    username: {username}
+    password: {password}
     cronExpression: 0 10 12 * * *
     capabilityKeySpEL: sourcePath.substring(1, sourcePath.indexOf('/', 1))
     capabilityNameSpEL: sourcePath.substring(1, sourcePath.indexOf('/', 1))
