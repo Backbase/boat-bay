@@ -109,7 +109,6 @@ entity SpecType {
 
 entity Source {
     name String required
-    key String required
     type SourceType required
     baseUrl String required
     active Boolean
