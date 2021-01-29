@@ -8,7 +8,6 @@ import { BoatProductRelease } from "../../models/boat-product-release";
 import { FormControl } from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { SpecDiffDialogComponent } from "../../components/spec-diff-dialog/spec-diff-dialog.component";
-import { ProductRelease } from "../../models/dashboard/v1";
 
 export enum ChangeState {
   NEW = 'NEW', DELETED = 'DELETED', CHANGED = 'CHANGED', UNCHANGED = 'UNCHANGED'

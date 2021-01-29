@@ -17,10 +17,10 @@
             <dd>{{spec.createdOn | date}}</dd>
 
             <dt>Capability</dt>
-            <dd><a [routerLink]="['/', product.portalKey, product.key, 'lint-reports']"
+            <dd><a [routerLink]="['/lint-reports/', product.portalKey, product.key]"
                    [queryParams]="{ capability: spec.capability.key}">{{spec.capability.name}}</a></dd>
             <dt>Service</dt>
-            <dd><a [routerLink]="['/',product.portalKey, product.key, 'lint-reports']"
+            <dd><a [routerLink]="['/lint-reports/',product.portalKey, product.key]"
                    [queryParams]="{ service: spec.serviceDefinition.key}">{{spec.serviceDefinition.name}}</a></dd>
         </dl>
     </div>
