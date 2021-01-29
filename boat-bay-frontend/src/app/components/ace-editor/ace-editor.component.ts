@@ -29,7 +29,6 @@ export class AceEditorComponent implements AfterViewInit {
     // This should be fixed by resolving the required packages from node_modules...
     config.set('basePath', 'https://unpkg.com/ace-builds@1.4.12/src-noconflict');
 
-
     const aceEditor = edit(this.editor.nativeElement);
     aceEditor.setReadOnly(true);
     aceEditor.setShowPrintMargin(false);

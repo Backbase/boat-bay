@@ -19,7 +19,8 @@ spec:
     spec:
       containers:
         - name: boat-bay-ui
-          image: 328033059293.dkr.ecr.eu-central-1.amazonaws.com/boat-bay
+          imagePullPolicy: Always
+          image: 328033059293.dkr.ecr.eu-central-1.amazonaws.com/boat-bay:latest
           ports:
             - name: http
               containerPort: 80
