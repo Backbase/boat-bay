@@ -9,6 +9,13 @@
       ]
     },
     {
+      "fieldName": "key",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
       "fieldName": "type",
       "fieldType": "SourceType",
       "fieldValues": "GIT,JFROG,HTTP,FILE_SYSTEM,BOAT_MAVEN_PLUGIN",
