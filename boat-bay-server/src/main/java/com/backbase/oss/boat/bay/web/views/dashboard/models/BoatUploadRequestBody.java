@@ -1,4 +1,4 @@
-package com.backbase.oss.boat.bay.web.utils;
+package com.backbase.oss.boat.bay.web.views.dashboard.models;
 
 import com.backbase.oss.boat.bay.domain.Spec;
 import lombok.AllArgsConstructor;
@@ -13,13 +13,13 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UploadRequestBody {
+public class BoatUploadRequestBody {
     private List<UploadSpec> specs;
     private String location;
     private String projectId, artifactId, version;
 
     @Data
-    class UploadSpec{
+    public class UploadSpec{
 
         @NotNull
         private String filename;
