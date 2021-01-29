@@ -9,6 +9,7 @@ import { SourceType } from 'app/shared/model/enumerations/source-type.model';
 export interface ISource {
   id?: number;
   name?: string;
+  key?: string;
   type?: SourceType;
   baseUrl?: string;
   active?: boolean;
@@ -42,6 +43,7 @@ export class Source implements ISource {
   constructor(
     public id?: number,
     public name?: string,
+    public key?: string,
     public type?: SourceType,
     public baseUrl?: string,
     public active?: boolean,

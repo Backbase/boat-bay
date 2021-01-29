@@ -28,6 +28,7 @@ describe('Service Tests', () => {
       elemDefault = new Source(
         0,
         'AAAAAAA',
+        'AAAAAAA',
         SourceType.GIT,
         'AAAAAAA',
         false,
@@ -96,6 +97,7 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             name: 'BBBBBB',
+            key: 'BBBBBB',
             type: 'BBBBBB',
             baseUrl: 'BBBBBB',
             active: true,
@@ -140,6 +142,7 @@ describe('Service Tests', () => {
         const returnedFromService = Object.assign(
           {
             name: 'BBBBBB',
+            key: 'BBBBBB',
             type: 'BBBBBB',
             baseUrl: 'BBBBBB',
             active: true,
