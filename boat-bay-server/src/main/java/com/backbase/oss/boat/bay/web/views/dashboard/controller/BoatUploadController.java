@@ -6,6 +6,7 @@ import com.backbase.oss.boat.bay.domain.Source;
 import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.repository.SourceRepository;
 import com.backbase.oss.boat.bay.repository.SpecRepository;
+import com.backbase.oss.boat.bay.repository.extended.BoatSourceRepository;
 import com.backbase.oss.boat.bay.service.export.ExportOptions;
 import com.backbase.oss.boat.bay.service.export.ExportType;
 import com.backbase.oss.boat.bay.service.export.impl.FileSystemExporter;
@@ -44,7 +45,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class BoatUploadController {
 
-  private final SourceRepository sourceRepository;
+  private final BoatSourceRepository boatSourceRepository;
   private final SpecSourceResolver specSourceResolver;
   private final FileSystemExporter fileSystemExporter;
   private final SpecRepository specRepository;
@@ -58,10 +59,10 @@ public class BoatUploadController {
 
 
 
-  @PutMapping("boat-maven-plugin/{sourceId}/upload")
-  public ResponseEntity<List<BoatLintReport>> uploadSpec(@Valid @RequestBody BoatUploadRequestBody requestBody, @PathVariable String sourceId) throws URISyntaxException, ExportException {
+  @PutMapping("boat-maven-plugin/{sourceKey}/upload")
+  public ResponseEntity<List<BoatLintReport>> uploadSpec(@Valid @RequestBody BoatUploadRequestBody requestBody, @PathVariable String sourceKey) throws URISyntaxException, ExportException {
 
-    Source source = sourceRepository.findById(Long.parseLong(sourceId)).orElseThrow(() -> new BadRequestAlertException("Invalid source, source Id does not exist", "SOURCE", "sourceIdInvalid"));
+    Source source = boatSourceRepository.findOne(Example.of(new Source().key(sourceKey))).orElseThrow(() -> new BadRequestAlertException("Invalid source, source Id does not exist", "SOURCE", "sourceIdInvalid"));
 
     List<BoatUploadRequestBody.UploadSpec> requestSpecs = requestBody.getSpecs();
 
