@@ -24,15 +24,10 @@ spec:
             - name: http
               containerPort: 8080
           env:
-            - name: spring.zipkin.baseUrl
-              valueFrom:
-                configMapKeyRef:
-                  key: baseUrl
-                  name: zipkin-config
             - name: SPRING_DATASOURCE_URL
               value: jdbc:mysql://proto.cdem7uw0kede.eu-central-1.rds.amazonaws.com/boat_bay?useSSL=false
             - name: SPRING_DATASOURCE_DRIVER_CLASS_NAME
-              value: com.mysql.jdbc.Driver
+              value: com.mysql.cj.jdbc.Driver
             - name: SPRING_DATASOURCE_USERNAME
               value: backbase
             - name: SPRING_DATASOURCE_PLATFORM
@@ -43,6 +38,6 @@ spec:
               valueFrom:
                 secretKeyRef:
                   key: mysql-password
-                  name: backbase-env-mysql
+                  name: mysql
             - name: JAVA_TOOL_OPTIONS
               value: "-agentlib:jdwp=transport=dt_socket,server=y,address=5005,suspend=n,quiet=y -Dspring.sleuth.sampler.probability=1 -Dspring.zipkin.enabled=true -Dspring.zipkin.baseUrl=http://meister-collector.observability.svc.cluster.local:9411 -Dmanagement.endpoints.web.exposure.include=* -Dmanagement.endpoints.enabled-by-default=true"
