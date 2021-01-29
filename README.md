@@ -173,7 +173,7 @@ The plugin configuration will look like example below:
                             <goal>lint</goal>
                         </goals>
                         <configuration>
-                            <boatBayUrl>${url}</boatBayUrl>
+                            <boatBayServerUrl>${url}</boatBayServerUrl>
                             <inputSpec>${project.basedir}/src/main/resources/petstore.yaml</inputSpec>
                             <output>${project.basedir}/src/main/resources/output</output>
                             <sourceId>sourceKey</sourceId>
@@ -185,11 +185,15 @@ The plugin configuration will look like example below:
     </build>
 ```
 
+
 In the plugin configuration you can customise the output path to the location you want
 the specs to be uploaded to. The
 boatBayUrl should be for boat bay client, this can be left out and instead configured using an 
-environment variable 'BOAT_BAY_URL'. The boat bay url must be configured in some way for the 
-specs to be uploaded by boat-bay. The input spec should be the path of the spec
+environment variable 'BOAT_BAY_SERVER_URL'. The boat bay url must be configured in some way for the 
+specs to be uploaded by boat-bay. The server url should be set to boatBayServerUrl http://localhost:8080 for testing via export BOAT_BAY_SERVER_URL=http://localhost:8080.
+When the project is not being run locally use https://boat-bay.proto.backbasecloud.com/.
+
+The input spec should be the path of the spec
 or directory containing the specs you wish to upload.  
 
 The other option is to send the upload request through a http request file like below:
