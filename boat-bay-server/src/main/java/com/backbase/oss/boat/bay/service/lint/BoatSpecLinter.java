@@ -48,15 +48,14 @@ public class BoatSpecLinter {
     private final BoatCacheManager boatCacheManager;
 
     @Async
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void scheduleLintJob(Spec spec) {
         lint(spec);
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public LintReport lint(Spec input) {
+    public LintReport lint(Spec spec) {
 
-        Spec spec = specRepository.findById(input.getId()).orElseThrow();
+        spec = specRepository.findById(spec.getId()).orElseThrow();
 
         log.info("Start Lint Spec: {}", spec.getName());
         if(spec.isValid() == null || spec.getServiceDefinition() == null) {

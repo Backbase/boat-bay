@@ -41,6 +41,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Example;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
@@ -75,7 +76,6 @@ public class SpecSourceResolver {
         log.info("Finished Processing Scan Result: {} from source: {}", scan.getSpecs().size() , scan.getSource().getName());
     }
 
-    @Transactional
     public void checkSpecs(List<Spec> processedSpecs, ScanResult scan){
         log.info("Checking Specs");
         for (Spec processedSpec : processedSpecs) {
@@ -103,11 +103,11 @@ public class SpecSourceResolver {
                 .collect(Collectors.toMap(Spec::getKey, spec -> spec, this::compareVersion))
                 .forEach((s, spec) -> productRelease.addSpec(spec));
 
-            productReleaseRepository.save(productRelease);
+            productReleaseRepository.saveAndFlush(productRelease);
         } else {
             scan.getProductReleases().forEach(pr -> {
                 ProductRelease productRelease = productReleaseRepository.findByProductAndKey(source.getProduct(), pr.getKey())
-                    .orElseGet(() -> productReleaseRepository.save(pr));
+                    .orElseGet(() -> productReleaseRepository.saveAndFlush(pr));
                 log.info("Processed release: {}", productRelease.getName());
             });
         }
@@ -123,11 +123,11 @@ public class SpecSourceResolver {
         newProductRelease.setReleaseDate(ZonedDateTime.now());
 
         newProductRelease.setProduct(product);
-        return productReleaseRepository.save(newProductRelease);
+        return productReleaseRepository.saveAndFlush(newProductRelease);
     }
 
     @NotNull
-    @Transactional
+    @Transactional(isolation = Isolation.DEFAULT, propagation =  Propagation.MANDATORY)
     public List<Spec> processSpecs(ScanResult scan) {
         log.info("Processing {} specs from scan result from source: {}", scan.getSpecs().size(), scan.getSource().getName());
 
@@ -226,7 +226,7 @@ public class SpecSourceResolver {
     @NotNull
     private Tag getOrCreateTag(io.swagger.v3.oas.models.tags.Tag tag) {
         return boatTagRepository.findByName(tag.getName())
-            .orElseGet(() -> boatTagRepository.save(new Tag().name(tag.getName()).description(tag.getDescription()).hide(false)));
+            .orElseGet(() -> boatTagRepository.saveAndFlush(new Tag().name(tag.getName()).description(tag.getDescription()).hide(false)));
     }
 
     private void setSpecType(Spec spec) {
@@ -249,7 +249,7 @@ public class SpecSourceResolver {
 
     @NotNull
     private SpecType createSpecType(SpecType specType) {
-        return specTypeRepository.save(specType);
+        return specTypeRepository.saveAndFlush(specType);
     }
 
     private void setServiceDefinition(Spec spec, Source source) {
@@ -295,7 +295,7 @@ public class SpecSourceResolver {
         serviceDefinition.setCreatedOn(ZonedDateTime.now());
         serviceDefinition.setName(StringUtils.capitalize(serviceNameSpEL.map(exp -> SpringExpressionUtils.parseName(exp, spec, key)).orElse(key)).replaceAll("-", " "));
         serviceDefinition.setDescription(spec.getDescription());
-        return boatServiceRepository.save(serviceDefinition);
+        return boatServiceRepository.saveAndFlush(serviceDefinition);
     }
 
     private Capability createCapabilityForSpecWithKey(Spec spec, String key) {
@@ -307,7 +307,7 @@ public class SpecSourceResolver {
         capability.setCreatedBy(spec.getSource().getName());
         capability.setCreatedOn(ZonedDateTime.now());
         capability.setName(StringUtils.capitalize(capabilityNameSpEL.map(exp -> SpringExpressionUtils.parseName(exp, spec, key)).orElse(key).replaceAll("-", " ")));
-        return capabilityRepository.save(capability);
+        return capabilityRepository.saveAndFlush(capability);
     }
 
 
