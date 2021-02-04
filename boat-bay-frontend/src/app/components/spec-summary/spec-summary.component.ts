@@ -6,14 +6,10 @@ import { BoatProduct, BoatSpec } from "../../models";
   templateUrl: './spec-summary.component.html',
   styleUrls: ['./spec-summary.component.scss']
 })
-export class SpecSummaryComponent implements OnInit {
+export class SpecSummaryComponent{
 
-  @Input() spec: BoatSpec | null = null;
-  @Input() product: BoatProduct | null = null;
+  @Input() spec!: BoatSpec;
+  @Input() product!: BoatProduct;
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
 
 }

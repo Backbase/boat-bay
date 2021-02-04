@@ -91,7 +91,7 @@ public class SpecSourceResolver {
         log.info("Finished Checking Specs");
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.MANDATORY)
     public void processReleases(ScanResult scan, Source source, List<Spec> processedSpecs) {
         log.info("Processing {} releases from scan result from source: {}", scan.getProductReleases().size(), scan.getSource().getName());
         if (scan.getProductReleases().isEmpty()) {
