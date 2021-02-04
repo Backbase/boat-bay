@@ -85,7 +85,7 @@ public class BoatSpecLinter {
         }
 
         String grade = calculateGrade(violations);
-
+        lintReport.setSpec(spec);
         lintReport.setName(spec.getFilename());
         lintReport.setGrade(grade);
         lintReport.setLintedOn(ZonedDateTime.now());

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { Range } from '../../components/ace-editor/ace-editor.component';
 import { BoatLintReport, BoatLintRule, BoatProduct, BoatViolation } from "../../models/";
 import { ActivatedRoute } from "@angular/router";
@@ -17,7 +17,7 @@ import Annotation = Ace.Annotation;
   styleUrls: ['lint-report.component.scss'],
 })
 export class LintReportComponent implements OnInit {
-  lintReport$: Observable<BoatLintReport> | null;
+  lintReport$: Observable<BoatLintReport>;
   product$: Observable<BoatProduct>;
   @Output() highlight = new EventEmitter<Range>();
   @Output() annotations = new EventEmitter<Annotation[]>();
@@ -28,7 +28,7 @@ export class LintReportComponent implements OnInit {
               protected boatLintReportService: BoatDashboardService,
               private _snackBar: MatSnackBar) {
     this.lintReport$ = activatedRoute.data.pipe(map(({lintReport}) => lintReport));
-    this.product$ = activatedRoute.data.pipe(map(({product}) => product));
+    this.product$ = activatedRoute.data.pipe(map(({product}) => product), tap(product => console.log("p", product)));
 
     this.lintReport$.pipe(
       map(report => {
