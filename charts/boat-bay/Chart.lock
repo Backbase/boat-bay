@@ -1,0 +1,9 @@
+dependencies:
+- name: vault
+  repository: https://helm.releases.hashicorp.com
+  version: 0.9.0
+- name: mysql
+  repository: https://charts.bitnami.com/bitnami
+  version: 8.2.8
+digest: sha256:87fd0b39ef68c4313d0b7cd6b56d4a40e9c7383f4ffba558d506250e205359cb
+generated: "2021-01-28T11:19:22.036488+01:00"

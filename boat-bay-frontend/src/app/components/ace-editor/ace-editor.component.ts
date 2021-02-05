@@ -1,8 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
-import * as ace from 'ace-builds';
-
 import { Observable } from 'rxjs';
-import { Ace } from "ace-builds";
+import { Ace, Range, config, edit, require } from "ace-builds";
 import Annotation = Ace.Annotation;
 
 export interface Range {
@@ -26,12 +24,12 @@ export class AceEditorComponent implements AfterViewInit {
   @ViewChild('editor') editor!: ElementRef<HTMLElement>;
 
   ngAfterViewInit(): void {
-    ace.config.set('fontSize', '14px');
+
+    config.set('fontSize', '14px');
     // This should be fixed by resolving the required packages from node_modules...
-    ace.config.set('basePath', 'https://unpkg.com/ace-builds@1.4.12/src-noconflict');
+    config.set('basePath', 'https://unpkg.com/ace-builds@1.4.12/src-noconflict');
 
-
-    const aceEditor = ace.edit(this.editor.nativeElement);
+    const aceEditor = edit(this.editor.nativeElement);
     aceEditor.setReadOnly(true);
     aceEditor.setShowPrintMargin(false);
 
@@ -43,7 +41,7 @@ export class AceEditorComponent implements AfterViewInit {
     aceEditor.setAnimatedScroll(true);
     aceEditor.setScrollSpeed(1);
     aceEditor.setTheme("ace/theme/chrome");
-    const AceRange = ace.require('ace/range').Range;
+    const AceRange = require('ace/range').Range;
     this.highlight?.subscribe(range => {
       // Clear previous marker
       if (this.marker != null) {

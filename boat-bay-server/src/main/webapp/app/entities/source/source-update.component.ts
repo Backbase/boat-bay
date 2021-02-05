@@ -35,6 +35,7 @@ export class SourceUpdateComponent implements OnInit {
   editForm = this.fb.group({
     id: [],
     name: [null, [Validators.required]],
+    key: [null, [Validators.required]],
     type: [null, [Validators.required]],
     baseUrl: [null, [Validators.required]],
     active: [],
@@ -95,6 +96,7 @@ export class SourceUpdateComponent implements OnInit {
     this.editForm.patchValue({
       id: source.id,
       name: source.name,
+      key: source.key,
       type: source.type,
       baseUrl: source.baseUrl,
       active: source.active,
@@ -159,6 +161,7 @@ export class SourceUpdateComponent implements OnInit {
       ...new Source(),
       id: this.editForm.get(['id'])!.value,
       name: this.editForm.get(['name'])!.value,
+      key: this.editForm.get(['key'])!.value,
       type: this.editForm.get(['type'])!.value,
       baseUrl: this.editForm.get(['baseUrl'])!.value,
       active: this.editForm.get(['active'])!.value,

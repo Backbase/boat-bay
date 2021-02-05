@@ -115,19 +115,31 @@
         <dependency>
             <groupId>com.backbase.oss</groupId>
             <artifactId>boat-engine</artifactId>
-            <version>0.13.0</version>
+            <version>0.14.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mock-server</groupId>
+            <artifactId>mockserver-netty</artifactId>
+            <version>5.11.1</version>
         </dependency>
 
         <dependency>
             <groupId>com.backbase.oss</groupId>
             <artifactId>boat-quay-lint</artifactId>
-            <version>0.13.0</version>
+            <version>0.14.0</version>
         </dependency>
 
         <dependency>
             <groupId>com.backbase.oss</groupId>
             <artifactId>boat-scaffold</artifactId>
-            <version>0.13.0</version>
+            <version>0.14.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.vault</groupId>
+            <artifactId>spring-vault-core</artifactId>
+            <version>2.3.0</version>
         </dependency>
 
         <dependency>
@@ -376,11 +388,11 @@
             <artifactId>lombok</artifactId>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>org.jobrunr</groupId>-->
-<!--            <artifactId>jobrunr-spring-boot-starter</artifactId>-->
-<!--            <version>1.2.3</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.jobrunr</groupId>-->
+        <!--            <artifactId>jobrunr-spring-boot-starter</artifactId>-->
+        <!--            <version>1.2.3</version>-->
+        <!--        </dependency>-->
 
 
         <dependency>

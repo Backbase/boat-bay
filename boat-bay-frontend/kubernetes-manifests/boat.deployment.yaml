@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: boat-bay-ui
+  labels:
+    app: boat-bay
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: boat-bay-ui
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: boat-bay-ui
+        tier: backend
+    spec:
+      containers:
+        - name: boat-bay-ui
+          imagePullPolicy: Always
+          image: 328033059293.dkr.ecr.eu-central-1.amazonaws.com/boat-bay:latest
+          ports:
+            - name: http
+              containerPort: 80
+

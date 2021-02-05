@@ -3,11 +3,11 @@
 <button mat-icon-button  class="prev" (click)="previous()"><mat-icon>arrow_back</mat-icon></button>
 <button mat-icon-button class="next" (click)="next()"><mat-icon>arrow_forward</mat-icon></button>
 <div style="display: flex">
-    <div style="flex-grow: 1">
-        <app-spec-summary [spec]="specRelease.spec1" [product]="product"></app-spec-summary>
+    <div style="flex-grow: 1" >
+        <app-spec-summary *ngIf="specRelease.spec1" [spec]="specRelease.spec1" [product]="product"></app-spec-summary>
     </div>
-    <div style="flex-grow: 1">
-        <app-spec-summary [spec]="specRelease.spec2" [product]="product"></app-spec-summary>
+    <div style="flex-grow: 1" >
+        <app-spec-summary *ngIf="specRelease.spec2" [spec]="specRelease.spec2" [product]="product"></app-spec-summary>
     </div>
 
 </div>

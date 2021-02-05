@@ -1,6 +1,7 @@
 package com.backbase.oss.boat.bay.web.views.dashboard.controller;
 
 import com.backbase.oss.boat.ExportException;
+import com.backbase.oss.boat.bay.domain.Capability;
 import com.backbase.oss.boat.bay.domain.Source;
 import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.repository.SourceRepository;
@@ -9,6 +10,20 @@ import com.backbase.oss.boat.bay.service.export.ExportOptions;
 import com.backbase.oss.boat.bay.service.export.ExportType;
 import com.backbase.oss.boat.bay.service.export.impl.FileSystemExporter;
 import com.backbase.oss.boat.bay.service.lint.BoatSpecLinter;
+import com.backbase.oss.boat.bay.service.source.SpecSourceResolver;
+import com.backbase.oss.boat.bay.service.source.scanner.ScanResult;
+import com.backbase.oss.boat.bay.service.source.scanner.SourceScannerOptions;
+import com.backbase.oss.boat.bay.web.rest.SpecResource;
+import com.backbase.oss.boat.bay.web.rest.errors.BadRequestAlertException;
+import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatUploadRequestBody;
+import com.backbase.oss.boat.bay.web.views.dashboard.mapper.BoatDashboardMapper;
+import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatLintReport;
+import io.github.jhipster.web.util.HeaderUtil;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import com.backbase.oss.boat.bay.service.model.BoatLintReport;
 import com.backbase.oss.boat.bay.service.model.UploadRequestBody;
 import com.backbase.oss.boat.bay.service.model.UploadSpec;
@@ -25,6 +40,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.net.URISyntaxException;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,12 +58,18 @@ public class BoatUploadController {
   private final SpecSourceResolver specSourceResolver;
   private final FileSystemExporter fileSystemExporter;
   private final SpecRepository specRepository;
-  private final BoatDashboardMapper lintReportMapper;
   private final BoatSpecLinter boatSpecLinter;
+  private final BoatDashboardMapper lintReportMapper;
+
+  @Value("${jhipster.clientApp.name}")
+  private String applicationName;
+  private static final String ENTITY_NAME = "spec";
+  private static final String SPEC_CREATOR= "MavenPluginUpload";
+
 
 
   @PutMapping("boat-maven-plugin/{sourceId}/upload")
-  public ResponseEntity<List<BoatLintReport>> uploadSpec(@PathVariable String sourceId, @Valid @RequestBody UploadRequestBody requestBody) {
+  public ResponseEntity<List<BoatLintReport>> uploadSpec(@Valid @RequestBody BoatUploadRequestBody requestBody, @PathVariable String sourceId) throws URISyntaxException, ExportException {
 
     Source source = sourceRepository.findById(Long.parseLong(sourceId)).orElseThrow(() -> new BadRequestAlertException("Invalid source, source Id does not exist", "SOURCE", "sourceIdInvalid"));
 
@@ -56,13 +78,14 @@ public class BoatUploadController {
     if (requestBody.getProjectId().isEmpty()
             || requestBody.getVersion().isEmpty()
             || requestBody.getArtifactId().isEmpty()) {
-      throw new BadRequestAlertException("Invalid Request body missing attributes", "UploadSpec", "attributeempty");
+      throw new BadRequestAlertException("Invalid Request body missing attributes", ENTITY_NAME, "attributeempty");
     }
 
 
     List<Spec> specs = new ArrayList<>();
 
 
+    for (BoatUploadRequestBody.UploadSpec uploadSpec : requestSpecs) {
     for (UploadSpec uploadSpec : requestSpecs) {
 
       Spec spec = mapSpec(uploadSpec);
@@ -74,14 +97,14 @@ public class BoatUploadController {
 
       if (spec.getOpenApi().isEmpty()
               || spec.getKey().isEmpty())
-        throw new BadRequestAlertException("Invalid spec with an empty api, key, or file name", "UploadSpec", "attributeempty");
+        throw new BadRequestAlertException("Invalid spec with an empty api, key, or file name", ENTITY_NAME, "attributeempty");
 
       spec.setPortal(source.getPortal());
       spec.setProduct(source.getProduct());
       spec.setVersion(requestBody.getVersion().replaceAll("(\\.|-)(\\w{2,})+" , ""));
       spec.setSource(source);
       spec.setSourceName(spec.getFilename());
-      spec.setCreatedBy("MavenPluginUpload");
+      spec.setCreatedBy(SPEC_CREATOR);
       spec.setCreatedOn(ZonedDateTime.now());
       spec.setSourcePath("/" +
               requestBody.getProjectId().substring(
@@ -96,19 +119,33 @@ public class BoatUploadController {
       if (duplicate.isPresent()) {
         spec.capability(duplicate.get().getCapability());
         spec.serviceDefinition(duplicate.get().getServiceDefinition());
+      }else {
+        spec.capability(new Capability().key(requestBody.getArtifactId()).name(requestBody.getArtifactId()));
       }
 
     }
-    SourceScannerOptions scannerOptions = new SourceScannerOptions();
-    ScanResult scanResult = new ScanResult(source,scannerOptions, specs);
+
+    ScanResult scanResult = new ScanResult(source, new SourceScannerOptions(), specs);
     specSourceResolver.process(scanResult);
 
-    String location = (requestBody.getLocation()).concat("/"+requestBody.getProjectId()).concat("/" + requestBody.getArtifactId()).concat("/" + source.getPortal().getName());
+    String location = requestBody.getLocation();
 
     ExportOptions exportSpec = new ExportOptions();
     exportSpec.setLocation(location);
     exportSpec.setPortal(source.getPortal());
     exportSpec.setExportType(ExportType.FILE_SYSTEM);
+    fileSystemExporter.export(exportSpec);
+
+    List<Spec> specsProcessed = specRepository.findAll().stream().filter(spec -> false).collect(Collectors.toList());
+    List<BoatLintReport> lintReports = specsProcessed.stream().map(boatSpecLinter::lint).map(lintReportMapper::mapReport).collect(Collectors.toList());
+
+    return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, "SOURCE", source.getId().toString()))
+            .body(lintReports);
+  }
+
+
+  private Spec mapSpec(BoatUploadRequestBody.UploadSpec uploadSpec){
     try {
       fileSystemExporter.export(exportSpec);
     }catch (ExportException e) {
@@ -130,7 +167,7 @@ public class BoatUploadController {
     spec.setOpenApi(uploadSpec.getOpenApi());
     spec.setKey(uploadSpec.getKey());
     spec.setName(uploadSpec.getName());
-    spec.setFilename(uploadSpec.getFileName());
+    spec.setFilename(uploadSpec.getFilename());
 
     return spec;
   }

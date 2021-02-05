@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { ReleaseSpec } from "../../pages/diff-dashboard/diff-dashboard.component";
-import * as ace from 'ace-builds';
+import { Ace, Range, config, edit, require } from "ace-builds";
 
 import { BoatDashboardService } from "../../services/boat-dashboard.service";
 import { Observable, zip } from "rxjs";
@@ -32,9 +32,9 @@ export class SpecDiffComponent implements AfterViewInit {
 
     if (this.specRelease && this.specRelease.spec1 && this.specRelease.spec2 && this.product) {
 
-      ace.config.set('fontSize', '14px');
+      config.set('fontSize', '14px');
       // This should be fixed by resolving the required packages from node_modules...
-      ace.config.set('basePath', 'https://unpkg.com/ace-builds@1.4.12/src-noconflict');
+      config.set('basePath', 'https://unpkg.com/ace-builds@1.4.12/src-noconflict');
 
       const spec1$: Observable<BoatSpec> = this.dashboard.getSpecBySpec(this.product, this.specRelease.spec1).pipe(
         map(({body}) => this.mapBody(body)));

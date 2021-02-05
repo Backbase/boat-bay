@@ -13,7 +13,7 @@
                     <div class="portal-container">
 
                         <div class="portal-container-column">
-                            <a [routerLink]="[portal.portalKey, portal.productKey, 'lint-reports']">
+                            <a [routerLink]="['lint-reports', portal.portalKey, portal.productKey ]">
                                 <mat-icon>grading</mat-icon>
                                 <div>Lint Reports</div>
                             </a>
@@ -21,7 +21,7 @@
 
 
                         <div class="portal-container-column">
-                            <a [routerLink]="[portal.portalKey, portal.productKey, 'diff-reports']">
+                            <a [routerLink]="['diff-reports' , portal.portalKey, portal.productKey] ">
                                 <mat-icon>compare</mat-icon>
                                 <div>Diff Reports</div>
                             </a>
@@ -29,26 +29,26 @@
                         </div>
 
                         <div class="portal-container-column">
-                            <a [routerLink]="[portal.portalKey, portal.productKey, 'tag-cloud']">
+                            <a [routerLink]="[ 'tag-cloud', portal.portalKey, portal.productKey]">
                                 <mat-icon>loyalty</mat-icon>
                                 <div>Tags</div>
                             </a>
                         </div>
 
 
-<!--                        <div class="portal-container-column">-->
-<!--                            <a [routerLink]="[portal.portalKey, portal.productKey, 'documentation']">-->
-<!--                                <mat-icon>help_outline</mat-icon>-->
-<!--                                <div>Documentation</div>-->
-<!--                            </a>-->
-<!--                        </div>-->
+                        <!--                        <div class="portal-container-column">-->
+                        <!--                            <a [routerLink]="[portal.portalKey, portal.productKey, 'documentation']">-->
+                        <!--                                <mat-icon>help_outline</mat-icon>-->
+                        <!--                                <div>Documentation</div>-->
+                        <!--                            </a>-->
+                        <!--                        </div>-->
 
-<!--                        <div class="portal-container-column">-->
-<!--                            <a [routerLink]="[portal.portalKey, portal.productKey, 'settings']">-->
-<!--                                <mat-icon>settings</mat-icon>-->
-<!--                                <div>Settings</div>-->
-<!--                            </a>-->
-<!--                        </div>-->
+                        <!--                        <div class="portal-container-column">-->
+                        <!--                            <a [routerLink]="[portal.portalKey, portal.productKey, 'settings']">-->
+                        <!--                                <mat-icon>settings</mat-icon>-->
+                        <!--                                <div>Settings</div>-->
+                        <!--                            </a>-->
+                        <!--                        </div>-->
 
 
                     </div>
