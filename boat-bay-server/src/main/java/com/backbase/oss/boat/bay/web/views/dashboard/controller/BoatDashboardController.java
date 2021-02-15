@@ -3,6 +3,7 @@ package com.backbase.oss.boat.bay.web.views.dashboard.controller;
 import com.backbase.oss.boat.ExportException;
 import com.backbase.oss.boat.bay.config.BoatCacheManager;
 import com.backbase.oss.boat.bay.domain.*;
+import com.backbase.oss.boat.bay.repository.CapabilityRepository;
 import com.backbase.oss.boat.bay.repository.LintRuleRepository;
 import com.backbase.oss.boat.bay.repository.SourceRepository;
 import com.backbase.oss.boat.bay.repository.SpecRepository;
@@ -65,6 +66,7 @@ public class BoatDashboardController implements ApiBoatBay {
     private final SpecSourceResolver specSourceResolver;
     private final FileSystemExporter fileSystemExporter;
     private final SpecRepository specRepository;
+    private final CapabilityRepository capabilityRepository;
     private final BoatDashboardMapper lintReportMapper;
     ///////////////////////////////////////////////////
 
@@ -170,6 +172,11 @@ public class BoatDashboardController implements ApiBoatBay {
         return ResponseEntity.accepted().build();
     }
 
+    @Override
+    public ResponseEntity<List<BoatLintReport>> uploadSpec(String sourceKey, UploadRequestBody uploadRequestBody) {
+        return null;
+    }
+
     @Cacheable(BoatCacheManager.PRODUCT_RELEASES)
     @GetMapping("/portals/{portalKey}/products/{productKey}/releases")
     public ResponseEntity<List<BoatProductRelease>> getProductReleases(@PathVariable String portalKey, @PathVariable String productKey) {
@@ -270,10 +277,7 @@ public class BoatDashboardController implements ApiBoatBay {
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
-    @Override
-    public ResponseEntity<List<BoatSpec>> getPortalSpecs(String productKey, String portalKey, Pageable pageable, String release, String grade, List<String> capability, List<String> service, Boolean backwardsCompatible, Boolean changed) {
-        return null;
-    }
+
 
 
     @Cacheable(BoatCacheManager.PRODUCT_SPECS)
@@ -281,12 +285,12 @@ public class BoatDashboardController implements ApiBoatBay {
     public ResponseEntity<List<BoatSpec>> getPortalSpecs(@PathVariable String productKey,
                                                          @PathVariable String portalKey,
                                                          Pageable pageable,
-                                                         @RequestParam(required = false) String release,
-                                                         @RequestParam(required = false) String grade,
                                                          @RequestParam(required = false) List<String> capability,
+                                                         @RequestParam(required = false) String release,
                                                          @RequestParam(required = false) List<String> service,
-                                                         @RequestParam(required = false) boolean backwardsCompatible,
-                                                         @RequestParam(required = false) boolean changed
+                                                         @RequestParam(required = false) String grade,
+                                                         @RequestParam(required = false) Boolean backwardsCompatible,
+                                                         @RequestParam(required = false) Boolean changed
                                                          ) {
         Product product = getProduct(portalKey, productKey);
 
@@ -506,21 +510,23 @@ public class BoatDashboardController implements ApiBoatBay {
         return boatCapability;
     }
 
-    @PutMapping("boat-maven-plugin/{sourceId}/upload")
-    public ResponseEntity<List<BoatLintReport>> uploadSpec(@PathVariable String sourceId, @Valid @RequestBody UploadRequestBody requestBody) {
+    @PostMapping("boat-maven-plugin/{sourceKey}/upload")
+    @Transactional
+    public ResponseEntity<List<BoatLintReport>> uploadSpec(@Valid @RequestBody UploadRequestBody requestBody, @PathVariable String sourceKey) throws ExportException {
 
-        Source source = sourceRepository.findById(Long.parseLong(sourceId)).orElseThrow(() -> new BadRequestAlertException("Invalid source, source Id does not exist", "SOURCE", "sourceIdInvalid"));
+        Source source = sourceRepository.findOne(Example.of(new Source().key(sourceKey))).orElseThrow(() -> new BadRequestAlertException("Invalid source, source Id does not exist", "SOURCE", "sourceIdInvalid"));;
 
         List<UploadSpec> requestSpecs = requestBody.getSpecs();
 
         if (requestBody.getProjectId().isEmpty()
                 || requestBody.getVersion().isEmpty()
                 || requestBody.getArtifactId().isEmpty()) {
-            throw new BadRequestAlertException("Invalid Request body missing attributes", "UploadSpec", "attributeempty");
+            throw new BadRequestAlertException("Invalid Request body missing attributes", "UPLOAD_REQUEST_BODY", "attributeempty");
         }
 
 
         List<Spec> specs = new ArrayList<>();
+
 
 
         for (UploadSpec uploadSpec : requestSpecs) {
@@ -534,7 +540,7 @@ public class BoatDashboardController implements ApiBoatBay {
 
             if (spec.getOpenApi().isEmpty()
                     || spec.getKey().isEmpty())
-                throw new BadRequestAlertException("Invalid spec with an empty api, key, or file name", "UploadSpec", "attributeempty");
+                throw new BadRequestAlertException("Invalid spec with an empty api, key, or file name", "UPLOAD_SPEC", "attributeempty");
 
             spec.setPortal(source.getPortal());
             spec.setProduct(source.getProduct());
@@ -556,28 +562,28 @@ public class BoatDashboardController implements ApiBoatBay {
             if (duplicate.isPresent()) {
                 spec.capability(duplicate.get().getCapability());
                 spec.serviceDefinition(duplicate.get().getServiceDefinition());
+            }else {
+                spec.capability(new Capability().key(requestBody.getArtifactId()).name(requestBody.getArtifactId()).product(source.getProduct()));
+                capabilityRepository.save(spec.getCapability());
             }
 
+            specs.add(spec);
+
         }
-        SourceScannerOptions scannerOptions = new SourceScannerOptions();
-        ScanResult scanResult = new ScanResult(source,scannerOptions, specs);
+
+        ScanResult scanResult = new ScanResult(source, new SourceScannerOptions(), specs);
         specSourceResolver.process(scanResult);
 
-        String location = (requestBody.getLocation()).concat("/"+requestBody.getProjectId()).concat("/" + requestBody.getArtifactId()).concat("/" + source.getPortal().getName());
+        String location = requestBody.getLocation();
 
         ExportOptions exportSpec = new ExportOptions();
         exportSpec.setLocation(location);
         exportSpec.setPortal(source.getPortal());
         exportSpec.setExportType(ExportType.FILE_SYSTEM);
-        try {
-            fileSystemExporter.export(exportSpec);
-        }catch (ExportException e) {
-            e.printStackTrace();
-        }
+        fileSystemExporter.export(exportSpec);
 
-
-        List<Spec> specsProcessed = specRepository.findAll().stream().filter(spec -> spec.getSource().getId().equals(sourceId)).collect(Collectors.toList());
-        List<BoatLintReport> lintReports = specsProcessed.stream().map(spec -> boatSpecLinter.lint(spec)).map(lintReport -> lintReportMapper.mapReport(lintReport)).collect(Collectors.toList());
+        List<Spec> specsProcessed = specRepository.findAll().stream().filter(spec -> spec.getSource().getKey().equals(sourceKey)).collect(Collectors.toList());
+        List<BoatLintReport> lintReports = specsProcessed.stream().map(boatSpecLinter::lint).map(lintReportMapper::mapReport).collect(Collectors.toList());
 
         return ResponseEntity.ok(lintReports);
     }
