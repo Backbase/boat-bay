@@ -431,6 +431,7 @@ public class AccountResourceIT {
         user.setEmail("save-account@example.com");
         user.setPassword(RandomStringUtils.random(60));
         user.setActivated(true);
+
         userRepository.saveAndFlush(user);
 
         UserDTO userDTO = new UserDTO();
