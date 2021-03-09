@@ -6,7 +6,10 @@ info:
     license:
         name: Backbase
 servers:
-    - url: http://boat-bay-server.proto.backbasecloud.com/
+  - description: test server
+    url: http://localhost:8080
+  - description: production server
+    url: http://boat-bay-server.proto.backbasecloud.com/
 tags:
   - name: dashboard
   - name: upload-plugin
@@ -147,24 +150,28 @@ paths:
               required: true
               schema:
                   type: string
-            - name: capabilityId
+            - name: capability
               in: query
               description: capablility idenifier
               required: false
               schema:
-                  type: string
-            - name: productReleaseId
+                  type: array
+                  items:
+                    type: string
+            - name: release
               in: query
               description: product release idenifier
               required: false
               schema:
                   type: string
-            - name: serviceId
+            - name: service
               in: query
               description: service idenifier
               required: false
               schema:
-                  type: string
+                  type: array
+                  items:
+                    type: string
             - name: grade
               in: query
               description: grade of spec
@@ -591,8 +598,8 @@ paths:
             in: query
             schema:
               type: string
-    /api/boat/boat-maven-plugin/{sourceId}/upload:
-        put:
+    /api/boat/boat-maven-plugin/{sourceKey}/upload:
+        post:
             summary: upload and lint specs
             operationId: uploadSpec
             tags:
@@ -613,7 +620,7 @@ paths:
                                 items:
                                     $ref: "schemas/boat-lint-report.yaml#/BoatLintReport"
         parameters:
-            - name: sourceId
+            - name: sourceKey
               in: path
               description: source idenifier
               required: true
