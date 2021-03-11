@@ -97,14 +97,17 @@ public interface BoatDashboardMapper {
 
     @Mapping(target = "statistics", ignore = true)
     @Mapping(target = "openApi", ignore = true)
+    @Mapping(target = "backwardsCompatible", ignore = true)
     BoatSpec mapBoatSpec(Spec spec);
 
     @Mapping(target = "version", source = "spec.version")
     @Mapping(target = "openApi", source = "spec.openApi")
+    @Mapping(target = "hasViolations", ignore = true)
     BoatLintReport mapReport(LintReport specReport);
 
     @Mapping(target = "version", source = "spec.version")
     @Mapping(target = "openApi", ignore = true)
+    @Mapping(target = "hasViolations", ignore = true)
     @Mapping(target = "violations", ignore = true)
     BoatLintReport mapReportWithoutViolations(LintReport lintReport);
 

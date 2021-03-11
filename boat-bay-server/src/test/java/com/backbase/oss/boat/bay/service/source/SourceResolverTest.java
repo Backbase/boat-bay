@@ -1,6 +1,7 @@
 package com.backbase.oss.boat.bay.service.source;
 
 import com.backbase.oss.boat.bay.domain.Spec;
+import com.backbase.oss.boat.bay.service.model.UploadRequestBody;
 import com.backbase.oss.boat.bay.util.SpringExpressionUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -8,6 +9,28 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 @Slf4j
 class SourceResolverTest {
+// test expressions
+
+    @ParameterizedTest
+    @CsvSource({"com.backbase.oss.boat.example, lint-petstore-breaking ",
+    "com.backbase.oss.boat.example,validate-petstore "})
+    void testMavenSourceTypeSpel(String groupId, String artifactId){
+
+        UploadRequestBody request = new UploadRequestBody().artifactId(artifactId).projectId(groupId);
+        String g = groupId.substring(groupId.indexOf('.')+1);
+
+        String[] expressions = {
+                "artifactId",
+                "artifactId",
+                "projectId.substring(projectId.indexOf('.')+1).replace('.','-') ",
+                "projectId.substring(projectId.indexOf('.')+1).replace('.','-') "
+        };
+
+        for (int i = 0; i < expressions.length; i++) {
+            log.info("Output  {}", SpringExpressionUtils.parseName(expressions[i], request, null));
+        }
+
+    }
 
     @ParameterizedTest
     @CsvSource({

@@ -40,12 +40,10 @@ public class BoatSpecLinter {
     private final BoatLintRuleValidatorFactory boatLintRuleValidatorFactory;
     private final BoatLintRuleViolationRepository boatLintRuleViolationRepository;
 
-    private final BoatLintRuleRepository boatLintRuleRepository;
     private final BoatLintReportRepository lintReportRepository;
     private final RulesManager rulesManager;
     private final BoatSpecRepository specRepository;
 
-    private final BoatCacheManager boatCacheManager;
 
     @Async
     public void scheduleLintJob(Spec spec) {
@@ -90,7 +88,7 @@ public class BoatSpecLinter {
         lintReport.setGrade(grade);
         lintReport.setLintedOn(ZonedDateTime.now());
         lintReport.setViolations(violations);
-        lintReport = lintReportRepository.save(lintReport);
+        lintReport = lintReportRepository.saveAndFlush(lintReport);
         boatLintRuleViolationRepository.saveAll(violations);
 
         spec.setLintReport(lintReport);

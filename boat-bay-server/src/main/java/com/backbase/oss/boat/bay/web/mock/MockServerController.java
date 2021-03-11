@@ -2,10 +2,8 @@ package com.backbase.oss.boat.bay.web.mock;
 
 import com.backbase.oss.boat.bay.domain.Product;
 import com.backbase.oss.boat.bay.domain.ProductRelease;
-import com.backbase.oss.boat.bay.repository.extended.BoatCapabilityRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatProductReleaseRepository;
 import com.backbase.oss.boat.bay.repository.extended.BoatProductRepository;
-import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatProductRelease;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
