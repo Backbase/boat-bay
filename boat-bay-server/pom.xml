@@ -412,6 +412,15 @@
             <version>0.2.1</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -487,6 +496,7 @@
             <plugin>
                 <groupId>com.backbase.oss</groupId>
                 <artifactId>boat-maven-plugin</artifactId>
+                <version>0.14.0</version>
                 <executions>
                     <execution>
                         <id>java-server</id>
@@ -518,6 +528,7 @@
                                 <typeMapping>Double=java.math.BigDecimal</typeMapping>
                             </typeMappings>
                             <importMappings>
+                                <importMapping>JsonPointer = com.fasterxml.jackson.core.JsonPointer</importMapping>
                                 <importMapping>LocalDateTime = java.time.LocalDateTime</importMapping>
                                 <importMapping>Pageable = org.springframework.data.domain.Pageable</importMapping>
                                 <importMapping>IntRange = kotlin.ranges.IntRange</importMapping>
