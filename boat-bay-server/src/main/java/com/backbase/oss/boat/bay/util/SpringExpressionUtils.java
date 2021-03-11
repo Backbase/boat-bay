@@ -4,6 +4,8 @@ import com.backbase.oss.boat.bay.domain.Spec;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+
+import com.backbase.oss.boat.bay.service.model.UploadRequestBody;
 import lombok.extern.slf4j.Slf4j;
 import org.jfrog.artifactory.client.ItemHandle;
 import org.springframework.expression.EvaluationException;
@@ -53,6 +55,21 @@ public class SpringExpressionUtils {
             name = getExpression(spEL).getValue(spec, String.class);
         } catch (EvaluationException | StringIndexOutOfBoundsException e) {
             log.warn("Expression: {} failed on: {}. Reason: {}", spEL, spec.getName(),e.getMessage());
+            return fallback;
+        }
+        log.debug("Resolved: {}", name);
+        return name;
+    }
+    public static String parseName(String spEL, UploadRequestBody requestBody, String fallback){
+        if (spEL == null) {
+            return fallback;
+        }
+
+        String name;
+        try {
+            name = getExpression(spEL).getValue(requestBody, String.class);
+        } catch (EvaluationException | StringIndexOutOfBoundsException e) {
+            log.warn("Expression: {} failed on: {}. Reason: {}", spEL, requestBody ,e.getMessage());
             return fallback;
         }
         log.debug("Resolved: {}", name);
