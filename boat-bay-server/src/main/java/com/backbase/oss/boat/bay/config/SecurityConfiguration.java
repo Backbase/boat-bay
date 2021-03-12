@@ -85,7 +85,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/api/export").permitAll()
             .antMatchers(HttpMethod.GET, "/api/boat/**").permitAll()
             //.antMatchers(HttpMethod.POST, "/api/boat/**").hasAuthority(AuthoritiesConstants.ADMIN)
-            .antMatchers(HttpMethod.POST, "/api/boat/boat-maven-plugin/**").permitAll()
+            .antMatchers(HttpMethod.POST, "/api/boat/**").permitAll()
             .antMatchers("/api/**").authenticated()
             .antMatchers("/management/health").permitAll()
             .antMatchers("/management/info").permitAll()
