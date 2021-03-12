@@ -513,7 +513,7 @@ public class BoatDashboardController implements ApiBoatBay {
     @Transactional
     public ResponseEntity<List<BoatLintReport>> uploadSpec(@PathVariable String sourceKey, @Valid @RequestBody UploadRequestBody requestBody)  {
 
-        Source source = sourceRepository.findOne(Example.of(new Source().key(sourceKey))).orElseThrow(() -> new BadRequestAlertException("Invalid source, source Id does not exist", "SOURCE", "sourceIdInvalid"));;
+        Source source = sourceRepository.findOne(Example.of(new Source().key(sourceKey))).orElseThrow(() -> new BadRequestAlertException("Invalid source, source Key does not exist", "SOURCE", "sourceIdInvalid"));;
 
         List<UploadSpec> requestSpecs = requestBody.getSpecs();
 
