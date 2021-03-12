@@ -38,9 +38,14 @@ spring:
     serialization:
       indent-output: true
   datasource:
-    url: jdbc:mysql://localhost:3306/boat-bay-test
-    username: root
-    password: FuKnMa7chPl3453
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password:
+    hikari:
+      poolName: Hikari
+    driver-class-name: org.h2.Driver
+
   h2:
     console:
       enabled: false
