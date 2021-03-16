@@ -103,12 +103,13 @@ public class BoatSpecLinter {
     }
 
     @NotNull
-    private Spec deleteExistingLintReport(Spec spec) {
+    @Transactional
+    public Spec deleteExistingLintReport(Spec spec) {
         LintReport existingLintReport = spec.getLintReport();
         boatLintRuleViolationRepository.deleteByLintReport(existingLintReport);
         lintReportRepository.delete(existingLintReport);
         spec.setLintReport(null);
-        spec = specRepository.save(spec);
+        spec = specRepository.saveAndFlush(spec);
         return spec;
     }
 

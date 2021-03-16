@@ -44,7 +44,7 @@ describe('Service Tests', () => {
         'AAAAAAA',
         false,
         'AAAAAAA',
-        Changes.NOT_APPLICABLE,
+        Changes.INVALID_VERSION,
         'AAAAAAA',
         'AAAAAAA',
         'AAAAAAA',

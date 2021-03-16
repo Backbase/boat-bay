@@ -25,6 +25,7 @@ import com.backbase.oss.boat.loader.OpenAPILoader;
 import com.backbase.oss.boat.loader.OpenAPILoaderException;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.ZonedDateTime;
@@ -35,6 +36,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -68,50 +70,57 @@ public class SpecSourceResolver {
     private final BoatBackwardsCompatibleChecker boatBackwardsCompatibleChecker;
 
     public void process(ScanResult scan) {
-        log.info("Processing Scan Result: {} from source: {}", scan.getSpecs().size() , scan.getSource().getName());
+        log.info("Processing Scan Result: {} from source: {}", scan.getSpecs().size(), scan.getSource().getName());
         Source source = scan.getSource();
         List<Spec> processedSpecs = processSpecs(scan);
         processReleases(scan, source, processedSpecs);
         checkSpecs(processedSpecs, scan);
-        log.info("Finished Processing Scan Result: {} from source: {}", scan.getSpecs().size() , scan.getSource().getName());
+        log.info("Finished Processing Scan Result: {} from source: {}", scan.getSpecs().size(), scan.getSource().getName());
     }
 
-    public void checkSpecs(List<Spec> processedSpecs, ScanResult scan){
+    public void checkSpecs(List<Spec> processedSpecs, ScanResult scan) {
         log.info("Checking Specs");
         for (Spec processedSpec : processedSpecs) {
 
 
-            if(processedSpec.getLintReport() == null) {
+            if (processedSpec.getLintReport() == null) {
                 boatSpecLinter.lint(processedSpec);
             }
-            if(processedSpec.getChanges() == null) {
+            if (processedSpec.getChanges() == null) {
                 boatBackwardsCompatibleChecker.checkBackwardsCompatibility(processedSpec);
             }
         }
         log.info("Finished Checking Specs");
     }
 
-    @Transactional(propagation = Propagation.MANDATORY)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void processReleases(ScanResult scan, Source source, List<Spec> processedSpecs) {
         log.info("Processing {} releases from scan result from source: {}", scan.getProductReleases().size(), scan.getSource().getName());
         if (scan.getProductReleases().isEmpty()) {
-
-            ProductRelease productRelease = productReleaseRepository.findByProductAndKey(source.getProduct(), LATEST)
-                .orElseGet(() -> createLatestProductRelease(source.getProduct()));
-
-            processedSpecs.stream()
-                .collect(Collectors.toMap(Spec::getKey, spec -> spec, this::compareVersion))
-                .forEach((s, spec) -> productRelease.addSpec(spec));
-
-            productReleaseRepository.saveAndFlush(productRelease);
+            addSpecsToLatestRelease(source, processedSpecs);
         } else {
-            scan.getProductReleases().forEach(pr -> {
-                ProductRelease productRelease = productReleaseRepository.findByProductAndKey(source.getProduct(), pr.getKey())
-                    .orElseGet(() -> productReleaseRepository.saveAndFlush(pr));
-                log.info("Processed release: {}", productRelease.getName());
-            });
+            addSpecsToReleases(scan, source);
         }
         log.info("Finished processing {} releases from scan result from source: {}", scan.getProductReleases().size(), scan.getSource().getName());
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void addSpecsToReleases(ScanResult scan, Source source) {
+        scan.getProductReleases().forEach(pr -> {
+            ProductRelease productRelease = productReleaseRepository.findByProductAndKey(source.getProduct(), pr.getKey())
+                .orElseGet(() -> productReleaseRepository.saveAndFlush(pr));
+            log.info("Processed release: {}", productRelease.getName());
+        });
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void addSpecsToLatestRelease(Source source, List<Spec> processedSpecs) {
+        ProductRelease productRelease = productReleaseRepository.findByProductAndKey(source.getProduct(), LATEST)
+            .orElseGet(() -> createLatestProductRelease(source.getProduct()));
+
+        productRelease.getSpecs().addAll(processedSpecs);
+        productReleaseRepository.saveAndFlush(productRelease);
+
     }
 
     @NotNull
@@ -127,7 +136,7 @@ public class SpecSourceResolver {
     }
 
     @NotNull
-    @Transactional(isolation = Isolation.DEFAULT, propagation =  Propagation.MANDATORY)
+    @Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.MANDATORY)
     public List<Spec> processSpecs(ScanResult scan) {
         log.info("Processing {} specs from scan result from source: {}", scan.getSpecs().size(), scan.getSource().getName());
 
@@ -164,8 +173,8 @@ public class SpecSourceResolver {
 
         if (existingSpec.isPresent() && !source.isOverwriteChanges()) {
             log.info("Spec: {}  already exists for source: {}", existingSpec.get().getName(), source.getName());
-            spec.setId(existingSpec.get().getId());
-            return spec;
+//            spec.setId(existingSpec.get().getId());
+            return existingSpec.get();
         } else if (existingSpec.isPresent() && source.isOverwriteChanges()) {
             log.debug("Updating spec: {}", spec.getName());
             spec.setId(existingSpec.get().getId());
@@ -178,9 +187,9 @@ public class SpecSourceResolver {
         setServiceDefinition(spec, source);
         setSpecType(spec);
 
-        Spec newSpec = specRepository.saveAndFlush(spec);
-        log.debug("Finished processing spec: {}", newSpec.getName());
-        return newSpec;
+        specRepository.saveAndFlush(spec);
+        log.debug("Finished processing spec: {}", spec.getName());
+        return spec;
     }
 
     private void setProduct(Spec spec, Source source) {
@@ -276,7 +285,7 @@ public class SpecSourceResolver {
     private String getCapabilityKey(Spec spec, Source source, SourceScannerOptions scannerOptions) {
         String key = SpringExpressionUtils.parseName(source.getCapabilityKeySpEL(), spec, "unknown");
 
-        if(scannerOptions != null && scannerOptions.getCapabilityMappingOverrides().containsKey(key)) {
+        if (scannerOptions != null && scannerOptions.getCapabilityMappingOverrides().containsKey(key)) {
             String override = scannerOptions.getCapabilityMappingOverrides().get(key);
             log.debug("Overriding capability key: {} with configuration override: {}", key, override);
             key = override;
