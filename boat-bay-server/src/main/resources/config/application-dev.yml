@@ -22,10 +22,13 @@ logging:
     io.swagger.v3.parser.OpenAPIV3Parser: OFF
 
 spring:
+  config:
+    use-legacy-processing: true
+
   profiles:
     active: dev
     include:
-      - swagger
+      - 'swagger'
       # Uncomment to activate TLS for the dev profile
       #- tls
   devtools:

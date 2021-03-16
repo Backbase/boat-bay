@@ -3,6 +3,7 @@ package com.backbase.oss.boat.bay.service.source;
 import com.backbase.oss.boat.bay.domain.Source;
 import com.backbase.oss.boat.bay.events.SpecSourceUpdatedEvent;
 import com.backbase.oss.boat.bay.repository.extended.BoatSourceRepository;
+import com.backbase.oss.boat.bay.service.source.scanner.ScanResult;
 import com.backbase.oss.boat.bay.service.source.scanner.SourceScannerOptions;
 import com.backbase.oss.boat.bay.service.source.scanner.SpecSourceScanner;
 import com.backbase.oss.boat.bay.service.source.scanner.impl.JFrogSpecSourceScanner;
@@ -77,7 +78,8 @@ public class SpecSourceScheduler {
             .forEach(scanner -> {
                 EntityTransaction transaction = entityManagerFactory.createEntityManager().getTransaction();
                 log.info("Executing Scanner: {} in transaction: {}", scanner.getSourceType(), transaction);
-                specSourceResolver.process(scanner.scan());
+                ScanResult scan = scanner.scan();
+                specSourceResolver.process(scan);
             });
     }
 

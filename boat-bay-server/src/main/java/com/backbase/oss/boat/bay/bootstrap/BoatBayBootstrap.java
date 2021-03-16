@@ -1,5 +1,6 @@
 package com.backbase.oss.boat.bay.bootstrap;
 
+import com.backbase.oss.boat.bay.config.BoatBayConfiguration;
 import com.backbase.oss.boat.bay.domain.Dashboard;
 import com.backbase.oss.boat.bay.domain.LintRule;
 import com.backbase.oss.boat.bay.domain.Portal;
@@ -35,6 +36,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;
@@ -46,12 +48,11 @@ import org.zalando.zally.rule.api.RuleSet;
 @Component
 @Slf4j
 @RequiredArgsConstructor
+@EnableConfigurationProperties(  BoatBayConfiguration.class)
 @DependsOn("liquibase")
 public class BoatBayBootstrap {
 
-    @Value("${backbase.bootstrap.file:''}")
-    private File bootstrapFile;
-
+    private final BoatBayConfiguration configuration;
     private final BoatPortalRepository portalRepository;
     private final ProductRepository productRepository;
     private final SourceRepository sourceRepository;
@@ -69,8 +70,8 @@ public class BoatBayBootstrap {
     @PostConstruct
     public void loadBootstrapFile() {
 
-        if (bootstrapFile != null && bootstrapFile.exists()) {
-
+        File bootstrapFile = configuration.getBootstrap().getFile();
+        if (bootstrapFile != null && bootstrapFile.exists() && configuration.getBootstrap().getEnabled()) {
             log.info("Loading bootstrap from: {}", bootstrapFile);
             ObjectMapper objectMapper = new ObjectMapper(YAMLFactory.builder().build());
             objectMapper.registerModule(javaTimeModule);

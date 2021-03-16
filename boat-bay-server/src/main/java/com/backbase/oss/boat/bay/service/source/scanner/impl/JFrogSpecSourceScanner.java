@@ -99,8 +99,8 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
             .sorted(comparing.reversed())
             .collect(Collectors.toList());
 
-        if (source.getItemLimit() != null) {
-            items = items.subList(0, source.getItemLimit());
+        if (source.getItemLimit() != null && !items.isEmpty()) {
+            items = items.subList(0, Math.min(source.getItemLimit(), items.size()-1));
         }
         log.info("Processing  items: {}", items.size());
 
