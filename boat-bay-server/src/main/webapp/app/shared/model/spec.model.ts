@@ -37,6 +37,7 @@ export interface ISpec {
   sourceCreatedOn?: Moment;
   sourceLastModifiedOn?: Moment;
   sourceLastModifiedBy?: string;
+  previousSpec?: ISpec;
   portal?: IPortal;
   capability?: ICapability;
   product?: IProduct;
@@ -44,6 +45,7 @@ export interface ISpec {
   specType?: ISpecType;
   tags?: ITag[];
   lintReport?: ILintReport;
+  successor?: ISpec;
   serviceDefinition?: IServiceDefinition;
   productReleases?: IProductRelease[];
 }
@@ -76,6 +78,7 @@ export class Spec implements ISpec {
     public sourceCreatedOn?: Moment,
     public sourceLastModifiedOn?: Moment,
     public sourceLastModifiedBy?: string,
+    public previousSpec?: ISpec,
     public portal?: IPortal,
     public capability?: ICapability,
     public product?: IProduct,
@@ -83,6 +86,7 @@ export class Spec implements ISpec {
     public specType?: ISpecType,
     public tags?: ITag[],
     public lintReport?: ILintReport,
+    public successor?: ISpec,
     public serviceDefinition?: IServiceDefinition,
     public productReleases?: IProductRelease[]
   ) {

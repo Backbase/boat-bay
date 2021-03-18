@@ -117,6 +117,10 @@ public class Spec implements Serializable {
     @Column(name = "source_last_modified_by")
     private String sourceLastModifiedBy;
 
+    @OneToOne
+    @JoinColumn(unique = true)
+    private Spec previousSpec;
+
     @ManyToOne(optional = false)
     @NotNull
     @JsonIgnoreProperties(value = "specs", allowSetters = true)
@@ -151,6 +155,10 @@ public class Spec implements Serializable {
     @OneToOne(mappedBy = "spec")
     @JsonIgnore
     private LintReport lintReport;
+
+    @OneToOne(mappedBy = "previousSpec")
+    @JsonIgnore
+    private Spec successor;
 
     @ManyToOne(optional = false)
     @NotNull
@@ -496,6 +504,19 @@ public class Spec implements Serializable {
         this.sourceLastModifiedBy = sourceLastModifiedBy;
     }
 
+    public Spec getPreviousSpec() {
+        return previousSpec;
+    }
+
+    public Spec previousSpec(Spec spec) {
+        this.previousSpec = spec;
+        return this;
+    }
+
+    public void setPreviousSpec(Spec spec) {
+        this.previousSpec = spec;
+    }
+
     public Portal getPortal() {
         return portal;
     }
@@ -597,6 +618,19 @@ public class Spec implements Serializable {
 
     public void setLintReport(LintReport lintReport) {
         this.lintReport = lintReport;
+    }
+
+    public Spec getSuccessor() {
+        return successor;
+    }
+
+    public Spec successor(Spec spec) {
+        this.successor = spec;
+        return this;
+    }
+
+    public void setSuccessor(Spec spec) {
+        this.successor = spec;
     }
 
     public ServiceDefinition getServiceDefinition() {

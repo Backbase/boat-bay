@@ -48,6 +48,7 @@
                     <th scope="col"  jhiSortBy="sourceCreatedOn"><span>Source Created On</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="sourceLastModifiedOn"><span>Source Last Modified On</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="sourceLastModifiedBy"><span>Source Last Modified By</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="previousSpec.version"><span>Previous Spec</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="portal.name"><span>Portal</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="capability.name"><span>Capability</span> <fa-icon icon="sort"></fa-icon></th>
                     <th scope="col"  jhiSortBy="product.name"><span>Product</span> <fa-icon icon="sort"></fa-icon></th>
@@ -85,6 +86,11 @@
                     <td>{{ spec.sourceCreatedOn | date:'medium' }}</td>
                     <td>{{ spec.sourceLastModifiedOn | date:'medium' }}</td>
                     <td>{{ spec.sourceLastModifiedBy }}</td>
+                    <td>
+                        <div *ngIf="spec.previousSpec">
+                            <a [routerLink]="['/spec', spec.previousSpec?.id, 'view']" >{{ spec.previousSpec?.version }}</a>
+                        </div>
+                    </td>
                     <td>
                         <div *ngIf="spec.portal">
                             <a [routerLink]="['/portal', spec.portal?.id, 'view']" >{{ spec.portal?.name }}</a>
