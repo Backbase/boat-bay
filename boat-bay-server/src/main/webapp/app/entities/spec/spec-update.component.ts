@@ -4,6 +4,7 @@ import { HttpResponse } from '@angular/common/http';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import * as moment from 'moment';
 import { DATE_TIME_FORMAT } from 'app/shared/constants/input.constants';
 import { JhiDataUtils, JhiFileLoadError, JhiEventManager, JhiEventWithContent } from 'ng-jhipster';
@@ -26,7 +27,7 @@ import { TagService } from 'app/entities/tag/tag.service';
 import { IServiceDefinition } from 'app/shared/model/service-definition.model';
 import { ServiceDefinitionService } from 'app/entities/service-definition/service-definition.service';
 
-type SelectableEntity = IPortal | ICapability | IProduct | ISource | ISpecType | ITag | IServiceDefinition;
+type SelectableEntity = ISpec | IPortal | ICapability | IProduct | ISource | ISpecType | ITag | IServiceDefinition;
 
 @Component({
   selector: 'jhi-spec-update',
@@ -34,6 +35,7 @@ type SelectableEntity = IPortal | ICapability | IProduct | ISource | ISpecType |
 })
 export class SpecUpdateComponent implements OnInit {
   isSaving = false;
+  previousspecs: ISpec[] = [];
   portals: IPortal[] = [];
   capabilities: ICapability[] = [];
   products: IProduct[] = [];
@@ -69,6 +71,7 @@ export class SpecUpdateComponent implements OnInit {
     sourceCreatedOn: [],
     sourceLastModifiedOn: [],
     sourceLastModifiedBy: [],
+    previousSpec: [],
     portal: [null, Validators.required],
     capability: [null, Validators.required],
     product: [null, Validators.required],
@@ -103,6 +106,28 @@ export class SpecUpdateComponent implements OnInit {
       }
 
       this.updateForm(spec);
+
+      this.specService
+        .query({ filter: 'successor-is-null' })
+        .pipe(
+          map((res: HttpResponse<ISpec[]>) => {
+            return res.body || [];
+          })
+        )
+        .subscribe((resBody: ISpec[]) => {
+          if (!spec.previousSpec || !spec.previousSpec.id) {
+            this.previousspecs = resBody;
+          } else {
+            this.specService
+              .find(spec.previousSpec.id)
+              .pipe(
+                map((subRes: HttpResponse<ISpec>) => {
+                  return subRes.body ? [subRes.body].concat(resBody) : resBody;
+                })
+              )
+              .subscribe((concatRes: ISpec[]) => (this.previousspecs = concatRes));
+          }
+        });
 
       this.portalService.query().subscribe((res: HttpResponse<IPortal[]>) => (this.portals = res.body || []));
 
@@ -150,6 +175,7 @@ export class SpecUpdateComponent implements OnInit {
       sourceCreatedOn: spec.sourceCreatedOn ? spec.sourceCreatedOn.format(DATE_TIME_FORMAT) : null,
       sourceLastModifiedOn: spec.sourceLastModifiedOn ? spec.sourceLastModifiedOn.format(DATE_TIME_FORMAT) : null,
       sourceLastModifiedBy: spec.sourceLastModifiedBy,
+      previousSpec: spec.previousSpec,
       portal: spec.portal,
       capability: spec.capability,
       product: spec.product,
@@ -223,6 +249,7 @@ export class SpecUpdateComponent implements OnInit {
         ? moment(this.editForm.get(['sourceLastModifiedOn'])!.value, DATE_TIME_FORMAT)
         : undefined,
       sourceLastModifiedBy: this.editForm.get(['sourceLastModifiedBy'])!.value,
+      previousSpec: this.editForm.get(['previousSpec'])!.value,
       portal: this.editForm.get(['portal'])!.value,
       capability: this.editForm.get(['capability'])!.value,
       product: this.editForm.get(['product'])!.value,

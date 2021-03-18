@@ -91,6 +91,7 @@ entity Spec {
     sourceLastModifiedOn ZonedDateTime
     sourceLastModifiedBy String
 
+
 }
 
 entity Tag {
@@ -201,6 +202,7 @@ relationship OneToMany {
 	LintReport{violations} to LintRuleViolation{lintReport(name)}
 	Portal to LintRule{portal(name) required}
 	Source to SourcePath{source(name)}
+
 }
 
 relationship ManyToOne {
@@ -210,10 +212,13 @@ relationship ManyToOne {
     Spec{source(name)} to Source
     Spec{specType(name) required} to SpecType
 
+
+
     Source{portal(name) required} to Portal
     Source{product(name) required} to Product
     Source{capability(name)} to Capability
     Source{serviceDefinition(name)} to ServiceDefinition
+
 
     LintRuleViolation{lintRule(title) required} to LintRule
 
@@ -222,6 +227,7 @@ relationship ManyToOne {
 relationship OneToOne {
     Dashboard{defaultPortal(name) required} to Portal
 	LintReport to Spec
+	Spec{previousSpec(version)} to Spec{successor(version)}
 }
 
 

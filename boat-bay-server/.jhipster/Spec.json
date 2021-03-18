@@ -135,6 +135,14 @@
   ],
   "relationships": [
     {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "spec",
+      "otherEntityRelationshipName": "successor",
+      "relationshipName": "previousSpec",
+      "otherEntityField": "version",
+      "ownerSide": true
+    },
+    {
       "relationshipType": "many-to-one",
       "otherEntityName": "portal",
       "otherEntityRelationshipName": "spec",
@@ -186,6 +194,13 @@
       "otherEntityName": "lintReport",
       "otherEntityRelationshipName": "spec",
       "relationshipName": "lintReport",
+      "ownerSide": false
+    },
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "spec",
+      "otherEntityRelationshipName": "previousSpec",
+      "relationshipName": "successor",
       "ownerSide": false
     },
     {

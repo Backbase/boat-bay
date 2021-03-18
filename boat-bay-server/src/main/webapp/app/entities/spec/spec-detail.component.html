@@ -108,6 +108,12 @@
                 <dd>
                     <span>{{ spec.sourceLastModifiedBy }}</span>
                 </dd>
+                <dt><span>Previous Spec</span></dt>
+                <dd>
+                    <div *ngIf="spec.previousSpec">
+                        <a [routerLink]="['/spec', spec.previousSpec?.id, 'view']">{{ spec.previousSpec?.version }}</a>
+                    </div>
+                </dd>
                 <dt><span>Portal</span></dt>
                 <dd>
                     <div *ngIf="spec.portal">

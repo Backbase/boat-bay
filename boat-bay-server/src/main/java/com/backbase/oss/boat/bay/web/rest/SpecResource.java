@@ -105,6 +105,13 @@ public class SpecResource {
                 .filter(spec -> spec.getLintReport() == null)
                 .collect(Collectors.toList()), HttpStatus.OK);
         }
+        if ("successor-is-null".equals(filter)) {
+            log.debug("REST request to get all Specs where successor is null");
+            return new ResponseEntity<>(StreamSupport
+                .stream(specRepository.findAll().spliterator(), false)
+                .filter(spec -> spec.getSuccessor() == null)
+                .collect(Collectors.toList()), HttpStatus.OK);
+        }
         log.debug("REST request to get a page of Specs");
         Page<Spec> page;
         if (eagerload) {

@@ -3,7 +3,6 @@
     <div class="mdl-grid mdl-cell mdl-cell--12-col mdl-cell--top">
         <div class="mdl-cell mdl-cell--7-col-desktop">
             <div class="lint-report-info info-container" *ngIf="product$ | async as product">
-                {{lintReport.spec | json}}
                 <app-spec-summary [spec]="lintReport.spec" [product]="product"><</app-spec-summary>
             </div>
 
