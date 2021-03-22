@@ -6,7 +6,7 @@
 
 ### Intro
 
-Boat bay allows for the management of products specs. This documentation will explain how to
+Boat bay allows for the management and linting of products' specs. This documentation will explain how to
 configure the application and how to use it effectively
 
 ### Bootstrap file
