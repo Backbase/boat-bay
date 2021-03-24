@@ -1,6 +1,7 @@
 import { Moment } from 'moment';
 import { IProduct } from 'app/shared/model/product.model';
 import { ILintRule } from 'app/shared/model/lint-rule.model';
+import { IZallyConfig } from 'app/shared/model/zally-config.model';
 
 export interface IPortal {
   id?: number;
@@ -16,6 +17,7 @@ export interface IPortal {
   linted?: boolean;
   products?: IProduct[];
   lintRules?: ILintRule[];
+  zallyConfig?: IZallyConfig;
 }
 
 export class Portal implements IPortal {
@@ -32,7 +34,8 @@ export class Portal implements IPortal {
     public hide?: boolean,
     public linted?: boolean,
     public products?: IProduct[],
-    public lintRules?: ILintRule[]
+    public lintRules?: ILintRule[],
+    public zallyConfig?: IZallyConfig
   ) {
     this.hide = this.hide || false;
     this.linted = this.linted || false;
