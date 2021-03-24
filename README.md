@@ -7,12 +7,17 @@
 ### Intro
 
 Boat bay allows for the management and linting of products' specs. This documentation will explain how to
-configure the application and how to use it effectively
+configure the application and how to use it effectively.
+
+#### Scope
+
+The scope of the project is to provide an API Quality Portal that provides a team an overview on the quality on their API.
+It allows teams to shift left by using a centralized rules repository for linting specs and maintaining backwards compatability in the pipelines.
 
 ### Bootstrap file
 
 Start by creating a bootstrap.yaml file. This will
-most likely be located in a with the specifications
+most likely be located in the same place as the specifications
 that are to be used with boat bay.
 
 Your file should look like the example below:
