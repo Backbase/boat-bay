@@ -67,62 +67,64 @@ public class BoatBayBootstrap {
 
     @PostConstruct
     public void loadBootstrapFile() {
+        if(configuration.getBootstrap() != null) {
 
-        File bootstrapFile = configuration.getBootstrap().getFile();
-        if (bootstrapFile != null && bootstrapFile.exists() && configuration.getBootstrap().getEnabled()) {
-            log.info("Loading bootstrap from: {}", bootstrapFile);
-            ObjectMapper objectMapper = new ObjectMapper(YAMLFactory.builder().build());
-            objectMapper.registerModule(javaTimeModule);
-            objectMapper.registerModule(jdk8Module);
-            objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            File bootstrapFile = configuration.getBootstrap().getFile();
+            if (configuration.getBootstrap() != null && bootstrapFile != null && bootstrapFile.exists() && configuration.getBootstrap().getEnabled()) {
+                log.info("Loading bootstrap from: {}", bootstrapFile);
+                ObjectMapper objectMapper = new ObjectMapper(YAMLFactory.builder().build());
+                objectMapper.registerModule(javaTimeModule);
+                objectMapper.registerModule(jdk8Module);
+                objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+                objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
-            try {
-                Bootstrap bootstrap = objectMapper.readValue(bootstrapFile, Bootstrap.class);
-                bootstrap.getPortals().forEach(portal -> {
-                    Optional<Portal> existingPortal = portalRepository.findOne(Example.of(portal));
-                    if (existingPortal.isEmpty()) {
-                        log.info("Bootstrapping portal: {}", portal.getName());
-                        Set<LintRule> lintRules = portal.getLintRules();
-                        portal.setLintRules(null);
-                        portalRepository.save(portal);
-                        lintRules.stream().map(rule -> createLintRule(portal, rule)).forEach(lintRuleRepository::save);
-                    }
-                });
-
-                Dashboard dashboard = bootstrap.getDashboard();
-
-                if (dashboard != null) {
-                    Optional<Dashboard> existingDashboard = dashboardRepository.findDashboardByName(dashboard.getName());
-                    if (existingDashboard.isEmpty()) {
-                        Portal portal = portalRepository.findOne(Example.of(dashboard.getDefaultPortal())).orElseThrow(() -> new BootstrapException("Cannot create dashboard with portal: " + dashboard.getDefaultPortal() + " as it does not exist"));
-                        dashboard.setDefaultPortal(portal);
-                        log.info("Bootstrapping dashboard: {}", dashboard.getName());
-                        dashboardRepository.save(dashboard);
-                    }
-                }
-
-                for (Source source : bootstrap.getSources()) {
-                    Optional<Source> existingSource = sourceRepository.findOne(Example.of(new Source().name(source.getName())));
-                    if (existingSource.isEmpty()) {
-                        bootstrapSource(source);
-                    }
-                }
-
-                if (bootstrap.getSpecTypes() != null) {
-                    bootstrap.getSpecTypes().forEach(specType -> {
-                        Optional<SpecType> existingSpecType = specTypeRepository.findOne(Example.of(specType));
-                        if (existingSpecType.isEmpty()) {
-                            log.info("Bootstrapping Spec Type: {}", specType.getName());
-                            specTypeRepository.save(specType);
+                try {
+                    Bootstrap bootstrap = objectMapper.readValue(bootstrapFile, Bootstrap.class);
+                    bootstrap.getPortals().forEach(portal -> {
+                        Optional<Portal> existingPortal = portalRepository.findOne(Example.of(portal));
+                        if (existingPortal.isEmpty()) {
+                            log.info("Bootstrapping portal: {}", portal.getName());
+                            Set<LintRule> lintRules = portal.getLintRules();
+                            portal.setLintRules(null);
+                            portalRepository.save(portal);
+                            lintRules.stream().map(rule -> createLintRule(portal, rule)).forEach(lintRuleRepository::save);
                         }
                     });
-                }
 
-            } catch (IOException e) {
-                log.error("Failed to read bootstrap yaml file from location: {}", bootstrapFile, e);
-            } catch (BootstrapException e) {
-                log.error("Failed to bootstrap ", e);
+                    Dashboard dashboard = bootstrap.getDashboard();
+
+                    if (dashboard != null) {
+                        Optional<Dashboard> existingDashboard = dashboardRepository.findDashboardByName(dashboard.getName());
+                        if (existingDashboard.isEmpty()) {
+                            Portal portal = portalRepository.findOne(Example.of(dashboard.getDefaultPortal())).orElseThrow(() -> new BootstrapException("Cannot create dashboard with portal: " + dashboard.getDefaultPortal() + " as it does not exist"));
+                            dashboard.setDefaultPortal(portal);
+                            log.info("Bootstrapping dashboard: {}", dashboard.getName());
+                            dashboardRepository.save(dashboard);
+                        }
+                    }
+
+                    for (Source source : bootstrap.getSources()) {
+                        Optional<Source> existingSource = sourceRepository.findOne(Example.of(new Source().name(source.getName())));
+                        if (existingSource.isEmpty()) {
+                            bootstrapSource(source);
+                        }
+                    }
+
+                    if (bootstrap.getSpecTypes() != null) {
+                        bootstrap.getSpecTypes().forEach(specType -> {
+                            Optional<SpecType> existingSpecType = specTypeRepository.findOne(Example.of(specType));
+                            if (existingSpecType.isEmpty()) {
+                                log.info("Bootstrapping Spec Type: {}", specType.getName());
+                                specTypeRepository.save(specType);
+                            }
+                        });
+                    }
+
+                } catch (IOException e) {
+                    log.error("Failed to read bootstrap yaml file from location: {}", bootstrapFile, e);
+                } catch (BootstrapException e) {
+                    log.error("Failed to bootstrap ", e);
+                }
             }
         }
     }
