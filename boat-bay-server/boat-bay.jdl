@@ -167,6 +167,11 @@ entity LintRuleViolation {
     jsonPointer String
 }
 
+entity ZallyConfig {
+     name String required
+     contents TextBlob
+}
+
 enum Severity {
 	MUST SHOULD MAY HINT
 }
@@ -211,9 +216,6 @@ relationship ManyToOne {
     Spec{product(name) required} to Product
     Spec{source(name)} to Source
     Spec{specType(name) required} to SpecType
-
-
-
     Source{portal(name) required} to Portal
     Source{product(name) required} to Product
     Source{capability(name)} to Capability
@@ -228,6 +230,8 @@ relationship OneToOne {
     Dashboard{defaultPortal(name) required} to Portal
 	LintReport to Spec
 	Spec{previousSpec(version)} to Spec{successor(version)}
+	ZallyConfig{portal(name)} to Portal{zallyConfig(name)}
+
 }
 
 

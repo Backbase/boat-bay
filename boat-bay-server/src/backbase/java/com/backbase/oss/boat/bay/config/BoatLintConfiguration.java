@@ -2,6 +2,7 @@ package com.backbase.oss.boat.bay.config;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+import com.typesafe.config.ConfigObject;
 import com.typesafe.config.ConfigParseOptions;
 import com.typesafe.config.impl.ConfigImpl;
 import com.typesafe.config.impl.Parseable;
