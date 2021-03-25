@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -21,6 +22,7 @@ import java.util.Set;
 import java.util.concurrent.ScheduledFuture;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -42,6 +44,7 @@ import org.springframework.transaction.annotation.Transactional;
 @ConditionalOnProperty(value = "boat.scheduler.source.scanner.enabled", havingValue = "true")
 public class SpecSourceScheduler {
 
+    private static ObjectMapper objectMapper;
     // Task Scheduler
     private final TaskScheduler scheduler;
     private final BoatSourceRepository boatSourceRepository;
@@ -116,12 +119,7 @@ public class SpecSourceScheduler {
     private SourceScannerOptions getScannerOptions(Source source) {
         SourceScannerOptions scannerOptions;
         if (source.getOptions() != null) {
-            ObjectMapper objectMapper = new ObjectMapper(YAMLFactory.builder().build());
-            objectMapper.registerModule(new JavaTimeModule());
-            objectMapper.registerModule(new Jdk8Module());
-            objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-
+            ObjectMapper objectMapper = additionalConfigurationMapper();
             try {
                 scannerOptions = objectMapper.readValue(source.getOptions(), SourceScannerOptions.class);
             } catch (JsonProcessingException e) {
@@ -131,6 +129,18 @@ public class SpecSourceScheduler {
             scannerOptions = new SourceScannerOptions();
         }
         return scannerOptions;
+    }
+
+    public static ObjectMapper additionalConfigurationMapper() {
+        if (objectMapper == null) {
+            objectMapper = new ObjectMapper(YAMLFactory.builder().build());
+            objectMapper.registerModule(new JavaTimeModule());
+            objectMapper.registerModule(new Jdk8Module());
+            objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+            objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+            objectMapper.findAndRegisterModules();
+        }
+        return objectMapper;
     }
 
     // Schedule Task to be executed every night at 00 or 12 am

@@ -107,6 +107,8 @@ public class BoatBayBootstrap {
                         Optional<Source> existingSource = sourceRepository.findOne(Example.of(new Source().name(source.getName())));
                         if (existingSource.isEmpty()) {
                             bootstrapSource(source);
+                        } else {
+                            updateSource(existingSource.get(), source);
                         }
                     }
 
@@ -127,6 +129,13 @@ public class BoatBayBootstrap {
                 }
             }
         }
+    }
+
+    private void updateSource(Source existingSource, Source source) {
+        existingSource.setOptions(source.getOptions());
+        sourceRepository.save(existingSource);
+
+
     }
 
     private LintRule createLintRule(Portal portal, LintRule rule) {
