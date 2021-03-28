@@ -103,7 +103,7 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
         }
         log.info("Processing  items: {}", items.size());
 
-        items.forEach(itemHandle -> process(itemHandle, scanResult));
+        items.forEach(itemHandle -> findSpecInZip(itemHandle, scanResult));
         return scanResult;
     }
 
@@ -150,7 +150,7 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
             .file(repoPath.getItemPath());
     }
 
-    private void process(ItemHandle item, ScanResult scanResult) {
+    private void findSpecInZip(ItemHandle item, ScanResult scanResult) {
         try {
             if (item.info().getName().endsWith(".yaml")) {
 
@@ -171,7 +171,7 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
                 Set<Spec> specsInZip = new HashSet<>();
 
                 while (zipEntry != null) {
-                    Optional<Spec> spec = process(item, zipInputStream, zipEntry);
+                    Optional<Spec> spec = findSpecInZip(item, zipInputStream, zipEntry);
                     spec.ifPresent(specsInZip::add);
                     zipEntry = zipInputStream.getNextEntry();
                 }
@@ -202,7 +202,7 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
         }
     }
 
-    private Optional<Spec> process(ItemHandle item, ZipInputStream stream, ZipEntry zipEntry) throws IOException {
+    private Optional<Spec> findSpecInZip(ItemHandle item, ZipInputStream stream, ZipEntry zipEntry) throws IOException {
         File file = item.info();
 
         if (!zipEntry.isDirectory() && zipEntry.getName().endsWith(".yaml")) {
