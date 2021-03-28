@@ -7,10 +7,5 @@ public class MavenScannerOptions {
 
     private String localRepoPath;
     private String mavenArtifactCoords;
-    private String includeGroupIds;
-    private String includeArtifactIds;
-    private String includeClassifiers;
-    private String includeProfileNames;
-
 
 }
