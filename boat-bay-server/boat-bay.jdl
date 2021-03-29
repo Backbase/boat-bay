@@ -91,6 +91,12 @@ entity Spec {
     sourceLastModifiedOn ZonedDateTime
     sourceLastModifiedBy String
 
+    mvnGroupId String
+    mvnArtifactId String
+    mvnVersion String
+    mvnClassifier String
+    mvnExtension String
+
 
 }
 
