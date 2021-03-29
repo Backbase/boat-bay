@@ -124,6 +124,21 @@ public class SpecResourceIT {
     private static final String DEFAULT_SOURCE_LAST_MODIFIED_BY = "AAAAAAAAAA";
     private static final String UPDATED_SOURCE_LAST_MODIFIED_BY = "BBBBBBBBBB";
 
+    private static final String DEFAULT_MVN_GROUP_ID = "AAAAAAAAAA";
+    private static final String UPDATED_MVN_GROUP_ID = "BBBBBBBBBB";
+
+    private static final String DEFAULT_MVN_ARTIFACT_ID = "AAAAAAAAAA";
+    private static final String UPDATED_MVN_ARTIFACT_ID = "BBBBBBBBBB";
+
+    private static final String DEFAULT_MVN_VERSION = "AAAAAAAAAA";
+    private static final String UPDATED_MVN_VERSION = "BBBBBBBBBB";
+
+    private static final String DEFAULT_MVN_CLASSIFIER = "AAAAAAAAAA";
+    private static final String UPDATED_MVN_CLASSIFIER = "BBBBBBBBBB";
+
+    private static final String DEFAULT_MVN_EXTENSION = "AAAAAAAAAA";
+    private static final String UPDATED_MVN_EXTENSION = "BBBBBBBBBB";
+
     @Autowired
     private SpecRepository specRepository;
 
@@ -170,7 +185,12 @@ public class SpecResourceIT {
             .sourceCreatedBy(DEFAULT_SOURCE_CREATED_BY)
             .sourceCreatedOn(DEFAULT_SOURCE_CREATED_ON)
             .sourceLastModifiedOn(DEFAULT_SOURCE_LAST_MODIFIED_ON)
-            .sourceLastModifiedBy(DEFAULT_SOURCE_LAST_MODIFIED_BY);
+            .sourceLastModifiedBy(DEFAULT_SOURCE_LAST_MODIFIED_BY)
+            .mvnGroupId(DEFAULT_MVN_GROUP_ID)
+            .mvnArtifactId(DEFAULT_MVN_ARTIFACT_ID)
+            .mvnVersion(DEFAULT_MVN_VERSION)
+            .mvnClassifier(DEFAULT_MVN_CLASSIFIER)
+            .mvnExtension(DEFAULT_MVN_EXTENSION);
         // Add required entity
         Portal portal;
         if (TestUtil.findAll(em, Portal.class).isEmpty()) {
@@ -255,7 +275,12 @@ public class SpecResourceIT {
             .sourceCreatedBy(UPDATED_SOURCE_CREATED_BY)
             .sourceCreatedOn(UPDATED_SOURCE_CREATED_ON)
             .sourceLastModifiedOn(UPDATED_SOURCE_LAST_MODIFIED_ON)
-            .sourceLastModifiedBy(UPDATED_SOURCE_LAST_MODIFIED_BY);
+            .sourceLastModifiedBy(UPDATED_SOURCE_LAST_MODIFIED_BY)
+            .mvnGroupId(UPDATED_MVN_GROUP_ID)
+            .mvnArtifactId(UPDATED_MVN_ARTIFACT_ID)
+            .mvnVersion(UPDATED_MVN_VERSION)
+            .mvnClassifier(UPDATED_MVN_CLASSIFIER)
+            .mvnExtension(UPDATED_MVN_EXTENSION);
         // Add required entity
         Portal portal;
         if (TestUtil.findAll(em, Portal.class).isEmpty()) {
@@ -353,6 +378,11 @@ public class SpecResourceIT {
         assertThat(testSpec.getSourceCreatedOn()).isEqualTo(DEFAULT_SOURCE_CREATED_ON);
         assertThat(testSpec.getSourceLastModifiedOn()).isEqualTo(DEFAULT_SOURCE_LAST_MODIFIED_ON);
         assertThat(testSpec.getSourceLastModifiedBy()).isEqualTo(DEFAULT_SOURCE_LAST_MODIFIED_BY);
+        assertThat(testSpec.getMvnGroupId()).isEqualTo(DEFAULT_MVN_GROUP_ID);
+        assertThat(testSpec.getMvnArtifactId()).isEqualTo(DEFAULT_MVN_ARTIFACT_ID);
+        assertThat(testSpec.getMvnVersion()).isEqualTo(DEFAULT_MVN_VERSION);
+        assertThat(testSpec.getMvnClassifier()).isEqualTo(DEFAULT_MVN_CLASSIFIER);
+        assertThat(testSpec.getMvnExtension()).isEqualTo(DEFAULT_MVN_EXTENSION);
     }
 
     @Test
@@ -562,7 +592,12 @@ public class SpecResourceIT {
             .andExpect(jsonPath("$.[*].sourceCreatedBy").value(hasItem(DEFAULT_SOURCE_CREATED_BY)))
             .andExpect(jsonPath("$.[*].sourceCreatedOn").value(hasItem(sameInstant(DEFAULT_SOURCE_CREATED_ON))))
             .andExpect(jsonPath("$.[*].sourceLastModifiedOn").value(hasItem(sameInstant(DEFAULT_SOURCE_LAST_MODIFIED_ON))))
-            .andExpect(jsonPath("$.[*].sourceLastModifiedBy").value(hasItem(DEFAULT_SOURCE_LAST_MODIFIED_BY)));
+            .andExpect(jsonPath("$.[*].sourceLastModifiedBy").value(hasItem(DEFAULT_SOURCE_LAST_MODIFIED_BY)))
+            .andExpect(jsonPath("$.[*].mvnGroupId").value(hasItem(DEFAULT_MVN_GROUP_ID)))
+            .andExpect(jsonPath("$.[*].mvnArtifactId").value(hasItem(DEFAULT_MVN_ARTIFACT_ID)))
+            .andExpect(jsonPath("$.[*].mvnVersion").value(hasItem(DEFAULT_MVN_VERSION)))
+            .andExpect(jsonPath("$.[*].mvnClassifier").value(hasItem(DEFAULT_MVN_CLASSIFIER)))
+            .andExpect(jsonPath("$.[*].mvnExtension").value(hasItem(DEFAULT_MVN_EXTENSION)));
     }
     
     @SuppressWarnings({"unchecked"})
@@ -620,7 +655,12 @@ public class SpecResourceIT {
             .andExpect(jsonPath("$.sourceCreatedBy").value(DEFAULT_SOURCE_CREATED_BY))
             .andExpect(jsonPath("$.sourceCreatedOn").value(sameInstant(DEFAULT_SOURCE_CREATED_ON)))
             .andExpect(jsonPath("$.sourceLastModifiedOn").value(sameInstant(DEFAULT_SOURCE_LAST_MODIFIED_ON)))
-            .andExpect(jsonPath("$.sourceLastModifiedBy").value(DEFAULT_SOURCE_LAST_MODIFIED_BY));
+            .andExpect(jsonPath("$.sourceLastModifiedBy").value(DEFAULT_SOURCE_LAST_MODIFIED_BY))
+            .andExpect(jsonPath("$.mvnGroupId").value(DEFAULT_MVN_GROUP_ID))
+            .andExpect(jsonPath("$.mvnArtifactId").value(DEFAULT_MVN_ARTIFACT_ID))
+            .andExpect(jsonPath("$.mvnVersion").value(DEFAULT_MVN_VERSION))
+            .andExpect(jsonPath("$.mvnClassifier").value(DEFAULT_MVN_CLASSIFIER))
+            .andExpect(jsonPath("$.mvnExtension").value(DEFAULT_MVN_EXTENSION));
     }
     @Test
     @Transactional
@@ -667,7 +707,12 @@ public class SpecResourceIT {
             .sourceCreatedBy(UPDATED_SOURCE_CREATED_BY)
             .sourceCreatedOn(UPDATED_SOURCE_CREATED_ON)
             .sourceLastModifiedOn(UPDATED_SOURCE_LAST_MODIFIED_ON)
-            .sourceLastModifiedBy(UPDATED_SOURCE_LAST_MODIFIED_BY);
+            .sourceLastModifiedBy(UPDATED_SOURCE_LAST_MODIFIED_BY)
+            .mvnGroupId(UPDATED_MVN_GROUP_ID)
+            .mvnArtifactId(UPDATED_MVN_ARTIFACT_ID)
+            .mvnVersion(UPDATED_MVN_VERSION)
+            .mvnClassifier(UPDATED_MVN_CLASSIFIER)
+            .mvnExtension(UPDATED_MVN_EXTENSION);
 
         restSpecMockMvc.perform(put("/api/specs")
             .contentType(MediaType.APPLICATION_JSON)
@@ -703,6 +748,11 @@ public class SpecResourceIT {
         assertThat(testSpec.getSourceCreatedOn()).isEqualTo(UPDATED_SOURCE_CREATED_ON);
         assertThat(testSpec.getSourceLastModifiedOn()).isEqualTo(UPDATED_SOURCE_LAST_MODIFIED_ON);
         assertThat(testSpec.getSourceLastModifiedBy()).isEqualTo(UPDATED_SOURCE_LAST_MODIFIED_BY);
+        assertThat(testSpec.getMvnGroupId()).isEqualTo(UPDATED_MVN_GROUP_ID);
+        assertThat(testSpec.getMvnArtifactId()).isEqualTo(UPDATED_MVN_ARTIFACT_ID);
+        assertThat(testSpec.getMvnVersion()).isEqualTo(UPDATED_MVN_VERSION);
+        assertThat(testSpec.getMvnClassifier()).isEqualTo(UPDATED_MVN_CLASSIFIER);
+        assertThat(testSpec.getMvnExtension()).isEqualTo(UPDATED_MVN_EXTENSION);
     }
 
     @Test

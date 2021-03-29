@@ -56,6 +56,14 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
     private RepositorySystemSession session;
     private List<RemoteRepository> repositories;
 
+    public static final String userHome = System.getProperty( "user.home" );
+    public static final File userMavenConfigurationHome = new File( userHome, ".m2" );
+    public static final String envM2Home = System.getenv("M2_HOME");
+    public static final File DEFAULT_USER_SETTINGS_FILE = new File( userMavenConfigurationHome, "settings.xml" );
+    public static final File DEFAULT_GLOBAL_SETTINGS_FILE =
+        new File( System.getProperty( "maven.home", envM2Home != null ? envM2Home : "" ), "conf/settings.xml" );
+
+
 
     @Override
     public void setSource(Source source) {
@@ -204,6 +212,11 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
             spec.setSourcePath(zipEntry.getName());
             spec.setSourceUrl(artifact.getGroupId() + ":" + artifact.getArtifactId() + ":" + artifact.getClassifier() + ":"+ artifact.getExtension() + ":" + artifact.getVersion());
             spec.setSourceName(filename);
+            spec.setMvnGroupId(artifact.getGroupId());
+            spec.setMvnArtifactId(artifact.getArtifactId());
+            spec.setMvnExtension(artifact.getExtension());
+            spec.setMvnVersion(artifact.getVersion());
+            spec.setMvnClassifier(artifact.getClassifier());
 //            spec.setSourceCreatedBy(file.getCreatedBy());
 //            spec.setSourceCreatedOn(file.getCreated().toInstant().atZone(ZoneId.systemDefault()));
 //            spec.setSourceLastModifiedBy(file.getModifiedBy());

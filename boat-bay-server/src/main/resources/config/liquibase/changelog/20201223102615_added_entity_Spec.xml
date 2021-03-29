@@ -91,6 +91,21 @@
             <column name="source_last_modified_by" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
+            <column name="mvn_group_id" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="mvn_artifact_id" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="mvn_version" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="mvn_classifier" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="mvn_extension" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
             <column name="previous_spec_id" type="bigint">
                 <constraints unique="true" nullable="true" uniqueConstraintName="ux_spec_previous_spec_id" />
             </column>
@@ -174,6 +189,11 @@
             <column name="source_created_on" type="datetime"/>
             <column name="source_last_modified_on" type="datetime"/>
             <column name="source_last_modified_by" type="string"/>
+            <column name="mvn_group_id" type="string"/>
+            <column name="mvn_artifact_id" type="string"/>
+            <column name="mvn_version" type="string"/>
+            <column name="mvn_classifier" type="string"/>
+            <column name="mvn_extension" type="string"/>
             <column name="portal_id" type="numeric"/>
             <column name="capability_id" type="numeric"/>
             <column name="product_id" type="numeric"/>
