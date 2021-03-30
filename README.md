@@ -11,8 +11,10 @@ configure the application and how to use it effectively.
 
 #### Scope
 
-The scope of the project is to provide an API Quality Portal that provides a team an overview on the quality on their API.
-It allows teams to shift left by using a centralized rules repository for linting specs and maintaining backwards compatability in the pipelines.
+The scope of the project is to provide an API Quality Portal that provides a team with an overview of the quality of their APIs.
+It makes use of a centralized rule repository for linting specs, these are configured per portal and allow teams to 
+easily enable and update the rules used in a portal. This allows teams to shift left and maintain backwards 
+compatibility in the pipelines.
 
 ### Bootstrap file
 
@@ -227,10 +229,15 @@ specTypes:
 
 ```
 
-This is where you can configure and set up product sources.
+This is where you can configure and set up product sources.  
 It should contain definitions for your portals, sources, dashboard and spec types.
-Where username and password are you should use your own users.
-The example above show the configuration for 2 sources. Break down of the source example:
+Where username and password are you should use your own users, these users should be able to access these sources.
+The project currently only allows for jfrog sources. Eventually it will allow for File System, Git and Maven sources.
+
+The example above shows the configuration for two portals. Portals are used to configure lint rules that are to be 
+enabled when linting the sources in a portal. They are easily changed and can be updated using a dashboard endpoint.
+
+The example above also shows the configuration for two sources. Break down of the source example:
 
 - name: the name of your source
 - baseUrl: the base url that will be used for your specs
@@ -239,8 +246,8 @@ The example above show the configuration for 2 sources. Break down of the source
 - filterArtifactsName: this defines what type of file ending, yaml, json, yml, however it could be made more specific
 - sourcePaths: this is a list of the parent directories for each capability under the product defined in this source
   - name: /{capability_name}/
-- username: username of user
-- password: password of user
+- username: username for accessing this source
+- password: password for accessing this source
 - cronExpression: schedule for scanning the source for updates and changes
 - capabilityKeySpEL: this is the spring expression language that will be used to
   format/produce the keys for capabilities, recommend use of this example's expressions
@@ -257,20 +264,29 @@ The example above show the configuration for 2 sources. Break down of the source
 - product:
 - key: key for this product
 - name: name for this product
-  Define the portals used in the sources where indicated in the example.
+
+Define the portals used in the sources where indicated in the example.
+There is also examples of configuring your dashboard, this is where portals are accessible from, and configuration 
+of spec types.
+  
 
 ### Building
+For Branches with an api:
 
 Run clean install in boat-bay-api project first, a bundled version of the spec needs to be generated.  
-Run clean install in boat-bay-server, the models ad interfaces must be generated from the bundled spec.  
+Run clean install in boat-bay-server, the models and interfaces must be generated from the bundled spec.  
 Run clean install in boat-bay-client and angular to generate their code.
+
+For Main:
+
+Run Clean Compile in project root.
 
 ### Running Locally
 
 To run the application it is fairly simple. First add the following parameters to your run configuration :
 
-- name: backbase.bootstrap.file value: location of the bootstrap.yaml file described above
-- name: boat.scheduler.source.scanner.enabled value: true
+- name: boat.bay.bootstrap.file value: location of the bootstrap.yaml file described above
+- name: boat.bay.bootstrap.enabled value: true
 
 To run the frontend go to the package.json file and run this line: ` "start": "npm run webpack:dev"`
 
@@ -300,7 +316,7 @@ The plugin configuration will look like example below:
                             <boatBayUrl>${url}</boatBayUrl>
                             <inputSpec>${project.basedir}/src/main/resources/petstore.yaml</inputSpec>
                             <output>${project.basedir}/src/main/resources/output</output>
-                            <sourceId>6</sourceId>
+                            <sourceKey>{source-key}</sourceKey>
                         </configuration>
                     </execution>
                 </executions>
@@ -310,9 +326,12 @@ The plugin configuration will look like example below:
 ```
 
 In the plugin configuration you can customise the output path to the location you want
-the lint reports to be generated this is also where the specs will be uploaded to, the
-boatBayUrl should be boat bay client, and the input spec should be the path of the spec
+the lint reports to be generated this is also where the specs will be uploaded to. The
+boatBayUrl should be configured to either "http://localhost:8080" to run locally for testing purposes and 
+https://boat-bay.proto.backbasecloud.com/ for deployment. The input spec should be the path of the spec
 or directory containing the specs you wish to upload.  
+More information on uploading specs using this method can be found at backbase-openapi-tools boat-maven-plugin.
+
 Or through a http request file like below:
 
 ```http request
