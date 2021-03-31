@@ -6,7 +6,7 @@ on:
     branches:
       - master
 
-jobs:cd
+jobs:
   # JOB to run change detection
   changes:
     runs-on: ubuntu-latest
