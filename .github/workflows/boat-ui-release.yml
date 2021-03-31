@@ -49,11 +49,11 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+#          npm version minor # To automatically increase the minor version, will have to push the file as well.
       - name: Prepare variables
         id: vars
         run: |
           cd boat-bay-frontend
-#          npm version minor # To automatically increase the minor version, will have to push the file as well.
           DOCKER_IMAGE=ghcr.io/Backbase/boat-bay-ui
           DOCKER_TAG=$(node -pe "require('./package.json').version")
           echo ::set-output name=image::${DOCKER_IMAGE}
