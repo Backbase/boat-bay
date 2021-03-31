@@ -41,7 +41,7 @@ jobs:
           echo ::set-output name=tag::${DOCKER_TAG}
 
       - name: Login to GHCR
-        run: echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u ${{ secrets.GHCR_USERNAME }} --password-stdin
+        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.repository }} --password-stdin
 
       - name: Build and Release Image
         run: |
