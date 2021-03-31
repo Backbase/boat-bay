@@ -1,0 +1,50 @@
+name: BOAT-BAY-UI-RELEASE
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'boat-bay-frontend/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+
+      - name: Checkout project
+        uses: actions/checkout@v2
+
+      - name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Prepare variables
+        id: vars
+        run: |
+          cd boat-bay-frontend
+#          npm version minor # To automatically increase the minor version, will have to push the file as well.
+          DOCKER_IMAGE=ghcr.io/Backbase/boat-bay-ui
+          DOCKER_TAG=$(node -pe "require('./package.json').version")
+          echo ::set-output name=image::${DOCKER_IMAGE}
+          echo ::set-output name=tag::${DOCKER_TAG}
+
+      - name: Build and Release Image
+        run: |
+          cd boat-bay-frontend
+          npm i
+          npm run build-prod
+          docker build . --file Dockerfile --tag ${{steps.vars.outputs.image}}:${{steps.vars.outputs.tag}}
+          docker push ${{steps.vars.outputs.image}}:${{steps.vars.outputs.tag}}
