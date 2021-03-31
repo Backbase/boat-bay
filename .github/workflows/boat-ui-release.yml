@@ -2,7 +2,6 @@ name: BOAT-BAY-UI-RELEASE
 
 on:
   push:
-    branches: [main]
     paths:
       - 'boat-bay-frontend/**'
 
