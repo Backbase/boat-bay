@@ -4,7 +4,7 @@ name: Frontend Release
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   # JOB to run change detection
