@@ -1,0 +1,62 @@
+name: Frontend Release
+
+#on.push.paths will trigger on every push, even in PR's
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  # JOB to run change detection
+  changes:
+    runs-on: ubuntu-latest
+    # Set job outputs to values from filter step
+    outputs:
+      frontend: ${{ steps.filter.outputs.backend }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            backend:
+              - 'boat-bay-server/**'
+
+  # JOB to release frontend
+  release:
+    needs: changes
+    if: ${{ needs.changes.outputs.backend == 'true' }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v2
+      - name: Setup Build Cache
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-m2
+          restore-keys: |
+            ${{ runner.os }}-m2
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Build & Verify
+        run: mvn -Pprod verify
+
+      - name: Prepare variables
+        id: vars
+        run: |
+          DOCKER_IMAGE=ghcr.io/backbase/boat-bay
+          DOCKER_TAG=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout |  cut -d- -f1)
+          echo ::set-output name=image::${DOCKER_IMAGE}
+          echo ::set-output name=tag::${DOCKER_TAG}
+
+      - name: Release Image
+        run: |
+          cd boat-bay-server
+          mvn -Pprod jib:build -Dskip.unit.tests=true -Dskip.integration.tests=true -Djib.to.image=${{steps.vars.outputs.image}}:${{steps.vars.outputs.tag}} -Djib.to.auth.username=${{ github.repository }} -Djib.to.auth.password=${{ secrets.GITHUB_TOKEN }}

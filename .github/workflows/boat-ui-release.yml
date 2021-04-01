@@ -54,7 +54,7 @@ jobs:
         id: vars
         run: |
           cd boat-bay-frontend
-          DOCKER_IMAGE=ghcr.io/backbase/boat-bay-ui
+          DOCKER_IMAGE=ghcr.io/backbase/boatbay-ui
           DOCKER_TAG=$(node -pe "require('./package.json').version")
           echo ::set-output name=image::${DOCKER_IMAGE}
           echo ::set-output name=tag::${DOCKER_TAG}

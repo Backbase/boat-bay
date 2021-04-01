@@ -1,9 +1,6 @@
 name: BOAT-BAY
 
-on:
-  push:
-    paths-ignore:
-      - 'boat-bay-frontend/**'
+on: push
 
 jobs:
   test:
