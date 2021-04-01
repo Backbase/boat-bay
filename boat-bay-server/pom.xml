@@ -15,6 +15,7 @@
 
     <repositories>
         <!-- jhipster-needle-maven-repository -->
+
     </repositories>
 
     <pluginRepositories>
