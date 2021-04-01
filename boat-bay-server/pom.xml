@@ -15,6 +15,11 @@
 
     <repositories>
         <!-- jhipster-needle-maven-repository -->
+        <repository>
+            <id>jfrog-bintray</id>
+            <name>bintray</name>
+            <url>https://dl.bintray.com/jfrog/artifactory-tools</url>
+        </repository>
     </repositories>
 
     <pluginRepositories>
