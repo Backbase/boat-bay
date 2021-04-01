@@ -14,7 +14,7 @@
     <name>Boat Bay :: Server</name>
 
     <repositories>
-        <!-- jhipster-needle-maven-repository -->
+        <!-- jfrog-bintray-repository -->
         <repository>
             <id>jfrog-bintray</id>
             <name>bintray</name>
