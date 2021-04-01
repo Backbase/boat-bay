@@ -1,4 +1,4 @@
-name: Frontend Release
+name: Backend Release
 
 #on.push.paths will trigger on every push, even in PR's
 on:
