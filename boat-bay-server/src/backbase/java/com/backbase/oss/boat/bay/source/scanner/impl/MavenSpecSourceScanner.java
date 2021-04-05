@@ -25,6 +25,7 @@ import org.eclipse.aether.graph.DependencyNode;
 import org.eclipse.aether.impl.DefaultServiceLocator;
 import org.eclipse.aether.repository.LocalRepository;
 import org.eclipse.aether.repository.RemoteRepository;
+import org.eclipse.aether.repository.RepositoryPolicy;
 import org.eclipse.aether.resolution.*;
 import org.eclipse.aether.spi.connector.RepositoryConnectorFactory;
 import org.eclipse.aether.spi.connector.transport.TransporterFactory;
@@ -32,9 +33,11 @@ import org.eclipse.aether.transport.file.FileTransporterFactory;
 import org.eclipse.aether.transport.http.HttpTransporterFactory;
 import org.eclipse.aether.util.repository.AuthenticationBuilder;
 import org.eclipse.aether.version.Version;
-import org.jfrog.artifactory.client.ItemHandle;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -55,19 +58,14 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
     private RepositorySystem repositorySystem;
     private RepositorySystemSession session;
     private List<RemoteRepository> repositories;
-
-    public static final String userHome = System.getProperty( "user.home" );
-    public static final File userMavenConfigurationHome = new File( userHome, ".m2" );
-    public static final String envM2Home = System.getenv("M2_HOME");
-    public static final File DEFAULT_USER_SETTINGS_FILE = new File( userMavenConfigurationHome, "settings.xml" );
-    public static final File DEFAULT_GLOBAL_SETTINGS_FILE =
-        new File( System.getProperty( "maven.home", envM2Home != null ? envM2Home : "" ), "conf/settings.xml" );
-
-
+    private final Set<SourcePath> paths = new LinkedHashSet<>();
 
     @Override
     public void setSource(Source source) {
+
         this.source = source;
+
+        paths.addAll(source.getSourcePaths());
     }
 
     @Override
@@ -83,6 +81,7 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
 
     @Override
     public ScanResult scan() {
+        log.info("Running Maven Source Scanner for source: {}", source.getName());
 
         ScanResult scanResult = new ScanResult(source, sourceScannerOptions);
 
@@ -100,12 +99,13 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
 
         VersionRangeResult rangeResult = null;
         try {
+            log.info("Resolving versions for artifact: {} in: {}", mavenScannerOptions.getMavenArtifactCoords(), repositories);
             rangeResult = repositorySystem.resolveVersionRange(session, rangeRequest);
 
             List<Version> versions = rangeResult.getVersions();
             log.info("Available versions: {}", StringUtils.join(versions, ","));
-
-            versions.forEach(v -> processVersion(scanResult, artifact, v));
+            Map<String, Spec> resolvedSpecs = new HashMap<>();
+            versions.forEach(v -> processVersion(scanResult, artifact, v, resolvedSpecs));
 
 
         } catch (VersionRangeResolutionException e) {
@@ -116,25 +116,30 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
         return scanResult;
     }
 
-    private void processVersion(ScanResult scanResult, Artifact artifact, Version version) {
+    private void processVersion(ScanResult scanResult, Artifact artifact, Version version, Map<String, Spec> resolvedSpecs) {
         if (artifact.getExtension().equals("pom")) {
-            processBOM(scanResult, artifact, version);
+            processBOM(scanResult, artifact, version, resolvedSpecs);
         } else {
             throw new NotImplementedException("Not yet implemented");
         }
     }
 
-    private void processBOM(ScanResult scanResult, Artifact artifact, Version version) {
+    private void processBOM(ScanResult scanResult, Artifact artifact, Version version, Map<String, Spec> resolvedSpecs) {
+
+
         try {
             Artifact searchArtifact = artifact.setVersion(version.toString());
+
+            log.info("Processing BOM Maven Artifact: {} for available spec dependencies", searchArtifact);
             ArtifactDescriptorRequest descriptorRequest = new ArtifactDescriptorRequest();
             descriptorRequest.setArtifact(searchArtifact);
             descriptorRequest.setRepositories(repositories);
 
             ArtifactDescriptorResult descriptorResult = repositorySystem.readArtifactDescriptor(session, descriptorRequest);
 
-
-            DependencyFilter dependencyFilter = new ExtendedPatternDependencyFilter(source.getSourcePaths().stream().map(SourcePath::getName).collect(Collectors.toList()));
+            DependencyFilter dependencyFilter = new ExtendedPatternDependencyFilter(paths.stream()
+                .map(SourcePath::getName)
+                .collect(Collectors.toList()));
 
             List<DependencyNode> parents = Collections.emptyList();
             List<ArtifactRequest> artifactRequests = Stream.concat(descriptorResult.getDependencies().stream(), descriptorResult.getManagedDependencies().stream())
@@ -143,26 +148,36 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
                 .map(this::createArtifactDownloadRequest)
                 .collect(Collectors.toList());
 
+            log.info("Found {} specs in BOM: {} ", artifactRequests.size(), searchArtifact.getVersion());
+
             List<ArtifactResult> artifactResults = repositorySystem.resolveArtifacts(session, artifactRequests);
             Set<Spec> specsInBom = new HashSet<>();
             artifactResults.forEach(artifactResult -> {
                 File file = artifactResult.getArtifact().getFile();
-                if(file.exists())  {
-                    if(file.getName().endsWith(".zip") || file.getName().endsWith(".jar")) {
+                if (file.exists()) {
+                    if (file.getName().endsWith(".zip") || file.getName().endsWith(".jar")) {
                         try {
                             ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(file));
                             ZipEntry zipEntry = zipInputStream.getNextEntry();
-                            Set<Spec> specsInZip = new HashSet<>();
 
                             while (zipEntry != null) {
-                                Optional<Spec> spec = findSpecInZip(artifactResult, zipInputStream, zipEntry);
-                                spec.ifPresent(specsInZip::add);
+                                Optional<Spec> spec;
+                                String resolvedSpecKey = artifactResult.getArtifact().toString() + "/" + zipEntry.getName();
+                                if (resolvedSpecs.containsKey(resolvedSpecKey)) {
+                                    spec = Optional.of(resolvedSpecs.get(resolvedSpecKey));
+                                    log.info("Spec already resolved: {}. Adding to release: {}", spec.get().getFilename(), searchArtifact.getVersion());
+                                } else {
+                                    spec = findSpecInZip(artifactResult, zipInputStream, zipEntry);
+                                    if (spec.isPresent()) {
+                                        resolvedSpecs.put(resolvedSpecKey, spec.get());
+                                        log.info("Spec: {} resolved from {}. Adding to release: {}", spec.get().getFilename(), artifactResult.getArtifact(), searchArtifact.getVersion());
+                                    }
+                                }
+                                spec.ifPresent(specsInBom::add);
+
                                 zipEntry = zipInputStream.getNextEntry();
                             }
                             zipInputStream.close();
-
-                            specsInBom.addAll(specsInZip);
-
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -170,14 +185,14 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
                 }
             });
 
-            if(!specsInBom.isEmpty()) {
+            if (!specsInBom.isEmpty()) {
                 ProductRelease productRelease = new ProductRelease();
                 productRelease.setKey(version.toString());
                 productRelease.setName(version.toString());
                 productRelease.setVersion(version.toString());
                 productRelease.setSpecs(specsInBom);
                 productRelease.setProduct(source.getProduct());
-                productRelease.setReleaseDate(ZonedDateTime.now() );
+                productRelease.setReleaseDate(ZonedDateTime.now());
                 log.info("Adding {} to release named: {}", specsInBom.size(), productRelease.getName());
                 scanResult.addProductRelease(productRelease);
             }
@@ -185,6 +200,8 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
         } catch (ArtifactDescriptorException | ArtifactResolutionException e) {
             e.printStackTrace();
         }
+
+
     }
 
     private Optional<Spec> findSpecInZip(ArtifactResult artifactResult, ZipInputStream stream, ZipEntry zipEntry) throws IOException {
@@ -192,36 +209,41 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
         Artifact artifact = artifactResult.getArtifact();
 
         if (!zipEntry.isDirectory() && zipEntry.getName().endsWith(".yaml")) {
-            log.info("Creating spec from zip entry: {}", zipEntry.getName());
+
             String openApi = getOpenApiFromZipStream(stream);
+            if (openApi.startsWith("openapi:")) {
+                log.info("Creating spec from zip entry: {} in artifact: {}", zipEntry.getName(), artifactResult.getArtifact());
 
-            String filename = StringUtils.substringAfter(zipEntry.getName(), "/");
+                String filename = zipEntry.getName().contains("/") ? StringUtils.substringAfter(zipEntry.getName(), "/") : zipEntry.getName();
 
-            Spec spec = new Spec();
-            spec.setKey(filename);
-            spec.setPortal(source.getPortal());
-            spec.setCapability(source.getCapability());
-            spec.setServiceDefinition(source.getServiceDefinition());
-            spec.setSource(source);
-            spec.setName(filename);
-            spec.setCreatedBy(JFrogSpecSourceScanner.class.getSimpleName());
-            spec.setCreatedOn(Instant.now().atZone(ZoneId.systemDefault()));
-            spec.setOpenApi(openApi);
+                Spec spec = new Spec();
+                spec.setKey(filename);
+                spec.setPortal(source.getPortal());
+                spec.setCapability(source.getCapability());
+                spec.setServiceDefinition(source.getServiceDefinition());
+                spec.setSource(source);
+                spec.setName(filename);
+                spec.setCreatedBy(MavenSpecSourceScanner.class.getSimpleName());
+                spec.setCreatedOn(Instant.now().atZone(ZoneId.systemDefault()));
+                spec.setOpenApi(openApi);
 
-            spec.setFilename(filename);
-            spec.setSourcePath(zipEntry.getName());
-            spec.setSourceUrl(artifact.getGroupId() + ":" + artifact.getArtifactId() + ":" + artifact.getClassifier() + ":"+ artifact.getExtension() + ":" + artifact.getVersion());
-            spec.setSourceName(filename);
-            spec.setMvnGroupId(artifact.getGroupId());
-            spec.setMvnArtifactId(artifact.getArtifactId());
-            spec.setMvnExtension(artifact.getExtension());
-            spec.setMvnVersion(artifact.getVersion());
-            spec.setMvnClassifier(artifact.getClassifier());
+                spec.setFilename(filename);
+                spec.setSourcePath(zipEntry.getName());
+                spec.setSourceUrl(artifact.getGroupId() + ":" + artifact.getArtifactId() + ":" + artifact.getClassifier() + ":" + artifact.getExtension() + ":" + artifact.getVersion());
+                spec.setSourceName(filename);
+                spec.setMvnGroupId(artifact.getGroupId());
+                spec.setMvnArtifactId(artifact.getArtifactId());
+                spec.setMvnExtension(artifact.getExtension());
+                spec.setMvnVersion(artifact.getVersion());
+                spec.setMvnClassifier(artifact.getClassifier());
 //            spec.setSourceCreatedBy(file.getCreatedBy());
 //            spec.setSourceCreatedOn(file.getCreated().toInstant().atZone(ZoneId.systemDefault()));
 //            spec.setSourceLastModifiedBy(file.getModifiedBy());
 //            spec.setSourceLastModifiedOn(file.getLastModified().toInstant().atZone(ZoneId.systemDefault()));
-            return Optional.of(spec);
+                return Optional.of(spec);
+            } else {
+                log.info("File: {} is not an openapi spec: ", zipEntry.getName());
+            }
         } else {
             log.debug("Ignoring {}", zipEntry.getName());
         }
@@ -241,43 +263,6 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
         return boas.toString(Charset.defaultCharset());
     }
 
-
-    private Optional<Spec> findSpecInZip(ItemHandle item, ZipInputStream stream, ZipEntry zipEntry) throws IOException {
-        org.jfrog.artifactory.client.model.File file = item.info();
-
-        if (!zipEntry.isDirectory() && zipEntry.getName().endsWith(".yaml")) {
-            log.info("Creating spec from zip entry: {}", zipEntry.getName());
-            String openApi = getOpenApiFromZipStream(stream);
-
-            String filename = StringUtils.substringAfter(zipEntry.getName(), "/");
-
-            Spec spec = new Spec();
-            spec.setKey(filename);
-            spec.setPortal(source.getPortal());
-            spec.setCapability(source.getCapability());
-            spec.setServiceDefinition(source.getServiceDefinition());
-            spec.setSource(source);
-            spec.setName(filename);
-            spec.setCreatedBy(JFrogSpecSourceScanner.class.getSimpleName());
-            spec.setCreatedOn(Instant.now().atZone(ZoneId.systemDefault()));
-            spec.setOpenApi(openApi);
-
-            spec.setFilename(filename);
-            spec.setSourcePath(zipEntry.getName());
-            spec.setSourceUrl(file.getDownloadUri());
-            spec.setSourceName(filename);
-            spec.setSourceCreatedBy(file.getCreatedBy());
-            spec.setSourceCreatedOn(file.getCreated().toInstant().atZone(ZoneId.systemDefault()));
-            spec.setSourceLastModifiedBy(file.getModifiedBy());
-            spec.setSourceLastModifiedOn(file.getLastModified().toInstant().atZone(ZoneId.systemDefault()));
-            return Optional.of(spec);
-        } else {
-            log.debug("Ignoring {}", zipEntry.getName());
-        }
-        return Optional.empty();
-
-    }
-
     private ArtifactRequest createArtifactDownloadRequest(DefaultDependencyNode dependency) {
         ArtifactRequest artifactRequest = new ArtifactRequest();
         artifactRequest.setArtifact(dependency.getArtifact());
@@ -291,12 +276,12 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
         return null;
     }
 
-
     public DefaultRepositorySystemSession newRepositorySystemSession(RepositorySystem system) {
         DefaultRepositorySystemSession session = MavenRepositorySystemUtils.newSession();
 
         LocalRepository localRepo = new LocalRepository(this.sourceScannerOptions.getMavenScannerOptions().getLocalRepoPath());
         session.setLocalRepositoryManager(system.newLocalRepositoryManager(session, localRepo));
+        session.setChecksumPolicy(RepositoryPolicy.CHECKSUM_POLICY_IGNORE);
 
 //        session.setTransferListener( new ConsoleTransferListener() );
 //        session.setRepositoryListener( new ConsoleRepositoryListener() );
@@ -322,11 +307,6 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
     }
 
     public RepositorySystem newRepositorySystem() {
-        /*
-         * Aether's components implement org.eclipse.aether.spi.locator.Service to ease manual wiring and using the
-         * prepopulated DefaultServiceLocator, we only need to register the repository connector and transporter
-         * factories.
-         */
         DefaultServiceLocator locator = MavenRepositorySystemUtils.newServiceLocator();
         locator.addService(RepositoryConnectorFactory.class, BasicRepositoryConnectorFactory.class);
         locator.addService(TransporterFactory.class, FileTransporterFactory.class);
@@ -335,28 +315,11 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
         locator.setErrorHandler(new DefaultServiceLocator.ErrorHandler() {
             @Override
             public void serviceCreationFailed(Class<?> type, Class<?> impl, Throwable exception) {
-                log.error("Service creation failed for {} with implementation {}",
-                    type, impl, exception);
+                log.error("Service creation failed for {} with implementation {}", type, impl, exception);
             }
         });
 
         return locator.getService(RepositorySystem.class);
-    }
-
-    /**
-     * Clean up configuration string before it can be tokenized.
-     *
-     * @param str the string which should be cleaned
-     * @return cleaned up string
-     */
-    public static String cleanToBeTokenizedString(String str) {
-        String ret = "";
-        if (!org.codehaus.plexus.util.StringUtils.isEmpty(str)) {
-            // remove initial and ending spaces, plus all spaces next to commas
-            ret = str.trim().replaceAll("[\\s]*,[\\s]*", ",");
-        }
-
-        return ret;
     }
 
 }

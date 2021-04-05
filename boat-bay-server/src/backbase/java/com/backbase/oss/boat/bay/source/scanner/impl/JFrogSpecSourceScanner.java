@@ -162,7 +162,6 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
                 log.info("Downloading OpenAPI for spec: {}", spec.getName());
                 String openApiContents = downloadOpenApi(item);
                 spec.setOpenApi(openApiContents);
-                scanResult.getSpecs().add(spec);
 
             } else if (item.info().getName().endsWith(".zip")) {
                 log.info("Downloading zip file: {}", item.info().getName());
@@ -192,7 +191,6 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
                     scanResult.addProductRelease(productRelease);
                 }
 
-                scanResult.getSpecs().addAll(specsInZip);
 
             } else {
                 log.error("Item: {} not supported", item.info().getPath());

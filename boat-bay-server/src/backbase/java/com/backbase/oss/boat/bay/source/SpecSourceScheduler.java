@@ -7,6 +7,7 @@ import com.backbase.oss.boat.bay.source.scanner.ScanResult;
 import com.backbase.oss.boat.bay.source.scanner.SourceScannerOptions;
 import com.backbase.oss.boat.bay.source.scanner.SpecSourceScanner;
 import com.backbase.oss.boat.bay.source.scanner.impl.JFrogSpecSourceScanner;
+import com.backbase.oss.boat.bay.source.scanner.impl.MavenSpecSourceScanner;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -106,6 +107,9 @@ public class SpecSourceScheduler {
         switch (source.getType()) {
             case JFROG:
                 specSourceScanner = new JFrogSpecSourceScanner();
+                break;
+            case MAVEN:
+                specSourceScanner = new MavenSpecSourceScanner();
                 break;
             default:
                 throw new IllegalArgumentException("No Implementation available for source: " + source);
