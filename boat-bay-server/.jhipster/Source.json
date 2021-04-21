@@ -18,7 +18,7 @@
     {
       "fieldName": "type",
       "fieldType": "SourceType",
-      "fieldValues": "GIT,JFROG,HTTP,FILE_SYSTEM,BOAT_MAVEN_PLUGIN",
+      "fieldValues": "GIT,JFROG,HTTP,FILE_SYSTEM,BOAT_MAVEN_PLUGIN,MAVEN",
       "fieldValidateRules": [
         "required"
       ]

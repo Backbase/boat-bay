@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -31,13 +32,23 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import javax.annotation.PostConstruct;
+
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionCallbackWithoutResult;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.zalando.zally.core.RuleDetails;
 import org.zalando.zally.core.RulesManager;
 import org.zalando.zally.rule.api.Rule;
@@ -46,7 +57,7 @@ import org.zalando.zally.rule.api.RuleSet;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-@EnableConfigurationProperties(  BoatBayConfiguration.class)
+@EnableConfigurationProperties(BoatBayConfiguration.class)
 @DependsOn("liquibase")
 public class BoatBayBootstrap {
 
@@ -65,10 +76,12 @@ public class BoatBayBootstrap {
 
     private Map<String, RuleDetails> availableRules;
 
-    @PostConstruct
-    public void loadBootstrapFile() {
-        if(configuration.getBootstrap() != null) {
+    private final PlatformTransactionManager txManager;
 
+    @PostConstruct
+
+    public void loadBootstrapFile() {
+        if (configuration.getBootstrap() != null) {
             File bootstrapFile = configuration.getBootstrap().getFile();
             if (configuration.getBootstrap() != null && bootstrapFile != null && bootstrapFile.exists() && configuration.getBootstrap().getEnabled()) {
                 log.info("Loading bootstrap from: {}", bootstrapFile);
@@ -77,55 +90,66 @@ public class BoatBayBootstrap {
                 objectMapper.registerModule(jdk8Module);
                 objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
                 objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-
                 try {
                     Bootstrap bootstrap = objectMapper.readValue(bootstrapFile, Bootstrap.class);
-                    bootstrap.getPortals().forEach(portal -> {
-                        Optional<Portal> existingPortal = portalRepository.findOne(Example.of(portal));
-                        if (existingPortal.isEmpty()) {
-                            log.info("Bootstrapping portal: {}", portal.getName());
-                            Set<LintRule> lintRules = portal.getLintRules();
-                            portal.setLintRules(null);
-                            portalRepository.save(portal);
-                            lintRules.stream().map(rule -> createLintRule(portal, rule)).forEach(lintRuleRepository::save);
+                    TransactionTemplate transactionTemplate = new TransactionTemplate(txManager);
+                    transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+                        @Override
+                        protected void doInTransactionWithoutResult(@NotNull TransactionStatus transactionStatus) {
+                            try {
+                                saveBootstrapConfiguration(bootstrap);
+                                transactionStatus.flush();
+                            } catch (BootstrapException e) {
+                                log.error("Failed to bootstrap ", e);
+                            }
                         }
                     });
-
-                    Dashboard dashboard = bootstrap.getDashboard();
-
-                    if (dashboard != null) {
-                        Optional<Dashboard> existingDashboard = dashboardRepository.findDashboardByName(dashboard.getName());
-                        if (existingDashboard.isEmpty()) {
-                            Portal portal = portalRepository.findOne(Example.of(dashboard.getDefaultPortal())).orElseThrow(() -> new BootstrapException("Cannot create dashboard with portal: " + dashboard.getDefaultPortal() + " as it does not exist"));
-                            dashboard.setDefaultPortal(portal);
-                            log.info("Bootstrapping dashboard: {}", dashboard.getName());
-                            dashboardRepository.save(dashboard);
-                        }
-                    }
-
-                    for (Source source : bootstrap.getSources()) {
-                        Optional<Source> existingSource = sourceRepository.findOne(Example.of(new Source().name(source.getName())));
-                        if (existingSource.isEmpty()) {
-                            bootstrapSource(source);
-                        }
-                    }
-
-                    if (bootstrap.getSpecTypes() != null) {
-                        bootstrap.getSpecTypes().forEach(specType -> {
-                            Optional<SpecType> existingSpecType = specTypeRepository.findOne(Example.of(specType));
-                            if (existingSpecType.isEmpty()) {
-                                log.info("Bootstrapping Spec Type: {}", specType.getName());
-                                specTypeRepository.save(specType);
-                            }
-                        });
-                    }
-
                 } catch (IOException e) {
                     log.error("Failed to read bootstrap yaml file from location: {}", bootstrapFile, e);
-                } catch (BootstrapException e) {
-                    log.error("Failed to bootstrap ", e);
                 }
             }
+        }
+    }
+
+    private void saveBootstrapConfiguration(Bootstrap bootstrap) throws BootstrapException {
+        bootstrap.getPortals().forEach(portal -> {
+            Optional<Portal> existingPortal = portalRepository.findOne(Example.of(portal));
+            if (existingPortal.isEmpty()) {
+                log.info("Bootstrapping portal: {}", portal.getName());
+                Set<LintRule> lintRules = portal.getLintRules();
+                portal.setLintRules(null);
+                portalRepository.save(portal);
+                lintRules.stream().map(rule -> createLintRule(portal, rule)).forEach(lintRuleRepository::save);
+            }
+        });
+
+        Dashboard dashboard = bootstrap.getDashboard();
+
+        if (dashboard != null) {
+            Optional<Dashboard> existingDashboard = dashboardRepository.findDashboardByName(dashboard.getName());
+            if (existingDashboard.isEmpty()) {
+                Portal portal = portalRepository.findOne(Example.of(dashboard.getDefaultPortal())).orElseThrow(() -> new BootstrapException("Cannot create dashboard with portal: " + dashboard.getDefaultPortal() + " as it does not exist"));
+                dashboard.setDefaultPortal(portal);
+                log.info("Bootstrapping dashboard: {}", dashboard.getName());
+                dashboardRepository.save(dashboard);
+            }
+        }
+
+        for (Source source : bootstrap.getSources()) {
+            Optional<Source> existingSource = sourceRepository.findOne(Example.of(new Source().name(source.getName())));
+            if (existingSource.isEmpty()) {
+                bootstrapSource(source);
+            }
+        }
+
+        if (bootstrap.getSpecTypes() != null) {
+            bootstrap.getSpecTypes().forEach(specType -> {
+                Optional<SpecType> existingSpecType = specTypeRepository.findOne(Example.of(specType));
+                if (existingSpecType.isEmpty()) {
+                    log.info("Bootstrapping Spec Type: {}", specType.getName());
+                    specTypeRepository.save(specType);
+                }
+            });
         }
     }
 

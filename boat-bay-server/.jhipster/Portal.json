@@ -62,6 +62,13 @@
       "otherEntityName": "lintRule",
       "otherEntityRelationshipName": "portal",
       "relationshipName": "lintRule"
+    },
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "zallyConfig",
+      "otherEntityRelationshipName": "portal",
+      "relationshipName": "zallyConfig",
+      "ownerSide": false
     }
   ],
   "changelogDate": "20201223102315",

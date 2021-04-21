@@ -131,6 +131,26 @@
     {
       "fieldName": "sourceLastModifiedBy",
       "fieldType": "String"
+    },
+    {
+      "fieldName": "mvnGroupId",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "mvnArtifactId",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "mvnVersion",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "mvnClassifier",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "mvnExtension",
+      "fieldType": "String"
     }
   ],
   "relationships": [

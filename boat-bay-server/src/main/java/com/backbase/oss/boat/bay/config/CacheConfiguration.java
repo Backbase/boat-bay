@@ -91,6 +91,7 @@ public class CacheConfiguration {
             createCache(cm, com.backbase.oss.boat.bay.domain.Product.class.getName() + ".productReleases");
             createCache(cm, com.backbase.oss.boat.bay.domain.Portal.class.getName() + ".lintRules");
             createCache(cm, com.backbase.oss.boat.bay.domain.Spec.class.getName() + ".specs");
+            createCache(cm, com.backbase.oss.boat.bay.domain.ZallyConfig.class.getName());
             // jhipster-needle-ehcache-add-entry
 
             createCache(cm, BoatLintRuleValidatorFactory.API_VALIDATORS);
