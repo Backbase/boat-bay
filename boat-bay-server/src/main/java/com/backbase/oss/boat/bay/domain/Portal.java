@@ -1,5 +1,6 @@
 package com.backbase.oss.boat.bay.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -65,6 +66,10 @@ public class Portal implements Serializable {
     @OneToMany(mappedBy = "portal")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Set<LintRule> lintRules = new HashSet<>();
+
+    @OneToOne(mappedBy = "portal")
+    @JsonIgnore
+    private ZallyConfig zallyConfig;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -253,6 +258,19 @@ public class Portal implements Serializable {
 
     public void setLintRules(Set<LintRule> lintRules) {
         this.lintRules = lintRules;
+    }
+
+    public ZallyConfig getZallyConfig() {
+        return zallyConfig;
+    }
+
+    public Portal zallyConfig(ZallyConfig zallyConfig) {
+        this.zallyConfig = zallyConfig;
+        return this;
+    }
+
+    public void setZallyConfig(ZallyConfig zallyConfig) {
+        this.zallyConfig = zallyConfig;
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
