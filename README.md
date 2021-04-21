@@ -6,18 +6,13 @@
 
 ### Intro
 
-Boat bay allows for the management and linting of products' specs. This documentation will explain how to
-configure the application and how to use it effectively.
-
-#### Scope
-
-The scope of the project is to provide an API Quality Portal that provides a team an overview on the quality on their API.
-It allows teams to shift left by using a centralized rules repository for linting specs and maintaining backwards compatability in the pipelines.
+Boat bay allows for the management of products specs. This documentation will explain how to
+configure the application and how to use it effectively
 
 ### Bootstrap file
 
 Start by creating a bootstrap.yaml file. This will
-most likely be located in the same place as the specifications
+most likely be located in a with the specifications
 that are to be used with boat bay.
 
 Your file should look like the example below:
@@ -25,7 +20,7 @@ Your file should look like the example below:
 ```yaml
 portals:
   - key: "repo"
-    name: "repo.backbase.com"
+    name: "repo.example.com"
     lintRules:
       - ruleId: 150
       - ruleId: B001
@@ -39,33 +34,14 @@ portals:
       - ruleId: B009
       - ruleId: B010
       - ruleId: M0012
-
-  - key: "artifacts"
-    name: "artifacts.backbase.com"
-    lintRules:
-      - ruleId: 150
-      - ruleId: B001
-        severity: SHOULD
-      - ruleId: B002
-      - ruleId: B003
-      - ruleId: B004
-      - ruleId: B005
-      - ruleId: B006
-      - ruleId: B007
-      - ruleId: B008
-      - ruleId: B009
-      - ruleId: B010
-      - ruleId: M0012
-
 sources:
-  - name: artifacts.backbase.com - Digital Banking
-    baseUrl: https://artifacts.backbase.com/staging
-    type: JFROG
+  - name: repo.example.com - PetStore
+    baseUrl: https://repo.example.com/
+    type: FILESYSTEM
     active: true
-    filterArtifactsName: "banking-services-bom-*-api.zip"
-    filterArtifactsCreatedSince: 2020-01-01
+    filterArtifactsName: "*.yaml"
     sourcePaths:
-      - name:  /com/backbase/dbs/banking-services-bom/
+      - name:  /petstore/
     username: {username}
     password: {password}
     cronExpression: 0 0 13 * * *
@@ -82,119 +58,11 @@ sources:
     runOnStartup: true
     itemLimit: 5
     portal:
-      key: "artifacts"
-    product:
-      key: "digital-banking"
-      name: "Digital Banking"
-      jiraProjectId: 10235
-  - name: repo.backbase.com - Digital Banking
-    baseUrl: https://repo.backbase.com/specs
-    type: JFROG
-    active: true
-    filterArtifactsName: "*.yaml"
-    sourcePaths:
-      - name: /account-statement/
-      - name: /action/
-      - name: /approval/
-      - name: /arrangement-manager/
-      - name: /billpay-integrator/
-      - name: /budget-planner/
-      - name: /card-manager/
-      - name: /cash-flow-forecasting
-      - name: /cash-management/
-      - name: /consent/
-      - name: /contact-manager/
-      - name: /employee/
-      - name: /financial-institution-manager/
-      - name: /limit/
-      - name: /message/
-      - name: /payment/
-      - name: /place-manager/
-      - name: /portfolio-summary/
-      - name: /saving-goal-planner/
-      - name: /stop-checks/
-      - name: /tradingfx/
-      - name: /transaction-category-collector/
-      - name: /transaction-manager/
-    username: {username}
-    password: {password}
-    cronExpression: 0 0 12 * * *
-    capabilityKeySpEL: sourcePath.substring(1, sourcePath.indexOf('/', 1))
-    capabilityNameSpEL: sourcePath.substring(1, sourcePath.indexOf('/', 1))
-    serviceKeySpEL: sourceName.substring(0, sourceName.lastIndexOf('-')).replaceAll('-([a-z]*?)-api', '').replaceAll('-integration([-a-z]*)', '')
-    serviceNameSpEL: sourceName.substring(0, sourceName.lastIndexOf('-')).replaceAll('-([a-z]*?)-api', '').replaceAll('-integration([-a-z]*)', '')
-    specKeySpEL: sourceName.substring(0, sourceName.lastIndexOf('-'))
-    specFilterSpEL: sourcePath.contains('common-types') || sourcePath.substring(1, sourcePath.indexOf('/', 1)).contains('integration') ||  sourcePath.substring(1, sourcePath.indexOf('/', 1)).contains('persistence')
-    overwriteChanges: false
-    runOnStartup: true
-    portal:
       key: "repo"
     product:
-      key: "digital-banking"
-      name: "Digital Banking"
-      jiraProjectId: 10235
-  - name: repo.backbase.com - Digital Sales
-    baseUrl: https://repo.backbase.com/specs
-    type: JFROG
-    active: true
-    filterArtifactsName: "*.yaml"
-    sourcePaths:
-      - name: /flow/
-    username: {username}
-    password: {password}
-    cronExpression: 0 5 12 * * *
-    capabilityKeySpEL: sourcePath.substring(1, sourcePath.indexOf('/', 1))
-    capabilityNameSpEL: sourcePath.substring(1, sourcePath.indexOf('/', 1))
-    serviceKeySpEL: sourceName.substring(0, sourceName.lastIndexOf('-')).replaceAll('-([a-z]*?)-api', '')
-    serviceNameSpEL: sourceName.substring(0, sourceName.lastIndexOf('-')).replaceAll('-([a-z]*?)-api', '')
-    specFilterSpEL: "sourcePath.contains('common-types') || sourcePath.substring(1, sourcePath.indexOf('/', 1)).contains('integration') ||  sourcePath.substring(1, sourcePath.indexOf('/', 1)).contains('persistence')"
-    specKeySpEL: sourceName.substring(0, sourceName.lastIndexOf('-'))
-    overwriteChanges: false
-    runOnStartup: true
-    portal:
-      key: "repo"
-    product:
-      key: "digital-sales"
-      name: "Digital Sales"
-  - name: repo.backbase.com - Platform
-    baseUrl: https://repo.backbase.com/specs
-    type: JFROG
-    active: true
-    filterArtifactsName: "*.yaml"
-    sourcePaths:
-      - name: /access-control/
-      - name: /audit/
-      - name: /authorized-user/
-      - name: /contentservices/
-      - name: /device-management-service/
-      - name: /notification/
-      - name: /portal/
-      - name: /provisioning/
-      - name: /push-integration/
-      - name: /renditionservice/
-      - name: /space-controller/
-      - name: /targeting/
-      - name: /user-manager/
-      - name: /user-profile-manager/
-      - name: /versionmanagement-persistence/
-    username: {username}
-    password: {password}
-    cronExpression: 0 10 12 * * *
-    capabilityKeySpEL: sourcePath.substring(1, sourcePath.indexOf('/', 1))
-    capabilityNameSpEL: sourcePath.substring(1, sourcePath.indexOf('/', 1))
-    serviceKeySpEL: sourceName.substring(0, sourceName.lastIndexOf('-')).replaceAll('-([a-z]*?)-api', '')
-    serviceNameSpEL: sourceName.substring(0, sourceName.lastIndexOf('-')).replaceAll('-([a-z]*?)-api', '')
-    specFilterSpEL: "sourcePath.contains('common-types') || sourcePath.substring(1, sourcePath.indexOf('/', 1)).contains('integration') ||  sourcePath.substring(1, sourcePath.indexOf('/', 1)).contains('persistence')"
-    specKeySpEL: sourceName.substring(0, sourceName.lastIndexOf('-'))
-    overwriteChanges: false
-    runOnStartup: true
-    portal:
-      key: "repo"
-    product:
-      key: platform
-      name: "Platform"
-      jiraProjectId: 10235
-
+      key: "pet-store"
+      name: "Pet Store"
+      jiraProjectId: 23098
 dashboard:
   name: OpenAPI Quality Dashboard
   defaultPortal:
@@ -229,8 +97,8 @@ specTypes:
 
 This is where you can configure and set up product sources.
 It should contain definitions for your portals, sources, dashboard and spec types.
-Where username and password are you should use your own users.
-The example above show the configuration for 2 sources. Break down of the source example:
+Where username and password are you should use your own.
+The example above show the configuration for an example source, the data in this is not valid. Break down of the source example:
 
 - name: the name of your source
 - baseUrl: the base url that will be used for your specs
@@ -238,7 +106,7 @@ The example above show the configuration for 2 sources. Break down of the source
 - active: boolean indicating state of activity
 - filterArtifactsName: this defines what type of file ending, yaml, json, yml, however it could be made more specific
 - sourcePaths: this is a list of the parent directories for each capability under the product defined in this source
-  - name: /{capability_name}/
+    - name: /{capability_name}/
 - username: username of user
 - password: password of user
 - cronExpression: schedule for scanning the source for updates and changes
@@ -274,6 +142,14 @@ To run the application it is fairly simple. First add the following parameters t
 
 To run the frontend go to the package.json file and run this line: ` "start": "npm run webpack:dev"`
 
+#### Resetting database
+
+Add the following properties to your run configuration:
+- spring.liquibase.clear-checksums
+- spring.liquibase.drop-first
+
+Set both to true and select them during run when you wish to reset the database.
+
 ### Using
 
 #### Uploading a spec
@@ -297,10 +173,10 @@ The plugin configuration will look like example below:
                             <goal>lint</goal>
                         </goals>
                         <configuration>
-                            <boatBayUrl>${url}</boatBayUrl>
+                            <boatBayServerUrl>${url}</boatBayServerUrl>
                             <inputSpec>${project.basedir}/src/main/resources/petstore.yaml</inputSpec>
                             <output>${project.basedir}/src/main/resources/output</output>
-                            <sourceId>6</sourceId>
+                            <sourceId>sourceKey</sourceId>
                         </configuration>
                     </execution>
                 </executions>
@@ -309,15 +185,22 @@ The plugin configuration will look like example below:
     </build>
 ```
 
+
 In the plugin configuration you can customise the output path to the location you want
-the lint reports to be generated this is also where the specs will be uploaded to, the
-boatBayUrl should be boat bay client, and the input spec should be the path of the spec
-or directory containing the specs you wish to upload.  
-Or through a http request file like below:
+the specs to be uploaded to. The
+boatBayUrl should be for boat bay client, this can be left out and instead configured using an
+environment variable 'BOAT_BAY_SERVER_URL'. The boat bay url must be configured in some way for the
+specs to be uploaded by boat-bay. The server url should be set to boatBayServerUrl http://localhost:8080 for testing via export BOAT_BAY_SERVER_URL=http://localhost:8080.
+When the project is not being run locally use https://boat-bay.proto.backbasecloud.com/.
+
+The input spec should be the path of the spec
+or directory containing the specs you wish to upload.
+
+The other option is to send the upload request through a http request file like below:
 
 ```http request
  ###
-PUT http://localhost:8080/api/boat-maven-plugin/5/upload
+PUT http://localhost:8080/api/boat-maven-plugin/{sourceKey}/upload
 Authorization: Basic YWRtaW46YWRtaW4=
 Content-Type: application/json
 

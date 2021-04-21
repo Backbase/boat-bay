@@ -4,7 +4,7 @@ import com.backbase.oss.boat.ExportException;
 import com.backbase.oss.boat.bay.domain.Capability;
 import com.backbase.oss.boat.bay.domain.Source;
 import com.backbase.oss.boat.bay.domain.Spec;
-import com.backbase.oss.boat.bay.repository.SourceRepository;
+import com.backbase.oss.boat.bay.repository.BoatSourceRepository;
 import com.backbase.oss.boat.bay.repository.SpecRepository;
 import com.backbase.oss.boat.bay.service.export.ExportOptions;
 import com.backbase.oss.boat.bay.service.export.ExportType;
@@ -41,105 +41,104 @@ import java.util.stream.Collectors;
 @Slf4j
 public class BoatUploadController {
 
-  private final SourceRepository sourceRepository;
-  private final SpecSourceResolver specSourceResolver;
-  private final FileSystemExporter fileSystemExporter;
-  private final SpecRepository specRepository;
-  private final BoatSpecLinter boatSpecLinter;
-  private final BoatDashboardMapper lintReportMapper;
+    private final BoatSourceRepository boatSourceRepository;
+    private final SpecSourceResolver specSourceResolver;
+    private final FileSystemExporter fileSystemExporter;
+    private final SpecRepository specRepository;
+    private final BoatSpecLinter boatSpecLinter;
+    private final BoatDashboardMapper lintReportMapper;
 
-  @Value("${jhipster.clientApp.name}")
-  private String applicationName;
-  private static final String ENTITY_NAME = "spec";
-  private static final String SPEC_CREATOR= "MavenPluginUpload";
+    @Value("${jhipster.clientApp.name}")
+    private String applicationName;
+    private static final String ENTITY_NAME = "spec";
+    private static final String SPEC_CREATOR = "MavenPluginUpload";
 
 
+    @PutMapping("boat-maven-plugin/{sourceKey}/upload")
+    public ResponseEntity<List<BoatLintReport>> uploadSpec(@Valid @RequestBody BoatUploadRequestBody requestBody, @PathVariable String sourceKey) throws URISyntaxException, ExportException {
 
-  @PutMapping("boat-maven-plugin/{sourceId}/upload")
-  public ResponseEntity<List<BoatLintReport>> uploadSpec(@Valid @RequestBody BoatUploadRequestBody requestBody, @PathVariable String sourceId) throws URISyntaxException, ExportException {
+        Source source = boatSourceRepository.findOne(Example.of(new Source().key(sourceKey))).orElseThrow(() -> new BadRequestAlertException("Invalid source, source Id does not exist", "SOURCE", "sourceIdInvalid"));
 
-    Source source = sourceRepository.findById(Long.parseLong(sourceId)).orElseThrow(() -> new BadRequestAlertException("Invalid source, source Id does not exist", "SOURCE", "sourceIdInvalid"));
+        List<BoatUploadRequestBody.UploadSpec> requestSpecs = requestBody.getSpecs();
 
-    List<BoatUploadRequestBody.UploadSpec> requestSpecs = requestBody.getSpecs();
-
-    if (requestBody.getProjectId().isEmpty()
+        if (requestBody.getProjectId().isEmpty()
             || requestBody.getVersion().isEmpty()
             || requestBody.getArtifactId().isEmpty()) {
-      throw new BadRequestAlertException("Invalid Request body missing attributes", ENTITY_NAME, "attributeempty");
-    }
+            throw new BadRequestAlertException("Invalid Request body missing attributes", ENTITY_NAME, "attributeempty");
+        }
 
 
-    List<Spec> specs = new ArrayList<>();
+        List<Spec> specs = new ArrayList<>();
 
 
-    for (BoatUploadRequestBody.UploadSpec uploadSpec : requestSpecs) {
+        for (BoatUploadRequestBody.UploadSpec uploadSpec : requestSpecs) {
 
-      Spec spec = mapSpec(uploadSpec);
+            Spec spec = mapSpec(uploadSpec);
 
-      log.debug("REST request to upload : {}", spec.getKey());
+            log.debug("REST request to upload : {}", spec.getKey());
 
-      if (spec.getFilename().isEmpty())
-        spec.setFilename(requestBody.getArtifactId() + "-api-v" + requestBody.getVersion() + ".yaml");
+            if (spec.getFilename().isEmpty())
+                spec.setFilename(requestBody.getArtifactId() + "-api-v" + requestBody.getVersion() + ".yaml");
 
-      if (spec.getOpenApi().isEmpty()
-              || spec.getKey().isEmpty())
-        throw new BadRequestAlertException("Invalid spec with an empty api, key, or file name", ENTITY_NAME, "attributeempty");
+            if (spec.getOpenApi().isEmpty()
+                || spec.getKey().isEmpty())
+                throw new BadRequestAlertException("Invalid spec with an empty api, key, or file name", ENTITY_NAME, "attributeempty");
 
-      spec.setPortal(source.getPortal());
-      spec.setProduct(source.getProduct());
-      spec.setVersion(requestBody.getVersion().replaceAll("(\\.|-)(\\w{2,})+" , ""));
-      spec.setSource(source);
-      spec.setSourceName(spec.getFilename());
-      spec.setCreatedBy(SPEC_CREATOR);
-      spec.setCreatedOn(ZonedDateTime.now());
-      spec.setSourcePath("/" +
-              requestBody.getProjectId().substring(
-                      requestBody.getProjectId().lastIndexOf(".")+1)
-              + "/" +
-              spec.getFilename());
+            spec.setPortal(source.getPortal());
+            spec.setProduct(source.getProduct());
+            spec.setVersion(requestBody.getVersion().replaceAll("([.\\-])(\\w{2,})+", ""));
+            spec.setSource(source);
+            spec.setSourceName(spec.getFilename());
+            spec.setCreatedBy(SPEC_CREATOR);
+            spec.setCreatedOn(ZonedDateTime.now());
+            spec.setSourcePath("/" +
+                requestBody.getProjectId().substring(
+                    requestBody.getProjectId().lastIndexOf(".") + 1)
+                + "/" +
+                spec.getFilename());
 
-      Spec match = new Spec().key(spec.getKey()).name(spec.getName());
+            Spec match = new Spec().key(spec.getKey()).name(spec.getName());
 
-      Optional<Spec> duplicate = specRepository.findOne(Example.of(match));
+            Optional<Spec> duplicate = specRepository.findOne(Example.of(match));
 
-      if (duplicate.isPresent()) {
-        spec.capability(duplicate.get().getCapability());
-        spec.serviceDefinition(duplicate.get().getServiceDefinition());
-      }else {
-        spec.capability(new Capability().key(requestBody.getArtifactId()).name(requestBody.getArtifactId()));
-      }
+            if (duplicate.isPresent()) {
+                spec.capability(duplicate.get().getCapability());
+                spec.serviceDefinition(duplicate.get().getServiceDefinition());
+            } else {
+                spec.capability(new Capability().key(requestBody.getArtifactId()).name(requestBody.getArtifactId()));
+            }
 
-    }
+        }
 
-    ScanResult scanResult = new ScanResult(source, new SourceScannerOptions(), specs);
-    specSourceResolver.process(scanResult);
+        ScanResult scanResult = new ScanResult(source, new SourceScannerOptions(), specs);
+        specSourceResolver.process(scanResult);
 
-    String location = requestBody.getLocation();
+        String location = requestBody.getLocation();
 
-    ExportOptions exportSpec = new ExportOptions();
-    exportSpec.setLocation(location);
-    exportSpec.setPortal(source.getPortal());
-    exportSpec.setExportType(ExportType.FILE_SYSTEM);
-    fileSystemExporter.export(exportSpec);
+        ExportOptions exportSpec = new ExportOptions();
+        exportSpec.setLocation(location);
+        exportSpec.setPortal(source.getPortal());
+        exportSpec.setExportType(ExportType.FILE_SYSTEM);
+        fileSystemExporter.export(exportSpec);
 
-    List<Spec> specsProcessed = specRepository.findAll().stream().filter(spec -> false).collect(Collectors.toList());
-    List<BoatLintReport> lintReports = specsProcessed.stream().map(boatSpecLinter::lint).map(lintReportMapper::mapReport).collect(Collectors.toList());
+        List<Spec> specsProcessed = specRepository.findAll().stream().filter(spec -> false).collect(Collectors.toList());
+        List<BoatLintReport> lintReports = specsProcessed.stream().map(boatSpecLinter::lint).map(lintReportMapper::mapReport).collect(Collectors.toList());
 
-    return ResponseEntity.ok()
+        return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, "SOURCE", source.getId().toString()))
             .body(lintReports);
-  }
+    }
 
 
-  private Spec mapSpec(BoatUploadRequestBody.UploadSpec uploadSpec){
+    private Spec mapSpec(BoatUploadRequestBody.UploadSpec uploadSpec) {
 
-    Spec spec = new Spec();
+        Spec spec = new Spec();
 
-    spec.setOpenApi(uploadSpec.getOpenApi());
-    spec.setKey(uploadSpec.getKey());
-    spec.setName(uploadSpec.getName());
-    spec.setFilename(uploadSpec.getFilename());
+        spec.setOpenApi(uploadSpec.getOpenApi());
+        spec.setKey(uploadSpec.getKey());
+        spec.setName(uploadSpec.getName());
+        spec.setFilename(uploadSpec.getFilename());
 
-    return spec;
-  }
+        return spec;
+    }
 }
