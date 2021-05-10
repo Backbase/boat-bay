@@ -51,6 +51,11 @@ describe('Service Tests', () => {
         'AAAAAAA',
         currentDate,
         currentDate,
+        'AAAAAAA',
+        'AAAAAAA',
+        'AAAAAAA',
+        'AAAAAAA',
+        'AAAAAAA',
         'AAAAAAA'
       );
     });
@@ -128,6 +133,11 @@ describe('Service Tests', () => {
             sourceCreatedOn: currentDate.format(DATE_TIME_FORMAT),
             sourceLastModifiedOn: currentDate.format(DATE_TIME_FORMAT),
             sourceLastModifiedBy: 'BBBBBB',
+            mvnGroupId: 'BBBBBB',
+            mvnArtifactId: 'BBBBBB',
+            mvnVersion: 'BBBBBB',
+            mvnClassifier: 'BBBBBB',
+            mvnExtension: 'BBBBBB',
           },
           elemDefault
         );
@@ -176,6 +186,11 @@ describe('Service Tests', () => {
             sourceCreatedOn: currentDate.format(DATE_TIME_FORMAT),
             sourceLastModifiedOn: currentDate.format(DATE_TIME_FORMAT),
             sourceLastModifiedBy: 'BBBBBB',
+            mvnGroupId: 'BBBBBB',
+            mvnArtifactId: 'BBBBBB',
+            mvnVersion: 'BBBBBB',
+            mvnClassifier: 'BBBBBB',
+            mvnExtension: 'BBBBBB',
           },
           elemDefault
         );

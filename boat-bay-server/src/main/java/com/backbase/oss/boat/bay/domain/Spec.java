@@ -117,6 +117,21 @@ public class Spec implements Serializable {
     @Column(name = "source_last_modified_by")
     private String sourceLastModifiedBy;
 
+    @Column(name = "mvn_group_id")
+    private String mvnGroupId;
+
+    @Column(name = "mvn_artifact_id")
+    private String mvnArtifactId;
+
+    @Column(name = "mvn_version")
+    private String mvnVersion;
+
+    @Column(name = "mvn_classifier")
+    private String mvnClassifier;
+
+    @Column(name = "mvn_extension")
+    private String mvnExtension;
+
     @OneToOne
     @JoinColumn(unique = true)
     private Spec previousSpec;
@@ -504,6 +519,71 @@ public class Spec implements Serializable {
         this.sourceLastModifiedBy = sourceLastModifiedBy;
     }
 
+    public String getMvnGroupId() {
+        return mvnGroupId;
+    }
+
+    public Spec mvnGroupId(String mvnGroupId) {
+        this.mvnGroupId = mvnGroupId;
+        return this;
+    }
+
+    public void setMvnGroupId(String mvnGroupId) {
+        this.mvnGroupId = mvnGroupId;
+    }
+
+    public String getMvnArtifactId() {
+        return mvnArtifactId;
+    }
+
+    public Spec mvnArtifactId(String mvnArtifactId) {
+        this.mvnArtifactId = mvnArtifactId;
+        return this;
+    }
+
+    public void setMvnArtifactId(String mvnArtifactId) {
+        this.mvnArtifactId = mvnArtifactId;
+    }
+
+    public String getMvnVersion() {
+        return mvnVersion;
+    }
+
+    public Spec mvnVersion(String mvnVersion) {
+        this.mvnVersion = mvnVersion;
+        return this;
+    }
+
+    public void setMvnVersion(String mvnVersion) {
+        this.mvnVersion = mvnVersion;
+    }
+
+    public String getMvnClassifier() {
+        return mvnClassifier;
+    }
+
+    public Spec mvnClassifier(String mvnClassifier) {
+        this.mvnClassifier = mvnClassifier;
+        return this;
+    }
+
+    public void setMvnClassifier(String mvnClassifier) {
+        this.mvnClassifier = mvnClassifier;
+    }
+
+    public String getMvnExtension() {
+        return mvnExtension;
+    }
+
+    public Spec mvnExtension(String mvnExtension) {
+        this.mvnExtension = mvnExtension;
+        return this;
+    }
+
+    public void setMvnExtension(String mvnExtension) {
+        this.mvnExtension = mvnExtension;
+    }
+
     public Spec getPreviousSpec() {
         return previousSpec;
     }
@@ -718,6 +798,11 @@ public class Spec implements Serializable {
             ", sourceCreatedOn='" + getSourceCreatedOn() + "'" +
             ", sourceLastModifiedOn='" + getSourceLastModifiedOn() + "'" +
             ", sourceLastModifiedBy='" + getSourceLastModifiedBy() + "'" +
+            ", mvnGroupId='" + getMvnGroupId() + "'" +
+            ", mvnArtifactId='" + getMvnArtifactId() + "'" +
+            ", mvnVersion='" + getMvnVersion() + "'" +
+            ", mvnClassifier='" + getMvnClassifier() + "'" +
+            ", mvnExtension='" + getMvnExtension() + "'" +
             "}";
     }
 }
