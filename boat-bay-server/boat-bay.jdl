@@ -91,6 +91,12 @@ entity Spec {
     sourceLastModifiedOn ZonedDateTime
     sourceLastModifiedBy String
 
+    mvnGroupId String
+    mvnArtifactId String
+    mvnVersion String
+    mvnClassifier String
+    mvnExtension String
+
 
 }
 
@@ -167,6 +173,11 @@ entity LintRuleViolation {
     jsonPointer String
 }
 
+entity ZallyConfig {
+     name String required
+     contents TextBlob
+}
+
 enum Severity {
 	MUST SHOULD MAY HINT
 }
@@ -180,7 +191,7 @@ enum TypeSeverity {
 }
 
 enum SourceType {
-    GIT JFROG HTTP FILE_SYSTEM BOAT_MAVEN_PLUGIN
+    GIT JFROG HTTP FILE_SYSTEM BOAT_MAVEN_PLUGIN MAVEN
 }
 
 enum DescriptionResolveStrategy {
@@ -207,13 +218,10 @@ relationship OneToMany {
 
 relationship ManyToOne {
     Spec{portal(name) required} to Portal
-    Spec{capability(name) required} to Capability
+    Spec{capability(name) } to Capability
     Spec{product(name) required} to Product
     Spec{source(name)} to Source
-    Spec{specType(name) required} to SpecType
-
-
-
+    Spec{specType(name) } to SpecType
     Source{portal(name) required} to Portal
     Source{product(name) required} to Product
     Source{capability(name)} to Capability
@@ -228,6 +236,8 @@ relationship OneToOne {
     Dashboard{defaultPortal(name) required} to Portal
 	LintReport to Spec
 	Spec{previousSpec(version)} to Spec{successor(version)}
+	ZallyConfig{portal(name)} to Portal{zallyConfig(name)}
+
 }
 
 

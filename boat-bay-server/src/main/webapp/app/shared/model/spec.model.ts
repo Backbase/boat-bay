@@ -37,6 +37,11 @@ export interface ISpec {
   sourceCreatedOn?: Moment;
   sourceLastModifiedOn?: Moment;
   sourceLastModifiedBy?: string;
+  mvnGroupId?: string;
+  mvnArtifactId?: string;
+  mvnVersion?: string;
+  mvnClassifier?: string;
+  mvnExtension?: string;
   previousSpec?: ISpec;
   portal?: IPortal;
   capability?: ICapability;
@@ -78,6 +83,11 @@ export class Spec implements ISpec {
     public sourceCreatedOn?: Moment,
     public sourceLastModifiedOn?: Moment,
     public sourceLastModifiedBy?: string,
+    public mvnGroupId?: string,
+    public mvnArtifactId?: string,
+    public mvnVersion?: string,
+    public mvnClassifier?: string,
+    public mvnExtension?: string,
     public previousSpec?: ISpec,
     public portal?: IPortal,
     public capability?: ICapability,

@@ -60,6 +60,10 @@ import { RouterModule } from '@angular/router';
         path: 'lint-rule-violation',
         loadChildren: () => import('./lint-rule-violation/lint-rule-violation.module').then(m => m.BoatBayLintRuleViolationModule),
       },
+      {
+        path: 'zally-config',
+        loadChildren: () => import('./zally-config/zally-config.module').then(m => m.BoatBayZallyConfigModule),
+      },
       /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
     ]),
   ],

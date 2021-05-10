@@ -1,21 +1,8 @@
 package com.backbase.oss.boat.bay.source;
 
-import com.backbase.oss.boat.bay.domain.Capability;
-import com.backbase.oss.boat.bay.domain.Product;
-import com.backbase.oss.boat.bay.domain.ProductRelease;
-import com.backbase.oss.boat.bay.domain.ServiceDefinition;
-import com.backbase.oss.boat.bay.domain.Source;
-import com.backbase.oss.boat.bay.domain.Spec;
-import com.backbase.oss.boat.bay.domain.SpecType;
-import com.backbase.oss.boat.bay.domain.Tag;
-import com.backbase.oss.boat.bay.repository.SpecRepository;
-import com.backbase.oss.boat.bay.repository.SpecTypeRepository;
-import com.backbase.oss.boat.bay.repository.BoatCapabilityRepository;
-import com.backbase.oss.boat.bay.repository.BoatProductReleaseRepository;
-import com.backbase.oss.boat.bay.repository.BoatProductRepository;
-import com.backbase.oss.boat.bay.repository.BoatServiceRepository;
-import com.backbase.oss.boat.bay.repository.BoatSpecRepository;
-import com.backbase.oss.boat.bay.repository.BoatTagRepository;
+import com.backbase.oss.boat.bay.domain.*;
+import com.backbase.oss.boat.bay.exceptions.InvalidSpecException;
+import com.backbase.oss.boat.bay.repository.*;
 import com.backbase.oss.boat.bay.service.backwardscompatible.BoatBackwardsCompatibleChecker;
 import com.backbase.oss.boat.bay.service.lint.BoatSpecLinter;
 import com.backbase.oss.boat.bay.source.scanner.ScanResult;
@@ -25,26 +12,22 @@ import com.backbase.oss.boat.loader.OpenAPILoader;
 import com.backbase.oss.boat.loader.OpenAPILoaderException;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
-
-import java.nio.charset.StandardCharsets;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
+
+import java.nio.charset.StandardCharsets;
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -67,19 +50,35 @@ public class SpecSourceResolver {
     private final BoatBackwardsCompatibleChecker boatBackwardsCompatibleChecker;
 
     public void process(ScanResult scan) {
-        log.info("Processing Scan Result: {} from source: {}", scan.getSpecs().size(), scan.getSource().getName());
+        log.info("Processing Scan Result: {}", scan);
         Source source = scan.getSource();
-        List<Spec> processedSpecs = processSpecs(scan);
-        processReleases(scan, source, processedSpecs);
-        checkSpecs(processedSpecs, scan);
-        log.info("Finished Processing Scan Result: {} from source: {}", scan.getSpecs().size(), scan.getSource().getName());
+        for (ProductRelease pr : scan.getProductReleases()) {
+            processProductRelease(scan, source, pr);
+        }
+
+        List<Spec> processedSpecs = scan.getProductReleases().stream()
+            .flatMap(pr -> pr.getSpecs().stream())
+            .filter(spec -> spec.getId() != null)
+            .collect(Collectors.toList());
+
+        checkSpecs(processedSpecs);
+        log.info("Processing Scan Result: {}", scan);
     }
 
-    public void checkSpecs(List<Spec> processedSpecs, ScanResult scan) {
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void processProductRelease(ScanResult scan, Source source, ProductRelease pr) {
+        for (Spec spec : pr.getSpecs()) {
+            processSpec(spec, scan.getScannerOptions());
+        }
+
+        productReleaseRepository.findByProductAndKey(source.getProduct(), pr.getKey())
+            .orElseGet(() -> productReleaseRepository.saveAndFlush(pr));
+    }
+
+    public void checkSpecs(List<Spec> processedSpecs) {
         log.info("Checking Specs");
         for (Spec processedSpec : processedSpecs) {
-
-
             if (processedSpec.getLintReport() == null) {
                 boatSpecLinter.lint(processedSpec);
             }
@@ -90,73 +89,9 @@ public class SpecSourceResolver {
         log.info("Finished Checking Specs");
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void processReleases(ScanResult scan, Source source, List<Spec> processedSpecs) {
-        log.info("Processing {} releases from scan result from source: {}", scan.getProductReleases().size(), scan.getSource().getName());
-        if (scan.getProductReleases().isEmpty()) {
-            addSpecsToLatestRelease(source, processedSpecs);
-        } else {
-            addSpecsToReleases(scan, source);
-        }
-        log.info("Finished processing {} releases from scan result from source: {}", scan.getProductReleases().size(), scan.getSource().getName());
-    }
-
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void addSpecsToReleases(ScanResult scan, Source source) {
-        scan.getProductReleases().forEach(pr -> {
-            ProductRelease productRelease = productReleaseRepository.findByProductAndKey(source.getProduct(), pr.getKey())
-                .orElseGet(() -> productReleaseRepository.saveAndFlush(pr));
-            log.info("Processed release: {}", productRelease.getName());
-        });
-    }
-
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void addSpecsToLatestRelease(Source source, List<Spec> processedSpecs) {
-        ProductRelease productRelease = productReleaseRepository.findByProductAndKey(source.getProduct(), LATEST)
-            .orElseGet(() -> createLatestProductRelease(source.getProduct()));
-
-        productRelease.getSpecs().addAll(processedSpecs);
-        productReleaseRepository.saveAndFlush(productRelease);
-
-    }
-
-    @NotNull
-    private ProductRelease createLatestProductRelease(Product product) {
-        ProductRelease newProductRelease = new ProductRelease();
-        newProductRelease.setKey(LATEST.toLowerCase(Locale.ROOT));
-        newProductRelease.setName(LATEST);
-        newProductRelease.setVersion(LATEST);
-        newProductRelease.setReleaseDate(ZonedDateTime.now());
-
-        newProductRelease.setProduct(product);
-        return productReleaseRepository.saveAndFlush(newProductRelease);
-    }
-
-    @NotNull
-    @Transactional(isolation = Isolation.DEFAULT, propagation = Propagation.MANDATORY)
-    public List<Spec> processSpecs(ScanResult scan) {
-        log.info("Processing {} specs from scan result from source: {}", scan.getSpecs().size(), scan.getSource().getName());
-
-        List<Spec> list = new ArrayList<>();
-        for (Spec spec : scan.getSpecs()) {
-            Spec processSpec = processSpec(spec, scan.getScannerOptions());
-            list.add(processSpec);
-        }
-        return list;
-    }
-
-    @NotNull
-    private Spec compareVersion(Spec s1, Spec s2) {
-        if (s1.getVersion().compareTo(s2.getVersion()) > 0) {
-            return s1;
-        } else {
-            return s2;
-        }
-    }
-
     @SuppressWarnings("java:S5411")
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public Spec processSpec(Spec spec, SourceScannerOptions scannerOptions) {
+    public void processSpec(Spec spec, SourceScannerOptions scannerOptions) {
         log.info("Processing spec: {}", spec.getName());
 
         Source source = spec.getSource();
@@ -170,15 +105,33 @@ public class SpecSourceResolver {
 
         if (existingSpec.isPresent() && !source.isOverwriteChanges()) {
             log.info("Spec: {}  already exists for source: {}", existingSpec.get().getName(), source.getName());
-//            spec.setId(existingSpec.get().getId());
-            return existingSpec.get();
+            spec.setId(existingSpec.get().getId());
+            return;
         } else if (existingSpec.isPresent() && source.isOverwriteChanges()) {
             log.debug("Updating spec: {}", spec.getName());
             spec.setId(existingSpec.get().getId());
         } else {
             log.debug("Spec: {} is not yet in BOAT BAY. Creating new Spec", spec.getName());
         }
-        setInformationFromSpec(spec, source);
+        OpenAPI openAPI;
+        try {
+            openAPI = OpenAPILoader.parse(spec.getOpenApi());
+            setInformationFromSpec(spec, openAPI, source);
+        } catch (OpenAPILoaderException | InvalidSpecException e) {
+            String parseErrorMessage = e.getMessage();
+            if (e instanceof OpenAPILoaderException) {
+                if (((OpenAPILoaderException) e).getParseMessages() != null) {
+                    parseErrorMessage += "\n" + String.join("\n\t" + ((OpenAPILoaderException) e).getParseMessages());
+                }
+                spec.setParseError(parseErrorMessage);
+            } else {
+                spec.setParseError(e.getMessage());
+            }
+            spec.setValid(false);
+            spec.setVersion("");
+            log.error("Failed to parse OpenAPI for item: {}", spec.getName());
+        }
+
         setProduct(spec, source);
         setCapability(spec, source, scannerOptions);
         setServiceDefinition(spec, source);
@@ -186,7 +139,6 @@ public class SpecSourceResolver {
 
         specRepository.saveAndFlush(spec);
         log.debug("Finished processing spec: {}", spec.getName());
-        return spec;
     }
 
     private void setProduct(Spec spec, Source source) {
@@ -195,34 +147,26 @@ public class SpecSourceResolver {
         log.debug("Adding spec: {} to product: {}", spec.getName(), product.getName());
     }
 
-    private void setInformationFromSpec(Spec spec, Source source) {
-        try {
-            OpenAPI openAPI = OpenAPILoader.parse(spec.getOpenApi());
+    private void setInformationFromSpec(Spec spec, OpenAPI openAPI, Source source) throws InvalidSpecException {
 
-            Info info = openAPI.getInfo();
-            spec.setVersion(info.getVersion());
-            spec.setTitle(info.getTitle());
-            spec.setDescription(info.getDescription());
-            spec.setValid(true);
-            if (openAPI.getTags() != null) {
-                Set<Tag> tags = openAPI.getTags().stream()
-                    .map(this::getOrCreateTag)
-                    .collect(Collectors.toSet());
-                spec.setTags(tags);
-            }
+        Info info = openAPI.getInfo();
+        if (info == null) {
+            throw new InvalidSpecException("Missing INFO block");
+        }
 
-            if (info.getExtensions() != null && info.getExtensions().containsKey("x-icon")) {
-                spec.setIcon(info.getExtensions().get("x-icon").toString());
-            }
-        } catch (OpenAPILoaderException e) {
-            String parseErrorMessage = e.getMessage();
-            if (e.getParseMessages() != null) {
-                parseErrorMessage += "\n" + String.join("\n\t" + e.getParseMessages());
-            }
-            spec.setParseError(parseErrorMessage);
-            spec.setValid(false);
-            spec.setVersion("");
-            log.error("Failed to parse OpenAPI for item: {}", spec.getName());
+        spec.setVersion(info.getVersion());
+        spec.setTitle(info.getTitle());
+        spec.setDescription(info.getDescription());
+        spec.setValid(true);
+        if (openAPI.getTags() != null) {
+            Set<Tag> tags = openAPI.getTags().stream()
+                .map(this::getOrCreateTag)
+                .collect(Collectors.toSet());
+            spec.setTags(tags);
+        }
+
+        if (info.getExtensions() != null && info.getExtensions().containsKey("x-icon")) {
+            spec.setIcon(info.getExtensions().get("x-icon").toString());
         }
 
         spec.setKey(SpringExpressionUtils.parseName(source.getSpecKeySpEL(), spec, spec.getKey()));
