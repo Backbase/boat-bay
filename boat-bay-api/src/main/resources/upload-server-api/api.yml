@@ -10,14 +10,14 @@ servers:
 tags:
 - name: upload-plugin
 paths:
-  /api/boat/boat-maven-plugin/{sourceId}/upload:
+  /api/boat/boat-maven-plugin/{sourceKey}/upload:
     put:
       tags:
       - upload-plugin
       summary: upload and lint specs
       operationId: uploadSpec
       parameters:
-      - name: sourceId
+      - name: sourceKey
         in: path
         description: source idenifier
         required: true
@@ -29,7 +29,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/upload-request-body'
+              $ref: '#/components/schemas/UploadRequestBody'
         required: true
       responses:
         "200":
@@ -207,7 +207,7 @@ components:
         format: byte
     ChangedOpenApiObject:
       type: object
-    upload-request-body:
+    UploadRequestBody:
       type: object
       properties:
         specs:
