@@ -111,6 +111,8 @@ components:
           type: string
         statistics:
           $ref: '#/components/schemas/BoatStatistics'
+        capability:
+          $ref: '#/components/schemas/BoatCapability'
     BoatSpec:
       type: object
       properties:
