@@ -19,7 +19,7 @@ paths:
       parameters:
       - name: sourceKey
         in: path
-        description: source idenifier
+        description: source identifier
         required: true
         style: simple
         explode: false
