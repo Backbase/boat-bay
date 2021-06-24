@@ -1,6 +1,7 @@
 package com.backbase.oss.boat.bay.web.views.dashboard.models;
 
-import com.backbase.oss.boat.bay.service.statistics.BoatStatistics;
+import com.backbase.oss.boat.bay.service.model.BoatLintReport;
+import com.backbase.oss.boat.bay.service.model.BoatStatistics;
 import lombok.Data;
 
 @Data

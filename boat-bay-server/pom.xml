@@ -444,7 +444,14 @@
             <artifactId>jasypt-spring-boot-starter</artifactId>
             <version>3.0.3</version>
         </dependency>
+        <!--        BOAT CONTROLR INTERFACE GENERATION DEPENDANCIES        -->
 
+        <dependency>
+            <groupId>org.openapitools</groupId>
+            <artifactId>jackson-databind-nullable</artifactId>
+            <version>0.2.1</version>
+            <scope>compile</scope>
+        </dependency>
 
     </dependencies>
 
@@ -453,6 +460,51 @@
 
         <plugins>
 
+            <plugin>
+                <groupId>com.backbase.oss</groupId>
+                <artifactId>boat-maven-plugin</artifactId>
+                <version>0.14.0</version>
+                <executions>
+                    <execution>
+                        <id>java-server</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.parent.basedir}/boat-bay-api/src/main/resources/upload-server-api/api.yml</inputSpec>
+                            <generatorName>spring</generatorName>
+                            <generateApiTests>false</generateApiTests>
+                            <generateApis>true</generateApis>
+                            <generateModels>true</generateModels>
+                            <generateSupportingFiles>false</generateSupportingFiles>
+                            <configOptions>
+                                <controllerThrowsExceptions>java.io.IOException,com.backbase.oss.boat.ExportException</controllerThrowsExceptions>
+                                <library>spring-boot</library>
+                                <reactive>false</reactive>
+                                <java8>true</java8>
+                                <dateLibrary>java8</dateLibrary>
+                                <interfaceOnly>true</interfaceOnly>
+                                <skipDefaultInterface>true</skipDefaultInterface>
+                                <useBeanValidation>false</useBeanValidation>
+                            </configOptions>
+                            <modelPackage>com.backbase.oss.boat.bay.service.model</modelPackage>
+                            <apiPackage>com.backbase.oss.boat.bay.service.api</apiPackage>
+                            <apiNameSuffix>BoatBayUpload</apiNameSuffix>
+                            <typeMappings>
+                                <typeMapping>Double=java.math.BigDecimal</typeMapping>
+                            </typeMappings>
+                            <importMappings>
+                                <importMapping>LocalDateTime = java.time.LocalDateTime</importMapping>
+                                <importMapping>IntRange = kotlin.ranges.IntRange</importMapping>
+                                <importMapping>Resource = org.springframework.core.io.Resource</importMapping>
+                                <importMapping>ChangedOpenApiObject = org.openapitools.openapidiff.core.model.ChangedOpenApi</importMapping>
+                            </importMappings>
+
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

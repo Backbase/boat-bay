@@ -50,7 +50,8 @@ components:
         portalName:
           type: string
         id:
-          type: number
+          type: integer
+          format: int64
         key:
           type: string
         name:
@@ -71,7 +72,8 @@ components:
       type: object
       properties:
         id:
-          type: number
+          type: integer
+          format: int64
         key:
           type: string
         name:
@@ -109,11 +111,14 @@ components:
           type: string
         statistics:
           $ref: '#/components/schemas/BoatStatistics'
+        capability:
+          $ref: '#/components/schemas/BoatCapability'
     BoatSpec:
       type: object
       properties:
         id:
-          type: number
+          type: integer
+          format: int64
         key:
           type: string
         name:
@@ -148,7 +153,8 @@ components:
       type: object
       properties:
         id:
-          type: number
+          type: integer
+          format: int64
         spec:
           $ref: '#/components/schemas/BoatSpec'
         name:
@@ -173,7 +179,8 @@ components:
       type: object
       properties:
         id:
-          type: number
+          type: integer
+          format: int64
         ruleId:
           type: string
         enabled:
@@ -191,7 +198,8 @@ components:
       type: object
       properties:
         id:
-          type: number
+          type: integer
+          format: int64
         key:
           type: string
         name:
@@ -245,6 +253,7 @@ components:
     Changes:
       type: string
       enum:
+      - INVALID_VERSION
       - NOT_APPLICABLE
       - ERROR_COMPARING
       - UNCHANGED
