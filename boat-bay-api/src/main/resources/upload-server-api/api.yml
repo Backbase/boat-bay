@@ -50,7 +50,8 @@ components:
         portalName:
           type: string
         id:
-          type: number
+          type: integer
+          format: int64
         key:
           type: string
         name:
@@ -71,7 +72,8 @@ components:
       type: object
       properties:
         id:
-          type: number
+          type: integer
+          format: int64
         key:
           type: string
         name:
@@ -113,7 +115,8 @@ components:
       type: object
       properties:
         id:
-          type: number
+          type: integer
+          format: int64
         key:
           type: string
         name:
@@ -148,7 +151,8 @@ components:
       type: object
       properties:
         id:
-          type: number
+          type: integer
+          format: int64
         spec:
           $ref: '#/components/schemas/BoatSpec'
         name:
@@ -173,7 +177,8 @@ components:
       type: object
       properties:
         id:
-          type: number
+          type: integer
+          format: int64
         ruleId:
           type: string
         enabled:
@@ -191,7 +196,8 @@ components:
       type: object
       properties:
         id:
-          type: number
+          type: integer
+          format: int64
         key:
           type: string
         name:
