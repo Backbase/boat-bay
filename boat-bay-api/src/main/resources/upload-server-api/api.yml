@@ -253,6 +253,7 @@ components:
     Changes:
       type: string
       enum:
+      - INVALID_VERSION
       - NOT_APPLICABLE
       - ERROR_COMPARING
       - UNCHANGED
