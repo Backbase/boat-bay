@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: Boat Bay Client
+  title: Boat Bay Dashboard Server API
   description: Endpoints for the boat bay operations
   license:
     name: Backbase
@@ -9,7 +9,6 @@ servers:
 - url: http://boat-bay-server.proto.backbasecloud.com/
 tags:
 - name: dashboard
-- name: upload-plugin
 paths:
   /api/boat/portals:
     get:
@@ -466,8 +465,8 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/BoatTag'
-  ? /api/boat/portals/{portalKey}/products/{productKey}/capabilities/{capabilityKey}/services/{serviceKey}/specs/{specKey}/{version}/download
-  : get:
+  /api/boat/portals/{portalKey}/products/{productKey}/capabilities/{capabilityKey}/services/{serviceKey}/specs/{specKey}/{version}/download:
+    get:
       tags:
       - dashboard
       summary: get spec as openapi
@@ -550,8 +549,8 @@ paths:
             application/vnd.oai.openapi:
               schema:
                 $ref: '#/components/schemas/Resource'
-  ? /api/boat/portals/{portalKey}/products/{productKey}/capabilities/{capabilityKey}/services/{serviceKey}/specs/{specKey}/{version}
-  : get:
+  /api/boat/portals/{portalKey}/products/{productKey}/capabilities/{capabilityKey}/services/{serviceKey}/specs/{specKey}/{version}:
+    get:
       tags:
       - dashboard
       summary: download spec
@@ -704,36 +703,6 @@ paths:
             application/json:
               schema:
                 type: string
-  /api/boat/boat-maven-plugin/{sourceId}/upload:
-    put:
-      tags:
-      - upload-plugin
-      summary: upload and lint specs
-      operationId: uploadSpec
-      parameters:
-      - name: sourceId
-        in: path
-        description: source idenifier
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/upload-request-body'
-        required: true
-      responses:
-        "200":
-          description: list of lint reports for specs
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/BoatLintReport'
 components:
   schemas:
     BoatPortal:
