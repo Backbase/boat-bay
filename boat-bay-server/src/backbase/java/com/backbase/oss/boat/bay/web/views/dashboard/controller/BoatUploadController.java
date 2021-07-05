@@ -115,14 +115,6 @@ public class BoatUploadController implements ApiBoatBayUpload {
         ScanResult scanResult = new ScanResult(source, new SourceScannerOptions(), specs);
         specSourceResolver.process(scanResult);
 
-        String location = requestBody.getLocation();
-
-//        ExportOptions exportSpec = new ExportOptions();
-//        exportSpec.setLocation(location);
-//        exportSpec.setPortal(source.getPortal());
-//        exportSpec.setExportType(ExportType.FILE_SYSTEM);
-//        fileSystemExporter.export(exportSpec);
-
         List<Spec> specsProcessed = specRepository.findAll().stream().filter(spec -> false).collect(Collectors.toList());
         List<BoatLintReport> lintReports = specsProcessed.stream().map(boatSpecLinter::lint).map(lintReportMapper::mapReport).collect(Collectors.toList());
 
