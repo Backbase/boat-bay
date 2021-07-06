@@ -11,6 +11,8 @@ import com.backbase.oss.boat.bay.repository.ServiceDefinitionRepository;
 import com.backbase.oss.boat.bay.repository.SpecRepository;
 import com.backbase.oss.boat.bay.repository.BoatLintRuleViolationRepository;
 import static com.backbase.oss.boat.bay.config.BoatCacheManager.STATISTICS;
+
+import com.backbase.oss.boat.bay.service.model.BoatStatistics;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
