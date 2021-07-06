@@ -1,5 +1,6 @@
 package com.backbase.oss.boat.bay.web.views.dashboard.controller;
 
+import com.backbase.oss.boat.bay.config.BoatCacheManager;
 import com.backbase.oss.boat.bay.domain.Capability;
 import com.backbase.oss.boat.bay.domain.LintReport;
 import com.backbase.oss.boat.bay.domain.LintRule;
@@ -9,7 +10,6 @@ import com.backbase.oss.boat.bay.domain.ProductRelease;
 import com.backbase.oss.boat.bay.domain.ServiceDefinition;
 import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.domain.Tag;
-import com.backbase.oss.boat.bay.repository.LintRuleRepository;
 import com.backbase.oss.boat.bay.repository.BoatCapabilityRepository;
 import com.backbase.oss.boat.bay.repository.BoatDashboardRepository;
 import com.backbase.oss.boat.bay.repository.BoatLintReportRepository;
@@ -21,22 +21,24 @@ import com.backbase.oss.boat.bay.repository.BoatServiceRepository;
 import com.backbase.oss.boat.bay.repository.BoatSpecQuerySpecs;
 import com.backbase.oss.boat.bay.repository.BoatSpecRepository;
 import com.backbase.oss.boat.bay.repository.BoatTagRepository;
+import com.backbase.oss.boat.bay.repository.LintRuleRepository;
 import com.backbase.oss.boat.bay.service.lint.BoatSpecLinter;
+import com.backbase.oss.boat.bay.service.model.BoatCapability;
+import com.backbase.oss.boat.bay.service.model.BoatLintReport;
+import com.backbase.oss.boat.bay.service.model.BoatLintRule;
+import com.backbase.oss.boat.bay.service.model.BoatProduct;
+import com.backbase.oss.boat.bay.service.model.BoatProductRelease;
+import com.backbase.oss.boat.bay.service.model.BoatService;
+import com.backbase.oss.boat.bay.service.model.BoatSpec;
+import com.backbase.oss.boat.bay.service.model.BoatViolation;
 import com.backbase.oss.boat.bay.service.statistics.BoatStatisticsCollector;
-import com.backbase.oss.boat.bay.config.BoatCacheManager;
 import com.backbase.oss.boat.bay.web.views.dashboard.diff.DiffReportRenderer;
 import com.backbase.oss.boat.bay.web.views.dashboard.mapper.BoatDashboardMapper;
-import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatCapability;
-import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatLintReport;
-import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatLintRule;
+
 import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatPortal;
 import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatPortalDashboard;
-import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatProduct;
-import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatProductRelease;
-import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatService;
-import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatSpec;
+
 import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatTag;
-import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatViolation;
 import io.github.jhipster.web.util.PaginationUtil;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -182,7 +184,7 @@ public class BoatDashboardController {
         boatSpecRepository.findAll(Example.of(new Spec().portal(portal))).forEach(boatSpecLinter::scheduleLintJob);
 
         log.info("Updating lint rule: {}", lintRule);
-        lintRule.setEnabled(boatLintRule.isEnabled());
+        lintRule.setEnabled(boatLintRule.getEnabled());
         lintRuleRepository.save(lintRule);
 
         return ResponseEntity.accepted().build();
