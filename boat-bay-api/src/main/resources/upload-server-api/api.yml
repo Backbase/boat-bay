@@ -11,7 +11,7 @@ tags:
 - name: upload-plugin
 paths:
   /api/boat/boat-maven-plugin/{sourceKey}/upload:
-    put:
+    post:
       tags:
       - upload-plugin
       summary: upload and lint specs
