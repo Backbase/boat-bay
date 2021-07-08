@@ -56,7 +56,7 @@ public class BoatUploadController implements ApiBoatBayUpload {
     private static final String SPEC_CREATOR = "MavenPluginUpload";
 
     @Override
-    @PutMapping("boat-maven-plugin/{sourceKey}/upload")
+    @PostMapping("boat-maven-plugin/{sourceKey}/upload")
     public ResponseEntity<List<BoatLintReport>> uploadSpec(@PathVariable String sourceKey, @Valid @RequestBody UploadRequestBody requestBody)  {
 
         Source source = boatSourceRepository.findOne(Example.of(new Source().key(sourceKey))).orElseThrow(() -> new BadRequestAlertException("Invalid source, source Id does not exist", "SOURCE", "sourceIdInvalid"));
@@ -114,14 +114,6 @@ public class BoatUploadController implements ApiBoatBayUpload {
 
         ScanResult scanResult = new ScanResult(source, new SourceScannerOptions(), specs);
         specSourceResolver.process(scanResult);
-
-        String location = requestBody.getLocation();
-
-//        ExportOptions exportSpec = new ExportOptions();
-//        exportSpec.setLocation(location);
-//        exportSpec.setPortal(source.getPortal());
-//        exportSpec.setExportType(ExportType.FILE_SYSTEM);
-//        fileSystemExporter.export(exportSpec);
 
         List<Spec> specsProcessed = specRepository.findAll().stream().filter(spec -> false).collect(Collectors.toList());
         List<BoatLintReport> lintReports = specsProcessed.stream().map(boatSpecLinter::lint).map(lintReportMapper::mapReport).collect(Collectors.toList());

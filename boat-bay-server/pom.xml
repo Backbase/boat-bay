@@ -444,7 +444,7 @@
             <artifactId>jasypt-spring-boot-starter</artifactId>
             <version>3.0.3</version>
         </dependency>
-        <!--        BOAT CONTROLR INTERFACE GENERATION DEPENDANCIES        -->
+        <!--        BOAT CONTROLLER INTERFACE GENERATION DEPENDENCIES      -->
 
         <dependency>
             <groupId>org.openapitools</groupId>
