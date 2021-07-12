@@ -226,10 +226,16 @@ components:
           type: string
         projectId:
           type: string
+          nullable: false
+          minLength: 1
         artifactId:
           type: string
+          nullable: false
+          minLength: 1
         version:
           type: string
+          nullable: false
+          minLength: 1
     LocalDateTime:
       type: string
       format: date-time
