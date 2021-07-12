@@ -59,7 +59,6 @@ public class BoatUploadController implements ApiBoatBayUpload {
     private static final String SPEC_CREATOR = "MavenPluginUpload";
 
     @Override
-    @PostMapping("boat-maven-plugin/{sourceKey}/upload")
     public ResponseEntity<List<BoatLintReport>> uploadSpec(@PathVariable String sourceKey,
         @Valid @RequestBody UploadRequestBody requestBody) {
         Source source = boatSourceRepository.findOne(Example.of(new Source().key(sourceKey))).orElseThrow(
@@ -73,10 +72,10 @@ public class BoatUploadController implements ApiBoatBayUpload {
         if (requestBody.getProjectId().isEmpty() || requestBody.getVersion().isEmpty()
             || requestBody.getArtifactId().isEmpty()) {
             throw new BadRequestAlertException("Invalid Request body missing attributes", "UPLOAD_REQUEST_BODY",
-                "attributeempty");
+                "attributeEmpty");
         }
 
-        log.info("Processing specs for upload");
+        log.info("Processing specs for upload from {}", sourceKey);
         for (UploadSpec uploadSpec : requestSpecs) {
             Spec spec = mapSpec(uploadSpec);
 
@@ -104,12 +103,11 @@ public class BoatUploadController implements ApiBoatBayUpload {
                 } else if (!spec.getVersion().equals(existing.getVersion())) {
                     spec.setKey(existing.getKey().concat("-" + spec.getVersion()));
                 } else {
-                    // should I be rejecting an attempt to upload a spec with the same name location and version but different contents?
-                    // if so do I want increment the version and create a new spec or update a current spec to hold the new api contents
                     existing.setOpenApi(spec.getOpenApi());
                     existing.setFilename(spec.getFilename());
+                    existing.setLintReport(null);
                     spec = existing;
-                    log.info("Spec {} already present, updating, if already linted it will not lint again",
+                    log.info("Spec {} already uploaded, updating with changes and re-linting",
                         spec.getKey());
                 }
             }
@@ -141,7 +139,7 @@ public class BoatUploadController implements ApiBoatBayUpload {
 
         ScanResult scanResult = new ScanResult(source, new SourceScannerOptions());
         specs.stream().forEach(scanResult::addSpec);
-        log.info("resolving spec");
+        log.info("resolving specs");
         specSourceResolver.process(scanResult);
 
         List<Spec> specsProcessed = specRepository.findAll().stream()
@@ -150,7 +148,7 @@ public class BoatUploadController implements ApiBoatBayUpload {
             .map(spec -> boatLintReportRepository.findBySpec(spec)).filter(Optional::isPresent).map(Optional::get)
             .map(lintReportMapper::mapReport).collect(Collectors.toList());
 
-        log.info("linted{}", lintReports.toString());
+        log.info("linted{}", lintReports);
 
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, "SOURCE", source.getId().toString()))
