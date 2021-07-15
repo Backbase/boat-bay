@@ -41,6 +41,7 @@
 
     <root>
         <level>DEBUG</level>
+        <level>INFO</level>
         <appender-ref ref="CONSOLE"/>
     </root>
 
