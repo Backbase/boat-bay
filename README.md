@@ -107,8 +107,8 @@ The example above show the configuration for an example source, the data in this
 - filterArtifactsName: this defines what type of file ending, yaml, json, yml, however it could be made more specific
 - sourcePaths: this is a list of the parent directories for each capability under the product defined in this source
     - name: /{capability_name}/
-- username: username of user
-- password: password of user
+- username: username of user accessing repo
+- password: password of user accessing repo
 - cronExpression: schedule for scanning the source for updates and changes
 - capabilityKeySpEL: this is the spring expression language that will be used to
   format/produce the keys for capabilities, recommend use of this example's expressions
@@ -129,9 +129,7 @@ The example above show the configuration for an example source, the data in this
 
 ### Building
 
-Run clean install in boat-bay-api project first, a bundled version of the spec needs to be generated.  
-Run clean install in boat-bay-server, the models ad interfaces must be generated from the bundled spec.  
-Run clean install in boat-bay-client and angular to generate their code.
+Run clean install in project root.
 
 ### Running Locally
 
@@ -176,7 +174,7 @@ The plugin configuration will look like example below:
                             <boatBayServerUrl>${url}</boatBayServerUrl>
                             <inputSpec>${project.basedir}/src/main/resources/petstore.yaml</inputSpec>
                             <output>${project.basedir}/src/main/resources/output</output>
-                            <sourceId>sourceKey</sourceId>
+                            <sourceKey>sourceKey</sourceKey>
                         </configuration>
                     </execution>
                 </executions>
@@ -200,7 +198,7 @@ The other option is to send the upload request through a http request file like 
 
 ```http request
  ###
-PUT http://localhost:8080/api/boat-maven-plugin/{sourceKey}/upload
+POST http://localhost:8080/api/boat-maven-plugin/{sourceKey}/upload
 Authorization: Basic YWRtaW46YWRtaW4=
 Content-Type: application/json
 
