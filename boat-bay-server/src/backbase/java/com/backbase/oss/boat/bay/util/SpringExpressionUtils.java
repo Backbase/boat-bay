@@ -1,6 +1,7 @@
 package com.backbase.oss.boat.bay.util;
 
 import com.backbase.oss.boat.bay.domain.Spec;
+import com.backbase.oss.boat.bay.service.model.UploadRequestBody;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -69,6 +70,21 @@ public class SpringExpressionUtils {
             name = getExpression(spEL).getValue(itemHandle, String.class);
         } catch (EvaluationException | StringIndexOutOfBoundsException e) {
             log.warn("Expression: {} failed on: {}. Reason: {}", spEL, itemHandle.info().getName(),e.getMessage());
+            return fallback;
+        }
+        log.debug("Resolved: {}", name);
+        return name;
+    }
+    public static String parseName(String spEL, UploadRequestBody uploadRequestBody, String fallback) {
+        if (spEL == null) {
+            return fallback;
+        }
+
+        String name;
+        try {
+            name = getExpression(spEL).getValue(uploadRequestBody, String.class);
+        } catch (EvaluationException | StringIndexOutOfBoundsException e) {
+            log.warn("Expression: {} failed on: {}. Reason: {}", spEL, uploadRequestBody.getArtifactId(),e.getMessage());
             return fallback;
         }
         log.debug("Resolved: {}", name);
