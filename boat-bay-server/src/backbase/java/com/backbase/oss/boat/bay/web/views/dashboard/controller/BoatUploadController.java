@@ -174,7 +174,8 @@ public class BoatUploadController implements ApiBoatBayUpload {
         try {
             spec.setVersion(OpenAPILoader.parse(spec.getOpenApi()).getInfo().getVersion());
         } catch (OpenAPILoaderException e) {
-            spec.setVersion(requestBody.getVersion().replaceAll("(\\.|-)(\\w{2,})+", ""));
+            throw new BadRequestAlertException("Invalid API Spec", "UPLOAD_REQUEST_BODY",
+                "attributeInvalid");
         }
         spec.setSource(source);
         spec.setSourceName(spec.getFilename());
