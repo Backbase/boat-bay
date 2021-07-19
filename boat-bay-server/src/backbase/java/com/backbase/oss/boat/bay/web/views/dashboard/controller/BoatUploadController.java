@@ -171,8 +171,6 @@ public class BoatUploadController implements ApiBoatBayUpload {
     private Spec setUpSpec(Spec spec,Source source,UploadRequestBody requestBody)  {
         spec.setPortal(source.getPortal());
         spec.setProduct(source.getProduct());
-        // this is the version of the project the spec is coming from,
-        // is it right to set this as the spec version or should I get it from the open api contents?
         try {
             spec.setVersion(OpenAPILoader.parse(spec.getOpenApi()).getInfo().getVersion());
         } catch (OpenAPILoaderException e) {
