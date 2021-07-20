@@ -110,8 +110,8 @@ public class BoatUploadController implements ApiBoatBayUpload {
                     log.info("Spec {} already uploaded, updating with changes and re-linting",
                         spec.getKey());
                 }else {
-                    throw new BadRequestAlertException("This spec has already been uploaded, this upload is not from a"
-                        + " project under development and so well be rejected", "SPEC",
+                    throw new BadRequestAlertException("This spec,"+spec.getKey()+", has already been uploaded, this upload is not from a"
+                        + " project under development and so will be rejected", "SPEC",
                         "duplicateSpec");
                 }
             }
