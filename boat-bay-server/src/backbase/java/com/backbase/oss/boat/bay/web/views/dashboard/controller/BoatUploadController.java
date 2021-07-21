@@ -79,14 +79,10 @@ public class BoatUploadController implements ApiBoatBayUpload {
 
             log.info("REST request to upload : {}", spec.getKey());
 
-            if (spec.getFilename().isEmpty()) {
-                spec.setFilename(requestBody.getArtifactId() + "-api-v" + requestBody.getVersion() + ".yaml");
-            }
-
             spec = setUpSpec(spec,source,requestBody);
 
-            if (spec.getOpenApi().isEmpty() || spec.getKey().isEmpty()) {
-                throw new BadRequestAlertException("Invalid spec with an empty api, key, or file name", "UPLOAD_SPEC",
+            if (spec.getOpenApi().isEmpty()) {
+                throw new BadRequestAlertException("Invalid spec with an empty openapi", "UPLOAD_SPEC",
                     "attributeempty");
             }
 
@@ -115,6 +111,7 @@ public class BoatUploadController implements ApiBoatBayUpload {
                         "duplicateSpec");
                 }
             }
+
             if (spec.getCapability() == null && spec.getServiceDefinition() == null) {
 
                 Capability capability = new Capability()
@@ -164,24 +161,23 @@ public class BoatUploadController implements ApiBoatBayUpload {
         Spec spec = new Spec();
         spec.setOpenApi(uploadSpec.getOpenApi());
         spec.setName(uploadSpec.getName());
+        spec.setVersion(uploadSpec.getVersion());
         spec.setFilename(uploadSpec.getFileName());
         return spec;
     }
 
-    private Spec setUpSpec(Spec spec,Source source,UploadRequestBody requestBody)  {
+    private Spec setUpSpec(Spec spec, Source source, UploadRequestBody requestBody)  {
         spec.setPortal(source.getPortal());
         spec.setProduct(source.getProduct());
-        try {
-            spec.setVersion(OpenAPILoader.parse(spec.getOpenApi()).getInfo().getVersion());
-        } catch (OpenAPILoaderException e) {
-            throw new BadRequestAlertException("Invalid API Spec", "UPLOAD_REQUEST_BODY",
-                "attributeInvalid");
-        }
         spec.setSource(source);
         spec.setSourceName(spec.getFilename());
         spec.setCreatedBy("MavenPluginUpload");
         spec.setCreatedOn(ZonedDateTime.now());
         spec.setKey(SpringExpressionUtils.parseName(source.getSpecKeySpEL(), spec, spec.getKey()));
+        if (spec.getKey().equals(null)){
+            log.info("Filename of spec doesn't fit format specified in SpecKeySpEL set in source, you may later "
+                + "encounter some issues");
+        }
         spec.setSourcePath("/" +
             requestBody.getProjectId().substring(
                 requestBody.getProjectId().lastIndexOf(".") + 1)
