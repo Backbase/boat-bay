@@ -277,7 +277,7 @@ components:
         lines:
           $ref: '#/components/schemas/IntRange'
         pointer:
-          type: string
+          type: JsonPointer
     Severity:
       type: string
       enum:
@@ -292,9 +292,9 @@ components:
           type: string
         openApi:
           type: string
-        key:
-          type: string
         name:
+          type: string
+        version:
           type: string
     IntRange:
       type: object

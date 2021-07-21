@@ -513,6 +513,7 @@
                             <importMappings>
                                 <importMapping>LocalDateTime = java.time.LocalDateTime</importMapping>
                                 <importMapping>IntRange = kotlin.ranges.IntRange</importMapping>
+                                <importMapping>JsonPointer = com.fasterxml.jackson.core.JsonPointer</importMapping>
                                 <importMapping>Resource = org.springframework.core.io.Resource</importMapping>
                                 <importMapping>ChangedOpenApiObject = org.openapitools.openapidiff.core.model.ChangedOpenApi</importMapping>
                             </importMappings>
