@@ -77,7 +77,7 @@ public class BoatUploadController implements ApiBoatBayUpload {
         for (UploadSpec uploadSpec : requestSpecs) {
             Spec spec = mapSpec(uploadSpec);
 
-            log.info("REST request to upload : {}", spec.getKey());
+            log.info("REST request to upload : {}", spec.getName());
 
             spec = setUpSpec(spec,source,requestBody);
 
