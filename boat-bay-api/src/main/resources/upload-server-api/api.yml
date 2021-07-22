@@ -222,8 +222,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/UploadSpec'
-        location:
-          type: string
         projectId:
           type: string
           nullable: false
