@@ -1,4 +1,4 @@
-# BoatBay
+# Boat Bay
 
 ---
 
@@ -10,16 +10,19 @@ Boat bay allows for the management of products specs. This documentation will ex
 configure the application and how to use it effectively.
 ### Bootstrap File
 
-The bootstrap file loads all your configured sources upon running of the application, this is where you can specify the 
-sources your specs will come from, how these sources are to be searched for specs, and how the specs will be processed.
-It is also where portals are defined, this is where you would configure the rules that are available to a portal.
+The bootstrap file loads the configured sources when you run the application. It specifies the following:
+- The sources your specs come from.
+- How to search the sources for specs.
+- How to process the specs.
+- Portal definitions.
+- Portal rule configurations.
 
 Start by creating a `bootstrap.yaml` file. This will
 most likely be located in a with the specifications
-that are to be used with boat bay.
+that are to be used with Boat Bay.
 
-Your file should look like the example below:
-
+The following example shows a typical `bootstrap.yaml` configuration, with definitions for `portals`, `sources`, `dashboard` 
+and `specTypes`:
 ```yaml
 portals:
   - key: "repo"
@@ -97,59 +100,58 @@ specTypes:
 
 
 ```
+Where `{username}` and `{password}` are you should use your own.
 
-This is where you can configure and set up product sources.
-It should contain definitions for your `portals`, `sources`, `dashboard` and `specTypes`.
-Where `username` and `password` are you should use your own.
-The example above show the configuration for an example `source`, the data in this is not valid. Break down of the source example:
+The fields in the source section are as follows:
 
-    name
+  - `name`:
         the name of your source
-    baseUrl
+  - `baseUrl`:
         the base url that will be used for your specs
-    type
-        This describes where your source in coming from, file system, jfrog, boat maven plugin
-    active
+  - `type`:
+        this describes where your source in coming from, file system, jfrog, boat maven plugin
+  - `active`:
         boolean indicating state of activity
-    filterArtifactsName
+  - `filterArtifactsName`:
         this defines what type of file ending, yaml, json, yml, however it could be made more specific
-    sourcePaths 
+  -`sourcePaths`:
         this is a list of the parent directories for each capability under the product defined in this source
-    name
+  - `name`:
         /{capability_name}/
-    username
+  - `username`:
         username of user accessing repo, these may change depending on the repo configured for this source
-    password 
+  - `password`:
         password of user accessing repo, 
         this will be what ever password/key (usually encrypted) you use to access the repo configured in this source
-    cronExpression
+  - `cronExpression`:
         schedule for scanning the source for updates and changes
-    capabilityKeySpEL
+  - `capabilityKeySpEL`:
         this is the spring expression language that will be used to
         format/produce the keys for capabilities, recommend use of this example's expressions
-    capabilityNameSpEL
+  - `capabilityNameSpEL`:
         spring expression language that is used to generate the capability names
-    serviceKeySpEL
+  - `serviceKeySpEL`:
         spring expression language that is used to generate the service keys
-    serviceNameSpEL
+  - `serviceNameSpEL`:
         spring expression language that is used to generate the service names
-    specFilterSpEL
+  - `specFilterSpEL`:
         spring expression language for filtering specifications
-    specKeySpEL
+  - `specKeySpEL`:
         spring expression language for generating the spec keys
-    overwriteChanges
+  - `overwriteChanges`:
         boolean, set this to true to overwrite a spec that is existing if false a new spec is created
-    runOnStartup
+  - `runOnStartup`:
         boolean, set this to true to scan specs from this source upon starting the application
-    portal
-        key
+  - `portal`:
+  
+       - `key`:
             key for this source's portal
-        name
+       - `name`:
             name for this source's portal
-    product
-        key
+  - `product`
+       - `key`:
             key for this product
-        name
+       - `name`:
             name for this product
 
 Define the `portals` used in the sources where indicated in the example.
@@ -210,7 +212,7 @@ The plugin configuration will look like example below:
         </plugins>
     </build>
 ```
-For the spec to be uploaded to BoatBay configuration of the BoatBay's server url is required.
+For the spec to be uploaded to Boat Bay configuration of the Boat Bay's server url is required.
 This URL can be configured in the plugin as show above or omitted from this configuration and instead set as an
 environment variable `BOAT_BAY_SERVER_URL`. To configure the URL as an environment variable run `export BOAT_BAY_SERVER_URL={boat-bay-url}`.
 There are two options for the URL value, to run locally `http://localhost:8080`  which should only be used for testing,
@@ -249,7 +251,7 @@ The projectId and artifactId should be that of the project where the specs are c
 ---
 ## About the Project
 
-### What is BoatBay
+### What is Boat Bay
 
 Boat Bay is a software tool that allows you to create portals for viewing Api Quality and Backwards Compatibility. It 
 lints specs using a centralized repository of rules, this rules can be configured per portal making it easy for teams to 
@@ -258,7 +260,7 @@ contain violations or could be improved, and a diff reoprt showing the changes b
 for backwards compatibility.
 
 Boat Bay will also be accessible through BOAT as described in [Uploading a spec](#uploading-a-spec) this will be through 
-an extended feature of the linting goal. This will allow a developer to upload a spec to boatbay through the build process.
+an extended feature of the linting goal. This will allow a developer to upload a spec to Boat Bay through the build process.
 You can upload the same spec multiple times, while uploading from a project with a snapshot version the spec will be 
 updated, otherwise a new spec will be created.
 
@@ -274,7 +276,7 @@ generated from our api specs found in [boat-bay-api](boat-bay-api), this is done
 
 ---
 
-# BoatBay-jhipster
+# Boat-Bay-jhipster
 
 This application was generated using JHipster 6.10.5, you can find documentation and help at
  [https://www.jhipster.tech/documentation-archive/v6.10.5](https://www.jhipster.tech/documentation-archive/v6.10.5).
@@ -383,7 +385,7 @@ update src/main/webapp/app/app.module.ts
 
 ### Packaging as jar
 
-To build the final jar and optimize the BoatBay application for production, run:
+To build the final jar and optimize the Boat Bay application for production, run:
 
 ```
 
