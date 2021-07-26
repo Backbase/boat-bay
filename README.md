@@ -143,7 +143,6 @@ The fields in the source section are as follows:
   - `runOnStartup`:
         boolean, set this to true to scan specs from this source upon starting the application
   - `portal`:
-  
        - `key`:
             key for this source's portal
        - `name`:
@@ -164,11 +163,11 @@ Run mvn clean install in project root.
 
 To run the application it is fairly simple. First add the following parameters to your run configuration :
 
-- name: backbase.bootstrap.file value: location of the bootstrap.yaml file described in [Bootstrap File](#bootstrap-file).
-- name: boat.scheduler.source.scanner.enabled value: true
+- name: `backbase.bootstrap.file` value: location of the bootstrap.yaml file described in [Bootstrap File](#bootstrap-file).
+- name: `boat.scheduler.source.scanner.enabled value`: true
 
-To run the frontend go to the [package.json](boat-bay-server/package.json) file and run this 
-line: ` "start": "npm run webpack:dev"` under the dir boat-bay-server
+To run the frontend  first run the command `npm install` go to the [package.json](boat-bay-server/package.json) file to 
+then see the available npm life cycle scripts for the project and run the command labeled start: `npm run webpack:dev` 
 
 #### Resetting Database
 
