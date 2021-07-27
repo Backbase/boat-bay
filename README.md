@@ -2,13 +2,13 @@
 
 ---
 
-## Using and Running Boat Bay
+## Using and running Boat Bay
 
 ### Intro
 
 Boat bay allows for the management of products specs. This documentation will explain how to
 configure the application and how to use it effectively.
-### Bootstrap File
+### Bootstrap file
 
 The bootstrap file loads the configured sources when you run the application. It specifies the following:
 - The sources your specs come from.
@@ -107,7 +107,7 @@ The fields in the source section are as follows:
   - `name`:
         the name of your source
   - `baseUrl`:
-        the base url that will be used for your specs
+        the base URL that will be used for your specs
   - `type`:
         describes where your source comes from: file system, jfrog, or Boat Maven plugin
   - `active`:
@@ -126,18 +126,17 @@ The fields in the source section are as follows:
   - `cronExpression`:
         schedule for scanning the source for updates and changes
   - `capabilityKeySpEL`:
-        the spring expression language that will be used to
-        format/produce the keys for capabilities, recommend use of this example's expressions
+        Spring Expression Language (SpEL) expression to generate capability names
   - `capabilityNameSpEL`:
-        spring expression language that is used to generate the capability names
+        SpEL expression to generate the capability names
   - `serviceKeySpEL`:
-        spring expression language that is used to generate the service keys
+        SpEL expression to generate the service keys
   - `serviceNameSpEL`:
-        spring expression language that is used to generate the service names
+        SpEL expression to generate the service names
   - `specFilterSpEL`:
-        spring expression language for filtering specifications
+        SpEL expression to filtering specifications
   - `specKeySpEL`:
-        spring expression language for generating the spec keys
+        SpEL expression to generating the spec keys
   - `overwriteChanges`:
         boolean, set this to true to overwrite a spec that is existing if false a new spec is created
   - `runOnStartup`:
@@ -157,9 +156,9 @@ Define the `portals` used in the sources where indicated in the example.
 
 ### Building
 
-Run mvn clean install in project root.
+Run `mvn clean install` in project root.
 
-### Running Locally
+### Running locally
 
 To run the application it is fairly simple. First add the following parameters to your run configuration :
 
@@ -167,7 +166,7 @@ To run the application it is fairly simple. First add the following parameters t
 - name: `boat.scheduler.source.scanner.enabled value`: true
 
 To find out how to run front end go to [boat-bay-frontend](boat-bay-frontend/README.md).
-#### Resetting Database
+#### Resetting database
 
 Add the following properties to your run configuration:
 - spring.liquibase.clear-checksums
@@ -177,7 +176,7 @@ Set both to true and select them during run when you wish to reset the database.
 
 ### Using
 
-#### Uploading a Spec
+#### Uploading a spec
 
 A spec can be uploaded through [boat-maven-plugin](https://github.com/Backbase/backbase-openapi-tools).  
 Before a spec can be uploaded however a source must be set-up. This
@@ -209,12 +208,11 @@ The plugin configuration will look like example below:
         </plugins>
     </build>
 ```
-For the spec to be uploaded to Boat Bay configuration of the Boat Bay's server url is required.
-This URL can be configured in the plugin as show above or omitted from this configuration and instead set as an
-environment variable `BOAT_BAY_SERVER_URL`. To configure the URL as an environment variable run `export BOAT_BAY_SERVER_URL={boat-bay-url}`.
-There are two options for the URL value, to run locally `http://localhost:8080`  which should only be used for testing,
-and `https://boat-bay.proto.backbasecloud.com/`.
-The url must be configured in some way for the specs to be uploaded by boat-bay, if not then the spec will only be linted. 
+For the spec to be uploaded to Boat Bay configuration of the Boat Bay's server URL is required.
+To configure the URL, either:
+- configure it in the plugin as shown above
+- set it as the environment variable BOAT_BAY_SERVER_URL by running export BOAT_BAY_SERVER_URL={boat-bay-url}.
+The URL must be configured in some way for the specs to be uploaded by boat-bay, if not then the spec will only be linted. 
 The input spec should be the path of the spec or directory containing the specs you wish to upload.
 The output is the location the lint reports get written to. 
 The sourceKey refers to the source the spec/s should be uploaded to.
@@ -246,16 +244,15 @@ Content-Type: application/json
 The projectId and artifactId should be that of the project where the specs are coming from.
 
 ---
-## About the Project
+## About the project
 
 ### What is Boat Bay
 
 Boat Bay is a software tool that allows you to create portals for viewing Api Quality and Backwards Compatibility. It 
-lints specs using a centralized repository of rules, this rules can be configured per portal making it easy for teams to 
+lints specs using a centralized repository of rules. These rules can be configured per portal, making it easy for teams to 
 customize linting for their purposes. It also creates reports on the quality, highlighting sections of the spec that 
-contain violations or could be improved, and a diff reoprt showing the changes between your api versions, making it easy 
-for backwards compatibility.
-
+contain violations or could be improved, and a diff report showing the changes between your api versions, helping 
+support backwards compatibility.
 ### Generated code
 
 The base of this project is generated by [JHipster](#boat-bay-jhipster).
@@ -270,7 +267,7 @@ They are generated using the [BOAT maven plugin](https://github.com/Backbase/bac
 
 
 ---
-## Upcoming Features
+## Upcoming features
 
 ###Implementing Boat Bay in Your Development Process 
 
