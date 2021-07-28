@@ -133,6 +133,12 @@
             <groupId>com.backbase.oss</groupId>
             <artifactId>boat-quay-lint</artifactId>
             <version>0.14.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.opentest4j</groupId>
+                    <artifactId>opentest4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -156,6 +162,16 @@
             <groupId>org.openapitools.openapidiff</groupId>
             <artifactId>openapi-diff-core</artifactId>
             <version>2.0.0-beta.6</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>io.swagger.parser.v3</groupId>
+                    <artifactId>swagger-parser-v3</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.swagger.parser.v3</groupId>
+                    <artifactId>swagger-parser-v2-converter</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -497,6 +513,7 @@
                             <importMappings>
                                 <importMapping>LocalDateTime = java.time.LocalDateTime</importMapping>
                                 <importMapping>IntRange = kotlin.ranges.IntRange</importMapping>
+                                <importMapping>JsonPointer = com.fasterxml.jackson.core.JsonPointer</importMapping>
                                 <importMapping>Resource = org.springframework.core.io.Resource</importMapping>
                                 <importMapping>ChangedOpenApiObject = org.openapitools.openapidiff.core.model.ChangedOpenApi</importMapping>
                             </importMappings>

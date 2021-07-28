@@ -162,7 +162,7 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
                 log.info("Downloading OpenAPI for spec: {}", spec.getName());
                 String openApiContents = downloadOpenApi(item);
                 spec.setOpenApi(openApiContents);
-
+                scanResult.addSpec(spec);
             } else if (item.info().getName().endsWith(".zip")) {
                 log.info("Downloading zip file: {}", item.info().getName());
                 ZipInputStream zipInputStream = downloadZipFile(item);
