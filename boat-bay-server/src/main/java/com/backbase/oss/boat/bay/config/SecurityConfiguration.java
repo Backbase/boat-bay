@@ -83,6 +83,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/api/account/reset-password/init").permitAll()
             .antMatchers("/api/account/reset-password/finish").permitAll()
             .antMatchers("/api/export").permitAll()
+            .antMatchers("/api/boat/boat-maven-plugin/**").permitAll()
             .antMatchers(HttpMethod.GET, "/api/boat/**").permitAll()
             .antMatchers(HttpMethod.POST, "/api/boat/**").hasAuthority(AuthoritiesConstants.ADMIN)
             .antMatchers("/api/**").authenticated()
