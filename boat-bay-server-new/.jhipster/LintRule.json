@@ -1,0 +1,62 @@
+{
+  "name": "LintRule",
+  "fields": [
+    {
+      "fieldName": "ruleId",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "title",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "ruleSet",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "summary",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "severity",
+      "fieldType": "Severity",
+      "fieldValues": "MUST,SHOULD,MAY,HINT",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "externalUrl",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "enabled",
+      "fieldType": "Boolean",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "portal",
+      "otherEntityRelationshipName": "lintRule",
+      "relationshipValidateRules": "required",
+      "relationshipName": "portal",
+      "otherEntityField": "name"
+    }
+  ],
+  "entityTableName": "lint_rule",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20210729083045"
+}

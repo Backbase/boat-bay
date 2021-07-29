@@ -1,0 +1,66 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="lintRule">
+      <h2 data-cy="lintRuleDetailsHeading"><span jhiTranslate="boatbayApp.lintRule.detail.title">Lint Rule</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ lintRule.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="boatbayApp.lintRule.ruleId">Rule Id</span></dt>
+        <dd>
+          <span>{{ lintRule.ruleId }}</span>
+        </dd>
+        <dt><span jhiTranslate="boatbayApp.lintRule.title">Title</span></dt>
+        <dd>
+          <span>{{ lintRule.title }}</span>
+        </dd>
+        <dt><span jhiTranslate="boatbayApp.lintRule.ruleSet">Rule Set</span></dt>
+        <dd>
+          <span>{{ lintRule.ruleSet }}</span>
+        </dd>
+        <dt><span jhiTranslate="boatbayApp.lintRule.summary">Summary</span></dt>
+        <dd>
+          <span>{{ lintRule.summary }}</span>
+        </dd>
+        <dt><span jhiTranslate="boatbayApp.lintRule.severity">Severity</span></dt>
+        <dd>
+          <span jhiTranslate="{{ 'boatbayApp.Severity.' + lintRule.severity }}">{{ lintRule.severity }}</span>
+        </dd>
+        <dt><span jhiTranslate="boatbayApp.lintRule.description">Description</span></dt>
+        <dd>
+          <span>{{ lintRule.description }}</span>
+        </dd>
+        <dt><span jhiTranslate="boatbayApp.lintRule.externalUrl">External Url</span></dt>
+        <dd>
+          <span>{{ lintRule.externalUrl }}</span>
+        </dd>
+        <dt><span jhiTranslate="boatbayApp.lintRule.enabled">Enabled</span></dt>
+        <dd>
+          <span>{{ lintRule.enabled }}</span>
+        </dd>
+        <dt><span jhiTranslate="boatbayApp.lintRule.portal">Portal</span></dt>
+        <dd>
+          <div *ngIf="lintRule.portal">
+            <a [routerLink]="['/portal', lintRule.portal?.id, 'view']">{{ lintRule.portal?.name }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/lint-rule', lintRule.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

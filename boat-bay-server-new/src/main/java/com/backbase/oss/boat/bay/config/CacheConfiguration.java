@@ -48,6 +48,33 @@ public class CacheConfiguration {
             createCache(cm, com.backbase.oss.boat.bay.domain.User.class.getName());
             createCache(cm, com.backbase.oss.boat.bay.domain.Authority.class.getName());
             createCache(cm, com.backbase.oss.boat.bay.domain.User.class.getName() + ".authorities");
+            createCache(cm, com.backbase.oss.boat.bay.domain.Dashboard.class.getName());
+            createCache(cm, com.backbase.oss.boat.bay.domain.Portal.class.getName());
+            createCache(cm, com.backbase.oss.boat.bay.domain.Portal.class.getName() + ".products");
+            createCache(cm, com.backbase.oss.boat.bay.domain.Portal.class.getName() + ".lintRules");
+            createCache(cm, com.backbase.oss.boat.bay.domain.ProductRelease.class.getName());
+            createCache(cm, com.backbase.oss.boat.bay.domain.ProductRelease.class.getName() + ".specs");
+            createCache(cm, com.backbase.oss.boat.bay.domain.Product.class.getName());
+            createCache(cm, com.backbase.oss.boat.bay.domain.Product.class.getName() + ".productReleases");
+            createCache(cm, com.backbase.oss.boat.bay.domain.Product.class.getName() + ".capabilities");
+            createCache(cm, com.backbase.oss.boat.bay.domain.Capability.class.getName());
+            createCache(cm, com.backbase.oss.boat.bay.domain.Capability.class.getName() + ".serviceDefinitions");
+            createCache(cm, com.backbase.oss.boat.bay.domain.ServiceDefinition.class.getName());
+            createCache(cm, com.backbase.oss.boat.bay.domain.ServiceDefinition.class.getName() + ".specs");
+            createCache(cm, com.backbase.oss.boat.bay.domain.Spec.class.getName());
+            createCache(cm, com.backbase.oss.boat.bay.domain.Spec.class.getName() + ".tags");
+            createCache(cm, com.backbase.oss.boat.bay.domain.Spec.class.getName() + ".productReleases");
+            createCache(cm, com.backbase.oss.boat.bay.domain.Tag.class.getName());
+            createCache(cm, com.backbase.oss.boat.bay.domain.Tag.class.getName() + ".specs");
+            createCache(cm, com.backbase.oss.boat.bay.domain.SpecType.class.getName());
+            createCache(cm, com.backbase.oss.boat.bay.domain.Source.class.getName());
+            createCache(cm, com.backbase.oss.boat.bay.domain.Source.class.getName() + ".sourcePaths");
+            createCache(cm, com.backbase.oss.boat.bay.domain.SourcePath.class.getName());
+            createCache(cm, com.backbase.oss.boat.bay.domain.LintRule.class.getName());
+            createCache(cm, com.backbase.oss.boat.bay.domain.LintReport.class.getName());
+            createCache(cm, com.backbase.oss.boat.bay.domain.LintReport.class.getName() + ".violations");
+            createCache(cm, com.backbase.oss.boat.bay.domain.LintRuleViolation.class.getName());
+            createCache(cm, com.backbase.oss.boat.bay.domain.ZallyConfig.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }

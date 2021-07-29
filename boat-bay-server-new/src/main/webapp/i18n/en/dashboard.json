@@ -1,0 +1,29 @@
+{
+  "boatbayApp": {
+    "dashboard": {
+      "home": {
+        "title": "Dashboards",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Dashboard",
+        "createOrEditLabel": "Create or edit a Dashboard",
+        "notFound": "No Dashboards found"
+      },
+      "created": "A new Dashboard is created with identifier {{ param }}",
+      "updated": "A Dashboard is updated with identifier {{ param }}",
+      "deleted": "A Dashboard is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Dashboard {{ id }}?"
+      },
+      "detail": {
+        "title": "Dashboard"
+      },
+      "id": "ID",
+      "name": "Name",
+      "title": "Title",
+      "subTitle": "Sub Title",
+      "navTitle": "Nav Title",
+      "content": "Content",
+      "defaultPortal": "Default Portal"
+    }
+  }
+}

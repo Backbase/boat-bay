@@ -1,0 +1,86 @@
+<div>
+  <h2 id="page-heading" data-cy="PortalHeading">
+    <span jhiTranslate="boatbayApp.portal.home.title">Portals</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="loadAll()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span jhiTranslate="boatbayApp.portal.home.refreshListLabel">Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-portal"
+        [routerLink]="['/portal/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span jhiTranslate="boatbayApp.portal.home.createLabel"> Create a new Portal </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="portals?.length === 0">
+    <span jhiTranslate="boatbayApp.portal.home.notFound">No portals found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="portals && portals.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr>
+          <th scope="col"><span jhiTranslate="global.field.id">ID</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.portal.key">Key</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.portal.name">Name</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.portal.subTitle">Sub Title</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.portal.logoUrl">Logo Url</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.portal.logoLink">Logo Link</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.portal.content">Content</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.portal.createdOn">Created On</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.portal.createdBy">Created By</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.portal.hide">Hide</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.portal.linted">Linted</span></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let portal of portals; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/portal', portal.id, 'view']">{{ portal.id }}</a>
+          </td>
+          <td>{{ portal.key }}</td>
+          <td>{{ portal.name }}</td>
+          <td>{{ portal.subTitle }}</td>
+          <td>{{ portal.logoUrl }}</td>
+          <td>{{ portal.logoLink }}</td>
+          <td>{{ portal.content }}</td>
+          <td>{{ portal.createdOn | formatMediumDatetime }}</td>
+          <td>{{ portal.createdBy }}</td>
+          <td>{{ portal.hide }}</td>
+          <td>{{ portal.linted }}</td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button type="submit" [routerLink]="['/portal', portal.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+              </button>
+
+              <button type="submit" [routerLink]="['/portal', portal.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(portal)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
