@@ -1,0 +1,155 @@
+{
+  "name": "Source",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "key",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "type",
+      "fieldType": "SourceType",
+      "fieldValues": "GIT,JFROG,HTTP,FILE_SYSTEM,BOAT_MAVEN_PLUGIN,MAVEN",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "baseUrl",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "active",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "filterArtifactsName",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "filterArtifactsCreatedSince",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "username",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "password",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "cronExpression",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "runOnStartup",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "specFilterSpEL",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "capabilityKeySpEL",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "capabilityNameSpEL",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "serviceKeySpEL",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "serviceNameSpEL",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "specKeySpEL",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "versionSpEL",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "productReleaseNameSpEL",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "productReleaseVersionSpEL",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "productReleaseKeySpEL",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "itemLimit",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "overwriteChanges",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "options",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "sourcePath",
+      "otherEntityRelationshipName": "source",
+      "relationshipName": "sourcePath"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "portal",
+      "otherEntityRelationshipName": "source",
+      "relationshipValidateRules": "required",
+      "relationshipName": "portal",
+      "otherEntityField": "name"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "product",
+      "otherEntityRelationshipName": "source",
+      "relationshipValidateRules": "required",
+      "relationshipName": "product",
+      "otherEntityField": "name"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "capability",
+      "otherEntityRelationshipName": "source",
+      "relationshipName": "capability",
+      "otherEntityField": "name"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "serviceDefinition",
+      "otherEntityRelationshipName": "source",
+      "relationshipName": "serviceDefinition",
+      "otherEntityField": "name"
+    }
+  ],
+  "entityTableName": "source",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20210729083043"
+}

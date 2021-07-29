@@ -42,6 +42,24 @@
     "devServerPort": 4200,
     "clientPackageManager": "npm",
     "clientThemeVariant": "",
-    "languages": ["en"]
+    "languages": ["en"],
+    "entities": [
+      "Dashboard",
+      "Portal",
+      "ProductRelease",
+      "Product",
+      "Capability",
+      "ServiceDefinition",
+      "Spec",
+      "Tag",
+      "SpecType",
+      "Source",
+      "SourcePath",
+      "LintRule",
+      "LintReport",
+      "LintRuleViolation",
+      "ZallyConfig"
+    ],
+    "lastLiquibaseTimestamp": 1627547448000
   }
 }

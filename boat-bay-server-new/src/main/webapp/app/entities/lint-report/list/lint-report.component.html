@@ -1,0 +1,90 @@
+<div>
+  <h2 id="page-heading" data-cy="LintReportHeading">
+    <span jhiTranslate="boatbayApp.lintReport.home.title">Lint Reports</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="loadAll()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span jhiTranslate="boatbayApp.lintReport.home.refreshListLabel">Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-lint-report"
+        [routerLink]="['/lint-report/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span jhiTranslate="boatbayApp.lintReport.home.createLabel"> Create a new Lint Report </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="lintReports?.length === 0">
+    <span jhiTranslate="boatbayApp.lintReport.home.notFound">No lintReports found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="lintReports && lintReports.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr>
+          <th scope="col"><span jhiTranslate="global.field.id">ID</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.lintReport.name">Name</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.lintReport.grade">Grade</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.lintReport.passed">Passed</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.lintReport.lintedOn">Linted On</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.lintReport.spec">Spec</span></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let lintReport of lintReports; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/lint-report', lintReport.id, 'view']">{{ lintReport.id }}</a>
+          </td>
+          <td>{{ lintReport.name }}</td>
+          <td>{{ lintReport.grade }}</td>
+          <td>{{ lintReport.passed }}</td>
+          <td>{{ lintReport.lintedOn | formatMediumDatetime }}</td>
+          <td>
+            <div *ngIf="lintReport.spec">
+              <a [routerLink]="['/spec', lintReport.spec?.id, 'view']">{{ lintReport.spec?.id }}</a>
+            </div>
+          </td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/lint-report', lintReport.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/lint-report', lintReport.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(lintReport)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

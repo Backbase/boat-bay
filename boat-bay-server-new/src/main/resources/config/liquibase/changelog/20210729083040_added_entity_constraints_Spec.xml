@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+    <!--
+        Added the constraints for entity Spec.
+    -->
+    <changeSet id="20210729083040-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="previous_spec_id"
+                                 baseTableName="spec"
+                                 constraintName="fk_spec__previous_spec_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="spec"/>
+
+        <addForeignKeyConstraint baseColumnNames="portal_id"
+                                 baseTableName="spec"
+                                 constraintName="fk_spec__portal_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="portal"/>
+
+        <addForeignKeyConstraint baseColumnNames="capability_id"
+                                 baseTableName="spec"
+                                 constraintName="fk_spec__capability_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="capability"/>
+
+        <addForeignKeyConstraint baseColumnNames="product_id"
+                                 baseTableName="spec"
+                                 constraintName="fk_spec__product_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="product"/>
+
+        <addForeignKeyConstraint baseColumnNames="source_id"
+                                 baseTableName="spec"
+                                 constraintName="fk_spec__source_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="source"/>
+
+        <addForeignKeyConstraint baseColumnNames="spec_type_id"
+                                 baseTableName="spec"
+                                 constraintName="fk_spec__spec_type_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="spec_type"/>
+
+        <addForeignKeyConstraint baseColumnNames="spec_id"
+                                 baseTableName="rel_spec__tag"
+                                 constraintName="fk_rel_spec__tag__spec_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="spec"/>
+
+        <addForeignKeyConstraint baseColumnNames="tag_id"
+                                 baseTableName="rel_spec__tag"
+                                 constraintName="fk_rel_spec__tag__tag_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="tag"/>
+
+        <addForeignKeyConstraint baseColumnNames="service_definition_id"
+                                 baseTableName="spec"
+                                 constraintName="fk_spec__service_definition_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="service_definition"/>
+    </changeSet>
+</databaseChangeLog>

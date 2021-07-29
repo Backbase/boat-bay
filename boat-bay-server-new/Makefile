@@ -1,2 +1,3 @@
+
 import-jdl:
-	jhipster jdl boat-bay.jdl
+	jhipster import-jdl boat-bay.jdl

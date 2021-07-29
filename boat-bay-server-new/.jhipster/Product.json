@@ -1,0 +1,72 @@
+{
+  "name": "Product",
+  "fields": [
+    {
+      "fieldName": "key",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "order",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "content",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text"
+    },
+    {
+      "fieldName": "createdOn",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "createdBy",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "hide",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "jiraProjectId",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "productRelease",
+      "otherEntityRelationshipName": "product",
+      "relationshipName": "productRelease"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "capability",
+      "otherEntityRelationshipName": "product",
+      "relationshipName": "capability"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "portal",
+      "otherEntityRelationshipName": "product",
+      "relationshipValidateRules": "required",
+      "relationshipName": "portal",
+      "otherEntityField": "name"
+    }
+  ],
+  "entityTableName": "product",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20210729083037"
+}

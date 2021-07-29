@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+    <!--
+        Added the constraints for entity ProductRelease.
+    -->
+    <changeSet id="20210729083036-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="product_release_id"
+                                 baseTableName="rel_product_release__spec"
+                                 constraintName="fk_rel_product_release__spec__product_release_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="product_release"/>
+
+        <addForeignKeyConstraint baseColumnNames="spec_id"
+                                 baseTableName="rel_product_release__spec"
+                                 constraintName="fk_rel_product_release__spec__spec_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="spec"/>
+
+        <addForeignKeyConstraint baseColumnNames="product_id"
+                                 baseTableName="product_release"
+                                 constraintName="fk_product_release__product_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="product"/>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,32 @@
+{
+  "boatbayApp": {
+    "lintRule": {
+      "home": {
+        "title": "Lint Rules",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Lint Rule",
+        "createOrEditLabel": "Create or edit a Lint Rule",
+        "notFound": "No Lint Rules found"
+      },
+      "created": "A new Lint Rule is created with identifier {{ param }}",
+      "updated": "A Lint Rule is updated with identifier {{ param }}",
+      "deleted": "A Lint Rule is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Lint Rule {{ id }}?"
+      },
+      "detail": {
+        "title": "Lint Rule"
+      },
+      "id": "ID",
+      "ruleId": "Rule Id",
+      "title": "Title",
+      "ruleSet": "Rule Set",
+      "summary": "Summary",
+      "severity": "Severity",
+      "description": "Description",
+      "externalUrl": "External Url",
+      "enabled": "Enabled",
+      "portal": "Portal"
+    }
+  }
+}
