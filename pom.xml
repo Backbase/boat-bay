@@ -11,7 +11,7 @@
 
 
     <properties>
-
+        <!-- Run sonar run -->
 
         <!-- Build properties -->
         <maven.version>3.3.9</maven.version>
