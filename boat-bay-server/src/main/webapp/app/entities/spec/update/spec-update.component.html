@@ -1,0 +1,533 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-spec-heading" data-cy="SpecCreateUpdateHeading" jhiTranslate="boatbayApp.spec.home.createOrEditLabel">
+        Create or edit a Spec
+      </h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="form-group" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-control-label" jhiTranslate="global.field.id" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.spec.key" for="field_key">Key</label>
+          <input type="text" class="form-control" name="key" id="field_key" data-cy="key" formControlName="key" />
+          <div *ngIf="editForm.get('key')!.invalid && (editForm.get('key')!.dirty || editForm.get('key')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('key')?.errors?.required" jhiTranslate="entity.validation.required">
+              This field is required.
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.spec.name" for="field_name">Name</label>
+          <input type="text" class="form-control" name="name" id="field_name" data-cy="name" formControlName="name" />
+          <div *ngIf="editForm.get('name')!.invalid && (editForm.get('name')!.dirty || editForm.get('name')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('name')?.errors?.required" jhiTranslate="entity.validation.required">
+              This field is required.
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.spec.version" for="field_version">Version</label>
+          <input type="text" class="form-control" name="version" id="field_version" data-cy="version" formControlName="version" />
+          <div *ngIf="editForm.get('version')!.invalid && (editForm.get('version')!.dirty || editForm.get('version')!.touched)">
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('version')?.errors?.required"
+              jhiTranslate="entity.validation.required"
+            >
+              This field is required.
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.spec.title" for="field_title">Title</label>
+          <input type="text" class="form-control" name="title" id="field_title" data-cy="title" formControlName="title" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.spec.icon" for="field_icon">Icon</label>
+          <input type="text" class="form-control" name="icon" id="field_icon" data-cy="icon" formControlName="icon" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.spec.openApi" for="field_openApi">Open Api</label>
+          <textarea class="form-control" name="openApi" id="field_openApi" data-cy="openApi" formControlName="openApi"></textarea>
+          <div *ngIf="editForm.get('openApi')!.invalid && (editForm.get('openApi')!.dirty || editForm.get('openApi')!.touched)">
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('openApi')?.errors?.required"
+              jhiTranslate="entity.validation.required"
+            >
+              This field is required.
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.spec.description" for="field_description">Description</label>
+          <textarea
+            class="form-control"
+            name="description"
+            id="field_description"
+            data-cy="description"
+            formControlName="description"
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.spec.createdOn" for="field_createdOn">Created On</label>
+          <div class="d-flex">
+            <input
+              id="field_createdOn"
+              data-cy="createdOn"
+              type="datetime-local"
+              class="form-control"
+              name="createdOn"
+              formControlName="createdOn"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+          <div *ngIf="editForm.get('createdOn')!.invalid && (editForm.get('createdOn')!.dirty || editForm.get('createdOn')!.touched)">
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('createdOn')?.errors?.required"
+              jhiTranslate="entity.validation.required"
+            >
+              This field is required.
+            </small>
+            <small
+              class="form-text text-danger"
+              [hidden]="!editForm.get('createdOn')?.errors?.ZonedDateTimelocal"
+              jhiTranslate="entity.validation.ZonedDateTimelocal"
+            >
+              This field should be a date and time.
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.spec.createdBy" for="field_createdBy">Created By</label>
+          <input type="text" class="form-control" name="createdBy" id="field_createdBy" data-cy="createdBy" formControlName="createdBy" />
+          <div *ngIf="editForm.get('createdBy')!.invalid && (editForm.get('createdBy')!.dirty || editForm.get('createdBy')!.touched)">
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('createdBy')?.errors?.required"
+              jhiTranslate="entity.validation.required"
+            >
+              This field is required.
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.spec.checksum" for="field_checksum">Checksum</label>
+          <input type="text" class="form-control" name="checksum" id="field_checksum" data-cy="checksum" formControlName="checksum" />
+          <div *ngIf="editForm.get('checksum')!.invalid && (editForm.get('checksum')!.dirty || editForm.get('checksum')!.touched)">
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('checksum')?.errors?.required"
+              jhiTranslate="entity.validation.required"
+            >
+              This field is required.
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.spec.filename" for="field_filename">Filename</label>
+          <input type="text" class="form-control" name="filename" id="field_filename" data-cy="filename" formControlName="filename" />
+          <div *ngIf="editForm.get('filename')!.invalid && (editForm.get('filename')!.dirty || editForm.get('filename')!.touched)">
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('filename')?.errors?.required"
+              jhiTranslate="entity.validation.required"
+            >
+              This field is required.
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.spec.valid" for="field_valid">Valid</label>
+          <input type="checkbox" class="form-check" name="valid" id="field_valid" data-cy="valid" formControlName="valid" />
+          <div *ngIf="editForm.get('valid')!.invalid && (editForm.get('valid')!.dirty || editForm.get('valid')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('valid')?.errors?.required" jhiTranslate="entity.validation.required">
+              This field is required.
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.spec.order" for="field_order">Order</label>
+          <input type="number" class="form-control" name="order" id="field_order" data-cy="order" formControlName="order" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.spec.parseError" for="field_parseError">Parse Error</label>
+          <textarea
+            class="form-control"
+            name="parseError"
+            id="field_parseError"
+            data-cy="parseError"
+            formControlName="parseError"
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.spec.externalDocs" for="field_externalDocs">External Docs</label>
+          <input
+            type="text"
+            class="form-control"
+            name="externalDocs"
+            id="field_externalDocs"
+            data-cy="externalDocs"
+            formControlName="externalDocs"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.spec.hide" for="field_hide">Hide</label>
+          <input type="checkbox" class="form-check" name="hide" id="field_hide" data-cy="hide" formControlName="hide" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.spec.grade" for="field_grade">Grade</label>
+          <input type="text" class="form-control" name="grade" id="field_grade" data-cy="grade" formControlName="grade" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.spec.changes" for="field_changes">Changes</label>
+          <select class="form-control" name="changes" formControlName="changes" id="field_changes" data-cy="changes">
+            <option [ngValue]="null">{{ 'boatbayApp.Changes.null' | translate }}</option>
+            <option value="INVALID_VERSION">{{ 'boatbayApp.Changes.INVALID_VERSION' | translate }}</option>
+            <option value="NOT_APPLICABLE">{{ 'boatbayApp.Changes.NOT_APPLICABLE' | translate }}</option>
+            <option value="ERROR_COMPARING">{{ 'boatbayApp.Changes.ERROR_COMPARING' | translate }}</option>
+            <option value="UNCHANGED">{{ 'boatbayApp.Changes.UNCHANGED' | translate }}</option>
+            <option value="COMPATIBLE">{{ 'boatbayApp.Changes.COMPATIBLE' | translate }}</option>
+            <option value="BREAKING">{{ 'boatbayApp.Changes.BREAKING' | translate }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.spec.sourcePath" for="field_sourcePath">Source Path</label>
+          <input
+            type="text"
+            class="form-control"
+            name="sourcePath"
+            id="field_sourcePath"
+            data-cy="sourcePath"
+            formControlName="sourcePath"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.spec.sourceName" for="field_sourceName">Source Name</label>
+          <input
+            type="text"
+            class="form-control"
+            name="sourceName"
+            id="field_sourceName"
+            data-cy="sourceName"
+            formControlName="sourceName"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.spec.sourceUrl" for="field_sourceUrl">Source Url</label>
+          <input type="text" class="form-control" name="sourceUrl" id="field_sourceUrl" data-cy="sourceUrl" formControlName="sourceUrl" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.spec.sourceCreatedBy" for="field_sourceCreatedBy"
+            >Source Created By</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="sourceCreatedBy"
+            id="field_sourceCreatedBy"
+            data-cy="sourceCreatedBy"
+            formControlName="sourceCreatedBy"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.spec.sourceCreatedOn" for="field_sourceCreatedOn"
+            >Source Created On</label
+          >
+          <div class="d-flex">
+            <input
+              id="field_sourceCreatedOn"
+              data-cy="sourceCreatedOn"
+              type="datetime-local"
+              class="form-control"
+              name="sourceCreatedOn"
+              formControlName="sourceCreatedOn"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.spec.sourceLastModifiedOn" for="field_sourceLastModifiedOn"
+            >Source Last Modified On</label
+          >
+          <div class="d-flex">
+            <input
+              id="field_sourceLastModifiedOn"
+              data-cy="sourceLastModifiedOn"
+              type="datetime-local"
+              class="form-control"
+              name="sourceLastModifiedOn"
+              formControlName="sourceLastModifiedOn"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.spec.sourceLastModifiedBy" for="field_sourceLastModifiedBy"
+            >Source Last Modified By</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="sourceLastModifiedBy"
+            id="field_sourceLastModifiedBy"
+            data-cy="sourceLastModifiedBy"
+            formControlName="sourceLastModifiedBy"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.spec.mvnGroupId" for="field_mvnGroupId">Mvn Group Id</label>
+          <input
+            type="text"
+            class="form-control"
+            name="mvnGroupId"
+            id="field_mvnGroupId"
+            data-cy="mvnGroupId"
+            formControlName="mvnGroupId"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.spec.mvnArtifactId" for="field_mvnArtifactId">Mvn Artifact Id</label>
+          <input
+            type="text"
+            class="form-control"
+            name="mvnArtifactId"
+            id="field_mvnArtifactId"
+            data-cy="mvnArtifactId"
+            formControlName="mvnArtifactId"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.spec.mvnVersion" for="field_mvnVersion">Mvn Version</label>
+          <input
+            type="text"
+            class="form-control"
+            name="mvnVersion"
+            id="field_mvnVersion"
+            data-cy="mvnVersion"
+            formControlName="mvnVersion"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.spec.mvnClassifier" for="field_mvnClassifier">Mvn Classifier</label>
+          <input
+            type="text"
+            class="form-control"
+            name="mvnClassifier"
+            id="field_mvnClassifier"
+            data-cy="mvnClassifier"
+            formControlName="mvnClassifier"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.spec.mvnExtension" for="field_mvnExtension">Mvn Extension</label>
+          <input
+            type="text"
+            class="form-control"
+            name="mvnExtension"
+            id="field_mvnExtension"
+            data-cy="mvnExtension"
+            formControlName="mvnExtension"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.spec.previousSpec" for="field_previousSpec">Previous Spec</label>
+          <select class="form-control" id="field_previousSpec" data-cy="previousSpec" name="previousSpec" formControlName="previousSpec">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="specOption.id === editForm.get('previousSpec')!.value?.id ? editForm.get('previousSpec')!.value : specOption"
+              *ngFor="let specOption of previousSpecsCollection; trackBy: trackSpecById"
+            >
+              {{ specOption.version }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.spec.portal" for="field_portal">Portal</label>
+          <select class="form-control" id="field_portal" data-cy="portal" name="portal" formControlName="portal">
+            <option *ngIf="!editForm.get('portal')!.value" [ngValue]="null" selected></option>
+            <option
+              [ngValue]="portalOption.id === editForm.get('portal')!.value?.id ? editForm.get('portal')!.value : portalOption"
+              *ngFor="let portalOption of portalsSharedCollection; trackBy: trackPortalById"
+            >
+              {{ portalOption.name }}
+            </option>
+          </select>
+        </div>
+        <div *ngIf="editForm.get(['portal'])!.invalid && (editForm.get(['portal'])!.dirty || editForm.get(['portal'])!.touched)">
+          <small class="form-text text-danger" *ngIf="editForm.get(['portal'])?.errors?.required" jhiTranslate="entity.validation.required">
+            This field is required.
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.spec.capability" for="field_capability">Capability</label>
+          <select class="form-control" id="field_capability" data-cy="capability" name="capability" formControlName="capability">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="
+                capabilityOption.id === editForm.get('capability')!.value?.id ? editForm.get('capability')!.value : capabilityOption
+              "
+              *ngFor="let capabilityOption of capabilitiesSharedCollection; trackBy: trackCapabilityById"
+            >
+              {{ capabilityOption.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.spec.product" for="field_product">Product</label>
+          <select class="form-control" id="field_product" data-cy="product" name="product" formControlName="product">
+            <option *ngIf="!editForm.get('product')!.value" [ngValue]="null" selected></option>
+            <option
+              [ngValue]="productOption.id === editForm.get('product')!.value?.id ? editForm.get('product')!.value : productOption"
+              *ngFor="let productOption of productsSharedCollection; trackBy: trackProductById"
+            >
+              {{ productOption.name }}
+            </option>
+          </select>
+        </div>
+        <div *ngIf="editForm.get(['product'])!.invalid && (editForm.get(['product'])!.dirty || editForm.get(['product'])!.touched)">
+          <small
+            class="form-text text-danger"
+            *ngIf="editForm.get(['product'])?.errors?.required"
+            jhiTranslate="entity.validation.required"
+          >
+            This field is required.
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.spec.source" for="field_source">Source</label>
+          <select class="form-control" id="field_source" data-cy="source" name="source" formControlName="source">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="sourceOption.id === editForm.get('source')!.value?.id ? editForm.get('source')!.value : sourceOption"
+              *ngFor="let sourceOption of sourcesSharedCollection; trackBy: trackSourceById"
+            >
+              {{ sourceOption.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.spec.specType" for="field_specType">Spec Type</label>
+          <select class="form-control" id="field_specType" data-cy="specType" name="specType" formControlName="specType">
+            <option [ngValue]="null"></option>
+            <option
+              [ngValue]="specTypeOption.id === editForm.get('specType')!.value?.id ? editForm.get('specType')!.value : specTypeOption"
+              *ngFor="let specTypeOption of specTypesSharedCollection; trackBy: trackSpecTypeById"
+            >
+              {{ specTypeOption.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label jhiTranslate="boatbayApp.spec.tag" for="field_tags">Tag</label>
+          <select class="form-control" id="field_tags" data-cy="tag" multiple name="tags" formControlName="tags">
+            <option
+              [ngValue]="getSelectedTag(tagOption, editForm.get('tags')!.value)"
+              *ngFor="let tagOption of tagsSharedCollection; trackBy: trackTagById"
+            >
+              {{ tagOption.id }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.spec.serviceDefinition" for="field_serviceDefinition"
+            >Service Definition</label
+          >
+          <select
+            class="form-control"
+            id="field_serviceDefinition"
+            data-cy="serviceDefinition"
+            name="serviceDefinition"
+            formControlName="serviceDefinition"
+          >
+            <option *ngIf="!editForm.get('serviceDefinition')!.value" [ngValue]="null" selected></option>
+            <option
+              [ngValue]="
+                serviceDefinitionOption.id === editForm.get('serviceDefinition')!.value?.id
+                  ? editForm.get('serviceDefinition')!.value
+                  : serviceDefinitionOption
+              "
+              *ngFor="let serviceDefinitionOption of serviceDefinitionsSharedCollection; trackBy: trackServiceDefinitionById"
+            >
+              {{ serviceDefinitionOption.name }}
+            </option>
+          </select>
+        </div>
+        <div
+          *ngIf="
+            editForm.get(['serviceDefinition'])!.invalid &&
+            (editForm.get(['serviceDefinition'])!.dirty || editForm.get(['serviceDefinition'])!.touched)
+          "
+        >
+          <small
+            class="form-text text-danger"
+            *ngIf="editForm.get(['serviceDefinition'])?.errors?.required"
+            jhiTranslate="entity.validation.required"
+          >
+            This field is required.
+          </small>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

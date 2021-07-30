@@ -29,7 +29,6 @@ import org.zalando.zally.core.RulesPolicy;
 @Slf4j
 public class BoatLintRuleValidatorFactory {
 
-
     public static final String API_VALIDATORS = "apiValidators";
     public static final String API_RULE_POLICY = "apiRulePolicy";
     private final RulesManager defaultRuleManager;
@@ -41,10 +40,13 @@ public class BoatLintRuleValidatorFactory {
         Set<LintRule> enabledRules = getAllByPortalAndEnabled(portal);
         Set<String> ids = enabledRules.stream().map(LintRule::getRuleId).collect(Collectors.toSet());
 
-        List<RuleDetails> collect = defaultRuleManager.getRules().stream().filter(ruleDetails -> ids.contains(ruleDetails.getRule().id())).collect(Collectors.toList());
+        List<RuleDetails> collect = defaultRuleManager
+            .getRules()
+            .stream()
+            .filter(ruleDetails -> ids.contains(ruleDetails.getRule().id()))
+            .collect(Collectors.toList());
 
         RulesManager portalRuleManager = new RulesManager(config, collect);
-
 
         DefaultContextFactory defaultContextFactory = new DefaultContextFactory();
         ContextRulesValidator contextRulesValidator = new ContextRulesValidator(portalRuleManager, defaultContextFactory);

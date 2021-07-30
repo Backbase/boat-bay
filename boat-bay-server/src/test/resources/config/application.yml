@@ -18,10 +18,10 @@ spring:
     # Uncomment the following line to enable tests against production database type rather than H2, using Testcontainers
     #active: testcontainers
   application:
-    name: BoatBay
+    name: boatbay
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:h2:mem:BoatBay;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:h2:mem:boatbay;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     name:
     username:
     password:
@@ -31,9 +31,8 @@ spring:
     serialization:
       write-durations-as-timestamps: false
   jpa:
-    database-platform: io.github.jhipster.domain.util.FixedH2Dialect
+    database-platform: tech.jhipster.domain.util.FixedH2Dialect
     open-in-view: false
-    show-sql: false
     hibernate:
       ddl-auto: none
       naming:
@@ -47,6 +46,7 @@ spring:
       hibernate.generate_statistics: false
       hibernate.hbm2ddl.auto: validate
       hibernate.jdbc.time_zone: UTC
+      hibernate.query.fail_on_pagination_over_collection_fetch: true
   liquibase:
     contexts: test
   mail:
@@ -57,13 +57,13 @@ spring:
     basename: i18n/messages
   task:
     execution:
-      thread-name-prefix: boat-bay-task-
+      thread-name-prefix: boatbay-task-
       pool:
         core-size: 1
         max-size: 50
         queue-capacity: 10000
     scheduling:
-      thread-name-prefix: boat-bay-scheduling-
+      thread-name-prefix: boatbay-scheduling-
       pool:
         size: 1
   thymeleaf:
@@ -81,7 +81,7 @@ server:
 
 jhipster:
   clientApp:
-    name: 'boatBayApp'
+    name: 'boatbayApp'
   logging:
     # To test json console appender
     use-json-format: false
@@ -97,14 +97,9 @@ jhipster:
     authentication:
       jwt:
         # This token must be encoded using Base64 (you can type `echo 'secret-key'|base64` on your command line)
-        base64-secret: NjFiODg4OTBhNTQ5OGQxZGJmNzIzNjBjOWRjZGY1ZDcxNGU2NWE2MTEyZTg0OGQ5YmM1M2M1ZjI3MzRkYjBiYjk0OTkzOTI4MzBmMmExMzI1NDQ4MWYwMjg5M2I0OWVkMjBkZDMwOTkwZmU3Njc1ZWQxZGY1OGIyNzczMGFlZjA=
+        base64-secret: MzcxMmQ3OWQ2ODNmNjdjMmM3ZTAyMWZkNzk2N2Y5MzA1MzY2MTkwZjgxOTIyOWI2YWUxZGZkOWI4ZTY4ZjU1MGQxYzE5NzRiNzIxZTM2NDZhZDcxNTFjNjllOWMyNDI2OWQxZTlkNzc4YjE3Zjk0ZDdmYzExYjhjOGYxYzFmN2U=
         # Token is valid 24 hours
         token-validity-in-seconds: 86400
-  metrics:
-    logs: # Reports metrics in the logs
-      enabled: true
-      report-frequency: 60 # in seconds
-
 # ===================================================================
 # Application specific properties
 # Add your own application properties here, see the ApplicationProperties class
@@ -115,8 +110,3 @@ jhipster:
 # ===================================================================
 
 # application:
-logging:
-  level:
-    root: debug
-    jdk: off
-    org.jfrog: debug

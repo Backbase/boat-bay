@@ -1,16 +1,14 @@
 package com.backbase.oss.boat.bay.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.*;
+import javax.validation.constraints.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Capability.
@@ -55,11 +53,12 @@ public class Capability implements Serializable {
 
     @OneToMany(mappedBy = "capability")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "specs", "capability" }, allowSetters = true)
     private Set<ServiceDefinition> serviceDefinitions = new HashSet<>();
 
     @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties(value = "capabilities", allowSetters = true)
+    @JsonIgnoreProperties(value = { "productReleases", "capabilities", "portal" }, allowSetters = true)
     private Product product;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -71,8 +70,13 @@ public class Capability implements Serializable {
         this.id = id;
     }
 
+    public Capability id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public String getKey() {
-        return key;
+        return this.key;
     }
 
     public Capability key(String key) {
@@ -85,7 +89,7 @@ public class Capability implements Serializable {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public Capability name(String name) {
@@ -98,7 +102,7 @@ public class Capability implements Serializable {
     }
 
     public Integer getOrder() {
-        return order;
+        return this.order;
     }
 
     public Capability order(Integer order) {
@@ -111,7 +115,7 @@ public class Capability implements Serializable {
     }
 
     public String getSubTitle() {
-        return subTitle;
+        return this.subTitle;
     }
 
     public Capability subTitle(String subTitle) {
@@ -124,7 +128,7 @@ public class Capability implements Serializable {
     }
 
     public String getContent() {
-        return content;
+        return this.content;
     }
 
     public Capability content(String content) {
@@ -137,7 +141,7 @@ public class Capability implements Serializable {
     }
 
     public ZonedDateTime getCreatedOn() {
-        return createdOn;
+        return this.createdOn;
     }
 
     public Capability createdOn(ZonedDateTime createdOn) {
@@ -150,7 +154,7 @@ public class Capability implements Serializable {
     }
 
     public String getCreatedBy() {
-        return createdBy;
+        return this.createdBy;
     }
 
     public Capability createdBy(String createdBy) {
@@ -162,8 +166,8 @@ public class Capability implements Serializable {
         this.createdBy = createdBy;
     }
 
-    public Boolean isHide() {
-        return hide;
+    public Boolean getHide() {
+        return this.hide;
     }
 
     public Capability hide(Boolean hide) {
@@ -176,11 +180,11 @@ public class Capability implements Serializable {
     }
 
     public Set<ServiceDefinition> getServiceDefinitions() {
-        return serviceDefinitions;
+        return this.serviceDefinitions;
     }
 
     public Capability serviceDefinitions(Set<ServiceDefinition> serviceDefinitions) {
-        this.serviceDefinitions = serviceDefinitions;
+        this.setServiceDefinitions(serviceDefinitions);
         return this;
     }
 
@@ -197,21 +201,28 @@ public class Capability implements Serializable {
     }
 
     public void setServiceDefinitions(Set<ServiceDefinition> serviceDefinitions) {
+        if (this.serviceDefinitions != null) {
+            this.serviceDefinitions.forEach(i -> i.setCapability(null));
+        }
+        if (serviceDefinitions != null) {
+            serviceDefinitions.forEach(i -> i.setCapability(this));
+        }
         this.serviceDefinitions = serviceDefinitions;
     }
 
     public Product getProduct() {
-        return product;
+        return this.product;
     }
 
     public Capability product(Product product) {
-        this.product = product;
+        this.setProduct(product);
         return this;
     }
 
     public void setProduct(Product product) {
         this.product = product;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -227,7 +238,8 @@ public class Capability implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
     // prettier-ignore
@@ -242,7 +254,7 @@ public class Capability implements Serializable {
             ", content='" + getContent() + "'" +
             ", createdOn='" + getCreatedOn() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
-            ", hide='" + isHide() + "'" +
+            ", hide='" + getHide() + "'" +
             "}";
     }
 }

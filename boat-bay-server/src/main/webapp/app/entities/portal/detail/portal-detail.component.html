@@ -1,0 +1,68 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <div *ngIf="portal">
+      <h2 data-cy="portalDetailsHeading"><span jhiTranslate="boatbayApp.portal.detail.title">Portal</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ portal.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="boatbayApp.portal.key">Key</span></dt>
+        <dd>
+          <span>{{ portal.key }}</span>
+        </dd>
+        <dt><span jhiTranslate="boatbayApp.portal.name">Name</span></dt>
+        <dd>
+          <span>{{ portal.name }}</span>
+        </dd>
+        <dt><span jhiTranslate="boatbayApp.portal.subTitle">Sub Title</span></dt>
+        <dd>
+          <span>{{ portal.subTitle }}</span>
+        </dd>
+        <dt><span jhiTranslate="boatbayApp.portal.logoUrl">Logo Url</span></dt>
+        <dd>
+          <span>{{ portal.logoUrl }}</span>
+        </dd>
+        <dt><span jhiTranslate="boatbayApp.portal.logoLink">Logo Link</span></dt>
+        <dd>
+          <span>{{ portal.logoLink }}</span>
+        </dd>
+        <dt><span jhiTranslate="boatbayApp.portal.content">Content</span></dt>
+        <dd>
+          <span>{{ portal.content }}</span>
+        </dd>
+        <dt><span jhiTranslate="boatbayApp.portal.createdOn">Created On</span></dt>
+        <dd>
+          <span>{{ portal.createdOn | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span jhiTranslate="boatbayApp.portal.createdBy">Created By</span></dt>
+        <dd>
+          <span>{{ portal.createdBy }}</span>
+        </dd>
+        <dt><span jhiTranslate="boatbayApp.portal.hide">Hide</span></dt>
+        <dd>
+          <span>{{ portal.hide }}</span>
+        </dd>
+        <dt><span jhiTranslate="boatbayApp.portal.linted">Linted</span></dt>
+        <dd>
+          <span>{{ portal.linted }}</span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+      </button>
+
+      <button type="button" [routerLink]="['/portal', portal.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+      </button>
+    </div>
+  </div>
+</div>

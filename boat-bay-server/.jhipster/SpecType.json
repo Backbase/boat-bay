@@ -4,9 +4,7 @@
     {
       "fieldName": "name",
       "fieldType": "String",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "description",
@@ -19,13 +17,10 @@
     {
       "fieldName": "icon",
       "fieldType": "String",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     }
   ],
   "relationships": [],
-  "changelogDate": "20201230150441",
   "entityTableName": "spec_type",
   "dto": "no",
   "pagination": "no",
@@ -34,6 +29,6 @@
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "clientRootFolder": "",
-  "applications": "*"
+  "applications": "*",
+  "changelogDate": "20210730113937"
 }

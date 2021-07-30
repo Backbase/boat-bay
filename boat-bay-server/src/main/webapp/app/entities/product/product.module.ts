@@ -1,16 +1,14 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { BoatBaySharedModule } from 'app/shared/shared.module';
-import { ProductComponent } from './product.component';
-import { ProductDetailComponent } from './product-detail.component';
-import { ProductUpdateComponent } from './product-update.component';
-import { ProductDeleteDialogComponent } from './product-delete-dialog.component';
-import { productRoute } from './product.route';
+import { SharedModule } from 'app/shared/shared.module';
+import { ProductComponent } from './list/product.component';
+import { ProductDetailComponent } from './detail/product-detail.component';
+import { ProductUpdateComponent } from './update/product-update.component';
+import { ProductDeleteDialogComponent } from './delete/product-delete-dialog.component';
+import { ProductRoutingModule } from './route/product-routing.module';
 
 @NgModule({
-  imports: [BoatBaySharedModule, RouterModule.forChild(productRoute)],
+  imports: [SharedModule, ProductRoutingModule],
   declarations: [ProductComponent, ProductDetailComponent, ProductUpdateComponent, ProductDeleteDialogComponent],
   entryComponents: [ProductDeleteDialogComponent],
 })
-export class BoatBayProductModule {}
+export class ProductModule {}

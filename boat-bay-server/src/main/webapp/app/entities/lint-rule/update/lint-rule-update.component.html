@@ -1,0 +1,140 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-lint-rule-heading" data-cy="LintRuleCreateUpdateHeading" jhiTranslate="boatbayApp.lintRule.home.createOrEditLabel">
+        Create or edit a Lint Rule
+      </h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="form-group" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-control-label" jhiTranslate="global.field.id" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.lintRule.ruleId" for="field_ruleId">Rule Id</label>
+          <input type="text" class="form-control" name="ruleId" id="field_ruleId" data-cy="ruleId" formControlName="ruleId" />
+          <div *ngIf="editForm.get('ruleId')!.invalid && (editForm.get('ruleId')!.dirty || editForm.get('ruleId')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('ruleId')?.errors?.required" jhiTranslate="entity.validation.required">
+              This field is required.
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.lintRule.title" for="field_title">Title</label>
+          <input type="text" class="form-control" name="title" id="field_title" data-cy="title" formControlName="title" />
+          <div *ngIf="editForm.get('title')!.invalid && (editForm.get('title')!.dirty || editForm.get('title')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('title')?.errors?.required" jhiTranslate="entity.validation.required">
+              This field is required.
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.lintRule.ruleSet" for="field_ruleSet">Rule Set</label>
+          <input type="text" class="form-control" name="ruleSet" id="field_ruleSet" data-cy="ruleSet" formControlName="ruleSet" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.lintRule.summary" for="field_summary">Summary</label>
+          <input type="text" class="form-control" name="summary" id="field_summary" data-cy="summary" formControlName="summary" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.lintRule.severity" for="field_severity">Severity</label>
+          <select class="form-control" name="severity" formControlName="severity" id="field_severity" data-cy="severity">
+            <option [ngValue]="null">{{ 'boatbayApp.Severity.null' | translate }}</option>
+            <option value="MUST">{{ 'boatbayApp.Severity.MUST' | translate }}</option>
+            <option value="SHOULD">{{ 'boatbayApp.Severity.SHOULD' | translate }}</option>
+            <option value="MAY">{{ 'boatbayApp.Severity.MAY' | translate }}</option>
+            <option value="HINT">{{ 'boatbayApp.Severity.HINT' | translate }}</option>
+          </select>
+          <div *ngIf="editForm.get('severity')!.invalid && (editForm.get('severity')!.dirty || editForm.get('severity')!.touched)">
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('severity')?.errors?.required"
+              jhiTranslate="entity.validation.required"
+            >
+              This field is required.
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.lintRule.description" for="field_description">Description</label>
+          <input
+            type="text"
+            class="form-control"
+            name="description"
+            id="field_description"
+            data-cy="description"
+            formControlName="description"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.lintRule.externalUrl" for="field_externalUrl">External Url</label>
+          <input
+            type="text"
+            class="form-control"
+            name="externalUrl"
+            id="field_externalUrl"
+            data-cy="externalUrl"
+            formControlName="externalUrl"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.lintRule.enabled" for="field_enabled">Enabled</label>
+          <input type="checkbox" class="form-check" name="enabled" id="field_enabled" data-cy="enabled" formControlName="enabled" />
+          <div *ngIf="editForm.get('enabled')!.invalid && (editForm.get('enabled')!.dirty || editForm.get('enabled')!.touched)">
+            <small
+              class="form-text text-danger"
+              *ngIf="editForm.get('enabled')?.errors?.required"
+              jhiTranslate="entity.validation.required"
+            >
+              This field is required.
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.lintRule.portal" for="field_portal">Portal</label>
+          <select class="form-control" id="field_portal" data-cy="portal" name="portal" formControlName="portal">
+            <option *ngIf="!editForm.get('portal')!.value" [ngValue]="null" selected></option>
+            <option
+              [ngValue]="portalOption.id === editForm.get('portal')!.value?.id ? editForm.get('portal')!.value : portalOption"
+              *ngFor="let portalOption of portalsSharedCollection; trackBy: trackPortalById"
+            >
+              {{ portalOption.name }}
+            </option>
+          </select>
+        </div>
+        <div *ngIf="editForm.get(['portal'])!.invalid && (editForm.get(['portal'])!.dirty || editForm.get(['portal'])!.touched)">
+          <small class="form-text text-danger" *ngIf="editForm.get(['portal'])?.errors?.required" jhiTranslate="entity.validation.required">
+            This field is required.
+          </small>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-
 @RequiredArgsConstructor
 @Component
 @Slf4j
@@ -31,7 +30,8 @@ public class BoatStatisticsPublishedSpringMetrics implements BoatStatisticsPubli
 
     @Override
     public void publish(Product product, BoatStatistics boatStatistics) {
-        MultiGauge multiGauge = MultiGauge.builder("boat.product.violations")
+        MultiGauge multiGauge = MultiGauge
+            .builder("boat.product.violations")
             .tag(PORTAL, product.getPortal().getKey())
             .tag(PRODUCT, product.getKey())
             .description("Number of violations on a product")
@@ -43,9 +43,9 @@ public class BoatStatisticsPublishedSpringMetrics implements BoatStatisticsPubli
 
     @Override
     public void publish(Capability capability, BoatStatistics boatStatistics) {
-
         Product product = capability.getProduct();
-        MultiGauge multiGauge = MultiGauge.builder("boat.capability.violations")
+        MultiGauge multiGauge = MultiGauge
+            .builder("boat.capability.violations")
             .tag(PORTAL, product.getPortal().getKey())
             .tag(PRODUCT, product.getKey())
             .tag(CAPABILITY, capability.getKey())
@@ -60,7 +60,8 @@ public class BoatStatisticsPublishedSpringMetrics implements BoatStatisticsPubli
     public void publish(ServiceDefinition serviceDefinition, BoatStatistics boatStatistics) {
         Capability capability = serviceDefinition.getCapability();
         Product product = capability.getProduct();
-        MultiGauge multiGauge = MultiGauge.builder("boat.service.violations")
+        MultiGauge multiGauge = MultiGauge
+            .builder("boat.service.violations")
             .tag(PORTAL, product.getPortal().getKey())
             .tag(PRODUCT, product.getKey())
             .tag(CAPABILITY, capability.getKey())
@@ -70,21 +71,18 @@ public class BoatStatisticsPublishedSpringMetrics implements BoatStatisticsPubli
             .register(meterRegistry);
 
         register(boatStatistics, multiGauge);
-
     }
-
 
     private void register(BoatStatistics boatStatistics, MultiGauge multiGauge) {
         log.debug("Publishing Micro Meter Metrics with gauge: {}", multiGauge);
 
-        multiGauge.register(Arrays.asList(
-            MultiGauge.Row.of(Tags.of(SEVERITY, Severity.MUST.name()), boatStatistics.getMustViolationsCount()),
-            MultiGauge.Row.of(Tags.of(SEVERITY, Severity.MAY.name()), boatStatistics.getMustViolationsCount()),
-            MultiGauge.Row.of(Tags.of(SEVERITY, Severity.SHOULD.name()), boatStatistics.getMustViolationsCount()),
-            MultiGauge.Row.of(Tags.of(SEVERITY, Severity.HINT.name()), boatStatistics.getMustViolationsCount())
-        ));
-
+        multiGauge.register(
+            Arrays.asList(
+                MultiGauge.Row.of(Tags.of(SEVERITY, Severity.MUST.name()), boatStatistics.getMustViolationsCount()),
+                MultiGauge.Row.of(Tags.of(SEVERITY, Severity.MAY.name()), boatStatistics.getMustViolationsCount()),
+                MultiGauge.Row.of(Tags.of(SEVERITY, Severity.SHOULD.name()), boatStatistics.getMustViolationsCount()),
+                MultiGauge.Row.of(Tags.of(SEVERITY, Severity.HINT.name()), boatStatistics.getMustViolationsCount())
+            )
+        );
     }
-
-
 }

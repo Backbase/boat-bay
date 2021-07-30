@@ -4,16 +4,12 @@
     {
       "fieldName": "key",
       "fieldType": "String",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "name",
       "fieldType": "String",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "order",
@@ -63,7 +59,6 @@
       "otherEntityField": "name"
     }
   ],
-  "changelogDate": "20201230121252",
   "entityTableName": "product",
   "dto": "no",
   "pagination": "no",
@@ -72,6 +67,6 @@
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "clientRootFolder": "",
-  "applications": "*"
+  "applications": "*",
+  "changelogDate": "20210730113932"
 }

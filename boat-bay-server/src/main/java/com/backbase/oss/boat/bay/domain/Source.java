@@ -1,18 +1,15 @@
 package com.backbase.oss.boat.bay.domain;
 
+import com.backbase.oss.boat.bay.domain.enumeration.SourceType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
-
-import com.backbase.oss.boat.bay.domain.enumeration.SourceType;
+import javax.persistence.*;
+import javax.validation.constraints.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Source.
@@ -108,24 +105,25 @@ public class Source implements Serializable {
 
     @OneToMany(mappedBy = "source")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "source" }, allowSetters = true)
     private Set<SourcePath> sourcePaths = new HashSet<>();
 
     @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties(value = "sources", allowSetters = true)
+    @JsonIgnoreProperties(value = { "products", "lintRules", "zallyConfig" }, allowSetters = true)
     private Portal portal;
 
     @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties(value = "sources", allowSetters = true)
+    @JsonIgnoreProperties(value = { "productReleases", "capabilities", "portal" }, allowSetters = true)
     private Product product;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = "sources", allowSetters = true)
+    @JsonIgnoreProperties(value = { "serviceDefinitions", "product" }, allowSetters = true)
     private Capability capability;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = "sources", allowSetters = true)
+    @JsonIgnoreProperties(value = { "specs", "capability" }, allowSetters = true)
     private ServiceDefinition serviceDefinition;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -137,8 +135,13 @@ public class Source implements Serializable {
         this.id = id;
     }
 
+    public Source id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public Source name(String name) {
@@ -151,7 +154,7 @@ public class Source implements Serializable {
     }
 
     public String getKey() {
-        return key;
+        return this.key;
     }
 
     public Source key(String key) {
@@ -164,7 +167,7 @@ public class Source implements Serializable {
     }
 
     public SourceType getType() {
-        return type;
+        return this.type;
     }
 
     public Source type(SourceType type) {
@@ -177,7 +180,7 @@ public class Source implements Serializable {
     }
 
     public String getBaseUrl() {
-        return baseUrl;
+        return this.baseUrl;
     }
 
     public Source baseUrl(String baseUrl) {
@@ -189,8 +192,8 @@ public class Source implements Serializable {
         this.baseUrl = baseUrl;
     }
 
-    public Boolean isActive() {
-        return active;
+    public Boolean getActive() {
+        return this.active;
     }
 
     public Source active(Boolean active) {
@@ -203,7 +206,7 @@ public class Source implements Serializable {
     }
 
     public String getFilterArtifactsName() {
-        return filterArtifactsName;
+        return this.filterArtifactsName;
     }
 
     public Source filterArtifactsName(String filterArtifactsName) {
@@ -216,7 +219,7 @@ public class Source implements Serializable {
     }
 
     public LocalDate getFilterArtifactsCreatedSince() {
-        return filterArtifactsCreatedSince;
+        return this.filterArtifactsCreatedSince;
     }
 
     public Source filterArtifactsCreatedSince(LocalDate filterArtifactsCreatedSince) {
@@ -229,7 +232,7 @@ public class Source implements Serializable {
     }
 
     public String getUsername() {
-        return username;
+        return this.username;
     }
 
     public Source username(String username) {
@@ -242,7 +245,7 @@ public class Source implements Serializable {
     }
 
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     public Source password(String password) {
@@ -255,7 +258,7 @@ public class Source implements Serializable {
     }
 
     public String getCronExpression() {
-        return cronExpression;
+        return this.cronExpression;
     }
 
     public Source cronExpression(String cronExpression) {
@@ -267,8 +270,8 @@ public class Source implements Serializable {
         this.cronExpression = cronExpression;
     }
 
-    public Boolean isRunOnStartup() {
-        return runOnStartup;
+    public Boolean getRunOnStartup() {
+        return this.runOnStartup;
     }
 
     public Source runOnStartup(Boolean runOnStartup) {
@@ -281,7 +284,7 @@ public class Source implements Serializable {
     }
 
     public String getSpecFilterSpEL() {
-        return specFilterSpEL;
+        return this.specFilterSpEL;
     }
 
     public Source specFilterSpEL(String specFilterSpEL) {
@@ -294,7 +297,7 @@ public class Source implements Serializable {
     }
 
     public String getCapabilityKeySpEL() {
-        return capabilityKeySpEL;
+        return this.capabilityKeySpEL;
     }
 
     public Source capabilityKeySpEL(String capabilityKeySpEL) {
@@ -307,7 +310,7 @@ public class Source implements Serializable {
     }
 
     public String getCapabilityNameSpEL() {
-        return capabilityNameSpEL;
+        return this.capabilityNameSpEL;
     }
 
     public Source capabilityNameSpEL(String capabilityNameSpEL) {
@@ -320,7 +323,7 @@ public class Source implements Serializable {
     }
 
     public String getServiceKeySpEL() {
-        return serviceKeySpEL;
+        return this.serviceKeySpEL;
     }
 
     public Source serviceKeySpEL(String serviceKeySpEL) {
@@ -333,7 +336,7 @@ public class Source implements Serializable {
     }
 
     public String getServiceNameSpEL() {
-        return serviceNameSpEL;
+        return this.serviceNameSpEL;
     }
 
     public Source serviceNameSpEL(String serviceNameSpEL) {
@@ -346,7 +349,7 @@ public class Source implements Serializable {
     }
 
     public String getSpecKeySpEL() {
-        return specKeySpEL;
+        return this.specKeySpEL;
     }
 
     public Source specKeySpEL(String specKeySpEL) {
@@ -359,7 +362,7 @@ public class Source implements Serializable {
     }
 
     public String getVersionSpEL() {
-        return versionSpEL;
+        return this.versionSpEL;
     }
 
     public Source versionSpEL(String versionSpEL) {
@@ -372,7 +375,7 @@ public class Source implements Serializable {
     }
 
     public String getProductReleaseNameSpEL() {
-        return productReleaseNameSpEL;
+        return this.productReleaseNameSpEL;
     }
 
     public Source productReleaseNameSpEL(String productReleaseNameSpEL) {
@@ -385,7 +388,7 @@ public class Source implements Serializable {
     }
 
     public String getProductReleaseVersionSpEL() {
-        return productReleaseVersionSpEL;
+        return this.productReleaseVersionSpEL;
     }
 
     public Source productReleaseVersionSpEL(String productReleaseVersionSpEL) {
@@ -398,7 +401,7 @@ public class Source implements Serializable {
     }
 
     public String getProductReleaseKeySpEL() {
-        return productReleaseKeySpEL;
+        return this.productReleaseKeySpEL;
     }
 
     public Source productReleaseKeySpEL(String productReleaseKeySpEL) {
@@ -411,7 +414,7 @@ public class Source implements Serializable {
     }
 
     public Integer getItemLimit() {
-        return itemLimit;
+        return this.itemLimit;
     }
 
     public Source itemLimit(Integer itemLimit) {
@@ -423,8 +426,8 @@ public class Source implements Serializable {
         this.itemLimit = itemLimit;
     }
 
-    public Boolean isOverwriteChanges() {
-        return overwriteChanges;
+    public Boolean getOverwriteChanges() {
+        return this.overwriteChanges;
     }
 
     public Source overwriteChanges(Boolean overwriteChanges) {
@@ -437,7 +440,7 @@ public class Source implements Serializable {
     }
 
     public String getOptions() {
-        return options;
+        return this.options;
     }
 
     public Source options(String options) {
@@ -450,11 +453,11 @@ public class Source implements Serializable {
     }
 
     public Set<SourcePath> getSourcePaths() {
-        return sourcePaths;
+        return this.sourcePaths;
     }
 
     public Source sourcePaths(Set<SourcePath> sourcePaths) {
-        this.sourcePaths = sourcePaths;
+        this.setSourcePaths(sourcePaths);
         return this;
     }
 
@@ -471,15 +474,21 @@ public class Source implements Serializable {
     }
 
     public void setSourcePaths(Set<SourcePath> sourcePaths) {
+        if (this.sourcePaths != null) {
+            this.sourcePaths.forEach(i -> i.setSource(null));
+        }
+        if (sourcePaths != null) {
+            sourcePaths.forEach(i -> i.setSource(this));
+        }
         this.sourcePaths = sourcePaths;
     }
 
     public Portal getPortal() {
-        return portal;
+        return this.portal;
     }
 
     public Source portal(Portal portal) {
-        this.portal = portal;
+        this.setPortal(portal);
         return this;
     }
 
@@ -488,11 +497,11 @@ public class Source implements Serializable {
     }
 
     public Product getProduct() {
-        return product;
+        return this.product;
     }
 
     public Source product(Product product) {
-        this.product = product;
+        this.setProduct(product);
         return this;
     }
 
@@ -501,11 +510,11 @@ public class Source implements Serializable {
     }
 
     public Capability getCapability() {
-        return capability;
+        return this.capability;
     }
 
     public Source capability(Capability capability) {
-        this.capability = capability;
+        this.setCapability(capability);
         return this;
     }
 
@@ -514,17 +523,18 @@ public class Source implements Serializable {
     }
 
     public ServiceDefinition getServiceDefinition() {
-        return serviceDefinition;
+        return this.serviceDefinition;
     }
 
     public Source serviceDefinition(ServiceDefinition serviceDefinition) {
-        this.serviceDefinition = serviceDefinition;
+        this.setServiceDefinition(serviceDefinition);
         return this;
     }
 
     public void setServiceDefinition(ServiceDefinition serviceDefinition) {
         this.serviceDefinition = serviceDefinition;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -540,7 +550,8 @@ public class Source implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
     // prettier-ignore
@@ -552,13 +563,13 @@ public class Source implements Serializable {
             ", key='" + getKey() + "'" +
             ", type='" + getType() + "'" +
             ", baseUrl='" + getBaseUrl() + "'" +
-            ", active='" + isActive() + "'" +
+            ", active='" + getActive() + "'" +
             ", filterArtifactsName='" + getFilterArtifactsName() + "'" +
             ", filterArtifactsCreatedSince='" + getFilterArtifactsCreatedSince() + "'" +
             ", username='" + getUsername() + "'" +
             ", password='" + getPassword() + "'" +
             ", cronExpression='" + getCronExpression() + "'" +
-            ", runOnStartup='" + isRunOnStartup() + "'" +
+            ", runOnStartup='" + getRunOnStartup() + "'" +
             ", specFilterSpEL='" + getSpecFilterSpEL() + "'" +
             ", capabilityKeySpEL='" + getCapabilityKeySpEL() + "'" +
             ", capabilityNameSpEL='" + getCapabilityNameSpEL() + "'" +
@@ -570,7 +581,7 @@ public class Source implements Serializable {
             ", productReleaseVersionSpEL='" + getProductReleaseVersionSpEL() + "'" +
             ", productReleaseKeySpEL='" + getProductReleaseKeySpEL() + "'" +
             ", itemLimit=" + getItemLimit() +
-            ", overwriteChanges='" + isOverwriteChanges() + "'" +
+            ", overwriteChanges='" + getOverwriteChanges() + "'" +
             ", options='" + getOptions() + "'" +
             "}";
     }

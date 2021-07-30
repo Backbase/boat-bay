@@ -1,0 +1,98 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-dashboard-heading" data-cy="DashboardCreateUpdateHeading" jhiTranslate="boatbayApp.dashboard.home.createOrEditLabel">
+        Create or edit a Dashboard
+      </h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="form-group" [hidden]="editForm.get('id')!.value == null">
+          <label class="form-control-label" jhiTranslate="global.field.id" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.dashboard.name" for="field_name">Name</label>
+          <input type="text" class="form-control" name="name" id="field_name" data-cy="name" formControlName="name" />
+          <div *ngIf="editForm.get('name')!.invalid && (editForm.get('name')!.dirty || editForm.get('name')!.touched)">
+            <small class="form-text text-danger" *ngIf="editForm.get('name')?.errors?.required" jhiTranslate="entity.validation.required">
+              This field is required.
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.dashboard.title" for="field_title">Title</label>
+          <input type="text" class="form-control" name="title" id="field_title" data-cy="title" formControlName="title" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.dashboard.subTitle" for="field_subTitle">Sub Title</label>
+          <input type="text" class="form-control" name="subTitle" id="field_subTitle" data-cy="subTitle" formControlName="subTitle" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.dashboard.navTitle" for="field_navTitle">Nav Title</label>
+          <input type="text" class="form-control" name="navTitle" id="field_navTitle" data-cy="navTitle" formControlName="navTitle" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.dashboard.content" for="field_content">Content</label>
+          <textarea class="form-control" name="content" id="field_content" data-cy="content" formControlName="content"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-control-label" jhiTranslate="boatbayApp.dashboard.defaultPortal" for="field_defaultPortal"
+            >Default Portal</label
+          >
+          <select
+            class="form-control"
+            id="field_defaultPortal"
+            data-cy="defaultPortal"
+            name="defaultPortal"
+            formControlName="defaultPortal"
+          >
+            <option *ngIf="editForm.get(['defaultPortal'])!.value == null" [ngValue]="null" selected></option>
+            <option
+              [ngValue]="portalOption.id === editForm.get('defaultPortal')!.value?.id ? editForm.get('defaultPortal')!.value : portalOption"
+              *ngFor="let portalOption of defaultPortalsCollection; trackBy: trackPortalById"
+            >
+              {{ portalOption.name }}
+            </option>
+          </select>
+        </div>
+        <div
+          *ngIf="
+            editForm.get(['defaultPortal'])!.invalid && (editForm.get(['defaultPortal'])!.dirty || editForm.get(['defaultPortal'])!.touched)
+          "
+        >
+          <small
+            class="form-text text-danger"
+            *ngIf="editForm.get(['defaultPortal'])?.errors?.required"
+            jhiTranslate="entity.validation.required"
+          >
+            This field is required.
+          </small>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

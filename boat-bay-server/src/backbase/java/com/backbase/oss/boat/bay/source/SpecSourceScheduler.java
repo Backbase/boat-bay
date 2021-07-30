@@ -15,7 +15,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -23,7 +22,6 @@ import java.util.Set;
 import java.util.concurrent.ScheduledFuture;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -41,7 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-@DependsOn({"liquibase", "boatBayBootstrap"})
+@DependsOn({ "liquibase", "boatBayBootstrap" })
 @ConditionalOnProperty(value = "boat.scheduler.source.scanner.enabled", havingValue = "true")
 public class SpecSourceScheduler {
 
@@ -55,37 +53,46 @@ public class SpecSourceScheduler {
     final Set<SpecSourceScanner> scanners = new HashSet<>();
     final Map<Long, ScheduledFuture<?>> jobsMap = new HashMap<>();
 
-    @EventListener({ContextRefreshedEvent.class, SpecSourceUpdatedEvent.class})
+    @EventListener({ ContextRefreshedEvent.class, SpecSourceUpdatedEvent.class })
     @Transactional(readOnly = true)
     public void scheduleTasks() {
-
         log.info("Setting up Scanner Tasks");
         jobsMap.forEach((jobId, job) -> removeTaskFromScheduler(jobId));
-        boatSourceRepository.findAllByCronExpressionIsNotNullAndActiveIsTrue()
-            .forEach(source -> {
-                SpecSourceScanner scanner = createScanner(source);
-                Runnable job = setupSpecScannerJob(scanner);
-                CronTrigger trigger = new CronTrigger(source.getCronExpression());
-                log.info("Setup Source Scanner: {} with cron expression: {}. First execution: {}", source.getName(), trigger.getExpression(), trigger.nextExecutionTime(new SimpleTriggerContext()));
-                addTaskToScheduler(source.getId(), job, trigger);
-                scanners.add(scanner);
-            });
-
+        boatSourceRepository
+            .findAllByCronExpressionIsNotNullAndActiveIsTrue()
+            .forEach(
+                source -> {
+                    SpecSourceScanner scanner = createScanner(source);
+                    Runnable job = setupSpecScannerJob(scanner);
+                    CronTrigger trigger = new CronTrigger(source.getCronExpression());
+                    log.info(
+                        "Setup Source Scanner: {} with cron expression: {}. First execution: {}",
+                        source.getName(),
+                        trigger.getExpression(),
+                        trigger.nextExecutionTime(new SimpleTriggerContext())
+                    );
+                    addTaskToScheduler(source.getId(), job, trigger);
+                    scanners.add(scanner);
+                }
+            );
     }
 
-    @EventListener({ContextRefreshedEvent.class})
+    @EventListener({ ContextRefreshedEvent.class })
     @Async
     public void runOnStartup() {
         log.info("Executing scanners on startup");
-        scanners.stream().filter(scanner -> scanner.getSource().isRunOnStartup())
-            .forEach(scanner -> {
-                EntityTransaction transaction = entityManagerFactory.createEntityManager().getTransaction();
-                log.info("Executing Scanner: {} in transaction: {}", scanner.getSourceType(), transaction);
-                ScanResult scan = scanner.scan();
-                specSourceResolver.process(scan);
-            });
+        scanners
+            .stream()
+            .filter(scanner -> scanner.getSource().getRunOnStartup())
+            .forEach(
+                scanner -> {
+                    EntityTransaction transaction = entityManagerFactory.createEntityManager().getTransaction();
+                    log.info("Executing Scanner: {} in transaction: {}", scanner.getSourceType(), transaction);
+                    ScanResult scan = scanner.scan();
+                    specSourceResolver.process(scan);
+                }
+            );
     }
-
 
     public void setupScheduledTasks() {
         scheduleTasks();
@@ -98,8 +105,7 @@ public class SpecSourceScheduler {
         };
     }
 
-    @SuppressWarnings({"java:S1301", "SwitchStatementWithTooFewBranches"})
-
+    @SuppressWarnings({ "java:S1301", "SwitchStatementWithTooFewBranches" })
     public SpecSourceScanner createScanner(Source source) {
         SourceScannerOptions scannerOptions = getScannerOptions(source);
 
@@ -127,7 +133,14 @@ public class SpecSourceScheduler {
             try {
                 scannerOptions = objectMapper.readValue(source.getOptions(), SourceScannerOptions.class);
             } catch (JsonProcessingException e) {
-                throw new IllegalStateException("Source configuration: " + source.getName() + " contains invalid options: " + source.getOptions() + " that cannot be mapped to : " + SourceScannerOptions.class);
+                throw new IllegalStateException(
+                    "Source configuration: " +
+                    source.getName() +
+                    " contains invalid options: " +
+                    source.getOptions() +
+                    " that cannot be mapped to : " +
+                    SourceScannerOptions.class
+                );
             }
         } else {
             scannerOptions = new SourceScannerOptions();
@@ -161,5 +174,4 @@ public class SpecSourceScheduler {
             jobsMap.put(id, null);
         }
     }
-
 }

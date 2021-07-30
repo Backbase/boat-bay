@@ -13,7 +13,4 @@ public class SpecSourceUpdatedEvent extends ApplicationEvent {
         super(eventSource);
         this.specSource = specSource;
     }
-
-
-
 }

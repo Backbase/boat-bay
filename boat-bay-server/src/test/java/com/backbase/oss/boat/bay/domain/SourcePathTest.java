@@ -1,13 +1,14 @@
 package com.backbase.oss.boat.bay.domain;
 
-import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
-import com.backbase.oss.boat.bay.web.rest.TestUtil;
 
-public class SourcePathTest {
+import com.backbase.oss.boat.bay.web.rest.TestUtil;
+import org.junit.jupiter.api.Test;
+
+class SourcePathTest {
 
     @Test
-    public void equalsVerifier() throws Exception {
+    void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(SourcePath.class);
         SourcePath sourcePath1 = new SourcePath();
         sourcePath1.setId(1L);

@@ -1,17 +1,15 @@
 package com.backbase.oss.boat.bay.source.scanner;
 
+import static com.backbase.oss.boat.bay.source.SpecSourceResolver.LATEST;
+
 import com.backbase.oss.boat.bay.domain.ProductRelease;
 import com.backbase.oss.boat.bay.domain.Source;
 import com.backbase.oss.boat.bay.domain.Spec;
-
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
 import lombok.Data;
-
-import static com.backbase.oss.boat.bay.source.SpecSourceResolver.LATEST;
 
 @Data
 public class ScanResult {
@@ -20,16 +18,10 @@ public class ScanResult {
     private final SourceScannerOptions scannerOptions;
     private final List<ProductRelease> productReleases;
 
-
-
-
-
-
     public ScanResult(Source source, SourceScannerOptions sourceScannerOptions) {
         this.source = source;
         this.scannerOptions = sourceScannerOptions;
         this.productReleases = new ArrayList<>();
-
     }
 
     public ScanResult(Source source, SourceScannerOptions sourceScannerOptions, List<Spec> specs) {
@@ -42,10 +34,8 @@ public class ScanResult {
         this.productReleases.add(productRelease);
     }
 
-
     public void addSpec(Spec spec) {
-
-        if(productReleases.isEmpty()) {
+        if (productReleases.isEmpty()) {
             ProductRelease newProductRelease = new ProductRelease();
             newProductRelease.setKey(LATEST.toLowerCase(Locale.ROOT));
             newProductRelease.setName(LATEST);
@@ -55,6 +45,5 @@ public class ScanResult {
             productReleases.add(newProductRelease);
         }
         productReleases.get(0).addSpec(spec);
-
     }
 }

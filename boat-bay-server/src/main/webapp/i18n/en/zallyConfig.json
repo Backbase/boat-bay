@@ -1,0 +1,26 @@
+{
+  "boatbayApp": {
+    "zallyConfig": {
+      "home": {
+        "title": "Zally Configs",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Zally Config",
+        "createOrEditLabel": "Create or edit a Zally Config",
+        "notFound": "No Zally Configs found"
+      },
+      "created": "A new Zally Config is created with identifier {{ param }}",
+      "updated": "A Zally Config is updated with identifier {{ param }}",
+      "deleted": "A Zally Config is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Zally Config {{ id }}?"
+      },
+      "detail": {
+        "title": "Zally Config"
+      },
+      "id": "ID",
+      "name": "Name",
+      "contents": "Contents",
+      "portal": "Portal"
+    }
+  }
+}

@@ -4,17 +4,13 @@
     {
       "fieldName": "name",
       "fieldType": "String",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "description",
       "fieldType": "byte[]",
       "fieldTypeBlobContent": "text",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "url",
@@ -55,7 +51,6 @@
       "otherEntityField": "name"
     }
   ],
-  "changelogDate": "20201223103115",
   "entityTableName": "lint_rule_violation",
   "dto": "no",
   "pagination": "pagination",
@@ -64,6 +59,6 @@
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "clientRootFolder": "",
-  "applications": "*"
+  "applications": "*",
+  "changelogDate": "20210730113942"
 }

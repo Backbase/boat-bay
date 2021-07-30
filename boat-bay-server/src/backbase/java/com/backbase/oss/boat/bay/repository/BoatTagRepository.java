@@ -7,9 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BoatTagRepository extends TagRepository {
-
     Optional<Tag> findByName(String name);
 
     List<Tag> findAllBySpecsIn(List<Spec> specs);
-
 }

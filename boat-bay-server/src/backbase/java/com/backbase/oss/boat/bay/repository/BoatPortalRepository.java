@@ -5,8 +5,5 @@ import com.backbase.oss.boat.bay.repository.PortalRepository;
 import java.util.Optional;
 
 public interface BoatPortalRepository extends PortalRepository {
-
-   Optional<Portal> findByKey(String key);
-
-
+    Optional<Portal> findByKey(String key);
 }

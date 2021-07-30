@@ -1,0 +1,102 @@
+<div>
+  <h2 id="page-heading" data-cy="ServiceDefinitionHeading">
+    <span jhiTranslate="boatbayApp.serviceDefinition.home.title">Service Definitions</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="loadAll()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span jhiTranslate="boatbayApp.serviceDefinition.home.refreshListLabel">Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-service-definition"
+        [routerLink]="['/service-definition/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span jhiTranslate="boatbayApp.serviceDefinition.home.createLabel"> Create a new Service Definition </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="serviceDefinitions?.length === 0">
+    <span jhiTranslate="boatbayApp.serviceDefinition.home.notFound">No serviceDefinitions found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="serviceDefinitions && serviceDefinitions.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr>
+          <th scope="col"><span jhiTranslate="global.field.id">ID</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.serviceDefinition.key">Key</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.serviceDefinition.name">Name</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.serviceDefinition.order">Order</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.serviceDefinition.subTitle">Sub Title</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.serviceDefinition.description">Description</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.serviceDefinition.icon">Icon</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.serviceDefinition.color">Color</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.serviceDefinition.createdOn">Created On</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.serviceDefinition.createdBy">Created By</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.serviceDefinition.hide">Hide</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.serviceDefinition.capability">Capability</span></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let serviceDefinition of serviceDefinitions; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/service-definition', serviceDefinition.id, 'view']">{{ serviceDefinition.id }}</a>
+          </td>
+          <td>{{ serviceDefinition.key }}</td>
+          <td>{{ serviceDefinition.name }}</td>
+          <td>{{ serviceDefinition.order }}</td>
+          <td>{{ serviceDefinition.subTitle }}</td>
+          <td>{{ serviceDefinition.description }}</td>
+          <td>{{ serviceDefinition.icon }}</td>
+          <td>{{ serviceDefinition.color }}</td>
+          <td>{{ serviceDefinition.createdOn | formatMediumDatetime }}</td>
+          <td>{{ serviceDefinition.createdBy }}</td>
+          <td>{{ serviceDefinition.hide }}</td>
+          <td>
+            <div *ngIf="serviceDefinition.capability">
+              <a [routerLink]="['/capability', serviceDefinition.capability?.id, 'view']">{{ serviceDefinition.capability?.name }}</a>
+            </div>
+          </td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/service-definition', serviceDefinition.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/service-definition', serviceDefinition.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(serviceDefinition)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
