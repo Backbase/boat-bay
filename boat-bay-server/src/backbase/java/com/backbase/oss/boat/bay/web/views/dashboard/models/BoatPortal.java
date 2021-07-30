@@ -14,6 +14,4 @@ public class BoatPortal {
 
     private LocalDateTime createdOn;
     private String createdBy;
-
 }
-

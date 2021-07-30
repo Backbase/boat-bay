@@ -1,6 +1,5 @@
 package com.backbase.oss.boat.bay.config;
 
-
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @RequiredArgsConstructor
 public class BoatCacheManager {
-
 
     private final CacheManager cacheManager;
 
@@ -26,7 +24,6 @@ public class BoatCacheManager {
     public static final String SPEC_LINT_REPORT = "spec.lintreport";
     public static final String STATISTICS = "statistics";
 
-
     public void clearCache() {
         for (String s : Arrays.asList(PRODUCT_SPECS, PRODUCT_SERVICES, PRODUCT_CAPABILITIES, STATISTICS)) {
             Cache cache = cacheManager.getCache(s);
@@ -35,5 +32,4 @@ public class BoatCacheManager {
             }
         }
     }
-
 }

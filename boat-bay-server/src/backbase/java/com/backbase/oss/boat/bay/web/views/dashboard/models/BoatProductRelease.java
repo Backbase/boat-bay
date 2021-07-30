@@ -11,5 +11,4 @@ public class BoatProductRelease {
     private String name;
     private String version;
     private LocalDateTime releaseDate;
-
 }

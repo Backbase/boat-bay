@@ -4,11 +4,9 @@ import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.domain.enumeration.Changes;
 import com.backbase.oss.boat.bay.repository.BoatSpecRepository;
 import com.github.zafarkhaja.semver.Version;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.openapitools.openapidiff.core.OpenApiCompare;
@@ -33,12 +31,12 @@ public class BoatBackwardsCompatibleChecker {
         if (specs.size() == 1 && specs.get(0).getId().equals(spec.getId())) {
             spec.setChanges(Changes.NOT_APPLICABLE);
         } else if (specs.size() > 1) {
-
             Optional<Version> specVersion = parseVersion(spec);
             if (specVersion.isEmpty()) {
                 spec.setChanges(Changes.INVALID_VERSION);
             } else {
-                Optional<Spec> previousSpec = specs.stream()
+                Optional<Spec> previousSpec = specs
+                    .stream()
                     .filter(s -> !s.equals(spec))
                     .filter(this::validateSpecVersion)
                     .sorted(this::compareVersion)
@@ -46,18 +44,20 @@ public class BoatBackwardsCompatibleChecker {
                     .findFirst();
 
                 if (previousSpec.isPresent()) {
-
-
                     Spec prevSpec = previousSpec.get();
                     String prevVersion = prevSpec.getVersion();
-                    log.info("Previous version from: {} detected: {} in list: {}", prevVersion, specVersion.get(), specs.stream().map(Spec::getVersion).collect(Collectors.joining(", ")));
+                    log.info(
+                        "Previous version from: {} detected: {} in list: {}",
+                        prevVersion,
+                        specVersion.get(),
+                        specs.stream().map(Spec::getVersion).collect(Collectors.joining(", "))
+                    );
 
                     if (prevSpec.getSuccessor() == null) {
                         spec.setPreviousSpec(prevSpec);
                     } else {
                         log.info("Cannot have multiple previous specs");
                     }
-
 
                     String currentOpenAPI = spec.getOpenApi();
                     String previousOpenAPI = prevSpec.getOpenApi();
@@ -76,11 +76,13 @@ public class BoatBackwardsCompatibleChecker {
                         spec.setChanges(Changes.ERROR_COMPARING);
                     }
 
-                    log.info("Checking backwards compatibility between: {} and: {} result: {}", specVersion.get(), prevVersion, spec.getChanges());
-
-
+                    log.info(
+                        "Checking backwards compatibility between: {} and: {} result: {}",
+                        specVersion.get(),
+                        prevVersion,
+                        spec.getChanges()
+                    );
                 }
-
             }
         }
         specRepository.saveAndFlush(spec);
@@ -107,7 +109,6 @@ public class BoatBackwardsCompatibleChecker {
     }
 
     private Optional<Version> parseVersion(Spec spec) {
-
         try {
             return Optional.of(Version.valueOf(spec.getVersion()));
         } catch (Exception e) {
@@ -115,5 +116,4 @@ public class BoatBackwardsCompatibleChecker {
         }
         return Optional.empty();
     }
-
 }

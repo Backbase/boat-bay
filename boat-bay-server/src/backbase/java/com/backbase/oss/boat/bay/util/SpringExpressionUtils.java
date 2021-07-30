@@ -15,12 +15,11 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 @Slf4j
 public class SpringExpressionUtils {
 
-
     private static final ExpressionParser parser = new SpelExpressionParser();
     private static final Map<String, Expression> expressionCache = new HashMap<>();
 
     private static Expression getExpression(String spEL) {
-        if(!expressionCache.containsKey(spEL)) {
+        if (!expressionCache.containsKey(spEL)) {
             log.debug("Creating expression from: {}", spEL);
             Expression value = parser.parseExpression(spEL);
             expressionCache.put(spEL, value);
@@ -28,7 +27,6 @@ public class SpringExpressionUtils {
         }
         return expressionCache.get(spEL);
     }
-
 
     public static boolean match(String spEL, Spec spec) {
         if (spEL == null) {
@@ -53,7 +51,7 @@ public class SpringExpressionUtils {
         try {
             name = getExpression(spEL).getValue(spec, String.class);
         } catch (EvaluationException | StringIndexOutOfBoundsException e) {
-            log.warn("Expression: {} failed on: {}. Reason: {}", spEL, spec.getName(),e.getMessage());
+            log.warn("Expression: {} failed on: {}. Reason: {}", spEL, spec.getName(), e.getMessage());
             return fallback;
         }
         log.debug("Resolved: {}", name);
@@ -69,12 +67,13 @@ public class SpringExpressionUtils {
         try {
             name = getExpression(spEL).getValue(itemHandle, String.class);
         } catch (EvaluationException | StringIndexOutOfBoundsException e) {
-            log.warn("Expression: {} failed on: {}. Reason: {}", spEL, itemHandle.info().getName(),e.getMessage());
+            log.warn("Expression: {} failed on: {}. Reason: {}", spEL, itemHandle.info().getName(), e.getMessage());
             return fallback;
         }
         log.debug("Resolved: {}", name);
         return name;
     }
+
     public static String parseName(String spEL, UploadRequestBody uploadRequestBody, String fallback) {
         if (spEL == null) {
             return fallback;
@@ -84,7 +83,7 @@ public class SpringExpressionUtils {
         try {
             name = getExpression(spEL).getValue(uploadRequestBody, String.class);
         } catch (EvaluationException | StringIndexOutOfBoundsException e) {
-            log.warn("Expression: {} failed on: {}. Reason: {}", spEL, uploadRequestBody.getArtifactId(),e.getMessage());
+            log.warn("Expression: {} failed on: {}. Reason: {}", spEL, uploadRequestBody.getArtifactId(), e.getMessage());
             return fallback;
         }
         log.debug("Resolved: {}", name);

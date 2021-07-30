@@ -21,5 +21,4 @@ public class BoatCapability {
     private BoatLintReport lastLintReport;
 
     private BoatStatistics statistics;
-
 }

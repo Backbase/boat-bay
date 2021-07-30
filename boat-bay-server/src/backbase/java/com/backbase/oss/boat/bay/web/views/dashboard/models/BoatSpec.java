@@ -29,4 +29,3 @@ public class BoatSpec {
 
     private String openApi;
 }
-

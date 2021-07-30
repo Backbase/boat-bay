@@ -1,5 +1,9 @@
 package com.backbase.oss.boat.bay.source.scanner.impl;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.graph.Dependency;
 import org.eclipse.aether.graph.DependencyFilter;
@@ -8,11 +12,6 @@ import org.eclipse.aether.version.InvalidVersionSpecificationException;
 import org.eclipse.aether.version.Version;
 import org.eclipse.aether.version.VersionRange;
 import org.eclipse.aether.version.VersionScheme;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * A extended simple filter to include artifacts from a list of patterns. The artifact pattern syntax is of the form:
@@ -40,12 +39,10 @@ public class ExtendedPatternDependencyFilter implements DependencyFilter {
         this.patterns.addAll(patterns);
     }
 
-
     public ExtendedPatternDependencyFilter(String... patterns) {
         this.versionScheme = null;
         this.patterns.addAll(Arrays.asList(patterns));
     }
-
 
     @Override
     public boolean accept(DependencyNode node, List<DependencyNode> parents) {
@@ -66,14 +63,14 @@ public class ExtendedPatternDependencyFilter implements DependencyFilter {
         return false;
     }
 
-
     private boolean accept(final Artifact artifact, final String pattern) {
-        final String[] tokens = new String[]{
+        final String[] tokens = new String[] {
             artifact.getGroupId(),
             artifact.getArtifactId(),
             artifact.getExtension(),
             artifact.getClassifier(),
-            artifact.getBaseVersion()};
+            artifact.getBaseVersion(),
+        };
 
         final String[] patternTokens = pattern.split(":");
 
@@ -138,5 +135,4 @@ public class ExtendedPatternDependencyFilter implements DependencyFilter {
             }
         }
     }
-
 }

@@ -1,16 +1,17 @@
 package com.backbase.oss.boat.bay.web.views.dashboard.diff;
 
+import static j2html.TagCreator.*;
+import static org.openapitools.openapidiff.core.model.Changed.result;
+
 import io.swagger.v3.oas.models.media.ArraySchema;
 import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.responses.ApiResponse;
-import static j2html.TagCreator.*;
 import j2html.tags.ContainerTag;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import static org.openapitools.openapidiff.core.model.Changed.result;
 import org.openapitools.openapidiff.core.model.ChangedApiResponse;
 import org.openapitools.openapidiff.core.model.ChangedContent;
 import org.openapitools.openapidiff.core.model.ChangedMediaType;
@@ -29,12 +30,12 @@ import org.openapitools.openapidiff.core.utils.RefPointer;
 import org.openapitools.openapidiff.core.utils.RefType;
 
 public class DiffReportRenderer implements Render {
+
     private static final RefPointer<Schema> refPointer = new RefPointer<>(RefType.SCHEMAS);
 
     protected ChangedOpenApi diff;
 
-    public DiffReportRenderer() {
-    }
+    public DiffReportRenderer() {}
 
     public String render(ChangedOpenApi diff) {
         this.diff = diff;
@@ -56,12 +57,13 @@ public class DiffReportRenderer implements Render {
 
     public String renderHtml(ContainerTag ol_new, ContainerTag ol_miss, ContainerTag ol_deprec, ContainerTag ol_changed) {
         ContainerTag html = div()
-                                .withClass("article")
-                                .with(
-                                    div().with(h5("What's New"), hr(), ol_new),
-                                    div().with(h5("What's Deleted"), hr(), ol_miss),
-                                    div().with(h5("What's Deprecated"), hr(), ol_deprec),
-                                    div().with(h5("What's Changed"), hr(), ol_changed));
+            .withClass("article")
+            .with(
+                div().with(h5("What's New"), hr(), ol_new),
+                div().with(h5("What's Deleted"), hr(), ol_miss),
+                div().with(h5("What's Deprecated"), hr(), ol_deprec),
+                div().with(h5("What's Changed"), hr(), ol_changed)
+            );
 
         return html.render();
     }
@@ -70,9 +72,7 @@ public class DiffReportRenderer implements Render {
         if (null == endpoints) return ol();
         ContainerTag ol = ol();
         for (Endpoint endpoint : endpoints) {
-            ol.with(
-                li_newEndpoint(
-                    endpoint.getMethod().toString(), endpoint.getPathUrl(), endpoint.getSummary()));
+            ol.with(li_newEndpoint(endpoint.getMethod().toString(), endpoint.getPathUrl(), endpoint.getSummary()));
         }
         return ol;
     }
@@ -85,9 +85,7 @@ public class DiffReportRenderer implements Render {
         if (null == endpoints) return ol();
         ContainerTag ol = ol();
         for (Endpoint endpoint : endpoints) {
-            ol.with(
-                li_missingEndpoint(
-                    endpoint.getMethod().toString(), endpoint.getPathUrl(), endpoint.getSummary()));
+            ol.with(li_missingEndpoint(endpoint.getMethod().toString(), endpoint.getPathUrl(), endpoint.getSummary()));
         }
         return ol;
     }
@@ -100,9 +98,7 @@ public class DiffReportRenderer implements Render {
         if (null == endpoints) return ol();
         ContainerTag ol = ol();
         for (Endpoint endpoint : endpoints) {
-            ol.with(
-                li_deprecatedEndpoint(
-                    endpoint.getMethod().toString(), endpoint.getPathUrl(), endpoint.getSummary()));
+            ol.with(li_deprecatedEndpoint(endpoint.getMethod().toString(), endpoint.getPathUrl(), endpoint.getSummary()));
         }
         return ol;
     }
@@ -117,30 +113,19 @@ public class DiffReportRenderer implements Render {
         for (ChangedOperation changedOperation : changedOperations) {
             String pathUrl = changedOperation.getPathUrl();
             String method = changedOperation.getHttpMethod().toString();
-            String desc =
-                Optional.ofNullable(changedOperation.getSummary())
-                    .map(ChangedMetadata::getRight)
-                    .orElse("");
+            String desc = Optional.ofNullable(changedOperation.getSummary()).map(ChangedMetadata::getRight).orElse("");
 
             ContainerTag ul_detail = ul().withClass("detail");
             if (result(changedOperation.getParameters()).isDifferent()) {
-                ul_detail.with(
-                    li().with(h6("Parameters")).with(ul_param(changedOperation.getParameters())));
+                ul_detail.with(li().with(h6("Parameters")).with(ul_param(changedOperation.getParameters())));
             }
             if (changedOperation.resultRequestBody().isDifferent()) {
-                ul_detail.with(
-                    li().with(h6("Request"))
-                        .with(ul_request(changedOperation.getRequestBody().getContent())));
+                ul_detail.with(li().with(h6("Request")).with(ul_request(changedOperation.getRequestBody().getContent())));
             }
             if (changedOperation.resultApiResponses().isDifferent()) {
-                ul_detail.with(
-                    li().with(h6("Response")).with(ul_response(changedOperation.getApiResponses())));
+                ul_detail.with(li().with(h6("Response")).with(ul_response(changedOperation.getApiResponses())));
             }
-            ol.with(
-                li().with(span(method).withClass(method))
-                    .withText(pathUrl + " ")
-                    .with(span(desc))
-                    .with(ul_detail));
+            ol.with(li().with(span(method).withClass(method)).withText(pathUrl + " ").with(span(desc)).with(ul_detail));
         }
         return ol;
     }
@@ -163,27 +148,28 @@ public class DiffReportRenderer implements Render {
     }
 
     private ContainerTag li_addResponse(String name, ApiResponse response) {
-        return li().withText(String.format("New response : [%s]", name))
-            .with(
-                span(null == response.getDescription() ? "" : ("//" + response.getDescription()))
-                    .withClass("comment"));
+        return li()
+            .withText(String.format("New response : [%s]", name))
+            .with(span(null == response.getDescription() ? "" : ("//" + response.getDescription())).withClass("comment"));
     }
 
     private ContainerTag li_missingResponse(String name, ApiResponse response) {
-        return li().withText(String.format("Deleted response : [%s]", name))
-            .with(
-                span(null == response.getDescription() ? "" : ("//" + response.getDescription()))
-                    .withClass("comment"));
+        return li()
+            .withText(String.format("Deleted response : [%s]", name))
+            .with(span(null == response.getDescription() ? "" : ("//" + response.getDescription())).withClass("comment"));
     }
 
     private ContainerTag li_changedResponse(String name, ChangedResponse response) {
-        return li().withText(String.format("Changed response : [%s]", name))
+        return li()
+            .withText(String.format("Changed response : [%s]", name))
             .with(
-                span((null == response.getNewApiResponse()
-                    || null == response.getNewApiResponse().getDescription())
-                    ? ""
-                    : ("//" + response.getNewApiResponse().getDescription()))
-                    .withClass("comment"))
+                span(
+                    (null == response.getNewApiResponse() || null == response.getNewApiResponse().getDescription())
+                        ? ""
+                        : ("//" + response.getNewApiResponse().getDescription())
+                )
+                    .withClass("comment")
+            )
             .with(ul_request(response.getContent()));
     }
 
@@ -212,9 +198,7 @@ public class DiffReportRenderer implements Render {
     }
 
     private ContainerTag li_changedRequest(String name, ChangedMediaType request) {
-        ContainerTag li =
-            li().with(div_changedSchema(request.getSchema()))
-                .withText(String.format("Changed body: '%s'", name));
+        ContainerTag li = li().with(div_changedSchema(request.getSchema())).withText(String.format("Changed body: '%s'", name));
         if (request.isIncompatible()) {
             incompatibilities(li, request.getSchema());
         }
@@ -231,8 +215,7 @@ public class DiffReportRenderer implements Render {
         incompatibilities(output, "", schema);
     }
 
-    private void incompatibilities(
-        final ContainerTag output, String propName, final ChangedSchema schema) {
+    private void incompatibilities(final ContainerTag output, String propName, final ChangedSchema schema) {
         if (schema.getItems() != null) {
             items(output, propName, schema.getItems());
         }
@@ -241,30 +224,21 @@ public class DiffReportRenderer implements Render {
             property(output, propName, "Changed property type", type);
         }
         String prefix = propName.isEmpty() ? "" : propName + ".";
-        properties(
-            output, prefix, "Missing property", schema.getMissingProperties(), schema.getContext());
-        schema
-            .getChangedProperties()
-            .forEach((name, property) -> incompatibilities(output, prefix + name, property));
+        properties(output, prefix, "Missing property", schema.getMissingProperties(), schema.getContext());
+        schema.getChangedProperties().forEach((name, property) -> incompatibilities(output, prefix + name, property));
     }
 
     private void items(ContainerTag output, String propName, ChangedSchema schema) {
         incompatibilities(output, propName + "[n]", schema);
     }
 
-    private void properties(
-        ContainerTag output,
-        String propPrefix,
-        String title,
-        Map<String, Schema> properties,
-        DiffContext context) {
+    private void properties(ContainerTag output, String propPrefix, String title, Map<String, Schema> properties, DiffContext context) {
         if (properties != null) {
             properties.forEach((key, value) -> resolveProperty(output, propPrefix, key, value, title));
         }
     }
 
-    private void resolveProperty(
-        ContainerTag output, String propPrefix, String key, Schema value, String title) {
+    private void resolveProperty(ContainerTag output, String propPrefix, String key, Schema value, String title) {
         try {
             property(output, propPrefix + key, title, resolve(value));
         } catch (Exception e) {
@@ -281,8 +255,7 @@ public class DiffReportRenderer implements Render {
     }
 
     protected Schema resolve(Schema schema) {
-        return refPointer.resolveRef(
-            diff.getNewSpecOpenApi().getComponents(), schema, schema.get$ref());
+        return refPointer.resolveRef(diff.getNewSpecOpenApi().getComponents(), schema, schema.get$ref());
     }
 
     protected String type(Schema schema) {
@@ -315,32 +288,30 @@ public class DiffReportRenderer implements Render {
     }
 
     private ContainerTag li_addParam(Parameter param) {
-        return li().withText("Add " + param.getName() + " in " + param.getIn())
-            .with(
-                span(null == param.getDescription() ? "" : ("//" + param.getDescription()))
-                    .withClass("comment"));
+        return li()
+            .withText("Add " + param.getName() + " in " + param.getIn())
+            .with(span(null == param.getDescription() ? "" : ("//" + param.getDescription())).withClass("comment"));
     }
 
     private ContainerTag li_missingParam(Parameter param) {
-        return li().withClass("missing")
+        return li()
+            .withClass("missing")
             .with(span("Delete"))
             .with(del(param.getName()))
             .with(span("in ").withText(param.getIn()))
-            .with(
-                span(null == param.getDescription() ? "" : ("//" + param.getDescription()))
-                    .withClass("comment"));
+            .with(span(null == param.getDescription() ? "" : ("//" + param.getDescription())).withClass("comment"));
     }
 
     private ContainerTag li_deprecatedParam(ChangedParameter param) {
-        return li().withClass("missing")
+        return li()
+            .withClass("missing")
             .with(span("Deprecated"))
             .with(del(param.getName()))
             .with(span("in ").withText(param.getIn()))
             .with(
-                span(null == param.getNewParameter().getDescription()
-                    ? ""
-                    : ("//" + param.getNewParameter().getDescription()))
-                    .withClass("comment"));
+                span(null == param.getNewParameter().getDescription() ? "" : ("//" + param.getNewParameter().getDescription()))
+                    .withClass("comment")
+            );
     }
 
     private ContainerTag li_changedParam(ChangedParameter changeParam) {
@@ -348,10 +319,7 @@ public class DiffReportRenderer implements Render {
             return li_deprecatedParam(changeParam);
         }
         boolean changeRequired = changeParam.isChangeRequired();
-        boolean changeDescription =
-            Optional.ofNullable(changeParam.getDescription())
-                .map(ChangedMetadata::isDifferent)
-                .orElse(false);
+        boolean changeDescription = Optional.ofNullable(changeParam.getDescription()).map(ChangedMetadata::isDifferent).orElse(false);
         Parameter rightParam = changeParam.getNewParameter();
         Parameter leftParam = changeParam.getNewParameter();
         ContainerTag li = li().withText(changeParam.getName() + " in " + changeParam.getIn());
@@ -359,7 +327,8 @@ public class DiffReportRenderer implements Render {
             li.withText(" change into " + (rightParam.getRequired() ? "required" : "not required"));
         }
         if (changeDescription) {
-            li.withText(" Notes ")
+            li
+                .withText(" Notes ")
                 .with(del(leftParam.getDescription()).withClass("comment"))
                 .withText(" change into ")
                 .with(span(rightParam.getDescription()).withClass("comment"));

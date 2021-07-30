@@ -1,36 +1,10 @@
-            ~        ~          ~            ~        ~
- ~                                  _.,-'=_.-'-._  ~        ~
-         ~     ~           ~   ._.-'             '-._   ~
-                      _.-':_.-'                      '-._   ~     ~
-                  _.-'                                   '-._.'-._
-   ~       .-'.-,'                                                '-.
-           '-._                       /\   /\                    _.-'
- ~             '-.           (o)(o)  /  \ /  \                ._'
-           ~      '-._         (/      /\ (           _.'-._,-'
-                      '-._            /  \ )      _.-'   (o o)
- ~     ) ( ) (    ~     .-'               (     .'       ))~((  ~              ${AnsiColor.RED}██████╗  ██████╗  █████╗ ████████╗${AnsiColor.DEFAULT}
-      ) " ( " (        .-'                 )    '-._.,.            ~           ${AnsiColor.RED}██╔══██╗██╔═══██╗██╔══██╗╚══██╔══╝${AnsiColor.DEFAULT}
-     )  "  ("  (       '-._               /           '-._  ~                  ${AnsiColor.RED}██████╔╝██║   ██║███████║   ██║${AnsiColor.DEFAULT}
-    )   "   (   ( ___      '-._          (                '.   ~               ${AnsiColor.RED}██╔══██╗██║   ██║██╔══██║   ██║${AnsiColor.DEFAULT}
-        "   "    |   | ~      .'          )                '-._                ${AnsiColor.RED}██████╔╝╚██████╔╝██║  ██║   ██║${AnsiColor.DEFAULT}
-  ---._-|--|--|--|--/     _.-'           /  (o)(o)           _.'   ~           ${AnsiColor.RED}╚═════╝  ╚═════╝ ╚═╝  ╚═╝   ╚═╝${AnsiColor.DEFAULT}
-       \ o  o  o  o/     '-._           /    (  )           '-._-'-.
-   ~~~~~~~~~~~~~~~~~         '-._      (                        _.-'
-  ~          ~             ~     '-.    ) /\            _.-"._,'
-                  ~              _.'   / /\ /\         '.  ~    (o o)              ${AnsiColor.RED}██████╗  █████╗ ██╗   ██╗${AnsiColor.DEFAULT}
-    (o o)              _.-'-._.-'     / /  \  \          '-._._ ))~((              ${AnsiColor.RED}██╔══██╗██╔══██╗╚██╗ ██╔╝${AnsiColor.DEFAULT}
-    ))~(( ~        _.-'              /                         '-. ~               ${AnsiColor.RED}██████╔╝███████║ ╚████╔╝${AnsiColor.DEFAULT}
-                .-'              .-'('-._                        '-.               ${AnsiColor.RED}██╔══██╗██╔══██║  ╚██╔╝${AnsiColor.DEFAULT}
- ~            _.'         _.-'-.-'~   ~  '.             _.'-.-'._  .'              ${AnsiColor.RED}██████╔╝██║  ██║   ██║${AnsiColor.DEFAULT}
-     .-'=_.'-'         .-'  ~   ~   _ _.-'          _.-'     ~   '.'               ${AnsiColor.RED}╚═════╝ ╚═╝  ╚═╝   ╚═╝${AnsiColor.DEFAULT}
-  _.-'                 '-._,.-'._.-'    (o)(o)     '_   ~       ~
-.'                                         \)         '-._   ~    ~
-'-.- = .-'.     (o)(o)                                    '=._
-          '._    (  )                                         '-.
-LGB     ~    :_                                            _.-'.-' ~
-     ~     ~   "._,-'.-'._    .-`-._;'-._.='._          .-'  ~
-                    ~     '-_."      ~    ~   '-._:'=~_.'       ~
-           ~     ~      ~        ~     ~        ~          ~    ~
 
-${AnsiColor.BRIGHT_BLUE}:: ⛵ BOAT BAY 🏝️ :: Running Spring Boot ${spring-boot.version} ::
-:: https://www.backbase.com ::${AnsiColor.DEFAULT}
+  ${AnsiColor.GREEN}      ██╗${AnsiColor.RED} ██╗   ██╗ ████████╗ ███████╗   ██████╗ ████████╗ ████████╗ ███████╗
+  ${AnsiColor.GREEN}      ██║${AnsiColor.RED} ██║   ██║ ╚══██╔══╝ ██╔═══██╗ ██╔════╝ ╚══██╔══╝ ██╔═════╝ ██╔═══██╗
+  ${AnsiColor.GREEN}      ██║${AnsiColor.RED} ████████║    ██║    ███████╔╝ ╚█████╗     ██║    ██████╗   ███████╔╝
+  ${AnsiColor.GREEN}██╗   ██║${AnsiColor.RED} ██╔═══██║    ██║    ██╔════╝   ╚═══██╗    ██║    ██╔═══╝   ██╔══██║
+  ${AnsiColor.GREEN}╚██████╔╝${AnsiColor.RED} ██║   ██║ ████████╗ ██║       ██████╔╝    ██║    ████████╗ ██║  ╚██╗
+  ${AnsiColor.GREEN} ╚═════╝ ${AnsiColor.RED} ╚═╝   ╚═╝ ╚═══════╝ ╚═╝       ╚═════╝     ╚═╝    ╚═══════╝ ╚═╝   ╚═╝
+
+${AnsiColor.BRIGHT_BLUE}:: JHipster 🤓  :: Running Spring Boot ${spring-boot.version} ::
+:: https://www.jhipster.tech ::${AnsiColor.DEFAULT}

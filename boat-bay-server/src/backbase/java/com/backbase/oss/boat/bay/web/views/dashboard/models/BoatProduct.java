@@ -7,7 +7,6 @@ import lombok.Data;
 @Data
 public class BoatProduct {
 
-
     private String portalKey;
     private String portalName;
 
@@ -24,6 +23,4 @@ public class BoatProduct {
     private BoatStatistics statistics;
 
     private String jiraProjectId;
-
 }
-

@@ -37,7 +37,7 @@ spring:
     password:
     hikari:
       poolName: Hikari
-      auto-commit: true
+      auto-commit: false
   h2:
     console:
       # disable spring boot built-in h2-console since we start it manually with correct configuration
@@ -84,7 +84,7 @@ jhipster:
     authentication:
       jwt:
         # This token must be encoded using Base64 and be at least 256 bits long (you can type `openssl rand -base64 64` on your command line to generate a 512 bits one)
-        base64-secret: NDFhZTdmNTFkZTNmMjE5MmVjNWY4MTIyMzFlYjZmOTBhZGU5YjM3ZGE2MjIwY2FiMzFlMTg3OGE2MjI2NGY3MTIwYTkzMzdkZjA5NWE1MjFhM2MxOGIwZTRlMTU1ZDliNGU1MzI5ODNhNTE2ODJlYjY3OTU4NDg5ZGVlZjE5YmY=
+        base64-secret: MzcxMmQ3OWQ2ODNmNjdjMmM3ZTAyMWZkNzk2N2Y5MzA1MzY2MTkwZjgxOTIyOWI2YWUxZGZkOWI4ZTY4ZjU1MGQxYzE5NzRiNzIxZTM2NDZhZDcxNTFjNjllOWMyNDI2OWQxZTlkNzc4YjE3Zjk0ZDdmYzExYjhjOGYxYzFmN2U=
         # Token is valid 24 hours
         token-validity-in-seconds: 86400
         token-validity-in-seconds-for-remember-me: 2592000

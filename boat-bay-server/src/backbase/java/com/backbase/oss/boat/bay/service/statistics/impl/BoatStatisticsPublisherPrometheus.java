@@ -15,7 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
 
-
 @RequiredArgsConstructor
 @Component
 @Slf4j
@@ -26,10 +25,10 @@ public class BoatStatisticsPublisherPrometheus implements BoatStatisticsPublishe
 
     @Override
     public void publish(Product product, BoatStatistics boatStatistics) {
-
         CollectorRegistry registry = new CollectorRegistry();
 
-        Gauge productGauge = Gauge.build()
+        Gauge productGauge = Gauge
+            .build()
             .name(product.getPortal().getKey() + "_" + product.getKey() + "_violations")
             .help("Linting Violations for all API's in + " + product.getName())
             .register(registry);
@@ -42,7 +41,8 @@ public class BoatStatisticsPublisherPrometheus implements BoatStatisticsPublishe
         CollectorRegistry registry = new CollectorRegistry();
 
         Product product = capability.getProduct();
-        Gauge productGauge = Gauge.build()
+        Gauge productGauge = Gauge
+            .build()
             .name(product.getPortal().getKey() + "_" + product.getKey() + "_" + capability.getKey() + "_violations")
             .help("Linting Violations for all API's in + " + capability.getName())
             .register(registry);
@@ -57,8 +57,18 @@ public class BoatStatisticsPublisherPrometheus implements BoatStatisticsPublishe
         Product product = serviceDefinition.getCapability().getProduct();
         Capability capability = serviceDefinition.getCapability();
 
-        Gauge productGauge = Gauge.build()
-            .name(product.getPortal().getKey() + "_" + product.getKey() + "_" + capability.getKey() + "_" + serviceDefinition.getKey() + "_violations")
+        Gauge productGauge = Gauge
+            .build()
+            .name(
+                product.getPortal().getKey() +
+                "_" +
+                product.getKey() +
+                "_" +
+                capability.getKey() +
+                "_" +
+                serviceDefinition.getKey() +
+                "_violations"
+            )
             .help("Linting Violations for all API's in + " + product.getName())
             .register(registry);
 
@@ -78,6 +88,4 @@ public class BoatStatisticsPublisherPrometheus implements BoatStatisticsPublishe
             log.warn("Failed to push metrics");
         }
     }
-
-
 }

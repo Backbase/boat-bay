@@ -22,7 +22,4 @@ public class BoatPortalDashboard {
     private BoatLintReport lastLintReport;
 
     private BoatStatistics statistics;
-
-
 }
-

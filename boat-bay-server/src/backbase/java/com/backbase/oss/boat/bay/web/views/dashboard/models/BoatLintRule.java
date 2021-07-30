@@ -14,5 +14,4 @@ public class BoatLintRule {
     private String ruleSet;
     private Severity severity;
     private URI url;
-
 }
