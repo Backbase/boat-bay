@@ -1,16 +1,14 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { BoatBaySharedModule } from 'app/shared/shared.module';
-import { TagComponent } from './tag.component';
-import { TagDetailComponent } from './tag-detail.component';
-import { TagUpdateComponent } from './tag-update.component';
-import { TagDeleteDialogComponent } from './tag-delete-dialog.component';
-import { tagRoute } from './tag.route';
+import { SharedModule } from 'app/shared/shared.module';
+import { TagComponent } from './list/tag.component';
+import { TagDetailComponent } from './detail/tag-detail.component';
+import { TagUpdateComponent } from './update/tag-update.component';
+import { TagDeleteDialogComponent } from './delete/tag-delete-dialog.component';
+import { TagRoutingModule } from './route/tag-routing.module';
 
 @NgModule({
-  imports: [BoatBaySharedModule, RouterModule.forChild(tagRoute)],
+  imports: [SharedModule, TagRoutingModule],
   declarations: [TagComponent, TagDetailComponent, TagUpdateComponent, TagDeleteDialogComponent],
   entryComponents: [TagDeleteDialogComponent],
 })
-export class BoatBayTagModule {}
+export class TagModule {}

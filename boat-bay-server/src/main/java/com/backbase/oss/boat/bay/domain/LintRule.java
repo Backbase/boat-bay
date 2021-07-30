@@ -1,15 +1,12 @@
 package com.backbase.oss.boat.bay.domain;
 
+import com.backbase.oss.boat.bay.domain.enumeration.Severity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
+import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.*;
-
-import java.io.Serializable;
-
-import com.backbase.oss.boat.bay.domain.enumeration.Severity;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A LintRule.
@@ -56,7 +53,7 @@ public class LintRule implements Serializable {
 
     @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties(value = "lintRules", allowSetters = true)
+    @JsonIgnoreProperties(value = { "products", "lintRules", "zallyConfig" }, allowSetters = true)
     private Portal portal;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -68,8 +65,13 @@ public class LintRule implements Serializable {
         this.id = id;
     }
 
+    public LintRule id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public String getRuleId() {
-        return ruleId;
+        return this.ruleId;
     }
 
     public LintRule ruleId(String ruleId) {
@@ -82,7 +84,7 @@ public class LintRule implements Serializable {
     }
 
     public String getTitle() {
-        return title;
+        return this.title;
     }
 
     public LintRule title(String title) {
@@ -95,7 +97,7 @@ public class LintRule implements Serializable {
     }
 
     public String getRuleSet() {
-        return ruleSet;
+        return this.ruleSet;
     }
 
     public LintRule ruleSet(String ruleSet) {
@@ -108,7 +110,7 @@ public class LintRule implements Serializable {
     }
 
     public String getSummary() {
-        return summary;
+        return this.summary;
     }
 
     public LintRule summary(String summary) {
@@ -121,7 +123,7 @@ public class LintRule implements Serializable {
     }
 
     public Severity getSeverity() {
-        return severity;
+        return this.severity;
     }
 
     public LintRule severity(Severity severity) {
@@ -134,7 +136,7 @@ public class LintRule implements Serializable {
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     public LintRule description(String description) {
@@ -147,7 +149,7 @@ public class LintRule implements Serializable {
     }
 
     public String getExternalUrl() {
-        return externalUrl;
+        return this.externalUrl;
     }
 
     public LintRule externalUrl(String externalUrl) {
@@ -159,8 +161,8 @@ public class LintRule implements Serializable {
         this.externalUrl = externalUrl;
     }
 
-    public Boolean isEnabled() {
-        return enabled;
+    public Boolean getEnabled() {
+        return this.enabled;
     }
 
     public LintRule enabled(Boolean enabled) {
@@ -173,17 +175,18 @@ public class LintRule implements Serializable {
     }
 
     public Portal getPortal() {
-        return portal;
+        return this.portal;
     }
 
     public LintRule portal(Portal portal) {
-        this.portal = portal;
+        this.setPortal(portal);
         return this;
     }
 
     public void setPortal(Portal portal) {
         this.portal = portal;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -199,7 +202,8 @@ public class LintRule implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
     // prettier-ignore
@@ -214,7 +218,7 @@ public class LintRule implements Serializable {
             ", severity='" + getSeverity() + "'" +
             ", description='" + getDescription() + "'" +
             ", externalUrl='" + getExternalUrl() + "'" +
-            ", enabled='" + isEnabled() + "'" +
+            ", enabled='" + getEnabled() + "'" +
             "}";
     }
 }

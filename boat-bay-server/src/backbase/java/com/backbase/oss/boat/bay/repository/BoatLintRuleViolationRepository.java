@@ -10,7 +10,6 @@ import com.backbase.oss.boat.bay.repository.LintRuleViolationRepository;
 
 @SuppressWarnings("S100")
 public interface BoatLintRuleViolationRepository extends LintRuleViolationRepository {
-
     void deleteByLintReport(LintReport lintReport);
 
     long countBySeverityAndLintReportSpecServiceDefinition(Severity severity, ServiceDefinition serviceDefinition);
@@ -20,5 +19,4 @@ public interface BoatLintRuleViolationRepository extends LintRuleViolationReposi
     long countBySeverityAndLintReportSpecProduct(Severity severity, Product product);
 
     long countBySeverityAndLintReportSpec(Severity severity, Spec product);
-
 }

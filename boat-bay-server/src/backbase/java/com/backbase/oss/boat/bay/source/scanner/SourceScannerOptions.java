@@ -10,5 +10,4 @@ public class SourceScannerOptions {
     private Map<String, String> capabilityMappingOverrides = new HashMap<>();
 
     private MavenScannerOptions mavenScannerOptions;
-
 }

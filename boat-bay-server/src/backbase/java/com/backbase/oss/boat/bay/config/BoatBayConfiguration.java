@@ -1,9 +1,8 @@
 package com.backbase.oss.boat.bay.config;
 
+import java.io.File;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-
-import java.io.File;
 
 @ConfigurationProperties(prefix = "boat.bay")
 @Data

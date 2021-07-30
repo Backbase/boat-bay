@@ -1,16 +1,14 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { BoatBaySharedModule } from 'app/shared/shared.module';
-import { PortalComponent } from './portal.component';
-import { PortalDetailComponent } from './portal-detail.component';
-import { PortalUpdateComponent } from './portal-update.component';
-import { PortalDeleteDialogComponent } from './portal-delete-dialog.component';
-import { portalRoute } from './portal.route';
+import { SharedModule } from 'app/shared/shared.module';
+import { PortalComponent } from './list/portal.component';
+import { PortalDetailComponent } from './detail/portal-detail.component';
+import { PortalUpdateComponent } from './update/portal-update.component';
+import { PortalDeleteDialogComponent } from './delete/portal-delete-dialog.component';
+import { PortalRoutingModule } from './route/portal-routing.module';
 
 @NgModule({
-  imports: [BoatBaySharedModule, RouterModule.forChild(portalRoute)],
+  imports: [SharedModule, PortalRoutingModule],
   declarations: [PortalComponent, PortalDetailComponent, PortalUpdateComponent, PortalDeleteDialogComponent],
   entryComponents: [PortalDeleteDialogComponent],
 })
-export class BoatBayPortalModule {}
+export class PortalModule {}

@@ -1,0 +1,27 @@
+{
+  "boatbayApp": {
+    "specType": {
+      "home": {
+        "title": "Spec Types",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Spec Type",
+        "createOrEditLabel": "Create or edit a Spec Type",
+        "notFound": "No Spec Types found"
+      },
+      "created": "A new Spec Type is created with identifier {{ param }}",
+      "updated": "A Spec Type is updated with identifier {{ param }}",
+      "deleted": "A Spec Type is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Spec Type {{ id }}?"
+      },
+      "detail": {
+        "title": "Spec Type"
+      },
+      "id": "ID",
+      "name": "Name",
+      "description": "Description",
+      "matchSpEL": "Match Sp EL",
+      "icon": "Icon"
+    }
+  }
+}

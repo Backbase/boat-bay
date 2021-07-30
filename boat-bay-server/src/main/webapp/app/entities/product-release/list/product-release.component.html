@@ -1,0 +1,99 @@
+<div>
+  <h2 id="page-heading" data-cy="ProductReleaseHeading">
+    <span jhiTranslate="boatbayApp.productRelease.home.title">Product Releases</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="loadAll()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span jhiTranslate="boatbayApp.productRelease.home.refreshListLabel">Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-product-release"
+        [routerLink]="['/product-release/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span jhiTranslate="boatbayApp.productRelease.home.createLabel"> Create a new Product Release </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="productReleases?.length === 0">
+    <span jhiTranslate="boatbayApp.productRelease.home.notFound">No productReleases found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="productReleases && productReleases.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr>
+          <th scope="col"><span jhiTranslate="global.field.id">ID</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.productRelease.key">Key</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.productRelease.name">Name</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.productRelease.version">Version</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.productRelease.releaseDate">Release Date</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.productRelease.hide">Hide</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.productRelease.spec">Spec</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.productRelease.product">Product</span></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let productRelease of productReleases; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/product-release', productRelease.id, 'view']">{{ productRelease.id }}</a>
+          </td>
+          <td>{{ productRelease.key }}</td>
+          <td>{{ productRelease.name }}</td>
+          <td>{{ productRelease.version }}</td>
+          <td>{{ productRelease.releaseDate | formatMediumDatetime }}</td>
+          <td>{{ productRelease.hide }}</td>
+          <td>
+            <span *ngFor="let spec of productRelease.specs; let last = last">
+              <a class="form-control-static" [routerLink]="['/spec', spec.id, 'view']">{{ spec.id }}</a
+              >{{ last ? '' : ', ' }}
+            </span>
+          </td>
+          <td>
+            <div *ngIf="productRelease.product">
+              <a [routerLink]="['/product', productRelease.product?.id, 'view']">{{ productRelease.product?.name }}</a>
+            </div>
+          </td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/product-release', productRelease.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/product-release', productRelease.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(productRelease)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

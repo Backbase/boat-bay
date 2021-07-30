@@ -39,7 +39,6 @@ import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatPortal;
 import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatPortalDashboard;
 
 import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatTag;
-import io.github.jhipster.web.util.PaginationUtil;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -74,6 +73,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.zalando.zally.rule.api.Severity;
+import tech.jhipster.web.util.PaginationUtil;
 
 
 @RestController

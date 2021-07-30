@@ -1,0 +1,98 @@
+<div>
+  <h2 id="page-heading" data-cy="LintRuleHeading">
+    <span jhiTranslate="boatbayApp.lintRule.home.title">Lint Rules</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="loadAll()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span jhiTranslate="boatbayApp.lintRule.home.refreshListLabel">Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-lint-rule"
+        [routerLink]="['/lint-rule/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span jhiTranslate="boatbayApp.lintRule.home.createLabel"> Create a new Lint Rule </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="lintRules?.length === 0">
+    <span jhiTranslate="boatbayApp.lintRule.home.notFound">No lintRules found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="lintRules && lintRules.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr>
+          <th scope="col"><span jhiTranslate="global.field.id">ID</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.lintRule.ruleId">Rule Id</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.lintRule.title">Title</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.lintRule.ruleSet">Rule Set</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.lintRule.summary">Summary</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.lintRule.severity">Severity</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.lintRule.description">Description</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.lintRule.externalUrl">External Url</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.lintRule.enabled">Enabled</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.lintRule.portal">Portal</span></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let lintRule of lintRules; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/lint-rule', lintRule.id, 'view']">{{ lintRule.id }}</a>
+          </td>
+          <td>{{ lintRule.ruleId }}</td>
+          <td>{{ lintRule.title }}</td>
+          <td>{{ lintRule.ruleSet }}</td>
+          <td>{{ lintRule.summary }}</td>
+          <td jhiTranslate="{{ 'boatbayApp.Severity.' + lintRule.severity }}">{{ lintRule.severity }}</td>
+          <td>{{ lintRule.description }}</td>
+          <td>{{ lintRule.externalUrl }}</td>
+          <td>{{ lintRule.enabled }}</td>
+          <td>
+            <div *ngIf="lintRule.portal">
+              <a [routerLink]="['/portal', lintRule.portal?.id, 'view']">{{ lintRule.portal?.name }}</a>
+            </div>
+          </td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/lint-rule', lintRule.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/lint-rule', lintRule.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(lintRule)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

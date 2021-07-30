@@ -14,5 +14,4 @@ public class RuleUpdatedEvent extends ApplicationEvent {
         super(eventSource);
         this.lintRule = lintRule;
     }
-
 }

@@ -10,20 +10,16 @@ import { RouterModule } from '@angular/router';
         path: 'user-management',
         loadChildren: () => import('./user-management/user-management.module').then(m => m.UserManagementModule),
         data: {
-          pageTitle: 'Users',
+          pageTitle: 'userManagement.home.title',
         },
-      },
-      {
-        path: 'audits',
-        loadChildren: () => import('./audits/audits.module').then(m => m.AuditsModule),
-      },
-      {
-        path: 'configuration',
-        loadChildren: () => import('./configuration/configuration.module').then(m => m.ConfigurationModule),
       },
       {
         path: 'docs',
         loadChildren: () => import('./docs/docs.module').then(m => m.DocsModule),
+      },
+      {
+        path: 'configuration',
+        loadChildren: () => import('./configuration/configuration.module').then(m => m.ConfigurationModule),
       },
       {
         path: 'health',

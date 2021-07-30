@@ -1,16 +1,14 @@
 package com.backbase.oss.boat.bay.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.*;
+import javax.validation.constraints.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A ProductRelease.
@@ -46,14 +44,32 @@ public class ProductRelease implements Serializable {
 
     @ManyToMany
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JoinTable(name = "product_release_spec",
-               joinColumns = @JoinColumn(name = "product_release_id", referencedColumnName = "id"),
-               inverseJoinColumns = @JoinColumn(name = "spec_id", referencedColumnName = "id"))
+    @JoinTable(
+        name = "rel_product_release__spec",
+        joinColumns = @JoinColumn(name = "product_release_id"),
+        inverseJoinColumns = @JoinColumn(name = "spec_id")
+    )
+    @JsonIgnoreProperties(
+        value = {
+            "previousSpec",
+            "portal",
+            "capability",
+            "product",
+            "source",
+            "specType",
+            "tags",
+            "lintReport",
+            "successor",
+            "serviceDefinition",
+            "productReleases",
+        },
+        allowSetters = true
+    )
     private Set<Spec> specs = new HashSet<>();
 
     @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties(value = "productReleases", allowSetters = true)
+    @JsonIgnoreProperties(value = { "productReleases", "capabilities", "portal" }, allowSetters = true)
     private Product product;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -65,8 +81,13 @@ public class ProductRelease implements Serializable {
         this.id = id;
     }
 
+    public ProductRelease id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public String getKey() {
-        return key;
+        return this.key;
     }
 
     public ProductRelease key(String key) {
@@ -79,7 +100,7 @@ public class ProductRelease implements Serializable {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public ProductRelease name(String name) {
@@ -92,7 +113,7 @@ public class ProductRelease implements Serializable {
     }
 
     public String getVersion() {
-        return version;
+        return this.version;
     }
 
     public ProductRelease version(String version) {
@@ -105,7 +126,7 @@ public class ProductRelease implements Serializable {
     }
 
     public ZonedDateTime getReleaseDate() {
-        return releaseDate;
+        return this.releaseDate;
     }
 
     public ProductRelease releaseDate(ZonedDateTime releaseDate) {
@@ -117,8 +138,8 @@ public class ProductRelease implements Serializable {
         this.releaseDate = releaseDate;
     }
 
-    public Boolean isHide() {
-        return hide;
+    public Boolean getHide() {
+        return this.hide;
     }
 
     public ProductRelease hide(Boolean hide) {
@@ -131,11 +152,11 @@ public class ProductRelease implements Serializable {
     }
 
     public Set<Spec> getSpecs() {
-        return specs;
+        return this.specs;
     }
 
     public ProductRelease specs(Set<Spec> specs) {
-        this.specs = specs;
+        this.setSpecs(specs);
         return this;
     }
 
@@ -156,17 +177,18 @@ public class ProductRelease implements Serializable {
     }
 
     public Product getProduct() {
-        return product;
+        return this.product;
     }
 
     public ProductRelease product(Product product) {
-        this.product = product;
+        this.setProduct(product);
         return this;
     }
 
     public void setProduct(Product product) {
         this.product = product;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -182,7 +204,8 @@ public class ProductRelease implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
     // prettier-ignore
@@ -194,7 +217,7 @@ public class ProductRelease implements Serializable {
             ", name='" + getName() + "'" +
             ", version='" + getVersion() + "'" +
             ", releaseDate='" + getReleaseDate() + "'" +
-            ", hide='" + isHide() + "'" +
+            ", hide='" + getHide() + "'" +
             "}";
     }
 }

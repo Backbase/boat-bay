@@ -1,19 +1,15 @@
 package com.backbase.oss.boat.bay.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.backbase.oss.boat.bay.domain.enumeration.Changes;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
-
-import com.backbase.oss.boat.bay.domain.enumeration.Changes;
+import javax.persistence.*;
+import javax.validation.constraints.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Spec.
@@ -47,7 +43,6 @@ public class Spec implements Serializable {
     @Column(name = "icon")
     private String icon;
 
-    
     @Lob
     @Column(name = "open_api", nullable = false)
     private String openApi;
@@ -132,57 +127,84 @@ public class Spec implements Serializable {
     @Column(name = "mvn_extension")
     private String mvnExtension;
 
+    @JsonIgnoreProperties(
+        value = {
+            "previousSpec",
+            "portal",
+            "capability",
+            "product",
+            "source",
+            "specType",
+            "tags",
+            "lintReport",
+            "successor",
+            "serviceDefinition",
+            "productReleases",
+        },
+        allowSetters = true
+    )
     @OneToOne
     @JoinColumn(unique = true)
     private Spec previousSpec;
 
     @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties(value = "specs", allowSetters = true)
+    @JsonIgnoreProperties(value = { "products", "lintRules", "zallyConfig" }, allowSetters = true)
     private Portal portal;
 
-    @ManyToOne(optional = false)
-    @NotNull
-    @JsonIgnoreProperties(value = "specs", allowSetters = true)
+    @ManyToOne
+    @JsonIgnoreProperties(value = { "serviceDefinitions", "product" }, allowSetters = true)
     private Capability capability;
 
     @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties(value = "specs", allowSetters = true)
+    @JsonIgnoreProperties(value = { "productReleases", "capabilities", "portal" }, allowSetters = true)
     private Product product;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = "specs", allowSetters = true)
+    @JsonIgnoreProperties(value = { "sourcePaths", "portal", "product", "capability", "serviceDefinition" }, allowSetters = true)
     private Source source;
 
-    @ManyToOne(optional = false)
-    @NotNull
-    @JsonIgnoreProperties(value = "specs", allowSetters = true)
+    @ManyToOne
     private SpecType specType;
 
     @ManyToMany
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JoinTable(name = "spec_tag",
-               joinColumns = @JoinColumn(name = "spec_id", referencedColumnName = "id"),
-               inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))
+    @JoinTable(name = "rel_spec__tag", joinColumns = @JoinColumn(name = "spec_id"), inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    @JsonIgnoreProperties(value = { "specs" }, allowSetters = true)
     private Set<Tag> tags = new HashSet<>();
 
+    @JsonIgnoreProperties(value = { "spec", "violations" }, allowSetters = true)
     @OneToOne(mappedBy = "spec")
-    @JsonIgnore
     private LintReport lintReport;
 
+    @JsonIgnoreProperties(
+        value = {
+            "previousSpec",
+            "portal",
+            "capability",
+            "product",
+            "source",
+            "specType",
+            "tags",
+            "lintReport",
+            "successor",
+            "serviceDefinition",
+            "productReleases",
+        },
+        allowSetters = true
+    )
     @OneToOne(mappedBy = "previousSpec")
-    @JsonIgnore
     private Spec successor;
 
     @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties(value = "specs", allowSetters = true)
+    @JsonIgnoreProperties(value = { "specs", "capability" }, allowSetters = true)
     private ServiceDefinition serviceDefinition;
 
     @ManyToMany(mappedBy = "specs")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnore
+    @JsonIgnoreProperties(value = { "specs", "product" }, allowSetters = true)
     private Set<ProductRelease> productReleases = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -194,8 +216,13 @@ public class Spec implements Serializable {
         this.id = id;
     }
 
+    public Spec id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public String getKey() {
-        return key;
+        return this.key;
     }
 
     public Spec key(String key) {
@@ -208,7 +235,7 @@ public class Spec implements Serializable {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public Spec name(String name) {
@@ -221,7 +248,7 @@ public class Spec implements Serializable {
     }
 
     public String getVersion() {
-        return version;
+        return this.version;
     }
 
     public Spec version(String version) {
@@ -234,7 +261,7 @@ public class Spec implements Serializable {
     }
 
     public String getTitle() {
-        return title;
+        return this.title;
     }
 
     public Spec title(String title) {
@@ -247,7 +274,7 @@ public class Spec implements Serializable {
     }
 
     public String getIcon() {
-        return icon;
+        return this.icon;
     }
 
     public Spec icon(String icon) {
@@ -260,7 +287,7 @@ public class Spec implements Serializable {
     }
 
     public String getOpenApi() {
-        return openApi;
+        return this.openApi;
     }
 
     public Spec openApi(String openApi) {
@@ -273,7 +300,7 @@ public class Spec implements Serializable {
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     public Spec description(String description) {
@@ -286,7 +313,7 @@ public class Spec implements Serializable {
     }
 
     public ZonedDateTime getCreatedOn() {
-        return createdOn;
+        return this.createdOn;
     }
 
     public Spec createdOn(ZonedDateTime createdOn) {
@@ -299,7 +326,7 @@ public class Spec implements Serializable {
     }
 
     public String getCreatedBy() {
-        return createdBy;
+        return this.createdBy;
     }
 
     public Spec createdBy(String createdBy) {
@@ -312,7 +339,7 @@ public class Spec implements Serializable {
     }
 
     public String getChecksum() {
-        return checksum;
+        return this.checksum;
     }
 
     public Spec checksum(String checksum) {
@@ -325,7 +352,7 @@ public class Spec implements Serializable {
     }
 
     public String getFilename() {
-        return filename;
+        return this.filename;
     }
 
     public Spec filename(String filename) {
@@ -337,8 +364,8 @@ public class Spec implements Serializable {
         this.filename = filename;
     }
 
-    public Boolean isValid() {
-        return valid;
+    public Boolean getValid() {
+        return this.valid;
     }
 
     public Spec valid(Boolean valid) {
@@ -351,7 +378,7 @@ public class Spec implements Serializable {
     }
 
     public Integer getOrder() {
-        return order;
+        return this.order;
     }
 
     public Spec order(Integer order) {
@@ -364,7 +391,7 @@ public class Spec implements Serializable {
     }
 
     public String getParseError() {
-        return parseError;
+        return this.parseError;
     }
 
     public Spec parseError(String parseError) {
@@ -377,7 +404,7 @@ public class Spec implements Serializable {
     }
 
     public String getExternalDocs() {
-        return externalDocs;
+        return this.externalDocs;
     }
 
     public Spec externalDocs(String externalDocs) {
@@ -389,8 +416,8 @@ public class Spec implements Serializable {
         this.externalDocs = externalDocs;
     }
 
-    public Boolean isHide() {
-        return hide;
+    public Boolean getHide() {
+        return this.hide;
     }
 
     public Spec hide(Boolean hide) {
@@ -403,7 +430,7 @@ public class Spec implements Serializable {
     }
 
     public String getGrade() {
-        return grade;
+        return this.grade;
     }
 
     public Spec grade(String grade) {
@@ -416,7 +443,7 @@ public class Spec implements Serializable {
     }
 
     public Changes getChanges() {
-        return changes;
+        return this.changes;
     }
 
     public Spec changes(Changes changes) {
@@ -429,7 +456,7 @@ public class Spec implements Serializable {
     }
 
     public String getSourcePath() {
-        return sourcePath;
+        return this.sourcePath;
     }
 
     public Spec sourcePath(String sourcePath) {
@@ -442,7 +469,7 @@ public class Spec implements Serializable {
     }
 
     public String getSourceName() {
-        return sourceName;
+        return this.sourceName;
     }
 
     public Spec sourceName(String sourceName) {
@@ -455,7 +482,7 @@ public class Spec implements Serializable {
     }
 
     public String getSourceUrl() {
-        return sourceUrl;
+        return this.sourceUrl;
     }
 
     public Spec sourceUrl(String sourceUrl) {
@@ -468,7 +495,7 @@ public class Spec implements Serializable {
     }
 
     public String getSourceCreatedBy() {
-        return sourceCreatedBy;
+        return this.sourceCreatedBy;
     }
 
     public Spec sourceCreatedBy(String sourceCreatedBy) {
@@ -481,7 +508,7 @@ public class Spec implements Serializable {
     }
 
     public ZonedDateTime getSourceCreatedOn() {
-        return sourceCreatedOn;
+        return this.sourceCreatedOn;
     }
 
     public Spec sourceCreatedOn(ZonedDateTime sourceCreatedOn) {
@@ -494,7 +521,7 @@ public class Spec implements Serializable {
     }
 
     public ZonedDateTime getSourceLastModifiedOn() {
-        return sourceLastModifiedOn;
+        return this.sourceLastModifiedOn;
     }
 
     public Spec sourceLastModifiedOn(ZonedDateTime sourceLastModifiedOn) {
@@ -507,7 +534,7 @@ public class Spec implements Serializable {
     }
 
     public String getSourceLastModifiedBy() {
-        return sourceLastModifiedBy;
+        return this.sourceLastModifiedBy;
     }
 
     public Spec sourceLastModifiedBy(String sourceLastModifiedBy) {
@@ -520,7 +547,7 @@ public class Spec implements Serializable {
     }
 
     public String getMvnGroupId() {
-        return mvnGroupId;
+        return this.mvnGroupId;
     }
 
     public Spec mvnGroupId(String mvnGroupId) {
@@ -533,7 +560,7 @@ public class Spec implements Serializable {
     }
 
     public String getMvnArtifactId() {
-        return mvnArtifactId;
+        return this.mvnArtifactId;
     }
 
     public Spec mvnArtifactId(String mvnArtifactId) {
@@ -546,7 +573,7 @@ public class Spec implements Serializable {
     }
 
     public String getMvnVersion() {
-        return mvnVersion;
+        return this.mvnVersion;
     }
 
     public Spec mvnVersion(String mvnVersion) {
@@ -559,7 +586,7 @@ public class Spec implements Serializable {
     }
 
     public String getMvnClassifier() {
-        return mvnClassifier;
+        return this.mvnClassifier;
     }
 
     public Spec mvnClassifier(String mvnClassifier) {
@@ -572,7 +599,7 @@ public class Spec implements Serializable {
     }
 
     public String getMvnExtension() {
-        return mvnExtension;
+        return this.mvnExtension;
     }
 
     public Spec mvnExtension(String mvnExtension) {
@@ -585,11 +612,11 @@ public class Spec implements Serializable {
     }
 
     public Spec getPreviousSpec() {
-        return previousSpec;
+        return this.previousSpec;
     }
 
     public Spec previousSpec(Spec spec) {
-        this.previousSpec = spec;
+        this.setPreviousSpec(spec);
         return this;
     }
 
@@ -598,11 +625,11 @@ public class Spec implements Serializable {
     }
 
     public Portal getPortal() {
-        return portal;
+        return this.portal;
     }
 
     public Spec portal(Portal portal) {
-        this.portal = portal;
+        this.setPortal(portal);
         return this;
     }
 
@@ -611,11 +638,11 @@ public class Spec implements Serializable {
     }
 
     public Capability getCapability() {
-        return capability;
+        return this.capability;
     }
 
     public Spec capability(Capability capability) {
-        this.capability = capability;
+        this.setCapability(capability);
         return this;
     }
 
@@ -624,11 +651,11 @@ public class Spec implements Serializable {
     }
 
     public Product getProduct() {
-        return product;
+        return this.product;
     }
 
     public Spec product(Product product) {
-        this.product = product;
+        this.setProduct(product);
         return this;
     }
 
@@ -637,11 +664,11 @@ public class Spec implements Serializable {
     }
 
     public Source getSource() {
-        return source;
+        return this.source;
     }
 
     public Spec source(Source source) {
-        this.source = source;
+        this.setSource(source);
         return this;
     }
 
@@ -650,11 +677,11 @@ public class Spec implements Serializable {
     }
 
     public SpecType getSpecType() {
-        return specType;
+        return this.specType;
     }
 
     public Spec specType(SpecType specType) {
-        this.specType = specType;
+        this.setSpecType(specType);
         return this;
     }
 
@@ -663,11 +690,11 @@ public class Spec implements Serializable {
     }
 
     public Set<Tag> getTags() {
-        return tags;
+        return this.tags;
     }
 
     public Spec tags(Set<Tag> tags) {
-        this.tags = tags;
+        this.setTags(tags);
         return this;
     }
 
@@ -688,37 +715,49 @@ public class Spec implements Serializable {
     }
 
     public LintReport getLintReport() {
-        return lintReport;
+        return this.lintReport;
     }
 
     public Spec lintReport(LintReport lintReport) {
-        this.lintReport = lintReport;
+        this.setLintReport(lintReport);
         return this;
     }
 
     public void setLintReport(LintReport lintReport) {
+        if (this.lintReport != null) {
+            this.lintReport.setSpec(null);
+        }
+        if (lintReport != null) {
+            lintReport.setSpec(this);
+        }
         this.lintReport = lintReport;
     }
 
     public Spec getSuccessor() {
-        return successor;
+        return this.successor;
     }
 
     public Spec successor(Spec spec) {
-        this.successor = spec;
+        this.setSuccessor(spec);
         return this;
     }
 
     public void setSuccessor(Spec spec) {
+        if (this.successor != null) {
+            this.successor.setPreviousSpec(null);
+        }
+        if (spec != null) {
+            spec.setPreviousSpec(this);
+        }
         this.successor = spec;
     }
 
     public ServiceDefinition getServiceDefinition() {
-        return serviceDefinition;
+        return this.serviceDefinition;
     }
 
     public Spec serviceDefinition(ServiceDefinition serviceDefinition) {
-        this.serviceDefinition = serviceDefinition;
+        this.setServiceDefinition(serviceDefinition);
         return this;
     }
 
@@ -727,11 +766,11 @@ public class Spec implements Serializable {
     }
 
     public Set<ProductRelease> getProductReleases() {
-        return productReleases;
+        return this.productReleases;
     }
 
     public Spec productReleases(Set<ProductRelease> productReleases) {
-        this.productReleases = productReleases;
+        this.setProductReleases(productReleases);
         return this;
     }
 
@@ -748,8 +787,15 @@ public class Spec implements Serializable {
     }
 
     public void setProductReleases(Set<ProductRelease> productReleases) {
+        if (this.productReleases != null) {
+            this.productReleases.forEach(i -> i.removeSpec(this));
+        }
+        if (productReleases != null) {
+            productReleases.forEach(i -> i.addSpec(this));
+        }
         this.productReleases = productReleases;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -765,7 +811,8 @@ public class Spec implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
     // prettier-ignore
@@ -784,11 +831,11 @@ public class Spec implements Serializable {
             ", createdBy='" + getCreatedBy() + "'" +
             ", checksum='" + getChecksum() + "'" +
             ", filename='" + getFilename() + "'" +
-            ", valid='" + isValid() + "'" +
+            ", valid='" + getValid() + "'" +
             ", order=" + getOrder() +
             ", parseError='" + getParseError() + "'" +
             ", externalDocs='" + getExternalDocs() + "'" +
-            ", hide='" + isHide() + "'" +
+            ", hide='" + getHide() + "'" +
             ", grade='" + getGrade() + "'" +
             ", changes='" + getChanges() + "'" +
             ", sourcePath='" + getSourcePath() + "'" +

@@ -1,35 +1,35 @@
 package com.backbase.oss.boat.bay.web.rest;
 
-import com.backbase.oss.boat.bay.BoatBayApp;
-import com.backbase.oss.boat.bay.domain.LintRule;
-import com.backbase.oss.boat.bay.domain.Portal;
-import com.backbase.oss.boat.bay.repository.LintRuleRepository;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.backbase.oss.boat.bay.IntegrationTest;
+import com.backbase.oss.boat.bay.domain.LintRule;
+import com.backbase.oss.boat.bay.domain.Portal;
 import com.backbase.oss.boat.bay.domain.enumeration.Severity;
+import com.backbase.oss.boat.bay.repository.LintRuleRepository;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+
 /**
  * Integration tests for the {@link LintRuleResource} REST controller.
  */
-@SpringBootTest(classes = BoatBayApp.class)
+@IntegrationTest
 @AutoConfigureMockMvc
 @WithMockUser
-public class LintRuleResourceIT {
+class LintRuleResourceIT {
 
     private static final String DEFAULT_RULE_ID = "AAAAAAAAAA";
     private static final String UPDATED_RULE_ID = "BBBBBBBBBB";
@@ -54,6 +54,12 @@ public class LintRuleResourceIT {
 
     private static final Boolean DEFAULT_ENABLED = false;
     private static final Boolean UPDATED_ENABLED = true;
+
+    private static final String ENTITY_API_URL = "/api/lint-rules";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     @Autowired
     private LintRuleRepository lintRuleRepository;
@@ -94,6 +100,7 @@ public class LintRuleResourceIT {
         lintRule.setPortal(portal);
         return lintRule;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -130,12 +137,11 @@ public class LintRuleResourceIT {
 
     @Test
     @Transactional
-    public void createLintRule() throws Exception {
+    void createLintRule() throws Exception {
         int databaseSizeBeforeCreate = lintRuleRepository.findAll().size();
         // Create the LintRule
-        restLintRuleMockMvc.perform(post("/api/lint-rules")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(lintRule)))
+        restLintRuleMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(lintRule)))
             .andExpect(status().isCreated());
 
         // Validate the LintRule in the database
@@ -149,21 +155,20 @@ public class LintRuleResourceIT {
         assertThat(testLintRule.getSeverity()).isEqualTo(DEFAULT_SEVERITY);
         assertThat(testLintRule.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testLintRule.getExternalUrl()).isEqualTo(DEFAULT_EXTERNAL_URL);
-        assertThat(testLintRule.isEnabled()).isEqualTo(DEFAULT_ENABLED);
+        assertThat(testLintRule.getEnabled()).isEqualTo(DEFAULT_ENABLED);
     }
 
     @Test
     @Transactional
-    public void createLintRuleWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = lintRuleRepository.findAll().size();
-
+    void createLintRuleWithExistingId() throws Exception {
         // Create the LintRule with an existing ID
         lintRule.setId(1L);
 
+        int databaseSizeBeforeCreate = lintRuleRepository.findAll().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
-        restLintRuleMockMvc.perform(post("/api/lint-rules")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(lintRule)))
+        restLintRuleMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(lintRule)))
             .andExpect(status().isBadRequest());
 
         // Validate the LintRule in the database
@@ -171,20 +176,17 @@ public class LintRuleResourceIT {
         assertThat(lintRuleList).hasSize(databaseSizeBeforeCreate);
     }
 
-
     @Test
     @Transactional
-    public void checkRuleIdIsRequired() throws Exception {
+    void checkRuleIdIsRequired() throws Exception {
         int databaseSizeBeforeTest = lintRuleRepository.findAll().size();
         // set the field null
         lintRule.setRuleId(null);
 
         // Create the LintRule, which fails.
 
-
-        restLintRuleMockMvc.perform(post("/api/lint-rules")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(lintRule)))
+        restLintRuleMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(lintRule)))
             .andExpect(status().isBadRequest());
 
         List<LintRule> lintRuleList = lintRuleRepository.findAll();
@@ -193,17 +195,15 @@ public class LintRuleResourceIT {
 
     @Test
     @Transactional
-    public void checkTitleIsRequired() throws Exception {
+    void checkTitleIsRequired() throws Exception {
         int databaseSizeBeforeTest = lintRuleRepository.findAll().size();
         // set the field null
         lintRule.setTitle(null);
 
         // Create the LintRule, which fails.
 
-
-        restLintRuleMockMvc.perform(post("/api/lint-rules")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(lintRule)))
+        restLintRuleMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(lintRule)))
             .andExpect(status().isBadRequest());
 
         List<LintRule> lintRuleList = lintRuleRepository.findAll();
@@ -212,17 +212,15 @@ public class LintRuleResourceIT {
 
     @Test
     @Transactional
-    public void checkSeverityIsRequired() throws Exception {
+    void checkSeverityIsRequired() throws Exception {
         int databaseSizeBeforeTest = lintRuleRepository.findAll().size();
         // set the field null
         lintRule.setSeverity(null);
 
         // Create the LintRule, which fails.
 
-
-        restLintRuleMockMvc.perform(post("/api/lint-rules")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(lintRule)))
+        restLintRuleMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(lintRule)))
             .andExpect(status().isBadRequest());
 
         List<LintRule> lintRuleList = lintRuleRepository.findAll();
@@ -231,17 +229,15 @@ public class LintRuleResourceIT {
 
     @Test
     @Transactional
-    public void checkEnabledIsRequired() throws Exception {
+    void checkEnabledIsRequired() throws Exception {
         int databaseSizeBeforeTest = lintRuleRepository.findAll().size();
         // set the field null
         lintRule.setEnabled(null);
 
         // Create the LintRule, which fails.
 
-
-        restLintRuleMockMvc.perform(post("/api/lint-rules")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(lintRule)))
+        restLintRuleMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(lintRule)))
             .andExpect(status().isBadRequest());
 
         List<LintRule> lintRuleList = lintRuleRepository.findAll();
@@ -250,12 +246,13 @@ public class LintRuleResourceIT {
 
     @Test
     @Transactional
-    public void getAllLintRules() throws Exception {
+    void getAllLintRules() throws Exception {
         // Initialize the database
         lintRuleRepository.saveAndFlush(lintRule);
 
         // Get all the lintRuleList
-        restLintRuleMockMvc.perform(get("/api/lint-rules?sort=id,desc"))
+        restLintRuleMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(lintRule.getId().intValue())))
@@ -268,15 +265,16 @@ public class LintRuleResourceIT {
             .andExpect(jsonPath("$.[*].externalUrl").value(hasItem(DEFAULT_EXTERNAL_URL)))
             .andExpect(jsonPath("$.[*].enabled").value(hasItem(DEFAULT_ENABLED.booleanValue())));
     }
-    
+
     @Test
     @Transactional
-    public void getLintRule() throws Exception {
+    void getLintRule() throws Exception {
         // Initialize the database
         lintRuleRepository.saveAndFlush(lintRule);
 
         // Get the lintRule
-        restLintRuleMockMvc.perform(get("/api/lint-rules/{id}", lintRule.getId()))
+        restLintRuleMockMvc
+            .perform(get(ENTITY_API_URL_ID, lintRule.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(lintRule.getId().intValue()))
@@ -289,17 +287,17 @@ public class LintRuleResourceIT {
             .andExpect(jsonPath("$.externalUrl").value(DEFAULT_EXTERNAL_URL))
             .andExpect(jsonPath("$.enabled").value(DEFAULT_ENABLED.booleanValue()));
     }
+
     @Test
     @Transactional
-    public void getNonExistingLintRule() throws Exception {
+    void getNonExistingLintRule() throws Exception {
         // Get the lintRule
-        restLintRuleMockMvc.perform(get("/api/lint-rules/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restLintRuleMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updateLintRule() throws Exception {
+    void putNewLintRule() throws Exception {
         // Initialize the database
         lintRuleRepository.saveAndFlush(lintRule);
 
@@ -319,9 +317,12 @@ public class LintRuleResourceIT {
             .externalUrl(UPDATED_EXTERNAL_URL)
             .enabled(UPDATED_ENABLED);
 
-        restLintRuleMockMvc.perform(put("/api/lint-rules")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedLintRule)))
+        restLintRuleMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, updatedLintRule.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedLintRule))
+            )
             .andExpect(status().isOk());
 
         // Validate the LintRule in the database
@@ -335,18 +336,22 @@ public class LintRuleResourceIT {
         assertThat(testLintRule.getSeverity()).isEqualTo(UPDATED_SEVERITY);
         assertThat(testLintRule.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testLintRule.getExternalUrl()).isEqualTo(UPDATED_EXTERNAL_URL);
-        assertThat(testLintRule.isEnabled()).isEqualTo(UPDATED_ENABLED);
+        assertThat(testLintRule.getEnabled()).isEqualTo(UPDATED_ENABLED);
     }
 
     @Test
     @Transactional
-    public void updateNonExistingLintRule() throws Exception {
+    void putNonExistingLintRule() throws Exception {
         int databaseSizeBeforeUpdate = lintRuleRepository.findAll().size();
+        lintRule.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restLintRuleMockMvc.perform(put("/api/lint-rules")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(lintRule)))
+        restLintRuleMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, lintRule.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(lintRule))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the LintRule in the database
@@ -356,15 +361,187 @@ public class LintRuleResourceIT {
 
     @Test
     @Transactional
-    public void deleteLintRule() throws Exception {
+    void putWithIdMismatchLintRule() throws Exception {
+        int databaseSizeBeforeUpdate = lintRuleRepository.findAll().size();
+        lintRule.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restLintRuleMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(lintRule))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the LintRule in the database
+        List<LintRule> lintRuleList = lintRuleRepository.findAll();
+        assertThat(lintRuleList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void putWithMissingIdPathParamLintRule() throws Exception {
+        int databaseSizeBeforeUpdate = lintRuleRepository.findAll().size();
+        lintRule.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restLintRuleMockMvc
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(lintRule)))
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the LintRule in the database
+        List<LintRule> lintRuleList = lintRuleRepository.findAll();
+        assertThat(lintRuleList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdateLintRuleWithPatch() throws Exception {
+        // Initialize the database
+        lintRuleRepository.saveAndFlush(lintRule);
+
+        int databaseSizeBeforeUpdate = lintRuleRepository.findAll().size();
+
+        // Update the lintRule using partial update
+        LintRule partialUpdatedLintRule = new LintRule();
+        partialUpdatedLintRule.setId(lintRule.getId());
+
+        partialUpdatedLintRule.summary(UPDATED_SUMMARY).severity(UPDATED_SEVERITY);
+
+        restLintRuleMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedLintRule.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedLintRule))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the LintRule in the database
+        List<LintRule> lintRuleList = lintRuleRepository.findAll();
+        assertThat(lintRuleList).hasSize(databaseSizeBeforeUpdate);
+        LintRule testLintRule = lintRuleList.get(lintRuleList.size() - 1);
+        assertThat(testLintRule.getRuleId()).isEqualTo(DEFAULT_RULE_ID);
+        assertThat(testLintRule.getTitle()).isEqualTo(DEFAULT_TITLE);
+        assertThat(testLintRule.getRuleSet()).isEqualTo(DEFAULT_RULE_SET);
+        assertThat(testLintRule.getSummary()).isEqualTo(UPDATED_SUMMARY);
+        assertThat(testLintRule.getSeverity()).isEqualTo(UPDATED_SEVERITY);
+        assertThat(testLintRule.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
+        assertThat(testLintRule.getExternalUrl()).isEqualTo(DEFAULT_EXTERNAL_URL);
+        assertThat(testLintRule.getEnabled()).isEqualTo(DEFAULT_ENABLED);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdateLintRuleWithPatch() throws Exception {
+        // Initialize the database
+        lintRuleRepository.saveAndFlush(lintRule);
+
+        int databaseSizeBeforeUpdate = lintRuleRepository.findAll().size();
+
+        // Update the lintRule using partial update
+        LintRule partialUpdatedLintRule = new LintRule();
+        partialUpdatedLintRule.setId(lintRule.getId());
+
+        partialUpdatedLintRule
+            .ruleId(UPDATED_RULE_ID)
+            .title(UPDATED_TITLE)
+            .ruleSet(UPDATED_RULE_SET)
+            .summary(UPDATED_SUMMARY)
+            .severity(UPDATED_SEVERITY)
+            .description(UPDATED_DESCRIPTION)
+            .externalUrl(UPDATED_EXTERNAL_URL)
+            .enabled(UPDATED_ENABLED);
+
+        restLintRuleMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedLintRule.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedLintRule))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the LintRule in the database
+        List<LintRule> lintRuleList = lintRuleRepository.findAll();
+        assertThat(lintRuleList).hasSize(databaseSizeBeforeUpdate);
+        LintRule testLintRule = lintRuleList.get(lintRuleList.size() - 1);
+        assertThat(testLintRule.getRuleId()).isEqualTo(UPDATED_RULE_ID);
+        assertThat(testLintRule.getTitle()).isEqualTo(UPDATED_TITLE);
+        assertThat(testLintRule.getRuleSet()).isEqualTo(UPDATED_RULE_SET);
+        assertThat(testLintRule.getSummary()).isEqualTo(UPDATED_SUMMARY);
+        assertThat(testLintRule.getSeverity()).isEqualTo(UPDATED_SEVERITY);
+        assertThat(testLintRule.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+        assertThat(testLintRule.getExternalUrl()).isEqualTo(UPDATED_EXTERNAL_URL);
+        assertThat(testLintRule.getEnabled()).isEqualTo(UPDATED_ENABLED);
+    }
+
+    @Test
+    @Transactional
+    void patchNonExistingLintRule() throws Exception {
+        int databaseSizeBeforeUpdate = lintRuleRepository.findAll().size();
+        lintRule.setId(count.incrementAndGet());
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restLintRuleMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, lintRule.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(lintRule))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the LintRule in the database
+        List<LintRule> lintRuleList = lintRuleRepository.findAll();
+        assertThat(lintRuleList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithIdMismatchLintRule() throws Exception {
+        int databaseSizeBeforeUpdate = lintRuleRepository.findAll().size();
+        lintRule.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restLintRuleMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(lintRule))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the LintRule in the database
+        List<LintRule> lintRuleList = lintRuleRepository.findAll();
+        assertThat(lintRuleList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithMissingIdPathParamLintRule() throws Exception {
+        int databaseSizeBeforeUpdate = lintRuleRepository.findAll().size();
+        lintRule.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restLintRuleMockMvc
+            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(lintRule)))
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the LintRule in the database
+        List<LintRule> lintRuleList = lintRuleRepository.findAll();
+        assertThat(lintRuleList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void deleteLintRule() throws Exception {
         // Initialize the database
         lintRuleRepository.saveAndFlush(lintRule);
 
         int databaseSizeBeforeDelete = lintRuleRepository.findAll().size();
 
         // Delete the lintRule
-        restLintRuleMockMvc.perform(delete("/api/lint-rules/{id}", lintRule.getId())
-            .accept(MediaType.APPLICATION_JSON))
+        restLintRuleMockMvc
+            .perform(delete(ENTITY_API_URL_ID, lintRule.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
