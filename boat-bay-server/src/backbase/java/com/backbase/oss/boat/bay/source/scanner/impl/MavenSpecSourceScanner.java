@@ -9,6 +9,19 @@ import com.backbase.oss.boat.bay.source.scanner.MavenScannerOptions;
 import com.backbase.oss.boat.bay.source.scanner.ScanResult;
 import com.backbase.oss.boat.bay.source.scanner.SourceScannerOptions;
 import com.backbase.oss.boat.bay.source.scanner.SpecSourceScanner;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
@@ -34,24 +47,8 @@ import org.eclipse.aether.transport.http.HttpTransporterFactory;
 import org.eclipse.aether.util.repository.AuthenticationBuilder;
 import org.eclipse.aether.version.Version;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-
-
 @Slf4j
 public class MavenSpecSourceScanner implements SpecSourceScanner {
-
 
     private Source source;
     private SourceScannerOptions sourceScannerOptions;
@@ -62,7 +59,6 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
 
     @Override
     public void setSource(Source source) {
-
         this.source = source;
 
         paths.addAll(source.getSourcePaths());
@@ -71,7 +67,6 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
     @Override
     public void setScannerOptions(SourceScannerOptions sourceScannerOptions) {
         this.sourceScannerOptions = sourceScannerOptions;
-
     }
 
     @Override
@@ -87,7 +82,6 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
 
         repositorySystem = newRepositorySystem();
         session = newRepositorySystemSession(repositorySystem);
-
 
         MavenScannerOptions mavenScannerOptions = sourceScannerOptions.getMavenScannerOptions();
         Artifact artifact = new DefaultArtifact(mavenScannerOptions.getMavenArtifactCoords());
@@ -106,12 +100,9 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
             log.info("Available versions: {}", StringUtils.join(versions, ","));
             Map<String, Spec> resolvedSpecs = new HashMap<>();
             versions.forEach(v -> processVersion(scanResult, artifact, v, resolvedSpecs));
-
-
         } catch (VersionRangeResolutionException e) {
             e.printStackTrace();
         }
-
 
         return scanResult;
     }
@@ -125,8 +116,6 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
     }
 
     private void processBOM(ScanResult scanResult, Artifact artifact, Version version, Map<String, Spec> resolvedSpecs) {
-
-
         try {
             Artifact searchArtifact = artifact.setVersion(version.toString());
 
@@ -137,12 +126,13 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
 
             ArtifactDescriptorResult descriptorResult = repositorySystem.readArtifactDescriptor(session, descriptorRequest);
 
-            DependencyFilter dependencyFilter = new ExtendedPatternDependencyFilter(paths.stream()
-                .map(SourcePath::getName)
-                .collect(Collectors.toList()));
+            DependencyFilter dependencyFilter = new ExtendedPatternDependencyFilter(
+                paths.stream().map(SourcePath::getName).collect(Collectors.toList())
+            );
 
             List<DependencyNode> parents = Collections.emptyList();
-            List<ArtifactRequest> artifactRequests = Stream.concat(descriptorResult.getDependencies().stream(), descriptorResult.getManagedDependencies().stream())
+            List<ArtifactRequest> artifactRequests = Stream
+                .concat(descriptorResult.getDependencies().stream(), descriptorResult.getManagedDependencies().stream())
                 .map(DefaultDependencyNode::new)
                 .filter(dependency -> dependencyFilter.accept(dependency, parents))
                 .map(this::createArtifactDownloadRequest)
@@ -152,38 +142,49 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
 
             List<ArtifactResult> artifactResults = repositorySystem.resolveArtifacts(session, artifactRequests);
             Set<Spec> specsInBom = new HashSet<>();
-            artifactResults.forEach(artifactResult -> {
-                File file = artifactResult.getArtifact().getFile();
-                if (file.exists()) {
-                    if (file.getName().endsWith(".zip") || file.getName().endsWith(".jar")) {
-                        try {
-                            ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(file));
-                            ZipEntry zipEntry = zipInputStream.getNextEntry();
+            artifactResults.forEach(
+                artifactResult -> {
+                    File file = artifactResult.getArtifact().getFile();
+                    if (file.exists()) {
+                        if (file.getName().endsWith(".zip") || file.getName().endsWith(".jar")) {
+                            try {
+                                ZipInputStream zipInputStream = new ZipInputStream(new FileInputStream(file));
+                                ZipEntry zipEntry = zipInputStream.getNextEntry();
 
-                            while (zipEntry != null) {
-                                Optional<Spec> spec;
-                                String resolvedSpecKey = artifactResult.getArtifact().toString() + "/" + zipEntry.getName();
-                                if (resolvedSpecs.containsKey(resolvedSpecKey)) {
-                                    spec = Optional.of(resolvedSpecs.get(resolvedSpecKey));
-                                    log.info("Spec already resolved: {}. Adding to release: {}", spec.get().getFilename(), searchArtifact.getVersion());
-                                } else {
-                                    spec = findSpecInZip(artifactResult, zipInputStream, zipEntry);
-                                    if (spec.isPresent()) {
-                                        resolvedSpecs.put(resolvedSpecKey, spec.get());
-                                        log.info("Spec: {} resolved from {}. Adding to release: {}", spec.get().getFilename(), artifactResult.getArtifact(), searchArtifact.getVersion());
+                                while (zipEntry != null) {
+                                    Optional<Spec> spec;
+                                    String resolvedSpecKey = artifactResult.getArtifact().toString() + "/" + zipEntry.getName();
+                                    if (resolvedSpecs.containsKey(resolvedSpecKey)) {
+                                        spec = Optional.of(resolvedSpecs.get(resolvedSpecKey));
+                                        log.info(
+                                            "Spec already resolved: {}. Adding to release: {}",
+                                            spec.get().getFilename(),
+                                            searchArtifact.getVersion()
+                                        );
+                                    } else {
+                                        spec = findSpecInZip(artifactResult, zipInputStream, zipEntry);
+                                        if (spec.isPresent()) {
+                                            resolvedSpecs.put(resolvedSpecKey, spec.get());
+                                            log.info(
+                                                "Spec: {} resolved from {}. Adding to release: {}",
+                                                spec.get().getFilename(),
+                                                artifactResult.getArtifact(),
+                                                searchArtifact.getVersion()
+                                            );
+                                        }
                                     }
-                                }
-                                spec.ifPresent(specsInBom::add);
+                                    spec.ifPresent(specsInBom::add);
 
-                                zipEntry = zipInputStream.getNextEntry();
+                                    zipEntry = zipInputStream.getNextEntry();
+                                }
+                                zipInputStream.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
-                            zipInputStream.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
                         }
                     }
                 }
-            });
+            );
 
             if (!specsInBom.isEmpty()) {
                 ProductRelease productRelease = new ProductRelease();
@@ -196,25 +197,22 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
                 log.info("Adding {} to release named: {}", specsInBom.size(), productRelease.getName());
                 scanResult.addProductRelease(productRelease);
             }
-
         } catch (ArtifactDescriptorException | ArtifactResolutionException e) {
             e.printStackTrace();
         }
-
-
     }
 
     private Optional<Spec> findSpecInZip(ArtifactResult artifactResult, ZipInputStream stream, ZipEntry zipEntry) throws IOException {
-
         Artifact artifact = artifactResult.getArtifact();
 
         if (!zipEntry.isDirectory() && zipEntry.getName().endsWith(".yaml")) {
-
             String openApi = getOpenApiFromZipStream(stream);
             if (openApi.startsWith("openapi:")) {
                 log.info("Creating spec from zip entry: {} in artifact: {}", zipEntry.getName(), artifactResult.getArtifact());
 
-                String filename = zipEntry.getName().contains("/") ? StringUtils.substringAfter(zipEntry.getName(), "/") : zipEntry.getName();
+                String filename = zipEntry.getName().contains("/")
+                    ? StringUtils.substringAfter(zipEntry.getName(), "/")
+                    : zipEntry.getName();
 
                 Spec spec = new Spec();
                 spec.setKey(filename);
@@ -229,17 +227,27 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
 
                 spec.setFilename(filename);
                 spec.setSourcePath(zipEntry.getName());
-                spec.setSourceUrl(artifact.getGroupId() + ":" + artifact.getArtifactId() + ":" + artifact.getClassifier() + ":" + artifact.getExtension() + ":" + artifact.getVersion());
+                spec.setSourceUrl(
+                    artifact.getGroupId() +
+                    ":" +
+                    artifact.getArtifactId() +
+                    ":" +
+                    artifact.getClassifier() +
+                    ":" +
+                    artifact.getExtension() +
+                    ":" +
+                    artifact.getVersion()
+                );
                 spec.setSourceName(filename);
                 spec.setMvnGroupId(artifact.getGroupId());
                 spec.setMvnArtifactId(artifact.getArtifactId());
                 spec.setMvnExtension(artifact.getExtension());
                 spec.setMvnVersion(artifact.getVersion());
                 spec.setMvnClassifier(artifact.getClassifier());
-//            spec.setSourceCreatedBy(file.getCreatedBy());
-//            spec.setSourceCreatedOn(file.getCreated().toInstant().atZone(ZoneId.systemDefault()));
-//            spec.setSourceLastModifiedBy(file.getModifiedBy());
-//            spec.setSourceLastModifiedOn(file.getLastModified().toInstant().atZone(ZoneId.systemDefault()));
+                //            spec.setSourceCreatedBy(file.getCreatedBy());
+                //            spec.setSourceCreatedOn(file.getCreated().toInstant().atZone(ZoneId.systemDefault()));
+                //            spec.setSourceLastModifiedBy(file.getModifiedBy());
+                //            spec.setSourceLastModifiedOn(file.getLastModified().toInstant().atZone(ZoneId.systemDefault()));
                 return Optional.of(spec);
             } else {
                 log.info("File: {} is not an openapi spec: ", zipEntry.getName());
@@ -248,7 +256,6 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
             log.debug("Ignoring {}", zipEntry.getName());
         }
         return Optional.empty();
-
     }
 
     byte[] buffer = new byte[2048];
@@ -283,8 +290,8 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
         session.setLocalRepositoryManager(system.newLocalRepositoryManager(session, localRepo));
         session.setChecksumPolicy(RepositoryPolicy.CHECKSUM_POLICY_IGNORE);
 
-//        session.setTransferListener( new ConsoleTransferListener() );
-//        session.setRepositoryListener( new ConsoleRepositoryListener() );
+        //        session.setTransferListener( new ConsoleTransferListener() );
+        //        session.setRepositoryListener( new ConsoleRepositoryListener() );
 
         // uncomment to generate dirty trees
         // session.setDependencyGraphTransformer( null );
@@ -312,14 +319,15 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
         locator.addService(TransporterFactory.class, FileTransporterFactory.class);
         locator.addService(TransporterFactory.class, HttpTransporterFactory.class);
 
-        locator.setErrorHandler(new DefaultServiceLocator.ErrorHandler() {
-            @Override
-            public void serviceCreationFailed(Class<?> type, Class<?> impl, Throwable exception) {
-                log.error("Service creation failed for {} with implementation {}", type, impl, exception);
+        locator.setErrorHandler(
+            new DefaultServiceLocator.ErrorHandler() {
+                @Override
+                public void serviceCreationFailed(Class<?> type, Class<?> impl, Throwable exception) {
+                    log.error("Service creation failed for {} with implementation {}", type, impl, exception);
+                }
             }
-        });
+        );
 
         return locator.getService(RepositorySystem.class);
     }
-
 }

@@ -1,17 +1,17 @@
 package com.backbase.oss.boat.bay.service.statistics;
 
+import static com.backbase.oss.boat.bay.config.BoatCacheManager.STATISTICS;
+
 import com.backbase.oss.boat.bay.domain.Capability;
 import com.backbase.oss.boat.bay.domain.Product;
 import com.backbase.oss.boat.bay.domain.ServiceDefinition;
 import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.domain.enumeration.Severity;
+import com.backbase.oss.boat.bay.repository.BoatLintRuleViolationRepository;
 import com.backbase.oss.boat.bay.repository.CapabilityRepository;
 import com.backbase.oss.boat.bay.repository.ProductRepository;
 import com.backbase.oss.boat.bay.repository.ServiceDefinitionRepository;
 import com.backbase.oss.boat.bay.repository.SpecRepository;
-import com.backbase.oss.boat.bay.repository.BoatLintRuleViolationRepository;
-import static com.backbase.oss.boat.bay.config.BoatCacheManager.STATISTICS;
-
 import com.backbase.oss.boat.bay.service.model.BoatStatistics;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,7 +35,7 @@ public class BoatStatisticsCollector {
     private final ServiceDefinitionRepository serviceDefinitionRepository;
     private final SpecRepository specRepository;
 
-//    @Scheduled(fixedRateString = "PT15M")
+    //    @Scheduled(fixedRateString = "PT15M")
     @Transactional
     public void publish() {
         productRepository.findAll().forEach(this::publish);
@@ -46,26 +46,30 @@ public class BoatStatisticsCollector {
 
     private void publish(ServiceDefinition serviceDefinition) {
         BoatStatistics boatStatistics = performCollect(serviceDefinition);
-        publisherList.forEach(publisher -> {
-            publisher.publish(serviceDefinition, boatStatistics);
-        });
-
+        publisherList.forEach(
+            publisher -> {
+                publisher.publish(serviceDefinition, boatStatistics);
+            }
+        );
     }
 
     private void publish(Capability capability) {
         BoatStatistics boatStatistics = performCollect(capability);
-        publisherList.forEach(publisher -> {
-            publisher.publish(capability, boatStatistics);
-        });
+        publisherList.forEach(
+            publisher -> {
+                publisher.publish(capability, boatStatistics);
+            }
+        );
     }
 
     private void publish(Product product) {
         BoatStatistics boatStatistics = performCollect(product);
-        publisherList.forEach(publisher -> {
-            publisher.publish(product, boatStatistics);
-        });
+        publisherList.forEach(
+            publisher -> {
+                publisher.publish(product, boatStatistics);
+            }
+        );
     }
-
 
     @Cacheable(STATISTICS)
     public BoatStatistics collect(Product product) {
@@ -78,7 +82,9 @@ public class BoatStatisticsCollector {
         statistics.setUpdatedOn(LocalDateTime.now());
 
         statistics.setMustViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpecProduct(Severity.MUST, product));
-        statistics.setShouldViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpecProduct(Severity.SHOULD, product));
+        statistics.setShouldViolationsCount(
+            boatLintRuleViolationRepository.countBySeverityAndLintReportSpecProduct(Severity.SHOULD, product)
+        );
         statistics.setMayViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpecProduct(Severity.MAY, product));
         statistics.setHintViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpecProduct(Severity.HINT, product));
 
@@ -87,7 +93,6 @@ public class BoatStatisticsCollector {
 
     @Cacheable(STATISTICS)
     public BoatStatistics collect(Capability capability) {
-
         return performCollect(capability);
     }
 
@@ -96,10 +101,18 @@ public class BoatStatisticsCollector {
         BoatStatistics statistics = new BoatStatistics();
         statistics.setUpdatedOn(LocalDateTime.now());
 
-        statistics.setMustViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpecCapability(Severity.MUST, capability));
-        statistics.setShouldViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpecCapability(Severity.SHOULD, capability));
-        statistics.setMayViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpecCapability(Severity.MAY, capability));
-        statistics.setHintViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpecCapability(Severity.HINT, capability));
+        statistics.setMustViolationsCount(
+            boatLintRuleViolationRepository.countBySeverityAndLintReportSpecCapability(Severity.MUST, capability)
+        );
+        statistics.setShouldViolationsCount(
+            boatLintRuleViolationRepository.countBySeverityAndLintReportSpecCapability(Severity.SHOULD, capability)
+        );
+        statistics.setMayViolationsCount(
+            boatLintRuleViolationRepository.countBySeverityAndLintReportSpecCapability(Severity.MAY, capability)
+        );
+        statistics.setHintViolationsCount(
+            boatLintRuleViolationRepository.countBySeverityAndLintReportSpecCapability(Severity.HINT, capability)
+        );
 
         return statistics;
     }
@@ -114,10 +127,18 @@ public class BoatStatisticsCollector {
         BoatStatistics statistics = new BoatStatistics();
         statistics.setUpdatedOn(LocalDateTime.now());
 
-        statistics.setMustViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpecServiceDefinition(Severity.MUST, serviceDefinition));
-        statistics.setShouldViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpecServiceDefinition(Severity.SHOULD, serviceDefinition));
-        statistics.setMayViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpecServiceDefinition(Severity.MAY, serviceDefinition));
-        statistics.setHintViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpecServiceDefinition(Severity.HINT, serviceDefinition));
+        statistics.setMustViolationsCount(
+            boatLintRuleViolationRepository.countBySeverityAndLintReportSpecServiceDefinition(Severity.MUST, serviceDefinition)
+        );
+        statistics.setShouldViolationsCount(
+            boatLintRuleViolationRepository.countBySeverityAndLintReportSpecServiceDefinition(Severity.SHOULD, serviceDefinition)
+        );
+        statistics.setMayViolationsCount(
+            boatLintRuleViolationRepository.countBySeverityAndLintReportSpecServiceDefinition(Severity.MAY, serviceDefinition)
+        );
+        statistics.setHintViolationsCount(
+            boatLintRuleViolationRepository.countBySeverityAndLintReportSpecServiceDefinition(Severity.HINT, serviceDefinition)
+        );
         return statistics;
     }
 
@@ -137,6 +158,4 @@ public class BoatStatisticsCollector {
         statistics.setHintViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpec(Severity.HINT, spec));
         return statistics;
     }
-
-
 }

@@ -15,7 +15,7 @@
     "blueprints": [],
     "otherModules": [],
     "pages": [],
-    "creationTimestamp": 1627547018924,
+    "creationTimestamp": 1627644288791,
     "serviceDiscoveryType": false,
     "reactive": false,
     "authenticationType": "jwt",
@@ -38,7 +38,7 @@
     "enableTranslation": true,
     "nativeLanguage": "en",
     "packageFolder": "com/backbase/oss/boat/bay",
-    "jwtSecretKey": "NDFhZTdmNTFkZTNmMjE5MmVjNWY4MTIyMzFlYjZmOTBhZGU5YjM3ZGE2MjIwY2FiMzFlMTg3OGE2MjI2NGY3MTIwYTkzMzdkZjA5NWE1MjFhM2MxOGIwZTRlMTU1ZDliNGU1MzI5ODNhNTE2ODJlYjY3OTU4NDg5ZGVlZjE5YmY=",
+    "jwtSecretKey": "MzcxMmQ3OWQ2ODNmNjdjMmM3ZTAyMWZkNzk2N2Y5MzA1MzY2MTkwZjgxOTIyOWI2YWUxZGZkOWI4ZTY4ZjU1MGQxYzE5NzRiNzIxZTM2NDZhZDcxNTFjNjllOWMyNDI2OWQxZTlkNzc4YjE3Zjk0ZDdmYzExYjhjOGYxYzFmN2U=",
     "devServerPort": 4200,
     "clientPackageManager": "npm",
     "clientThemeVariant": "",
@@ -60,6 +60,6 @@
       "LintRuleViolation",
       "ZallyConfig"
     ],
-    "lastLiquibaseTimestamp": 1627547448000
+    "lastLiquibaseTimestamp": 1627645183000
   }
 }

@@ -55,21 +55,24 @@ public class BoatUploadController implements ApiBoatBayUpload {
 
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
+
     private static final String ENTITY_NAME = "SPEC";
     private static final String SPEC_CREATOR = "MavenPluginUpload";
 
-    public ResponseEntity<List<BoatLintReport>> uploadSpec(@PathVariable String sourceKey, @Valid @RequestBody UploadRequestBody requestBody)  {
-
-        Source source = boatSourceRepository.findOne(Example.of(new Source().key(sourceKey))).orElseThrow(() -> new BadRequestAlertException("Invalid source, source Id does not exist", "SOURCE", "sourceIdInvalid"));
+    public ResponseEntity<List<BoatLintReport>> uploadSpec(
+        @PathVariable String sourceKey,
+        @Valid @RequestBody UploadRequestBody requestBody
+    ) {
+        Source source = boatSourceRepository
+            .findOne(Example.of(new Source().key(sourceKey)))
+            .orElseThrow(() -> new BadRequestAlertException("Invalid source, source Id does not exist", "SOURCE", "sourceIdInvalid"));
 
         List<UploadSpec> requestSpecs = requestBody.getSpecs();
 
         List<Spec> specs = new ArrayList<>();
 
-        if (requestBody.getProjectId().isEmpty() || requestBody.getVersion().isEmpty()
-            || requestBody.getArtifactId().isEmpty()) {
-            throw new BadRequestAlertException("Invalid Request body missing attributes", "UPLOAD_REQUEST_BODY",
-                "attributeEmpty");
+        if (requestBody.getProjectId().isEmpty() || requestBody.getVersion().isEmpty() || requestBody.getArtifactId().isEmpty()) {
+            throw new BadRequestAlertException("Invalid Request body missing attributes", "UPLOAD_REQUEST_BODY", "attributeEmpty");
         }
 
         log.info("Processing specs for upload from {}", sourceKey);
@@ -78,11 +81,10 @@ public class BoatUploadController implements ApiBoatBayUpload {
 
             log.info("REST request to upload : {}", spec.getName());
 
-            spec = setUpSpec(spec,source,requestBody);
+            spec = setUpSpec(spec, source, requestBody);
 
             if (spec.getOpenApi().isEmpty()) {
-                throw new BadRequestAlertException("Invalid spec with an empty openapi", "UPLOAD_SPEC",
-                    "attributeempty");
+                throw new BadRequestAlertException("Invalid spec with an empty openapi", "UPLOAD_SPEC", "attributeempty");
             }
 
             Spec match = new Spec().key(spec.getKey()).name(spec.getName());
@@ -93,26 +95,29 @@ public class BoatUploadController implements ApiBoatBayUpload {
 
                 if (!existing.getSource().equals(source)) {
                     spec.setKey(existing.getKey().concat("-" + spec.getProduct().getKey()));
-                    log.info("Uploading new spec {}",spec.getKey());
+                    log.info("Uploading new spec {}", spec.getKey());
                 } else if (!spec.getVersion().equals(existing.getVersion())) {
                     spec.setKey(existing.getKey().concat("-" + spec.getVersion()));
-                    log.info("Uploading new version {} of spec {}",spec.getVersion(), spec.getKey());
-                } else if(requestBody.getVersion().contains("SNAPSHOT")){
+                    log.info("Uploading new version {} of spec {}", spec.getVersion(), spec.getKey());
+                } else if (requestBody.getVersion().contains("SNAPSHOT")) {
                     existing.setOpenApi(spec.getOpenApi());
                     existing.setFilename(spec.getFilename());
                     existing.setLintReport(null);
                     spec = existing;
-                    log.info("Spec {} already uploaded, updating with changes and re-linting",
-                        spec.getKey());
-                }else {
-                    throw new BadRequestAlertException("This spec,"+spec.getKey()+", has already been uploaded, this upload is not from a"
-                        + " project under development and so will be rejected", "SPEC",
-                        "duplicateSpec");
+                    log.info("Spec {} already uploaded, updating with changes and re-linting", spec.getKey());
+                } else {
+                    throw new BadRequestAlertException(
+                        "This spec," +
+                        spec.getKey() +
+                        ", has already been uploaded, this upload is not from a" +
+                        " project under development and so will be rejected",
+                        "SPEC",
+                        "duplicateSpec"
+                    );
                 }
             }
 
             if (spec.getCapability() == null && spec.getServiceDefinition() == null) {
-
                 Capability capability = new Capability()
                     .key(SpringExpressionUtils.parseName(source.getCapabilityKeySpEL(), requestBody, null))
                     .name(SpringExpressionUtils.parseName(source.getCapabilityNameSpEL(), requestBody, null))
@@ -134,7 +139,6 @@ public class BoatUploadController implements ApiBoatBayUpload {
             }
 
             specs.add(spec);
-
         }
 
         ScanResult scanResult = new ScanResult(source, new SourceScannerOptions());
@@ -142,19 +146,26 @@ public class BoatUploadController implements ApiBoatBayUpload {
         log.info("resolving specs {}", specs);
         specSourceResolver.process(scanResult);
 
-        List<Spec> specsProcessed = specRepository.findAll().stream()
-            .filter(spec -> spec.getSource().getKey().equals(sourceKey)).collect(Collectors.toList());
-        List<BoatLintReport> lintReports = specsProcessed.stream()
-            .map(spec -> boatLintReportRepository.findBySpec(spec)).filter(Optional::isPresent).map(Optional::get)
-            .map(lintReportMapper::mapReport).collect(Collectors.toList());
+        List<Spec> specsProcessed = specRepository
+            .findAll()
+            .stream()
+            .filter(spec -> spec.getSource().getKey().equals(sourceKey))
+            .collect(Collectors.toList());
+        List<BoatLintReport> lintReports = specsProcessed
+            .stream()
+            .map(spec -> boatLintReportRepository.findBySpec(spec))
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .map(lintReportMapper::mapReport)
+            .collect(Collectors.toList());
 
         log.info("linted{}", lintReports);
 
-        return ResponseEntity.ok()
+        return ResponseEntity
+            .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, "SOURCE", source.getId().toString()))
             .body(lintReports);
     }
-
 
     private Spec mapSpec(UploadSpec uploadSpec) {
         Spec spec = new Spec();
@@ -165,7 +176,7 @@ public class BoatUploadController implements ApiBoatBayUpload {
         return spec;
     }
 
-    private Spec setUpSpec(Spec spec, Source source, UploadRequestBody requestBody)  {
+    private Spec setUpSpec(Spec spec, Source source, UploadRequestBody requestBody) {
         spec.setPortal(source.getPortal());
         spec.setProduct(source.getProduct());
         spec.setSource(source);
@@ -173,17 +184,14 @@ public class BoatUploadController implements ApiBoatBayUpload {
         spec.setCreatedBy("MavenPluginUpload");
         spec.setCreatedOn(ZonedDateTime.now());
         spec.setKey(SpringExpressionUtils.parseName(source.getSpecKeySpEL(), spec, spec.getKey()));
-        if (spec.getKey().equals(null)){
-            log.info("Filename of spec doesn't fit format specified in SpecKeySpEL set in source, you may later "
-                + "encounter some issues");
+        if (spec.getKey().equals(null)) {
+            log.info(
+                "Filename of spec doesn't fit format specified in SpecKeySpEL set in source, you may later " + "encounter some issues"
+            );
         }
-        spec.setSourcePath("/" +
-            requestBody.getProjectId().substring(
-                requestBody.getProjectId().lastIndexOf(".") + 1)
-            + "/" +
-            spec.getFilename());
+        spec.setSourcePath(
+            "/" + requestBody.getProjectId().substring(requestBody.getProjectId().lastIndexOf(".") + 1) + "/" + spec.getFilename()
+        );
         return spec;
     }
-
-
 }

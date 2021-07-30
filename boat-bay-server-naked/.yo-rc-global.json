@@ -1,8 +1,0 @@
-{
-  "generator-jhipster:7.1.0": {
-    "promptValues": {
-      "packageName": "com.backbase.oss.boat.bay",
-      "nativeLanguage": "en"
-    }
-  }
-}

@@ -24,5 +24,4 @@ public class BoatLintReport {
     public boolean hasViolations() {
         return !violations.isEmpty();
     }
-
 }

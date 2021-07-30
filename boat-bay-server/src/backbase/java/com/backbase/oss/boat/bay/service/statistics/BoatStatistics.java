@@ -15,5 +15,4 @@ public class BoatStatistics {
     private long shouldViolationsCount;
     private long mayViolationsCount;
     private long hintViolationsCount;
-
 }

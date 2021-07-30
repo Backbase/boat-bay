@@ -17,5 +17,4 @@ public class BoatViolation {
     public String displayString() {
         return "[" + rule.getId() + "] " + severity + " - " + rule.getTitle() + ": " + description;
     }
-
 }

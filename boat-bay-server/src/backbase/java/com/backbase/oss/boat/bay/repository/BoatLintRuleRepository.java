@@ -7,12 +7,9 @@ import java.util.Optional;
 import java.util.Set;
 
 public interface BoatLintRuleRepository extends LintRuleRepository {
-
-
     Set<LintRule> findAllByPortal(Portal portal);
 
     Set<LintRule> findAllByPortalAndEnabled(Portal portal, boolean enabled);
-
 
     Optional<LintRule> findByRuleId(String id);
 }

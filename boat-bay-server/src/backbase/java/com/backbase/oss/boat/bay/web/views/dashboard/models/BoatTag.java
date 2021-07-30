@@ -11,5 +11,4 @@ public class BoatTag {
     private boolean hide;
     private String color;
     private int numberOfOccurrences;
-
 }

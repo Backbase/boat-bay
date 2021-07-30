@@ -1,6 +1,5 @@
 package com.backbase.oss.boat.bay.config;
 
-import com.backbase.oss.boat.bay.service.lint.BoatLintRuleValidatorFactory;
 import java.time.Duration;
 import org.ehcache.config.builders.*;
 import org.ehcache.jsr107.Eh107Configuration;
@@ -76,19 +75,6 @@ public class CacheConfiguration {
             createCache(cm, com.backbase.oss.boat.bay.domain.LintReport.class.getName() + ".violations");
             createCache(cm, com.backbase.oss.boat.bay.domain.LintRuleViolation.class.getName());
             createCache(cm, com.backbase.oss.boat.bay.domain.ZallyConfig.class.getName());
-
-            createCache(cm, BoatLintRuleValidatorFactory.API_VALIDATORS);
-            createCache(cm, BoatLintRuleValidatorFactory.API_RULE_POLICY);
-            createCache(cm, BoatCacheManager.PORTAL);
-            createCache(cm, BoatCacheManager.PORTAL_PRODUCT);
-            createCache(cm, BoatCacheManager.PRODUCT_CAPABILITIES);
-            createCache(cm, BoatCacheManager.PRODUCT_SERVICES);
-            createCache(cm, BoatCacheManager.PRODUCT_RELEASES);
-            createCache(cm, BoatCacheManager.PORTAL_PRODUCT);
-            createCache(cm, BoatCacheManager.PRODUCT_TAGS);
-            createCache(cm, BoatCacheManager.PRODUCT_SPECS);
-            createCache(cm, BoatCacheManager.SPEC_LINT_REPORT);
-            createCache(cm, BoatCacheManager.STATISTICS);
             // jhipster-needle-ehcache-add-entry
         };
     }
