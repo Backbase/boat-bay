@@ -15,7 +15,34 @@
     <property name="datetimeType" value="datetime" dbms="oracle, mssql, postgresql, h2"/>
 
     <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210730113929_added_entity_Dashboard.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210730113930_added_entity_Portal.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210730113931_added_entity_ProductRelease.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210730113932_added_entity_Product.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210730113933_added_entity_Capability.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210730113934_added_entity_ServiceDefinition.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210730113935_added_entity_Spec.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210730113936_added_entity_Tag.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210730113937_added_entity_SpecType.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210730113938_added_entity_Source.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210730113939_added_entity_SourcePath.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210730113940_added_entity_LintRule.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210730113941_added_entity_LintReport.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210730113942_added_entity_LintRuleViolation.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210730113943_added_entity_ZallyConfig.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
+    <include file="config/liquibase/changelog/20210730113929_added_entity_constraints_Dashboard.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210730113931_added_entity_constraints_ProductRelease.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210730113932_added_entity_constraints_Product.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210730113933_added_entity_constraints_Capability.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210730113934_added_entity_constraints_ServiceDefinition.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210730113935_added_entity_constraints_Spec.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210730113938_added_entity_constraints_Source.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210730113939_added_entity_constraints_SourcePath.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210730113940_added_entity_constraints_LintRule.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210730113941_added_entity_constraints_LintReport.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210730113942_added_entity_constraints_LintRuleViolation.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20210730113943_added_entity_constraints_ZallyConfig.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
 </databaseChangeLog>
