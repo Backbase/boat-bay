@@ -37,7 +37,7 @@ spring:
     password:
     hikari:
       poolName: Hikari
-      auto-commit: false
+      auto-commit: true
   h2:
     console:
       # disable spring boot built-in h2-console since we start it manually with correct configuration

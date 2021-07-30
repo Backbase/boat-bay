@@ -34,9 +34,12 @@ import com.backbase.oss.boat.bay.service.model.BoatViolation;
 import com.backbase.oss.boat.bay.service.statistics.BoatStatisticsCollector;
 import com.backbase.oss.boat.bay.web.views.dashboard.diff.DiffReportRenderer;
 import com.backbase.oss.boat.bay.web.views.dashboard.mapper.BoatDashboardMapper;
+
 import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatPortal;
 import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatPortalDashboard;
+
 import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatTag;
+import io.github.jhipster.web.util.PaginationUtil;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -71,7 +74,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.zalando.zally.rule.api.Severity;
-import tech.jhipster.web.util.PaginationUtil;
+
 
 @RestController
 @RequestMapping("/api/boat/")
@@ -102,16 +105,17 @@ public class BoatDashboardController {
     private Map<Severity, Integer> severityOrder;
 
     public List<String> getAllEnabledTags() {
-        return tagRepository.findAll(Example.of(new Tag().hide(false))).stream().map(Tag::getName).collect(Collectors.toList());
+        return tagRepository.findAll(Example.of(new Tag().hide(false))).stream()
+            .map(Tag::getName)
+            .collect(Collectors.toList());
     }
 
     @GetMapping("dashboard")
     @Cacheable(BoatCacheManager.PORTAL)
     @Deprecated
     public ResponseEntity<List<BoatPortalDashboard>> getDashboard() {
-        List<BoatPortalDashboard> portals = boatPortalRepository
-            .findAll()
-            .stream()
+
+        List<BoatPortalDashboard> portals = boatPortalRepository.findAll().stream()
             .flatMap(portal -> portal.getProducts().stream().map(this::mapPortalDashboard))
             .collect(Collectors.toList());
 
@@ -122,6 +126,7 @@ public class BoatDashboardController {
     @Cacheable(BoatCacheManager.PORTAL_PRODUCT)
     @Deprecated
     public ResponseEntity<BoatProduct> getProductDashboard(@PathVariable String projectKey, @PathVariable String productKey) {
+
         Product product = getProduct(projectKey, productKey);
         BoatProduct boatProduct = mapProduct(product);
 
@@ -130,48 +135,50 @@ public class BoatDashboardController {
 
     @GetMapping("/portals")
     public ResponseEntity<List<BoatPortal>> getPortals() {
-        List<BoatPortal> portals = boatPortalRepository.findAll().stream().map(this::mapPortal).collect(Collectors.toList());
+
+        List<BoatPortal> portals = boatPortalRepository.findAll().stream()
+            .map(this::mapPortal)
+            .collect(Collectors.toList());
 
         return ResponseEntity.ok(portals);
     }
 
     @GetMapping("/portals/{portalKey}/products")
     public ResponseEntity<List<BoatProduct>> getPortalProducts(@PathVariable String portalKey) {
+
         Portal portal = getPortal(portalKey);
 
         List<Product> products = boatProductRepository.findAllByPortal(portal);
 
-        List<BoatProduct> boatProductDashboards = products.stream().map(this::mapProduct).collect(Collectors.toList());
+        List<BoatProduct> boatProductDashboards = products.stream().map(
+            this::mapProduct).collect(Collectors.toList());
 
         return ResponseEntity.ok(boatProductDashboards);
     }
 
     @GetMapping("/portals/{portalKey}/lint-rules")
     public ResponseEntity<List<BoatLintRule>> getPortalLintRules(@PathVariable String portalKey) {
+
         Portal portal = getPortal(portalKey);
 
-        List<BoatLintRule> portalLintRules = portal
-            .getLintRules()
-            .stream()
-            .map(dashboardMapper::mapPortalLintRule)
-            .collect(Collectors.toList());
+        List<BoatLintRule> portalLintRules = portal.getLintRules().stream().map(dashboardMapper::mapPortalLintRule).collect(Collectors.toList());
         return ResponseEntity.ok(portalLintRules);
     }
 
     private Portal getPortal(@PathVariable String portalKey) {
-        return boatPortalRepository.findByKey(portalKey).orElseThrow((() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
+        return boatPortalRepository.findByKey(portalKey)
+            .orElseThrow((() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
     }
 
     @PostMapping("/portals/{portalKey}/lint-rules/{lintRuleId}")
     public ResponseEntity<Void> updatePortalLintRule(
         @PathVariable String portalKey,
         @PathVariable String lintRuleId,
-        @RequestBody BoatLintRule boatLintRule
-    ) {
+        @RequestBody BoatLintRule boatLintRule) {
+
         Portal portal = getPortal(portalKey);
 
-        LintRule lintRule = lintRuleRepository
-            .findById(Long.valueOf(lintRuleId))
+        LintRule lintRule = lintRuleRepository.findById(Long.valueOf(lintRuleId))
             .orElseThrow((() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
 
         boatSpecRepository.findAll(Example.of(new Spec().portal(portal))).forEach(boatSpecLinter::scheduleLintJob);
@@ -186,59 +193,52 @@ public class BoatDashboardController {
     @Cacheable(BoatCacheManager.PRODUCT_RELEASES)
     @GetMapping("/portals/{portalKey}/products/{productKey}/releases")
     public ResponseEntity<List<BoatProductRelease>> getProductReleases(@PathVariable String portalKey, @PathVariable String productKey) {
+
         Product product = getProduct(portalKey, productKey);
 
         List<ProductRelease> productRelease = boatProductReleaseRepository.findAllByProductOrderByReleaseDate(product);
-        List<BoatProductRelease> boatProductReleases = productRelease
-            .stream()
-            .map(dashboardMapper::mapBoatProductRelease)
-            .collect(Collectors.toList());
+        List<BoatProductRelease> boatProductReleases = productRelease.stream().map(dashboardMapper::mapBoatProductRelease).collect(Collectors.toList());
 
         return ResponseEntity.ok(boatProductReleases);
     }
 
     @Cacheable(BoatCacheManager.PRODUCT_SPECS)
     @GetMapping("/portals/{portalKey}/products/{productKey}/releases/{releaseKey}/specs")
-    public ResponseEntity<List<BoatSpec>> getProductReleaseSpecs(
-        @PathVariable String portalKey,
-        @PathVariable String productKey,
-        @PathVariable String releaseKey
-    ) {
-        Product product = getProduct(portalKey, productKey);
-        ProductRelease productRelease = boatProductReleaseRepository
-            .findByProductAndKey(product, releaseKey)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    public ResponseEntity<List<BoatSpec>> getProductReleaseSpecs(@PathVariable String portalKey, @PathVariable String productKey, @PathVariable String releaseKey) {
 
-        List<BoatSpec> specs = productRelease.getSpecs().stream().map(this::mapSpec).collect(Collectors.toList());
+        Product product = getProduct(portalKey, productKey);
+        ProductRelease productRelease = boatProductReleaseRepository.findByProductAndKey(product, releaseKey).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        List<BoatSpec> specs = productRelease.getSpecs().stream()
+            .map(this::mapSpec)
+            .collect(Collectors.toList());
         return ResponseEntity.ok(specs);
     }
 
     @GetMapping("/portals/{portalKey}/products/{productKey}/tags")
     @Cacheable(BoatCacheManager.PRODUCT_TAGS)
     public ResponseEntity<List<BoatTag>> getProductTags(@PathVariable String portalKey, @PathVariable String productKey) {
+
         Product product = getProduct(portalKey, productKey);
         List<Spec> specsForProduct = getSpecsForProduct(product);
 
         Map<Tag, Integer> tagCount = new HashMap<>();
 
         for (Spec spec : specsForProduct) {
-            spec
-                .getTags()
-                .forEach(
-                    tag -> {
-                        int occurences = tagCount.getOrDefault(tag, 0) + 1;
-                        tagCount.put(tag, occurences);
-                    }
-                );
+
+            spec.getTags().forEach(tag ->  {
+                int occurences = tagCount.getOrDefault(tag, 0) + 1;
+                tagCount.put(tag, occurences);
+            });
+
         }
         List<BoatTag> tags = new ArrayList<>();
-        tagCount.forEach(
-            (tag, integer) -> {
-                BoatTag boatTag = dashboardMapper.mapTag(tag);
-                boatTag.setNumberOfOccurrences(integer);
-                tags.add(boatTag);
-            }
-        );
+        tagCount.forEach((tag, integer) -> {
+            BoatTag boatTag = dashboardMapper.mapTag(tag);
+            boatTag.setNumberOfOccurrences(integer);
+            tags.add(boatTag);
+
+        });
 
         return ResponseEntity.ok(tags);
     }
@@ -247,13 +247,11 @@ public class BoatDashboardController {
         return boatSpecRepository.findAll(boatSpecQuerySpecs.hasProduct(product.getId()));
     }
 
+
     @Cacheable(BoatCacheManager.PRODUCT_CAPABILITIES)
     @GetMapping("/portals/{portalKey}/products/{productKey}/capabilities")
-    public ResponseEntity<List<BoatCapability>> getPortalProducts(
-        @PathVariable String portalKey,
-        @PathVariable String productKey,
-        Pageable pageable
-    ) {
+    public ResponseEntity<List<BoatCapability>> getPortalProducts(@PathVariable String portalKey, @PathVariable String productKey, Pageable pageable) {
+
         Product product = getProduct(portalKey, productKey);
 
         Page<Capability> capabilities = boatCapabilityRepository.findByProduct(product, pageable);
@@ -268,8 +266,7 @@ public class BoatDashboardController {
     public ResponseEntity<List<BoatService>> getPortalServices(
         @PathVariable String portalKey,
         @PathVariable String productKey,
-        @PathVariable String capabilityKey
-    ) {
+        @PathVariable String capabilityKey) {
         Product product = getProduct(portalKey, productKey);
 
         Capability capability = boatCapabilityRepository.findByProductAndKey(product, capabilityKey).orElseThrow();
@@ -279,13 +276,10 @@ public class BoatDashboardController {
         return ResponseEntity.ok(services);
     }
 
+
     @Cacheable(BoatCacheManager.PRODUCT_SERVICES)
     @GetMapping("/portals/{portalKey}/products/{productKey}/services")
-    public ResponseEntity<List<BoatService>> getPortalServices(
-        @PathVariable String portalKey,
-        @PathVariable String productKey,
-        Pageable pageable
-    ) {
+    public ResponseEntity<List<BoatService>> getPortalServices(@PathVariable String portalKey, @PathVariable String productKey, Pageable pageable) {
         Product product = getProduct(portalKey, productKey);
 
         Page<ServiceDefinition> services = boatServiceRepository.findByCapabilityProduct(product, pageable);
@@ -296,38 +290,37 @@ public class BoatDashboardController {
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
+
     @Cacheable(BoatCacheManager.PRODUCT_SPECS)
     @GetMapping("/portals/{portalKey}/products/{productKey}/specs")
-    public ResponseEntity<List<BoatSpec>> getPortalSpecs(
-        @PathVariable String portalKey,
-        @PathVariable String productKey,
-        @RequestParam(required = false) String[] capability,
-        @RequestParam(required = false) String[] service,
-        @RequestParam(required = false) String release,
-        @RequestParam(required = false) String grade,
-        @RequestParam(required = false) boolean backwardsCompatible,
-        @RequestParam(required = false) boolean changed,
-        Pageable pageable
-    ) {
+    public ResponseEntity<List<BoatSpec>> getPortalSpecs(@PathVariable String portalKey, @PathVariable String productKey,
+                                                         @RequestParam(required = false) String[] capability,
+                                                         @RequestParam(required = false) String[] service,
+                                                         @RequestParam(required = false) String release,
+
+                                                         @RequestParam(required = false) String grade,
+                                                         @RequestParam(required = false) boolean backwardsCompatible,
+                                                         @RequestParam(required = false) boolean changed,
+                                                         Pageable pageable) {
         Product product = getProduct(portalKey, productKey);
 
         Specification<Spec> specification = boatSpecQuerySpecs.hasProduct(product.getId());
 
-        if (release != null) {
+        if(release != null) {
             specification = specification.and(boatSpecQuerySpecs.inProductRelease(release));
         }
 
-        if (capability != null) {
+        if(capability != null) {
             Specification<Spec> capabilitySpecification = boatSpecQuerySpecs.hasCapabilityKey(capability[0]);
-            for (int i = 1; i < capability.length; i++) {
+            for(int i = 1; i < capability.length; i++) {
                 capabilitySpecification = capabilitySpecification.or(boatSpecQuerySpecs.hasCapabilityKey(capability[i]));
             }
             specification = specification.and(capabilitySpecification);
         }
 
-        if (service != null) {
+        if(service != null) {
             Specification<Spec> serviceDefinitionSpecification = boatSpecQuerySpecs.hasServiceDefinition(service[0]);
-            for (int i = 1; i < service.length; i++) {
+            for(int i = 1; i < service.length; i++) {
                 serviceDefinitionSpecification = serviceDefinitionSpecification.or(boatSpecQuerySpecs.hasServiceDefinition(service[i]));
             }
             specification = specification.and(serviceDefinitionSpecification);
@@ -339,13 +332,12 @@ public class BoatDashboardController {
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
+
     @GetMapping("/portals/{portalKey}/products/{productKey}/specs/{specId}/lint-report")
-    public ResponseEntity<BoatLintReport> getLintReportForSpec(
-        @PathVariable String portalKey,
-        @PathVariable String productKey,
-        @PathVariable String specId,
-        @RequestParam(required = false) Boolean refresh
-    ) {
+    public ResponseEntity<BoatLintReport> getLintReportForSpec(@PathVariable String portalKey,
+                                                               @PathVariable String productKey,
+                                                               @PathVariable String specId,
+                                                               @RequestParam(required = false) Boolean refresh) {
         Product product = getProduct(portalKey, productKey);
 
         log.info("Get lint report for spec: {} in product: {}", specId, product.getName());
@@ -353,46 +345,39 @@ public class BoatDashboardController {
         Spec spec = boatSpecRepository.findById(Long.valueOf(specId)).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         LintReport specReport;
-        //        if(refresh != null && refresh) {
-        specReport = boatSpecLinter.lint(spec);
+//        if(refresh != null && refresh) {
+            specReport = boatSpecLinter.lint(spec);
 
-        //        } else {
-        //            specReport = Optional.ofNullable(spec.getLintReport()).orElseGet(() -> boatSpecLinter.lint(spec));
-        //        }
+//        } else {
+//            specReport = Optional.ofNullable(spec.getLintReport()).orElseGet(() -> boatSpecLinter.lint(spec));
+//        }
 
         Map<Severity, Integer> severityIntegerMap = getSeverityOrder();
 
         BoatLintReport lintReport = dashboardMapper.mapReport(specReport);
         lintReport.setOpenApi(spec.getOpenApi());
 
-        lintReport.getViolations().sort(Comparator.comparing(boatViolation -> boatViolation.getRule().getRuleId()));
+        lintReport.getViolations()
+            .sort(Comparator.comparing(boatViolation -> boatViolation.getRule().getRuleId()));
 
-        lintReport.getViolations().sort(Comparator.comparing(BoatViolation::getSeverity, Comparator.comparingInt(severityIntegerMap::get)));
+        lintReport.getViolations()
+            .sort(Comparator.comparing(
+                BoatViolation::getSeverity,
+                Comparator.comparingInt(severityIntegerMap::get)));
 
         return ResponseEntity.ok(lintReport);
     }
 
-    @GetMapping(
-        "/portals/{portalKey}/products/{productKey}/capabilities/{capabilityKey}/services/{serviceKey}/specs/{specKey}/{version}/download"
-    )
-    public ResponseEntity<Resource> getSpecAsOpenAPI(
-        @PathVariable String portalKey,
-        @PathVariable String productKey,
-        @PathVariable String capabilityKey,
-        @PathVariable String serviceKey,
-        @PathVariable String specKey,
-        @PathVariable String version
-    ) {
-        Spec spec = boatSpecRepository
-            .findByPortalKeyAndProductKeyAndCapabilityKeyAndServiceDefinitionKeyAndKeyAndVersion(
-                portalKey,
-                productKey,
-                capabilityKey,
-                serviceKey,
-                specKey,
-                version
-            )
-            .orElseThrow((() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
+    @GetMapping("/portals/{portalKey}/products/{productKey}/capabilities/{capabilityKey}/services/{serviceKey}/specs/{specKey}/{version}/download")
+    public ResponseEntity<Resource> getSpecAsOpenAPI(@PathVariable String portalKey,
+                                                     @PathVariable String productKey,
+                                                     @PathVariable String capabilityKey,
+                                                     @PathVariable String serviceKey,
+                                                     @PathVariable String specKey,
+                                                     @PathVariable String version) {
+
+        Spec spec = boatSpecRepository.findByPortalKeyAndProductKeyAndCapabilityKeyAndServiceDefinitionKeyAndKeyAndVersion(
+            portalKey,productKey,capabilityKey,serviceKey,specKey,version).orElseThrow((() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
 
         HttpHeaders header = new HttpHeaders();
         header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + spec.getFilename());
@@ -402,59 +387,48 @@ public class BoatDashboardController {
 
         ByteArrayResource openApiBody = new ByteArrayResource(spec.getOpenApi().getBytes(StandardCharsets.UTF_8));
 
-        return ResponseEntity
-            .ok()
+        return ResponseEntity.ok()
             .headers(header)
             .contentLength(spec.getOpenApi().length())
             .contentType(MediaType.valueOf("application/vnd.oai.openapi"))
             .body(openApiBody);
+
     }
 
     @GetMapping("/portals/{portalKey}/products/{productKey}/capabilities/{capabilityKey}/services/{serviceKey}/specs/{specKey}/{version}")
-    public ResponseEntity<BoatSpec> downloadSpec(
-        @PathVariable String portalKey,
-        @PathVariable String productKey,
-        @PathVariable String capabilityKey,
-        @PathVariable String serviceKey,
-        @PathVariable String specKey,
-        @PathVariable String version
-    ) {
-        Spec spec = boatSpecRepository
-            .findByPortalKeyAndProductKeyAndCapabilityKeyAndServiceDefinitionKeyAndKeyAndVersion(
-                portalKey,
-                productKey,
-                capabilityKey,
-                serviceKey,
-                specKey,
-                version
-            )
-            .orElseThrow((() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
+    public ResponseEntity<BoatSpec> downloadSpec(@PathVariable String portalKey,
+                                                     @PathVariable String productKey,
+                                                     @PathVariable String capabilityKey,
+                                                     @PathVariable String serviceKey,
+                                                     @PathVariable String specKey,
+                                                     @PathVariable String version) {
+
+        Spec spec = boatSpecRepository.findByPortalKeyAndProductKeyAndCapabilityKeyAndServiceDefinitionKeyAndKeyAndVersion(
+            portalKey,productKey,capabilityKey,serviceKey,specKey,version).orElseThrow((() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
 
         BoatSpec body = dashboardMapper.mapBoatSpec(spec);
         body.setOpenApi(spec.getOpenApi());
 
         return ResponseEntity.ok(body);
+
     }
 
     @GetMapping("/portals/{portalKey}/products/{productKey}/diff-report")
-    public ResponseEntity<ChangedOpenApi> getLintReportForSpec(
-        @PathVariable String portalKey,
-        @PathVariable String productKey,
-        @RequestParam String spec1Id,
-        @RequestParam String spec2Id
-    ) {
+    public ResponseEntity<ChangedOpenApi> getLintReportForSpec(@PathVariable String portalKey,
+                                                               @PathVariable String productKey,
+                                                               @RequestParam String spec1Id,
+                                                               @RequestParam String spec2Id) {
         ChangedOpenApi changedOpenApi = getChangedOpenApi(portalKey, productKey, spec1Id, spec2Id);
+
 
         return ResponseEntity.ok(changedOpenApi);
     }
 
     @GetMapping(value = "/portals/{portalKey}/products/{productKey}/diff-report.html", produces = MediaType.TEXT_HTML_VALUE)
-    public ResponseEntity<String> getLintReportForSpecAsHtml(
-        @PathVariable String portalKey,
-        @PathVariable String productKey,
-        @RequestParam String spec1Id,
-        @RequestParam String spec2Id
-    ) {
+    public ResponseEntity<String> getLintReportForSpecAsHtml(@PathVariable String portalKey,
+                                                               @PathVariable String productKey,
+                                                               @RequestParam String spec1Id,
+                                                               @RequestParam String spec2Id) {
         ChangedOpenApi changedOpenApi = getChangedOpenApi(portalKey, productKey, spec1Id, spec2Id);
         DiffReportRenderer htmlRender = new DiffReportRenderer();
 
@@ -462,12 +436,7 @@ public class BoatDashboardController {
     }
 
     @NotNull
-    private ChangedOpenApi getChangedOpenApi(
-        @PathVariable String portalKey,
-        @PathVariable String productKey,
-        @RequestParam String spec1Id,
-        @RequestParam String spec2Id
-    ) {
+    private ChangedOpenApi getChangedOpenApi(@PathVariable String portalKey, @PathVariable String productKey, @RequestParam String spec1Id, @RequestParam String spec2Id) {
         Product product = getProduct(portalKey, productKey);
 
         Spec spec1 = boatSpecRepository.findById(Long.valueOf(spec1Id)).orElseThrow();
@@ -485,8 +454,7 @@ public class BoatDashboardController {
     }
 
     private Product getProduct(@PathVariable String portalKey, @PathVariable String productKey) {
-        return boatProductRepository
-            .findByKeyAndPortalKey(productKey, portalKey)
+        return boatProductRepository.findByKeyAndPortalKey(productKey, portalKey)
             .orElseThrow((() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
     }
 
@@ -497,7 +465,7 @@ public class BoatDashboardController {
     }
 
     private Map<Severity, Integer> getSeverityOrder() {
-        if (severityOrder == null) {
+        if(severityOrder == null) {
             severityOrder = new HashMap<>();
             for (int i = 0; i < Severity.values().length; i++) {
                 severityOrder.put(Severity.values()[i], i);
@@ -518,10 +486,10 @@ public class BoatDashboardController {
     }
 
     @NotNull
-    private BoatPortalDashboard mapPortalDashboard(Product product) {
+    private BoatPortalDashboard mapPortalDashboard(com.backbase.oss.boat.bay.domain.Product product) {
+
         BoatPortalDashboard portalDto = dashboardMapper.mapPortal(product.getPortal(), product);
-        boatLintReportRepository
-            .findDistinctFirstBySpecProductOrderByLintedOn(product)
+        boatLintReportRepository.findDistinctFirstBySpecProductOrderByLintedOn(product)
             .ifPresent(lintReport -> portalDto.setLastLintReport(dashboardMapper.mapReportWithoutViolations(lintReport)));
 
         portalDto.setNumberOfCapabilities(boatCapabilityRepository.countByProduct(product));
@@ -532,9 +500,9 @@ public class BoatDashboardController {
 
     @NotNull
     private BoatProduct mapProduct(Product product) {
+
         BoatProduct boatProduct = dashboardMapper.mapBoatProduct(product);
-        boatLintReportRepository
-            .findDistinctFirstBySpecProductOrderByLintedOn(product)
+        boatLintReportRepository.findDistinctFirstBySpecProductOrderByLintedOn(product)
             .ifPresent(lintReport -> boatProduct.setLastLintReport(dashboardMapper.mapReportWithoutViolations(lintReport)));
         boatProduct.setStatistics(boatStatisticsCollector.collect(product));
         boatProduct.setPortalName(product.getPortal().getName());
@@ -544,11 +512,12 @@ public class BoatDashboardController {
 
     @NotNull
     private BoatCapability mapCapability(Capability capability) {
+
         BoatCapability boatCapability = dashboardMapper.mapBoatCapability(capability);
-        boatLintReportRepository
-            .findDistinctFirstBySpecServiceDefinitionCapability(capability)
+        boatLintReportRepository.findDistinctFirstBySpecServiceDefinitionCapability(capability)
             .ifPresent(lintReport -> boatCapability.setLastLintReport(dashboardMapper.mapReportWithoutViolations(lintReport)));
         boatCapability.setStatistics(boatStatisticsCollector.collect(capability));
         return boatCapability;
     }
+
 }

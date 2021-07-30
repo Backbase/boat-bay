@@ -2,6 +2,7 @@ package com.backbase.oss.boat.bay.config;
 
 import com.backbase.oss.boat.bay.security.*;
 import com.backbase.oss.boat.bay.security.jwt.*;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpMethod;
@@ -91,7 +92,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers("/api/activate").permitAll()
             .antMatchers("/api/account/reset-password/init").permitAll()
             .antMatchers("/api/account/reset-password/finish").permitAll()
-            .antMatchers("/api/admin/**").hasAuthority(AuthoritiesConstants.ADMIN)
+            .antMatchers("/api/export").permitAll()
+            .antMatchers("/api/boat/boat-maven-plugin/**").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/boat/**").permitAll()
+            .antMatchers(HttpMethod.POST, "/api/boat/**").hasAuthority(AuthoritiesConstants.ADMIN)
             .antMatchers("/api/**").authenticated()
             .antMatchers("/management/health").permitAll()
             .antMatchers("/management/health/**").permitAll()
