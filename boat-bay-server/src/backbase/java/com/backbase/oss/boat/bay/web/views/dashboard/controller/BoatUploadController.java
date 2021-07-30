@@ -4,11 +4,7 @@ import com.backbase.oss.boat.bay.domain.Capability;
 import com.backbase.oss.boat.bay.domain.ServiceDefinition;
 import com.backbase.oss.boat.bay.domain.Source;
 import com.backbase.oss.boat.bay.domain.Spec;
-import com.backbase.oss.boat.bay.repository.BoatLintReportRepository;
-import com.backbase.oss.boat.bay.repository.BoatSourceRepository;
-import com.backbase.oss.boat.bay.repository.CapabilityRepository;
-import com.backbase.oss.boat.bay.repository.ServiceDefinitionRepository;
-import com.backbase.oss.boat.bay.repository.SpecRepository;
+import com.backbase.oss.boat.bay.repository.*;
 import com.backbase.oss.boat.bay.service.api.ApiBoatBayUpload;
 import com.backbase.oss.boat.bay.service.model.BoatLintReport;
 import com.backbase.oss.boat.bay.service.model.UploadRequestBody;
@@ -19,25 +15,24 @@ import com.backbase.oss.boat.bay.source.scanner.SourceScannerOptions;
 import com.backbase.oss.boat.bay.util.SpringExpressionUtils;
 import com.backbase.oss.boat.bay.web.rest.errors.BadRequestAlertException;
 import com.backbase.oss.boat.bay.web.views.dashboard.mapper.BoatDashboardMapper;
-import com.backbase.oss.boat.loader.OpenAPILoader;
-import com.backbase.oss.boat.loader.OpenAPILoaderException;
-import io.github.jhipster.web.util.HeaderUtil;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Example;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import tech.jhipster.web.util.HeaderUtil;
+
+import javax.validation.Valid;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @Transactional
@@ -60,7 +55,8 @@ public class BoatUploadController implements ApiBoatBayUpload {
 
     public ResponseEntity<List<BoatLintReport>> uploadSpec(@PathVariable String sourceKey, @Valid @RequestBody UploadRequestBody requestBody)  {
 
-        Source source = boatSourceRepository.findOne(Example.of(new Source().key(sourceKey))).orElseThrow(() -> new BadRequestAlertException("Invalid source, source Id does not exist", "SOURCE", "sourceIdInvalid"));
+        Source source = boatSourceRepository.findOne(Example.of(new Source().key(sourceKey)))
+            .orElseThrow(() -> new BadRequestAlertException("Invalid source, source Key does not exist", "SOURCE", "sourceIdInvalid"));
 
         List<UploadSpec> requestSpecs = requestBody.getSpecs();
 
@@ -89,26 +85,7 @@ public class BoatUploadController implements ApiBoatBayUpload {
             Optional<Spec> duplicateKey = specRepository.findOne(Example.of(match));
 
             if (duplicateKey.isPresent()) {
-                Spec existing = duplicateKey.get();
-
-                if (!existing.getSource().equals(source)) {
-                    spec.setKey(existing.getKey().concat("-" + spec.getProduct().getKey()));
-                    log.info("Uploading new spec {}",spec.getKey());
-                } else if (!spec.getVersion().equals(existing.getVersion())) {
-                    spec.setKey(existing.getKey().concat("-" + spec.getVersion()));
-                    log.info("Uploading new version {} of spec {}",spec.getVersion(), spec.getKey());
-                } else if(requestBody.getVersion().contains("SNAPSHOT")){
-                    existing.setOpenApi(spec.getOpenApi());
-                    existing.setFilename(spec.getFilename());
-                    existing.setLintReport(null);
-                    spec = existing;
-                    log.info("Spec {} already uploaded, updating with changes and re-linting",
-                        spec.getKey());
-                }else {
-                    throw new BadRequestAlertException("This spec,"+spec.getKey()+", has already been uploaded, this upload is not from a"
-                        + " project under development and so will be rejected", "SPEC",
-                        "duplicateSpec");
-                }
+                spec = getAndUpdateExistingSpec(requestBody, source, spec, duplicateKey);
             }
 
             if (spec.getCapability() == null && spec.getServiceDefinition() == null) {
@@ -138,14 +115,14 @@ public class BoatUploadController implements ApiBoatBayUpload {
         }
 
         ScanResult scanResult = new ScanResult(source, new SourceScannerOptions());
-        specs.stream().forEach(scanResult::addSpec);
+        specs.forEach(scanResult::addSpec);
         log.info("resolving specs {}", specs);
         specSourceResolver.process(scanResult);
 
         List<Spec> specsProcessed = specRepository.findAll().stream()
             .filter(spec -> spec.getSource().getKey().equals(sourceKey)).collect(Collectors.toList());
         List<BoatLintReport> lintReports = specsProcessed.stream()
-            .map(spec -> boatLintReportRepository.findBySpec(spec)).filter(Optional::isPresent).map(Optional::get)
+            .map(boatLintReportRepository::findBySpec).filter(Optional::isPresent).map(Optional::get)
             .map(lintReportMapper::mapReport).collect(Collectors.toList());
 
         log.info("linted{}", lintReports);
@@ -153,6 +130,31 @@ public class BoatUploadController implements ApiBoatBayUpload {
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, "SOURCE", source.getId().toString()))
             .body(lintReports);
+    }
+
+    @NotNull
+    private Spec getAndUpdateExistingSpec(UploadRequestBody requestBody, Source source, Spec spec, Optional<Spec> duplicateKey) {
+        Spec existing = duplicateKey.get();
+
+        if (!existing.getSource().equals(source)) {
+            spec.setKey(existing.getKey().concat("-" + spec.getProduct().getKey()));
+            log.info("Uploading new spec {}", spec.getKey());
+        } else if (!spec.getVersion().equals(existing.getVersion())) {
+            spec.setKey(existing.getKey().concat("-" + spec.getVersion()));
+            log.info("Uploading new version {} of spec {}", spec.getVersion(), spec.getKey());
+        } else if(requestBody.getVersion().contains("SNAPSHOT")){
+            existing.setOpenApi(spec.getOpenApi());
+            existing.setFilename(spec.getFilename());
+            existing.setLintReport(null);
+            spec = existing;
+            log.info("Spec {} already uploaded, updating with changes and re-linting",
+                spec.getKey());
+        }else {
+            throw new BadRequestAlertException("This spec,"+ spec.getKey()+", has already been uploaded, this upload is not from a"
+                + " project under development and so will be rejected", "SPEC",
+                "duplicateSpec");
+        }
+        return spec;
     }
 
 
