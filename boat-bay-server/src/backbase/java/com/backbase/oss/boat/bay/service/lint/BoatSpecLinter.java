@@ -58,7 +58,7 @@ public class BoatSpecLinter {
         spec = specRepository.findById(spec.getId()).orElseThrow();
 
         log.info("Start Lint Spec: {}", spec.getName());
-        if(spec.isValid() == null || spec.getServiceDefinition() == null) {
+        if(spec.getValid() == null || spec.getServiceDefinition() == null) {
             log.warn("I should never ever exists");
         }
 

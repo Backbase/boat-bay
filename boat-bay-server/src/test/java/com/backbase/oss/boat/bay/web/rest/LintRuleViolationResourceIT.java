@@ -1,36 +1,36 @@
 package com.backbase.oss.boat.bay.web.rest;
 
-import com.backbase.oss.boat.bay.BoatBayApp;
-import com.backbase.oss.boat.bay.domain.LintRuleViolation;
-import com.backbase.oss.boat.bay.domain.LintRule;
-import com.backbase.oss.boat.bay.repository.LintRuleViolationRepository;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Base64Utils;
-import javax.persistence.EntityManager;
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.backbase.oss.boat.bay.IntegrationTest;
+import com.backbase.oss.boat.bay.domain.LintRule;
+import com.backbase.oss.boat.bay.domain.LintRuleViolation;
 import com.backbase.oss.boat.bay.domain.enumeration.Severity;
+import com.backbase.oss.boat.bay.repository.LintRuleViolationRepository;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Base64Utils;
+
 /**
  * Integration tests for the {@link LintRuleViolationResource} REST controller.
  */
-@SpringBootTest(classes = BoatBayApp.class)
+@IntegrationTest
 @AutoConfigureMockMvc
 @WithMockUser
-public class LintRuleViolationResourceIT {
+class LintRuleViolationResourceIT {
 
     private static final String DEFAULT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_NAME = "BBBBBBBBBB";
@@ -52,6 +52,12 @@ public class LintRuleViolationResourceIT {
 
     private static final String DEFAULT_JSON_POINTER = "AAAAAAAAAA";
     private static final String UPDATED_JSON_POINTER = "BBBBBBBBBB";
+
+    private static final String ENTITY_API_URL = "/api/lint-rule-violations";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     @Autowired
     private LintRuleViolationRepository lintRuleViolationRepository;
@@ -91,6 +97,7 @@ public class LintRuleViolationResourceIT {
         lintRuleViolation.setLintRule(lintRule);
         return lintRuleViolation;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -126,12 +133,13 @@ public class LintRuleViolationResourceIT {
 
     @Test
     @Transactional
-    public void createLintRuleViolation() throws Exception {
+    void createLintRuleViolation() throws Exception {
         int databaseSizeBeforeCreate = lintRuleViolationRepository.findAll().size();
         // Create the LintRuleViolation
-        restLintRuleViolationMockMvc.perform(post("/api/lint-rule-violations")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(lintRuleViolation)))
+        restLintRuleViolationMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(lintRuleViolation))
+            )
             .andExpect(status().isCreated());
 
         // Validate the LintRuleViolation in the database
@@ -149,16 +157,17 @@ public class LintRuleViolationResourceIT {
 
     @Test
     @Transactional
-    public void createLintRuleViolationWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = lintRuleViolationRepository.findAll().size();
-
+    void createLintRuleViolationWithExistingId() throws Exception {
         // Create the LintRuleViolation with an existing ID
         lintRuleViolation.setId(1L);
 
+        int databaseSizeBeforeCreate = lintRuleViolationRepository.findAll().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
-        restLintRuleViolationMockMvc.perform(post("/api/lint-rule-violations")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(lintRuleViolation)))
+        restLintRuleViolationMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(lintRuleViolation))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the LintRuleViolation in the database
@@ -166,20 +175,19 @@ public class LintRuleViolationResourceIT {
         assertThat(lintRuleViolationList).hasSize(databaseSizeBeforeCreate);
     }
 
-
     @Test
     @Transactional
-    public void checkNameIsRequired() throws Exception {
+    void checkNameIsRequired() throws Exception {
         int databaseSizeBeforeTest = lintRuleViolationRepository.findAll().size();
         // set the field null
         lintRuleViolation.setName(null);
 
         // Create the LintRuleViolation, which fails.
 
-
-        restLintRuleViolationMockMvc.perform(post("/api/lint-rule-violations")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(lintRuleViolation)))
+        restLintRuleViolationMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(lintRuleViolation))
+            )
             .andExpect(status().isBadRequest());
 
         List<LintRuleViolation> lintRuleViolationList = lintRuleViolationRepository.findAll();
@@ -188,12 +196,13 @@ public class LintRuleViolationResourceIT {
 
     @Test
     @Transactional
-    public void getAllLintRuleViolations() throws Exception {
+    void getAllLintRuleViolations() throws Exception {
         // Initialize the database
         lintRuleViolationRepository.saveAndFlush(lintRuleViolation);
 
         // Get all the lintRuleViolationList
-        restLintRuleViolationMockMvc.perform(get("/api/lint-rule-violations?sort=id,desc"))
+        restLintRuleViolationMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(lintRuleViolation.getId().intValue())))
@@ -205,15 +214,16 @@ public class LintRuleViolationResourceIT {
             .andExpect(jsonPath("$.[*].lineEnd").value(hasItem(DEFAULT_LINE_END)))
             .andExpect(jsonPath("$.[*].jsonPointer").value(hasItem(DEFAULT_JSON_POINTER)));
     }
-    
+
     @Test
     @Transactional
-    public void getLintRuleViolation() throws Exception {
+    void getLintRuleViolation() throws Exception {
         // Initialize the database
         lintRuleViolationRepository.saveAndFlush(lintRuleViolation);
 
         // Get the lintRuleViolation
-        restLintRuleViolationMockMvc.perform(get("/api/lint-rule-violations/{id}", lintRuleViolation.getId()))
+        restLintRuleViolationMockMvc
+            .perform(get(ENTITY_API_URL_ID, lintRuleViolation.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(lintRuleViolation.getId().intValue()))
@@ -225,17 +235,17 @@ public class LintRuleViolationResourceIT {
             .andExpect(jsonPath("$.lineEnd").value(DEFAULT_LINE_END))
             .andExpect(jsonPath("$.jsonPointer").value(DEFAULT_JSON_POINTER));
     }
+
     @Test
     @Transactional
-    public void getNonExistingLintRuleViolation() throws Exception {
+    void getNonExistingLintRuleViolation() throws Exception {
         // Get the lintRuleViolation
-        restLintRuleViolationMockMvc.perform(get("/api/lint-rule-violations/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restLintRuleViolationMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updateLintRuleViolation() throws Exception {
+    void putNewLintRuleViolation() throws Exception {
         // Initialize the database
         lintRuleViolationRepository.saveAndFlush(lintRuleViolation);
 
@@ -254,9 +264,12 @@ public class LintRuleViolationResourceIT {
             .lineEnd(UPDATED_LINE_END)
             .jsonPointer(UPDATED_JSON_POINTER);
 
-        restLintRuleViolationMockMvc.perform(put("/api/lint-rule-violations")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedLintRuleViolation)))
+        restLintRuleViolationMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, updatedLintRuleViolation.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedLintRuleViolation))
+            )
             .andExpect(status().isOk());
 
         // Validate the LintRuleViolation in the database
@@ -274,13 +287,17 @@ public class LintRuleViolationResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingLintRuleViolation() throws Exception {
+    void putNonExistingLintRuleViolation() throws Exception {
         int databaseSizeBeforeUpdate = lintRuleViolationRepository.findAll().size();
+        lintRuleViolation.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restLintRuleViolationMockMvc.perform(put("/api/lint-rule-violations")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(lintRuleViolation)))
+        restLintRuleViolationMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, lintRuleViolation.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(lintRuleViolation))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the LintRuleViolation in the database
@@ -290,15 +307,190 @@ public class LintRuleViolationResourceIT {
 
     @Test
     @Transactional
-    public void deleteLintRuleViolation() throws Exception {
+    void putWithIdMismatchLintRuleViolation() throws Exception {
+        int databaseSizeBeforeUpdate = lintRuleViolationRepository.findAll().size();
+        lintRuleViolation.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restLintRuleViolationMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(lintRuleViolation))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the LintRuleViolation in the database
+        List<LintRuleViolation> lintRuleViolationList = lintRuleViolationRepository.findAll();
+        assertThat(lintRuleViolationList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void putWithMissingIdPathParamLintRuleViolation() throws Exception {
+        int databaseSizeBeforeUpdate = lintRuleViolationRepository.findAll().size();
+        lintRuleViolation.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restLintRuleViolationMockMvc
+            .perform(
+                put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(lintRuleViolation))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the LintRuleViolation in the database
+        List<LintRuleViolation> lintRuleViolationList = lintRuleViolationRepository.findAll();
+        assertThat(lintRuleViolationList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdateLintRuleViolationWithPatch() throws Exception {
+        // Initialize the database
+        lintRuleViolationRepository.saveAndFlush(lintRuleViolation);
+
+        int databaseSizeBeforeUpdate = lintRuleViolationRepository.findAll().size();
+
+        // Update the lintRuleViolation using partial update
+        LintRuleViolation partialUpdatedLintRuleViolation = new LintRuleViolation();
+        partialUpdatedLintRuleViolation.setId(lintRuleViolation.getId());
+
+        partialUpdatedLintRuleViolation.severity(UPDATED_SEVERITY).lineEnd(UPDATED_LINE_END).jsonPointer(UPDATED_JSON_POINTER);
+
+        restLintRuleViolationMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedLintRuleViolation.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedLintRuleViolation))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the LintRuleViolation in the database
+        List<LintRuleViolation> lintRuleViolationList = lintRuleViolationRepository.findAll();
+        assertThat(lintRuleViolationList).hasSize(databaseSizeBeforeUpdate);
+        LintRuleViolation testLintRuleViolation = lintRuleViolationList.get(lintRuleViolationList.size() - 1);
+        assertThat(testLintRuleViolation.getName()).isEqualTo(DEFAULT_NAME);
+        assertThat(testLintRuleViolation.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
+        assertThat(testLintRuleViolation.getUrl()).isEqualTo(DEFAULT_URL);
+        assertThat(testLintRuleViolation.getSeverity()).isEqualTo(UPDATED_SEVERITY);
+        assertThat(testLintRuleViolation.getLineStart()).isEqualTo(DEFAULT_LINE_START);
+        assertThat(testLintRuleViolation.getLineEnd()).isEqualTo(UPDATED_LINE_END);
+        assertThat(testLintRuleViolation.getJsonPointer()).isEqualTo(UPDATED_JSON_POINTER);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdateLintRuleViolationWithPatch() throws Exception {
+        // Initialize the database
+        lintRuleViolationRepository.saveAndFlush(lintRuleViolation);
+
+        int databaseSizeBeforeUpdate = lintRuleViolationRepository.findAll().size();
+
+        // Update the lintRuleViolation using partial update
+        LintRuleViolation partialUpdatedLintRuleViolation = new LintRuleViolation();
+        partialUpdatedLintRuleViolation.setId(lintRuleViolation.getId());
+
+        partialUpdatedLintRuleViolation
+            .name(UPDATED_NAME)
+            .description(UPDATED_DESCRIPTION)
+            .url(UPDATED_URL)
+            .severity(UPDATED_SEVERITY)
+            .lineStart(UPDATED_LINE_START)
+            .lineEnd(UPDATED_LINE_END)
+            .jsonPointer(UPDATED_JSON_POINTER);
+
+        restLintRuleViolationMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedLintRuleViolation.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedLintRuleViolation))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the LintRuleViolation in the database
+        List<LintRuleViolation> lintRuleViolationList = lintRuleViolationRepository.findAll();
+        assertThat(lintRuleViolationList).hasSize(databaseSizeBeforeUpdate);
+        LintRuleViolation testLintRuleViolation = lintRuleViolationList.get(lintRuleViolationList.size() - 1);
+        assertThat(testLintRuleViolation.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testLintRuleViolation.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+        assertThat(testLintRuleViolation.getUrl()).isEqualTo(UPDATED_URL);
+        assertThat(testLintRuleViolation.getSeverity()).isEqualTo(UPDATED_SEVERITY);
+        assertThat(testLintRuleViolation.getLineStart()).isEqualTo(UPDATED_LINE_START);
+        assertThat(testLintRuleViolation.getLineEnd()).isEqualTo(UPDATED_LINE_END);
+        assertThat(testLintRuleViolation.getJsonPointer()).isEqualTo(UPDATED_JSON_POINTER);
+    }
+
+    @Test
+    @Transactional
+    void patchNonExistingLintRuleViolation() throws Exception {
+        int databaseSizeBeforeUpdate = lintRuleViolationRepository.findAll().size();
+        lintRuleViolation.setId(count.incrementAndGet());
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restLintRuleViolationMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, lintRuleViolation.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(lintRuleViolation))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the LintRuleViolation in the database
+        List<LintRuleViolation> lintRuleViolationList = lintRuleViolationRepository.findAll();
+        assertThat(lintRuleViolationList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithIdMismatchLintRuleViolation() throws Exception {
+        int databaseSizeBeforeUpdate = lintRuleViolationRepository.findAll().size();
+        lintRuleViolation.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restLintRuleViolationMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(lintRuleViolation))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the LintRuleViolation in the database
+        List<LintRuleViolation> lintRuleViolationList = lintRuleViolationRepository.findAll();
+        assertThat(lintRuleViolationList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithMissingIdPathParamLintRuleViolation() throws Exception {
+        int databaseSizeBeforeUpdate = lintRuleViolationRepository.findAll().size();
+        lintRuleViolation.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restLintRuleViolationMockMvc
+            .perform(
+                patch(ENTITY_API_URL)
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(lintRuleViolation))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the LintRuleViolation in the database
+        List<LintRuleViolation> lintRuleViolationList = lintRuleViolationRepository.findAll();
+        assertThat(lintRuleViolationList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void deleteLintRuleViolation() throws Exception {
         // Initialize the database
         lintRuleViolationRepository.saveAndFlush(lintRuleViolation);
 
         int databaseSizeBeforeDelete = lintRuleViolationRepository.findAll().size();
 
         // Delete the lintRuleViolation
-        restLintRuleViolationMockMvc.perform(delete("/api/lint-rule-violations/{id}", lintRuleViolation.getId())
-            .accept(MediaType.APPLICATION_JSON))
+        restLintRuleViolationMockMvc
+            .perform(delete(ENTITY_API_URL_ID, lintRuleViolation.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

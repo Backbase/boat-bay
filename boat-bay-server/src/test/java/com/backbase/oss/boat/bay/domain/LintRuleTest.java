@@ -1,13 +1,14 @@
 package com.backbase.oss.boat.bay.domain;
 
-import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
-import com.backbase.oss.boat.bay.web.rest.TestUtil;
 
-public class LintRuleTest {
+import com.backbase.oss.boat.bay.web.rest.TestUtil;
+import org.junit.jupiter.api.Test;
+
+class LintRuleTest {
 
     @Test
-    public void equalsVerifier() throws Exception {
+    void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(LintRule.class);
         LintRule lintRule1 = new LintRule();
         lintRule1.setId(1L);

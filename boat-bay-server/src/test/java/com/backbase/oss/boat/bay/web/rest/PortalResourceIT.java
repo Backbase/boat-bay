@@ -1,39 +1,39 @@
 package com.backbase.oss.boat.bay.web.rest;
 
-import com.backbase.oss.boat.bay.BoatBayApp;
-import com.backbase.oss.boat.bay.domain.Portal;
-import com.backbase.oss.boat.bay.repository.PortalRepository;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Base64Utils;
-import javax.persistence.EntityManager;
-import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.time.ZoneOffset;
-import java.time.ZoneId;
-import java.util.List;
-
 import static com.backbase.oss.boat.bay.web.rest.TestUtil.sameInstant;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.backbase.oss.boat.bay.IntegrationTest;
+import com.backbase.oss.boat.bay.domain.Portal;
+import com.backbase.oss.boat.bay.repository.PortalRepository;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Base64Utils;
+
 /**
  * Integration tests for the {@link PortalResource} REST controller.
  */
-@SpringBootTest(classes = BoatBayApp.class)
+@IntegrationTest
 @AutoConfigureMockMvc
 @WithMockUser
-public class PortalResourceIT {
+class PortalResourceIT {
 
     private static final String DEFAULT_KEY = "AAAAAAAAAA";
     private static final String UPDATED_KEY = "BBBBBBBBBB";
@@ -64,6 +64,12 @@ public class PortalResourceIT {
 
     private static final Boolean DEFAULT_LINTED = false;
     private static final Boolean UPDATED_LINTED = true;
+
+    private static final String ENTITY_API_URL = "/api/portals";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     @Autowired
     private PortalRepository portalRepository;
@@ -96,6 +102,7 @@ public class PortalResourceIT {
             .linted(DEFAULT_LINTED);
         return portal;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -124,12 +131,11 @@ public class PortalResourceIT {
 
     @Test
     @Transactional
-    public void createPortal() throws Exception {
+    void createPortal() throws Exception {
         int databaseSizeBeforeCreate = portalRepository.findAll().size();
         // Create the Portal
-        restPortalMockMvc.perform(post("/api/portals")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(portal)))
+        restPortalMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(portal)))
             .andExpect(status().isCreated());
 
         // Validate the Portal in the database
@@ -144,22 +150,21 @@ public class PortalResourceIT {
         assertThat(testPortal.getContent()).isEqualTo(DEFAULT_CONTENT);
         assertThat(testPortal.getCreatedOn()).isEqualTo(DEFAULT_CREATED_ON);
         assertThat(testPortal.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
-        assertThat(testPortal.isHide()).isEqualTo(DEFAULT_HIDE);
-        assertThat(testPortal.isLinted()).isEqualTo(DEFAULT_LINTED);
+        assertThat(testPortal.getHide()).isEqualTo(DEFAULT_HIDE);
+        assertThat(testPortal.getLinted()).isEqualTo(DEFAULT_LINTED);
     }
 
     @Test
     @Transactional
-    public void createPortalWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = portalRepository.findAll().size();
-
+    void createPortalWithExistingId() throws Exception {
         // Create the Portal with an existing ID
         portal.setId(1L);
 
+        int databaseSizeBeforeCreate = portalRepository.findAll().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
-        restPortalMockMvc.perform(post("/api/portals")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(portal)))
+        restPortalMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(portal)))
             .andExpect(status().isBadRequest());
 
         // Validate the Portal in the database
@@ -167,20 +172,17 @@ public class PortalResourceIT {
         assertThat(portalList).hasSize(databaseSizeBeforeCreate);
     }
 
-
     @Test
     @Transactional
-    public void checkKeyIsRequired() throws Exception {
+    void checkKeyIsRequired() throws Exception {
         int databaseSizeBeforeTest = portalRepository.findAll().size();
         // set the field null
         portal.setKey(null);
 
         // Create the Portal, which fails.
 
-
-        restPortalMockMvc.perform(post("/api/portals")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(portal)))
+        restPortalMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(portal)))
             .andExpect(status().isBadRequest());
 
         List<Portal> portalList = portalRepository.findAll();
@@ -189,17 +191,15 @@ public class PortalResourceIT {
 
     @Test
     @Transactional
-    public void checkNameIsRequired() throws Exception {
+    void checkNameIsRequired() throws Exception {
         int databaseSizeBeforeTest = portalRepository.findAll().size();
         // set the field null
         portal.setName(null);
 
         // Create the Portal, which fails.
 
-
-        restPortalMockMvc.perform(post("/api/portals")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(portal)))
+        restPortalMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(portal)))
             .andExpect(status().isBadRequest());
 
         List<Portal> portalList = portalRepository.findAll();
@@ -208,12 +208,13 @@ public class PortalResourceIT {
 
     @Test
     @Transactional
-    public void getAllPortals() throws Exception {
+    void getAllPortals() throws Exception {
         // Initialize the database
         portalRepository.saveAndFlush(portal);
 
         // Get all the portalList
-        restPortalMockMvc.perform(get("/api/portals?sort=id,desc"))
+        restPortalMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(portal.getId().intValue())))
@@ -228,15 +229,16 @@ public class PortalResourceIT {
             .andExpect(jsonPath("$.[*].hide").value(hasItem(DEFAULT_HIDE.booleanValue())))
             .andExpect(jsonPath("$.[*].linted").value(hasItem(DEFAULT_LINTED.booleanValue())));
     }
-    
+
     @Test
     @Transactional
-    public void getPortal() throws Exception {
+    void getPortal() throws Exception {
         // Initialize the database
         portalRepository.saveAndFlush(portal);
 
         // Get the portal
-        restPortalMockMvc.perform(get("/api/portals/{id}", portal.getId()))
+        restPortalMockMvc
+            .perform(get(ENTITY_API_URL_ID, portal.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(portal.getId().intValue()))
@@ -251,17 +253,17 @@ public class PortalResourceIT {
             .andExpect(jsonPath("$.hide").value(DEFAULT_HIDE.booleanValue()))
             .andExpect(jsonPath("$.linted").value(DEFAULT_LINTED.booleanValue()));
     }
+
     @Test
     @Transactional
-    public void getNonExistingPortal() throws Exception {
+    void getNonExistingPortal() throws Exception {
         // Get the portal
-        restPortalMockMvc.perform(get("/api/portals/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restPortalMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updatePortal() throws Exception {
+    void putNewPortal() throws Exception {
         // Initialize the database
         portalRepository.saveAndFlush(portal);
 
@@ -283,9 +285,12 @@ public class PortalResourceIT {
             .hide(UPDATED_HIDE)
             .linted(UPDATED_LINTED);
 
-        restPortalMockMvc.perform(put("/api/portals")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedPortal)))
+        restPortalMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, updatedPortal.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedPortal))
+            )
             .andExpect(status().isOk());
 
         // Validate the Portal in the database
@@ -300,19 +305,23 @@ public class PortalResourceIT {
         assertThat(testPortal.getContent()).isEqualTo(UPDATED_CONTENT);
         assertThat(testPortal.getCreatedOn()).isEqualTo(UPDATED_CREATED_ON);
         assertThat(testPortal.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
-        assertThat(testPortal.isHide()).isEqualTo(UPDATED_HIDE);
-        assertThat(testPortal.isLinted()).isEqualTo(UPDATED_LINTED);
+        assertThat(testPortal.getHide()).isEqualTo(UPDATED_HIDE);
+        assertThat(testPortal.getLinted()).isEqualTo(UPDATED_LINTED);
     }
 
     @Test
     @Transactional
-    public void updateNonExistingPortal() throws Exception {
+    void putNonExistingPortal() throws Exception {
         int databaseSizeBeforeUpdate = portalRepository.findAll().size();
+        portal.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restPortalMockMvc.perform(put("/api/portals")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(portal)))
+        restPortalMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, portal.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(portal))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Portal in the database
@@ -322,15 +331,200 @@ public class PortalResourceIT {
 
     @Test
     @Transactional
-    public void deletePortal() throws Exception {
+    void putWithIdMismatchPortal() throws Exception {
+        int databaseSizeBeforeUpdate = portalRepository.findAll().size();
+        portal.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restPortalMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(portal))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Portal in the database
+        List<Portal> portalList = portalRepository.findAll();
+        assertThat(portalList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void putWithMissingIdPathParamPortal() throws Exception {
+        int databaseSizeBeforeUpdate = portalRepository.findAll().size();
+        portal.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restPortalMockMvc
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(portal)))
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the Portal in the database
+        List<Portal> portalList = portalRepository.findAll();
+        assertThat(portalList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdatePortalWithPatch() throws Exception {
+        // Initialize the database
+        portalRepository.saveAndFlush(portal);
+
+        int databaseSizeBeforeUpdate = portalRepository.findAll().size();
+
+        // Update the portal using partial update
+        Portal partialUpdatedPortal = new Portal();
+        partialUpdatedPortal.setId(portal.getId());
+
+        partialUpdatedPortal
+            .key(UPDATED_KEY)
+            .name(UPDATED_NAME)
+            .logoUrl(UPDATED_LOGO_URL)
+            .createdOn(UPDATED_CREATED_ON)
+            .createdBy(UPDATED_CREATED_BY)
+            .hide(UPDATED_HIDE)
+            .linted(UPDATED_LINTED);
+
+        restPortalMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedPortal.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedPortal))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the Portal in the database
+        List<Portal> portalList = portalRepository.findAll();
+        assertThat(portalList).hasSize(databaseSizeBeforeUpdate);
+        Portal testPortal = portalList.get(portalList.size() - 1);
+        assertThat(testPortal.getKey()).isEqualTo(UPDATED_KEY);
+        assertThat(testPortal.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testPortal.getSubTitle()).isEqualTo(DEFAULT_SUB_TITLE);
+        assertThat(testPortal.getLogoUrl()).isEqualTo(UPDATED_LOGO_URL);
+        assertThat(testPortal.getLogoLink()).isEqualTo(DEFAULT_LOGO_LINK);
+        assertThat(testPortal.getContent()).isEqualTo(DEFAULT_CONTENT);
+        assertThat(testPortal.getCreatedOn()).isEqualTo(UPDATED_CREATED_ON);
+        assertThat(testPortal.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testPortal.getHide()).isEqualTo(UPDATED_HIDE);
+        assertThat(testPortal.getLinted()).isEqualTo(UPDATED_LINTED);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdatePortalWithPatch() throws Exception {
+        // Initialize the database
+        portalRepository.saveAndFlush(portal);
+
+        int databaseSizeBeforeUpdate = portalRepository.findAll().size();
+
+        // Update the portal using partial update
+        Portal partialUpdatedPortal = new Portal();
+        partialUpdatedPortal.setId(portal.getId());
+
+        partialUpdatedPortal
+            .key(UPDATED_KEY)
+            .name(UPDATED_NAME)
+            .subTitle(UPDATED_SUB_TITLE)
+            .logoUrl(UPDATED_LOGO_URL)
+            .logoLink(UPDATED_LOGO_LINK)
+            .content(UPDATED_CONTENT)
+            .createdOn(UPDATED_CREATED_ON)
+            .createdBy(UPDATED_CREATED_BY)
+            .hide(UPDATED_HIDE)
+            .linted(UPDATED_LINTED);
+
+        restPortalMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedPortal.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedPortal))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the Portal in the database
+        List<Portal> portalList = portalRepository.findAll();
+        assertThat(portalList).hasSize(databaseSizeBeforeUpdate);
+        Portal testPortal = portalList.get(portalList.size() - 1);
+        assertThat(testPortal.getKey()).isEqualTo(UPDATED_KEY);
+        assertThat(testPortal.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testPortal.getSubTitle()).isEqualTo(UPDATED_SUB_TITLE);
+        assertThat(testPortal.getLogoUrl()).isEqualTo(UPDATED_LOGO_URL);
+        assertThat(testPortal.getLogoLink()).isEqualTo(UPDATED_LOGO_LINK);
+        assertThat(testPortal.getContent()).isEqualTo(UPDATED_CONTENT);
+        assertThat(testPortal.getCreatedOn()).isEqualTo(UPDATED_CREATED_ON);
+        assertThat(testPortal.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testPortal.getHide()).isEqualTo(UPDATED_HIDE);
+        assertThat(testPortal.getLinted()).isEqualTo(UPDATED_LINTED);
+    }
+
+    @Test
+    @Transactional
+    void patchNonExistingPortal() throws Exception {
+        int databaseSizeBeforeUpdate = portalRepository.findAll().size();
+        portal.setId(count.incrementAndGet());
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restPortalMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, portal.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(portal))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Portal in the database
+        List<Portal> portalList = portalRepository.findAll();
+        assertThat(portalList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithIdMismatchPortal() throws Exception {
+        int databaseSizeBeforeUpdate = portalRepository.findAll().size();
+        portal.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restPortalMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(portal))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Portal in the database
+        List<Portal> portalList = portalRepository.findAll();
+        assertThat(portalList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithMissingIdPathParamPortal() throws Exception {
+        int databaseSizeBeforeUpdate = portalRepository.findAll().size();
+        portal.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restPortalMockMvc
+            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(portal)))
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the Portal in the database
+        List<Portal> portalList = portalRepository.findAll();
+        assertThat(portalList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void deletePortal() throws Exception {
         // Initialize the database
         portalRepository.saveAndFlush(portal);
 
         int databaseSizeBeforeDelete = portalRepository.findAll().size();
 
         // Delete the portal
-        restPortalMockMvc.perform(delete("/api/portals/{id}", portal.getId())
-            .accept(MediaType.APPLICATION_JSON))
+        restPortalMockMvc
+            .perform(delete(ENTITY_API_URL_ID, portal.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

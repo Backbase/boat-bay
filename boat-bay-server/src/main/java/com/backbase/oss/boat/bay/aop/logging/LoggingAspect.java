@@ -1,8 +1,6 @@
 package com.backbase.oss.boat.bay.aop.logging;
 
-import io.github.jhipster.config.JHipsterConstants;
-
-import org.apache.commons.lang3.StringUtils;
+import java.util.Arrays;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterThrowing;
@@ -13,8 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.Profiles;
-
-import java.util.Arrays;
+import tech.jhipster.config.JHipsterConstants;
 
 /**
  * Aspect for logging execution of service and repository Spring components.
@@ -33,9 +30,11 @@ public class LoggingAspect {
     /**
      * Pointcut that matches all repositories, services and Web REST endpoints.
      */
-    @Pointcut("within(@org.springframework.stereotype.Repository *)" +
+    @Pointcut(
+        "within(@org.springframework.stereotype.Repository *)" +
         " || within(@org.springframework.stereotype.Service *)" +
-        " || within(@org.springframework.web.bind.annotation.RestController *)")
+        " || within(@org.springframework.web.bind.annotation.RestController *)"
+    )
     public void springBeanPointcut() {
         // Method is empty as this is just a Pointcut, the implementations are in the advices.
     }
@@ -43,9 +42,11 @@ public class LoggingAspect {
     /**
      * Pointcut that matches all Spring beans in the application's main packages.
      */
-    @Pointcut("within(com.backbase.oss.boat.bay.repository..*)"+
-        " || within(com.backbase.oss.boat.bay.service..*)"+
-        " || within(com.backbase.oss.boat.bay.web.rest..*)")
+    @Pointcut(
+        "within(com.backbase.oss.boat.bay.repository..*)" +
+        " || within(com.backbase.oss.boat.bay.service..*)" +
+        " || within(com.backbase.oss.boat.bay.web.rest..*)"
+    )
     public void applicationPackagePointcut() {
         // Method is empty as this is just a Pointcut, the implementations are in the advices.
     }
@@ -98,7 +99,7 @@ public class LoggingAspect {
     public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
         Logger log = logger(joinPoint);
         if (log.isDebugEnabled()) {
-            log.debug("Enter: {}() with argument[s] = {}", joinPoint.getSignature().getName(), StringUtils.truncate(Arrays.toString(joinPoint.getArgs()),100));
+            log.debug("Enter: {}() with argument[s] = {}", joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs()));
         }
         try {
             Object result = joinPoint.proceed();

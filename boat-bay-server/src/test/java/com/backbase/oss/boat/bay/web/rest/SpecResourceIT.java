@@ -1,37 +1,5 @@
 package com.backbase.oss.boat.bay.web.rest;
 
-import com.backbase.oss.boat.bay.BoatBayApp;
-import com.backbase.oss.boat.bay.domain.Spec;
-import com.backbase.oss.boat.bay.domain.Portal;
-import com.backbase.oss.boat.bay.domain.Capability;
-import com.backbase.oss.boat.bay.domain.Product;
-import com.backbase.oss.boat.bay.domain.SpecType;
-import com.backbase.oss.boat.bay.domain.ServiceDefinition;
-import com.backbase.oss.boat.bay.repository.SpecRepository;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Base64Utils;
-import javax.persistence.EntityManager;
-import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.time.ZoneOffset;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-
 import static com.backbase.oss.boat.bay.web.rest.TestUtil.sameInstant;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
@@ -39,15 +7,45 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.backbase.oss.boat.bay.IntegrationTest;
+import com.backbase.oss.boat.bay.domain.Portal;
+import com.backbase.oss.boat.bay.domain.Product;
+import com.backbase.oss.boat.bay.domain.ServiceDefinition;
+import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.domain.enumeration.Changes;
+import com.backbase.oss.boat.bay.repository.SpecRepository;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Base64Utils;
+
 /**
  * Integration tests for the {@link SpecResource} REST controller.
  */
-@SpringBootTest(classes = BoatBayApp.class)
+@IntegrationTest
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
-public class SpecResourceIT {
+class SpecResourceIT {
 
     private static final String DEFAULT_KEY = "AAAAAAAAAA";
     private static final String UPDATED_KEY = "BBBBBBBBBB";
@@ -139,6 +137,12 @@ public class SpecResourceIT {
     private static final String DEFAULT_MVN_EXTENSION = "AAAAAAAAAA";
     private static final String UPDATED_MVN_EXTENSION = "BBBBBBBBBB";
 
+    private static final String ENTITY_API_URL = "/api/specs";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
+
     @Autowired
     private SpecRepository specRepository;
 
@@ -202,16 +206,6 @@ public class SpecResourceIT {
         }
         spec.setPortal(portal);
         // Add required entity
-        Capability capability;
-        if (TestUtil.findAll(em, Capability.class).isEmpty()) {
-            capability = CapabilityResourceIT.createEntity(em);
-            em.persist(capability);
-            em.flush();
-        } else {
-            capability = TestUtil.findAll(em, Capability.class).get(0);
-        }
-        spec.setCapability(capability);
-        // Add required entity
         Product product;
         if (TestUtil.findAll(em, Product.class).isEmpty()) {
             product = ProductResourceIT.createEntity(em);
@@ -221,16 +215,6 @@ public class SpecResourceIT {
             product = TestUtil.findAll(em, Product.class).get(0);
         }
         spec.setProduct(product);
-        // Add required entity
-        SpecType specType;
-        if (TestUtil.findAll(em, SpecType.class).isEmpty()) {
-            specType = SpecTypeResourceIT.createEntity(em);
-            em.persist(specType);
-            em.flush();
-        } else {
-            specType = TestUtil.findAll(em, SpecType.class).get(0);
-        }
-        spec.setSpecType(specType);
         // Add required entity
         ServiceDefinition serviceDefinition;
         if (TestUtil.findAll(em, ServiceDefinition.class).isEmpty()) {
@@ -243,6 +227,7 @@ public class SpecResourceIT {
         spec.setServiceDefinition(serviceDefinition);
         return spec;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -292,16 +277,6 @@ public class SpecResourceIT {
         }
         spec.setPortal(portal);
         // Add required entity
-        Capability capability;
-        if (TestUtil.findAll(em, Capability.class).isEmpty()) {
-            capability = CapabilityResourceIT.createUpdatedEntity(em);
-            em.persist(capability);
-            em.flush();
-        } else {
-            capability = TestUtil.findAll(em, Capability.class).get(0);
-        }
-        spec.setCapability(capability);
-        // Add required entity
         Product product;
         if (TestUtil.findAll(em, Product.class).isEmpty()) {
             product = ProductResourceIT.createUpdatedEntity(em);
@@ -311,16 +286,6 @@ public class SpecResourceIT {
             product = TestUtil.findAll(em, Product.class).get(0);
         }
         spec.setProduct(product);
-        // Add required entity
-        SpecType specType;
-        if (TestUtil.findAll(em, SpecType.class).isEmpty()) {
-            specType = SpecTypeResourceIT.createUpdatedEntity(em);
-            em.persist(specType);
-            em.flush();
-        } else {
-            specType = TestUtil.findAll(em, SpecType.class).get(0);
-        }
-        spec.setSpecType(specType);
         // Add required entity
         ServiceDefinition serviceDefinition;
         if (TestUtil.findAll(em, ServiceDefinition.class).isEmpty()) {
@@ -341,12 +306,11 @@ public class SpecResourceIT {
 
     @Test
     @Transactional
-    public void createSpec() throws Exception {
+    void createSpec() throws Exception {
         int databaseSizeBeforeCreate = specRepository.findAll().size();
         // Create the Spec
-        restSpecMockMvc.perform(post("/api/specs")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(spec)))
+        restSpecMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(spec)))
             .andExpect(status().isCreated());
 
         // Validate the Spec in the database
@@ -364,11 +328,11 @@ public class SpecResourceIT {
         assertThat(testSpec.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
         assertThat(testSpec.getChecksum()).isEqualTo(DEFAULT_CHECKSUM);
         assertThat(testSpec.getFilename()).isEqualTo(DEFAULT_FILENAME);
-        assertThat(testSpec.isValid()).isEqualTo(DEFAULT_VALID);
+        assertThat(testSpec.getValid()).isEqualTo(DEFAULT_VALID);
         assertThat(testSpec.getOrder()).isEqualTo(DEFAULT_ORDER);
         assertThat(testSpec.getParseError()).isEqualTo(DEFAULT_PARSE_ERROR);
         assertThat(testSpec.getExternalDocs()).isEqualTo(DEFAULT_EXTERNAL_DOCS);
-        assertThat(testSpec.isHide()).isEqualTo(DEFAULT_HIDE);
+        assertThat(testSpec.getHide()).isEqualTo(DEFAULT_HIDE);
         assertThat(testSpec.getGrade()).isEqualTo(DEFAULT_GRADE);
         assertThat(testSpec.getChanges()).isEqualTo(DEFAULT_CHANGES);
         assertThat(testSpec.getSourcePath()).isEqualTo(DEFAULT_SOURCE_PATH);
@@ -387,16 +351,15 @@ public class SpecResourceIT {
 
     @Test
     @Transactional
-    public void createSpecWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = specRepository.findAll().size();
-
+    void createSpecWithExistingId() throws Exception {
         // Create the Spec with an existing ID
         spec.setId(1L);
 
+        int databaseSizeBeforeCreate = specRepository.findAll().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
-        restSpecMockMvc.perform(post("/api/specs")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(spec)))
+        restSpecMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(spec)))
             .andExpect(status().isBadRequest());
 
         // Validate the Spec in the database
@@ -404,20 +367,17 @@ public class SpecResourceIT {
         assertThat(specList).hasSize(databaseSizeBeforeCreate);
     }
 
-
     @Test
     @Transactional
-    public void checkKeyIsRequired() throws Exception {
+    void checkKeyIsRequired() throws Exception {
         int databaseSizeBeforeTest = specRepository.findAll().size();
         // set the field null
         spec.setKey(null);
 
         // Create the Spec, which fails.
 
-
-        restSpecMockMvc.perform(post("/api/specs")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(spec)))
+        restSpecMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(spec)))
             .andExpect(status().isBadRequest());
 
         List<Spec> specList = specRepository.findAll();
@@ -426,17 +386,15 @@ public class SpecResourceIT {
 
     @Test
     @Transactional
-    public void checkNameIsRequired() throws Exception {
+    void checkNameIsRequired() throws Exception {
         int databaseSizeBeforeTest = specRepository.findAll().size();
         // set the field null
         spec.setName(null);
 
         // Create the Spec, which fails.
 
-
-        restSpecMockMvc.perform(post("/api/specs")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(spec)))
+        restSpecMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(spec)))
             .andExpect(status().isBadRequest());
 
         List<Spec> specList = specRepository.findAll();
@@ -445,17 +403,15 @@ public class SpecResourceIT {
 
     @Test
     @Transactional
-    public void checkVersionIsRequired() throws Exception {
+    void checkVersionIsRequired() throws Exception {
         int databaseSizeBeforeTest = specRepository.findAll().size();
         // set the field null
         spec.setVersion(null);
 
         // Create the Spec, which fails.
 
-
-        restSpecMockMvc.perform(post("/api/specs")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(spec)))
+        restSpecMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(spec)))
             .andExpect(status().isBadRequest());
 
         List<Spec> specList = specRepository.findAll();
@@ -464,17 +420,15 @@ public class SpecResourceIT {
 
     @Test
     @Transactional
-    public void checkCreatedOnIsRequired() throws Exception {
+    void checkCreatedOnIsRequired() throws Exception {
         int databaseSizeBeforeTest = specRepository.findAll().size();
         // set the field null
         spec.setCreatedOn(null);
 
         // Create the Spec, which fails.
 
-
-        restSpecMockMvc.perform(post("/api/specs")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(spec)))
+        restSpecMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(spec)))
             .andExpect(status().isBadRequest());
 
         List<Spec> specList = specRepository.findAll();
@@ -483,17 +437,15 @@ public class SpecResourceIT {
 
     @Test
     @Transactional
-    public void checkCreatedByIsRequired() throws Exception {
+    void checkCreatedByIsRequired() throws Exception {
         int databaseSizeBeforeTest = specRepository.findAll().size();
         // set the field null
         spec.setCreatedBy(null);
 
         // Create the Spec, which fails.
 
-
-        restSpecMockMvc.perform(post("/api/specs")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(spec)))
+        restSpecMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(spec)))
             .andExpect(status().isBadRequest());
 
         List<Spec> specList = specRepository.findAll();
@@ -502,17 +454,15 @@ public class SpecResourceIT {
 
     @Test
     @Transactional
-    public void checkChecksumIsRequired() throws Exception {
+    void checkChecksumIsRequired() throws Exception {
         int databaseSizeBeforeTest = specRepository.findAll().size();
         // set the field null
         spec.setChecksum(null);
 
         // Create the Spec, which fails.
 
-
-        restSpecMockMvc.perform(post("/api/specs")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(spec)))
+        restSpecMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(spec)))
             .andExpect(status().isBadRequest());
 
         List<Spec> specList = specRepository.findAll();
@@ -521,17 +471,15 @@ public class SpecResourceIT {
 
     @Test
     @Transactional
-    public void checkFilenameIsRequired() throws Exception {
+    void checkFilenameIsRequired() throws Exception {
         int databaseSizeBeforeTest = specRepository.findAll().size();
         // set the field null
         spec.setFilename(null);
 
         // Create the Spec, which fails.
 
-
-        restSpecMockMvc.perform(post("/api/specs")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(spec)))
+        restSpecMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(spec)))
             .andExpect(status().isBadRequest());
 
         List<Spec> specList = specRepository.findAll();
@@ -540,17 +488,15 @@ public class SpecResourceIT {
 
     @Test
     @Transactional
-    public void checkValidIsRequired() throws Exception {
+    void checkValidIsRequired() throws Exception {
         int databaseSizeBeforeTest = specRepository.findAll().size();
         // set the field null
         spec.setValid(null);
 
         // Create the Spec, which fails.
 
-
-        restSpecMockMvc.perform(post("/api/specs")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(spec)))
+        restSpecMockMvc
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(spec)))
             .andExpect(status().isBadRequest());
 
         List<Spec> specList = specRepository.findAll();
@@ -559,12 +505,13 @@ public class SpecResourceIT {
 
     @Test
     @Transactional
-    public void getAllSpecs() throws Exception {
+    void getAllSpecs() throws Exception {
         // Initialize the database
         specRepository.saveAndFlush(spec);
 
         // Get all the specList
-        restSpecMockMvc.perform(get("/api/specs?sort=id,desc"))
+        restSpecMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(spec.getId().intValue())))
@@ -599,35 +546,34 @@ public class SpecResourceIT {
             .andExpect(jsonPath("$.[*].mvnClassifier").value(hasItem(DEFAULT_MVN_CLASSIFIER)))
             .andExpect(jsonPath("$.[*].mvnExtension").value(hasItem(DEFAULT_MVN_EXTENSION)));
     }
-    
-    @SuppressWarnings({"unchecked"})
-    public void getAllSpecsWithEagerRelationshipsIsEnabled() throws Exception {
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllSpecsWithEagerRelationshipsIsEnabled() throws Exception {
         when(specRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
 
-        restSpecMockMvc.perform(get("/api/specs?eagerload=true"))
-            .andExpect(status().isOk());
+        restSpecMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
 
         verify(specRepositoryMock, times(1)).findAllWithEagerRelationships(any());
     }
 
-    @SuppressWarnings({"unchecked"})
-    public void getAllSpecsWithEagerRelationshipsIsNotEnabled() throws Exception {
+    @SuppressWarnings({ "unchecked" })
+    void getAllSpecsWithEagerRelationshipsIsNotEnabled() throws Exception {
         when(specRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
 
-        restSpecMockMvc.perform(get("/api/specs?eagerload=true"))
-            .andExpect(status().isOk());
+        restSpecMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
 
         verify(specRepositoryMock, times(1)).findAllWithEagerRelationships(any());
     }
 
     @Test
     @Transactional
-    public void getSpec() throws Exception {
+    void getSpec() throws Exception {
         // Initialize the database
         specRepository.saveAndFlush(spec);
 
         // Get the spec
-        restSpecMockMvc.perform(get("/api/specs/{id}", spec.getId()))
+        restSpecMockMvc
+            .perform(get(ENTITY_API_URL_ID, spec.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(spec.getId().intValue()))
@@ -662,17 +608,17 @@ public class SpecResourceIT {
             .andExpect(jsonPath("$.mvnClassifier").value(DEFAULT_MVN_CLASSIFIER))
             .andExpect(jsonPath("$.mvnExtension").value(DEFAULT_MVN_EXTENSION));
     }
+
     @Test
     @Transactional
-    public void getNonExistingSpec() throws Exception {
+    void getNonExistingSpec() throws Exception {
         // Get the spec
-        restSpecMockMvc.perform(get("/api/specs/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restSpecMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updateSpec() throws Exception {
+    void putNewSpec() throws Exception {
         // Initialize the database
         specRepository.saveAndFlush(spec);
 
@@ -714,9 +660,12 @@ public class SpecResourceIT {
             .mvnClassifier(UPDATED_MVN_CLASSIFIER)
             .mvnExtension(UPDATED_MVN_EXTENSION);
 
-        restSpecMockMvc.perform(put("/api/specs")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedSpec)))
+        restSpecMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, updatedSpec.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedSpec))
+            )
             .andExpect(status().isOk());
 
         // Validate the Spec in the database
@@ -734,11 +683,11 @@ public class SpecResourceIT {
         assertThat(testSpec.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
         assertThat(testSpec.getChecksum()).isEqualTo(UPDATED_CHECKSUM);
         assertThat(testSpec.getFilename()).isEqualTo(UPDATED_FILENAME);
-        assertThat(testSpec.isValid()).isEqualTo(UPDATED_VALID);
+        assertThat(testSpec.getValid()).isEqualTo(UPDATED_VALID);
         assertThat(testSpec.getOrder()).isEqualTo(UPDATED_ORDER);
         assertThat(testSpec.getParseError()).isEqualTo(UPDATED_PARSE_ERROR);
         assertThat(testSpec.getExternalDocs()).isEqualTo(UPDATED_EXTERNAL_DOCS);
-        assertThat(testSpec.isHide()).isEqualTo(UPDATED_HIDE);
+        assertThat(testSpec.getHide()).isEqualTo(UPDATED_HIDE);
         assertThat(testSpec.getGrade()).isEqualTo(UPDATED_GRADE);
         assertThat(testSpec.getChanges()).isEqualTo(UPDATED_CHANGES);
         assertThat(testSpec.getSourcePath()).isEqualTo(UPDATED_SOURCE_PATH);
@@ -757,13 +706,17 @@ public class SpecResourceIT {
 
     @Test
     @Transactional
-    public void updateNonExistingSpec() throws Exception {
+    void putNonExistingSpec() throws Exception {
         int databaseSizeBeforeUpdate = specRepository.findAll().size();
+        spec.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restSpecMockMvc.perform(put("/api/specs")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(spec)))
+        restSpecMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, spec.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(spec))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Spec in the database
@@ -773,15 +726,272 @@ public class SpecResourceIT {
 
     @Test
     @Transactional
-    public void deleteSpec() throws Exception {
+    void putWithIdMismatchSpec() throws Exception {
+        int databaseSizeBeforeUpdate = specRepository.findAll().size();
+        spec.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restSpecMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(spec))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Spec in the database
+        List<Spec> specList = specRepository.findAll();
+        assertThat(specList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void putWithMissingIdPathParamSpec() throws Exception {
+        int databaseSizeBeforeUpdate = specRepository.findAll().size();
+        spec.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restSpecMockMvc
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(spec)))
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the Spec in the database
+        List<Spec> specList = specRepository.findAll();
+        assertThat(specList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdateSpecWithPatch() throws Exception {
+        // Initialize the database
+        specRepository.saveAndFlush(spec);
+
+        int databaseSizeBeforeUpdate = specRepository.findAll().size();
+
+        // Update the spec using partial update
+        Spec partialUpdatedSpec = new Spec();
+        partialUpdatedSpec.setId(spec.getId());
+
+        partialUpdatedSpec
+            .key(UPDATED_KEY)
+            .name(UPDATED_NAME)
+            .title(UPDATED_TITLE)
+            .icon(UPDATED_ICON)
+            .openApi(UPDATED_OPEN_API)
+            .createdOn(UPDATED_CREATED_ON)
+            .createdBy(UPDATED_CREATED_BY)
+            .checksum(UPDATED_CHECKSUM)
+            .valid(UPDATED_VALID)
+            .parseError(UPDATED_PARSE_ERROR)
+            .externalDocs(UPDATED_EXTERNAL_DOCS)
+            .hide(UPDATED_HIDE)
+            .grade(UPDATED_GRADE)
+            .sourceName(UPDATED_SOURCE_NAME)
+            .sourceUrl(UPDATED_SOURCE_URL)
+            .sourceCreatedOn(UPDATED_SOURCE_CREATED_ON)
+            .sourceLastModifiedBy(UPDATED_SOURCE_LAST_MODIFIED_BY)
+            .mvnArtifactId(UPDATED_MVN_ARTIFACT_ID)
+            .mvnExtension(UPDATED_MVN_EXTENSION);
+
+        restSpecMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedSpec.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedSpec))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the Spec in the database
+        List<Spec> specList = specRepository.findAll();
+        assertThat(specList).hasSize(databaseSizeBeforeUpdate);
+        Spec testSpec = specList.get(specList.size() - 1);
+        assertThat(testSpec.getKey()).isEqualTo(UPDATED_KEY);
+        assertThat(testSpec.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testSpec.getVersion()).isEqualTo(DEFAULT_VERSION);
+        assertThat(testSpec.getTitle()).isEqualTo(UPDATED_TITLE);
+        assertThat(testSpec.getIcon()).isEqualTo(UPDATED_ICON);
+        assertThat(testSpec.getOpenApi()).isEqualTo(UPDATED_OPEN_API);
+        assertThat(testSpec.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
+        assertThat(testSpec.getCreatedOn()).isEqualTo(UPDATED_CREATED_ON);
+        assertThat(testSpec.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testSpec.getChecksum()).isEqualTo(UPDATED_CHECKSUM);
+        assertThat(testSpec.getFilename()).isEqualTo(DEFAULT_FILENAME);
+        assertThat(testSpec.getValid()).isEqualTo(UPDATED_VALID);
+        assertThat(testSpec.getOrder()).isEqualTo(DEFAULT_ORDER);
+        assertThat(testSpec.getParseError()).isEqualTo(UPDATED_PARSE_ERROR);
+        assertThat(testSpec.getExternalDocs()).isEqualTo(UPDATED_EXTERNAL_DOCS);
+        assertThat(testSpec.getHide()).isEqualTo(UPDATED_HIDE);
+        assertThat(testSpec.getGrade()).isEqualTo(UPDATED_GRADE);
+        assertThat(testSpec.getChanges()).isEqualTo(DEFAULT_CHANGES);
+        assertThat(testSpec.getSourcePath()).isEqualTo(DEFAULT_SOURCE_PATH);
+        assertThat(testSpec.getSourceName()).isEqualTo(UPDATED_SOURCE_NAME);
+        assertThat(testSpec.getSourceUrl()).isEqualTo(UPDATED_SOURCE_URL);
+        assertThat(testSpec.getSourceCreatedBy()).isEqualTo(DEFAULT_SOURCE_CREATED_BY);
+        assertThat(testSpec.getSourceCreatedOn()).isEqualTo(UPDATED_SOURCE_CREATED_ON);
+        assertThat(testSpec.getSourceLastModifiedOn()).isEqualTo(DEFAULT_SOURCE_LAST_MODIFIED_ON);
+        assertThat(testSpec.getSourceLastModifiedBy()).isEqualTo(UPDATED_SOURCE_LAST_MODIFIED_BY);
+        assertThat(testSpec.getMvnGroupId()).isEqualTo(DEFAULT_MVN_GROUP_ID);
+        assertThat(testSpec.getMvnArtifactId()).isEqualTo(UPDATED_MVN_ARTIFACT_ID);
+        assertThat(testSpec.getMvnVersion()).isEqualTo(DEFAULT_MVN_VERSION);
+        assertThat(testSpec.getMvnClassifier()).isEqualTo(DEFAULT_MVN_CLASSIFIER);
+        assertThat(testSpec.getMvnExtension()).isEqualTo(UPDATED_MVN_EXTENSION);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdateSpecWithPatch() throws Exception {
+        // Initialize the database
+        specRepository.saveAndFlush(spec);
+
+        int databaseSizeBeforeUpdate = specRepository.findAll().size();
+
+        // Update the spec using partial update
+        Spec partialUpdatedSpec = new Spec();
+        partialUpdatedSpec.setId(spec.getId());
+
+        partialUpdatedSpec
+            .key(UPDATED_KEY)
+            .name(UPDATED_NAME)
+            .version(UPDATED_VERSION)
+            .title(UPDATED_TITLE)
+            .icon(UPDATED_ICON)
+            .openApi(UPDATED_OPEN_API)
+            .description(UPDATED_DESCRIPTION)
+            .createdOn(UPDATED_CREATED_ON)
+            .createdBy(UPDATED_CREATED_BY)
+            .checksum(UPDATED_CHECKSUM)
+            .filename(UPDATED_FILENAME)
+            .valid(UPDATED_VALID)
+            .order(UPDATED_ORDER)
+            .parseError(UPDATED_PARSE_ERROR)
+            .externalDocs(UPDATED_EXTERNAL_DOCS)
+            .hide(UPDATED_HIDE)
+            .grade(UPDATED_GRADE)
+            .changes(UPDATED_CHANGES)
+            .sourcePath(UPDATED_SOURCE_PATH)
+            .sourceName(UPDATED_SOURCE_NAME)
+            .sourceUrl(UPDATED_SOURCE_URL)
+            .sourceCreatedBy(UPDATED_SOURCE_CREATED_BY)
+            .sourceCreatedOn(UPDATED_SOURCE_CREATED_ON)
+            .sourceLastModifiedOn(UPDATED_SOURCE_LAST_MODIFIED_ON)
+            .sourceLastModifiedBy(UPDATED_SOURCE_LAST_MODIFIED_BY)
+            .mvnGroupId(UPDATED_MVN_GROUP_ID)
+            .mvnArtifactId(UPDATED_MVN_ARTIFACT_ID)
+            .mvnVersion(UPDATED_MVN_VERSION)
+            .mvnClassifier(UPDATED_MVN_CLASSIFIER)
+            .mvnExtension(UPDATED_MVN_EXTENSION);
+
+        restSpecMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedSpec.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedSpec))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the Spec in the database
+        List<Spec> specList = specRepository.findAll();
+        assertThat(specList).hasSize(databaseSizeBeforeUpdate);
+        Spec testSpec = specList.get(specList.size() - 1);
+        assertThat(testSpec.getKey()).isEqualTo(UPDATED_KEY);
+        assertThat(testSpec.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testSpec.getVersion()).isEqualTo(UPDATED_VERSION);
+        assertThat(testSpec.getTitle()).isEqualTo(UPDATED_TITLE);
+        assertThat(testSpec.getIcon()).isEqualTo(UPDATED_ICON);
+        assertThat(testSpec.getOpenApi()).isEqualTo(UPDATED_OPEN_API);
+        assertThat(testSpec.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+        assertThat(testSpec.getCreatedOn()).isEqualTo(UPDATED_CREATED_ON);
+        assertThat(testSpec.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testSpec.getChecksum()).isEqualTo(UPDATED_CHECKSUM);
+        assertThat(testSpec.getFilename()).isEqualTo(UPDATED_FILENAME);
+        assertThat(testSpec.getValid()).isEqualTo(UPDATED_VALID);
+        assertThat(testSpec.getOrder()).isEqualTo(UPDATED_ORDER);
+        assertThat(testSpec.getParseError()).isEqualTo(UPDATED_PARSE_ERROR);
+        assertThat(testSpec.getExternalDocs()).isEqualTo(UPDATED_EXTERNAL_DOCS);
+        assertThat(testSpec.getHide()).isEqualTo(UPDATED_HIDE);
+        assertThat(testSpec.getGrade()).isEqualTo(UPDATED_GRADE);
+        assertThat(testSpec.getChanges()).isEqualTo(UPDATED_CHANGES);
+        assertThat(testSpec.getSourcePath()).isEqualTo(UPDATED_SOURCE_PATH);
+        assertThat(testSpec.getSourceName()).isEqualTo(UPDATED_SOURCE_NAME);
+        assertThat(testSpec.getSourceUrl()).isEqualTo(UPDATED_SOURCE_URL);
+        assertThat(testSpec.getSourceCreatedBy()).isEqualTo(UPDATED_SOURCE_CREATED_BY);
+        assertThat(testSpec.getSourceCreatedOn()).isEqualTo(UPDATED_SOURCE_CREATED_ON);
+        assertThat(testSpec.getSourceLastModifiedOn()).isEqualTo(UPDATED_SOURCE_LAST_MODIFIED_ON);
+        assertThat(testSpec.getSourceLastModifiedBy()).isEqualTo(UPDATED_SOURCE_LAST_MODIFIED_BY);
+        assertThat(testSpec.getMvnGroupId()).isEqualTo(UPDATED_MVN_GROUP_ID);
+        assertThat(testSpec.getMvnArtifactId()).isEqualTo(UPDATED_MVN_ARTIFACT_ID);
+        assertThat(testSpec.getMvnVersion()).isEqualTo(UPDATED_MVN_VERSION);
+        assertThat(testSpec.getMvnClassifier()).isEqualTo(UPDATED_MVN_CLASSIFIER);
+        assertThat(testSpec.getMvnExtension()).isEqualTo(UPDATED_MVN_EXTENSION);
+    }
+
+    @Test
+    @Transactional
+    void patchNonExistingSpec() throws Exception {
+        int databaseSizeBeforeUpdate = specRepository.findAll().size();
+        spec.setId(count.incrementAndGet());
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restSpecMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, spec.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(spec))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Spec in the database
+        List<Spec> specList = specRepository.findAll();
+        assertThat(specList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithIdMismatchSpec() throws Exception {
+        int databaseSizeBeforeUpdate = specRepository.findAll().size();
+        spec.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restSpecMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(spec))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the Spec in the database
+        List<Spec> specList = specRepository.findAll();
+        assertThat(specList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithMissingIdPathParamSpec() throws Exception {
+        int databaseSizeBeforeUpdate = specRepository.findAll().size();
+        spec.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restSpecMockMvc
+            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(spec)))
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the Spec in the database
+        List<Spec> specList = specRepository.findAll();
+        assertThat(specList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void deleteSpec() throws Exception {
         // Initialize the database
         specRepository.saveAndFlush(spec);
 
         int databaseSizeBeforeDelete = specRepository.findAll().size();
 
         // Delete the spec
-        restSpecMockMvc.perform(delete("/api/specs/{id}", spec.getId())
-            .accept(MediaType.APPLICATION_JSON))
+        restSpecMockMvc
+            .perform(delete(ENTITY_API_URL_ID, spec.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

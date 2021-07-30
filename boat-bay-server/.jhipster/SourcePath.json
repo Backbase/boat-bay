@@ -15,7 +15,6 @@
       "otherEntityField": "name"
     }
   ],
-  "changelogDate": "20210105153413",
   "entityTableName": "source_path",
   "dto": "no",
   "pagination": "no",
@@ -24,6 +23,6 @@
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "clientRootFolder": "",
-  "applications": "*"
+  "applications": "*",
+  "changelogDate": "20210729083044"
 }

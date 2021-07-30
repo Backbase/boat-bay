@@ -1,16 +1,14 @@
 package com.backbase.oss.boat.bay.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.*;
+import javax.validation.constraints.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Product.
@@ -55,15 +53,17 @@ public class Product implements Serializable {
 
     @OneToMany(mappedBy = "product")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "specs", "product" }, allowSetters = true)
     private Set<ProductRelease> productReleases = new HashSet<>();
 
     @OneToMany(mappedBy = "product")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "serviceDefinitions", "product" }, allowSetters = true)
     private Set<Capability> capabilities = new HashSet<>();
 
     @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties(value = "products", allowSetters = true)
+    @JsonIgnoreProperties(value = { "products", "lintRules", "zallyConfig" }, allowSetters = true)
     private Portal portal;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -75,8 +75,13 @@ public class Product implements Serializable {
         this.id = id;
     }
 
+    public Product id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public String getKey() {
-        return key;
+        return this.key;
     }
 
     public Product key(String key) {
@@ -89,7 +94,7 @@ public class Product implements Serializable {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public Product name(String name) {
@@ -102,7 +107,7 @@ public class Product implements Serializable {
     }
 
     public Integer getOrder() {
-        return order;
+        return this.order;
     }
 
     public Product order(Integer order) {
@@ -115,7 +120,7 @@ public class Product implements Serializable {
     }
 
     public String getContent() {
-        return content;
+        return this.content;
     }
 
     public Product content(String content) {
@@ -128,7 +133,7 @@ public class Product implements Serializable {
     }
 
     public ZonedDateTime getCreatedOn() {
-        return createdOn;
+        return this.createdOn;
     }
 
     public Product createdOn(ZonedDateTime createdOn) {
@@ -141,7 +146,7 @@ public class Product implements Serializable {
     }
 
     public String getCreatedBy() {
-        return createdBy;
+        return this.createdBy;
     }
 
     public Product createdBy(String createdBy) {
@@ -153,8 +158,8 @@ public class Product implements Serializable {
         this.createdBy = createdBy;
     }
 
-    public Boolean isHide() {
-        return hide;
+    public Boolean getHide() {
+        return this.hide;
     }
 
     public Product hide(Boolean hide) {
@@ -167,7 +172,7 @@ public class Product implements Serializable {
     }
 
     public String getJiraProjectId() {
-        return jiraProjectId;
+        return this.jiraProjectId;
     }
 
     public Product jiraProjectId(String jiraProjectId) {
@@ -180,11 +185,11 @@ public class Product implements Serializable {
     }
 
     public Set<ProductRelease> getProductReleases() {
-        return productReleases;
+        return this.productReleases;
     }
 
     public Product productReleases(Set<ProductRelease> productReleases) {
-        this.productReleases = productReleases;
+        this.setProductReleases(productReleases);
         return this;
     }
 
@@ -201,15 +206,21 @@ public class Product implements Serializable {
     }
 
     public void setProductReleases(Set<ProductRelease> productReleases) {
+        if (this.productReleases != null) {
+            this.productReleases.forEach(i -> i.setProduct(null));
+        }
+        if (productReleases != null) {
+            productReleases.forEach(i -> i.setProduct(this));
+        }
         this.productReleases = productReleases;
     }
 
     public Set<Capability> getCapabilities() {
-        return capabilities;
+        return this.capabilities;
     }
 
     public Product capabilities(Set<Capability> capabilities) {
-        this.capabilities = capabilities;
+        this.setCapabilities(capabilities);
         return this;
     }
 
@@ -226,21 +237,28 @@ public class Product implements Serializable {
     }
 
     public void setCapabilities(Set<Capability> capabilities) {
+        if (this.capabilities != null) {
+            this.capabilities.forEach(i -> i.setProduct(null));
+        }
+        if (capabilities != null) {
+            capabilities.forEach(i -> i.setProduct(this));
+        }
         this.capabilities = capabilities;
     }
 
     public Portal getPortal() {
-        return portal;
+        return this.portal;
     }
 
     public Product portal(Portal portal) {
-        this.portal = portal;
+        this.setPortal(portal);
         return this;
     }
 
     public void setPortal(Portal portal) {
         this.portal = portal;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -256,7 +274,8 @@ public class Product implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
     // prettier-ignore
@@ -270,7 +289,7 @@ public class Product implements Serializable {
             ", content='" + getContent() + "'" +
             ", createdOn='" + getCreatedOn() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
-            ", hide='" + isHide() + "'" +
+            ", hide='" + getHide() + "'" +
             ", jiraProjectId='" + getJiraProjectId() + "'" +
             "}";
     }
