@@ -1,0 +1,33 @@
+{
+  "boatbayApp": {
+    "capability": {
+      "home": {
+        "title": "Capabilities",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Capability",
+        "createOrEditLabel": "Create or edit a Capability",
+        "notFound": "No Capabilities found"
+      },
+      "created": "A new Capability is created with identifier {{ param }}",
+      "updated": "A Capability is updated with identifier {{ param }}",
+      "deleted": "A Capability is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Capability {{ id }}?"
+      },
+      "detail": {
+        "title": "Capability"
+      },
+      "id": "ID",
+      "key": "Key",
+      "name": "Name",
+      "order": "Order",
+      "subTitle": "Sub Title",
+      "content": "Content",
+      "createdOn": "Created On",
+      "createdBy": "Created By",
+      "hide": "Hide",
+      "serviceDefinition": "Service Definition",
+      "product": "Product"
+    }
+  }
+}
