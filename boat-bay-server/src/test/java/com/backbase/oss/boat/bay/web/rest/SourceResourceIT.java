@@ -41,8 +41,8 @@ class SourceResourceIT {
     private static final String DEFAULT_KEY = "AAAAAAAAAA";
     private static final String UPDATED_KEY = "BBBBBBBBBB";
 
-    private static final SourceType DEFAULT_TYPE = SourceType.GIT;
-    private static final SourceType UPDATED_TYPE = SourceType.JFROG;
+    private static final SourceType DEFAULT_TYPE = SourceType.JFROG;
+    private static final SourceType UPDATED_TYPE = SourceType.BOAT_MAVEN_PLUGIN;
 
     private static final String DEFAULT_BASE_URL = "AAAAAAAAAA";
     private static final String UPDATED_BASE_URL = "BBBBBBBBBB";

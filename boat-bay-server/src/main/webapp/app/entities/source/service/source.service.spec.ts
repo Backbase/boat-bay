@@ -29,7 +29,7 @@ describe('Service Tests', () => {
         id: 0,
         name: 'AAAAAAA',
         key: 'AAAAAAA',
-        type: SourceType.GIT,
+        type: SourceType.JFROG,
         baseUrl: 'AAAAAAA',
         active: false,
         filterArtifactsName: 'AAAAAAA',

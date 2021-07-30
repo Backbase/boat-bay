@@ -20,11 +20,6 @@ public class ScanResult {
     private final SourceScannerOptions scannerOptions;
     private final List<ProductRelease> productReleases;
 
-
-
-
-
-
     public ScanResult(Source source, SourceScannerOptions sourceScannerOptions) {
         this.source = source;
         this.scannerOptions = sourceScannerOptions;

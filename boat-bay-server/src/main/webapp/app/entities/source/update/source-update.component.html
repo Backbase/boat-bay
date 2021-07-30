@@ -37,10 +37,7 @@
           <label class="form-control-label" jhiTranslate="boatbayApp.source.type" for="field_type">Type</label>
           <select class="form-control" name="type" formControlName="type" id="field_type" data-cy="type">
             <option [ngValue]="null">{{ 'boatbayApp.SourceType.null' | translate }}</option>
-            <option value="GIT">{{ 'boatbayApp.SourceType.GIT' | translate }}</option>
             <option value="JFROG">{{ 'boatbayApp.SourceType.JFROG' | translate }}</option>
-            <option value="HTTP">{{ 'boatbayApp.SourceType.HTTP' | translate }}</option>
-            <option value="FILE_SYSTEM">{{ 'boatbayApp.SourceType.FILE_SYSTEM' | translate }}</option>
             <option value="BOAT_MAVEN_PLUGIN">{{ 'boatbayApp.SourceType.BOAT_MAVEN_PLUGIN' | translate }}</option>
             <option value="MAVEN">{{ 'boatbayApp.SourceType.MAVEN' | translate }}</option>
           </select>

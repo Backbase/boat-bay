@@ -7,6 +7,21 @@
       "jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)",
       "entities": {
         "main": "Entities",
+        "dashboard": "Dashboard",
+        "portal": "Portal",
+        "productRelease": "Product Release",
+        "product": "Product",
+        "capability": "Capability",
+        "serviceDefinition": "Service Definition",
+        "spec": "Spec",
+        "tag": "Tag",
+        "specType": "Spec Type",
+        "source": "Source",
+        "sourcePath": "Source Path",
+        "lintRule": "Lint Rule",
+        "lintReport": "Lint Report",
+        "lintRuleViolation": "Lint Rule Violation",
+        "zallyConfig": "Zally Config",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
       },
       "account": {

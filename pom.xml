@@ -419,7 +419,7 @@
     <modules>
         <module>boat-bay-api</module>
         <module>boat-bay-client</module>
-        <module>boat-bay-server</module>
+        <module>boat-bay-server-naked</module>
     </modules>
 </project>
 
