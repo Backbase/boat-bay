@@ -7,7 +7,7 @@
     <artifactId>boat-bay</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>Boat Bay Parent</name>
+    <name>Boat Bay ::  Parent</name>
 
 
     <properties>
