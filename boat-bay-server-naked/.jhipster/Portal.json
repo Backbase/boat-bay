@@ -1,0 +1,80 @@
+{
+  "name": "Portal",
+  "fields": [
+    {
+      "fieldName": "key",
+      "fieldType": "String",
+      "fieldValidateRules": ["required", "unique"]
+    },
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "subTitle",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "logoUrl",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "logoLink",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "content",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text"
+    },
+    {
+      "fieldName": "createdOn",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "createdBy",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "hide",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "linted",
+      "fieldType": "Boolean"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "product",
+      "otherEntityRelationshipName": "portal",
+      "relationshipName": "product"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "lintRule",
+      "otherEntityRelationshipName": "portal",
+      "relationshipName": "lintRule"
+    },
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "zallyConfig",
+      "otherEntityRelationshipName": "portal",
+      "relationshipName": "zallyConfig",
+      "otherEntityField": "name",
+      "ownerSide": false
+    }
+  ],
+  "entityTableName": "portal",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20210730113930"
+}

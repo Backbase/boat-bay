@@ -1,0 +1,29 @@
+{
+  "boatbayApp": {
+    "lintReport": {
+      "home": {
+        "title": "Lint Reports",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Lint Report",
+        "createOrEditLabel": "Create or edit a Lint Report",
+        "notFound": "No Lint Reports found"
+      },
+      "created": "A new Lint Report is created with identifier {{ param }}",
+      "updated": "A Lint Report is updated with identifier {{ param }}",
+      "deleted": "A Lint Report is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Lint Report {{ id }}?"
+      },
+      "detail": {
+        "title": "Lint Report"
+      },
+      "id": "ID",
+      "name": "Name",
+      "grade": "Grade",
+      "passed": "Passed",
+      "lintedOn": "Linted On",
+      "spec": "Spec",
+      "violations": "Violations"
+    }
+  }
+}

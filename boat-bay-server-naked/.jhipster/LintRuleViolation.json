@@ -1,0 +1,64 @@
+{
+  "name": "LintRuleViolation",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "url",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "severity",
+      "fieldType": "Severity",
+      "fieldValues": "MUST,SHOULD,MAY,HINT"
+    },
+    {
+      "fieldName": "lineStart",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "lineEnd",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "jsonPointer",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "lintRule",
+      "otherEntityRelationshipName": "lintRuleViolation",
+      "relationshipValidateRules": "required",
+      "relationshipName": "lintRule",
+      "otherEntityField": "title"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "lintReport",
+      "otherEntityRelationshipName": "violations",
+      "relationshipName": "lintReport",
+      "otherEntityField": "name"
+    }
+  ],
+  "entityTableName": "lint_rule_violation",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": "*",
+  "changelogDate": "20210730113942"
+}
