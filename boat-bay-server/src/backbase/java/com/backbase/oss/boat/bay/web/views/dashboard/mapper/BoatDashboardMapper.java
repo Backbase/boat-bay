@@ -20,7 +20,9 @@ import com.backbase.oss.boat.bay.service.model.BoatSpec;
 import com.backbase.oss.boat.bay.service.model.BoatViolation;
 import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatPortal;
 import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatPortalDashboard;
+
 import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatTag;
+
 import com.fasterxml.jackson.core.JsonPointer;
 import java.net.URI;
 import java.time.Instant;
@@ -43,6 +45,7 @@ import org.zalando.zally.rule.api.RuleSet;
 
 @Mapper(componentModel = "spring")
 public interface BoatDashboardMapper {
+
     @Mapping(target = "numberOfServices", ignore = true)
     @Mapping(target = "numberOfCapabilities", ignore = true)
     @Mapping(target = "portalId", source = "portal.id")
@@ -63,8 +66,7 @@ public interface BoatDashboardMapper {
 
     static <T, K, U> Collector<T, ?, Map<K, U>> toLinkedMap(
         Function<? super T, ? extends K> keyMapper,
-        Function<? super T, ? extends U> valueMapper
-    ) {
+        Function<? super T, ? extends U> valueMapper) {
         return Collectors.toMap(
             keyMapper,
             valueMapper,
@@ -75,8 +77,11 @@ public interface BoatDashboardMapper {
         );
     }
 
+
     default List<String> mapCapabilities(Set<Capability> capabilities) {
-        return capabilities.stream().map(Capability::getName).collect(Collectors.toList());
+        return capabilities.stream()
+            .map(Capability::getName)
+            .collect(Collectors.toList());
     }
 
     @Mapping(target = "portalName", source = "portal.name")
@@ -132,8 +137,10 @@ public interface BoatDashboardMapper {
         return JsonPointer.valueOf(value);
     }
 
+
     @Mapping(target = "url", source = "externalUrl")
     BoatLintRule mapPortalLintRule(LintRule rule);
+
 
     @Mapping(target = "numberOfOccurrences", ignore = true)
     BoatTag mapTag(Tag tag);
@@ -145,10 +152,10 @@ public interface BoatDashboardMapper {
     BoatProductRelease mapBoatProductRelease(ProductRelease productRelease);
 
     default URI mapUrl(String value) {
-        if (StringUtils.hasText(value)) {
+        if(StringUtils.hasText(value)) {
             return URI.create(value);
         } else {
             return null;
         }
-    }
+    };
 }

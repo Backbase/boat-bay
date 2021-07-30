@@ -89,4 +89,19 @@ public class SpringExpressionUtils {
         log.debug("Resolved: {}", name);
         return name;
     }
+    public static String parseName(String spEL, UploadRequestBody uploadRequestBody, String fallback) {
+        if (spEL == null) {
+            return fallback;
+        }
+
+        String name;
+        try {
+            name = getExpression(spEL).getValue(uploadRequestBody, String.class);
+        } catch (EvaluationException | StringIndexOutOfBoundsException e) {
+            log.warn("Expression: {} failed on: {}. Reason: {}", spEL, uploadRequestBody.getArtifactId(),e.getMessage());
+            return fallback;
+        }
+        log.debug("Resolved: {}", name);
+        return name;
+    }
 }
