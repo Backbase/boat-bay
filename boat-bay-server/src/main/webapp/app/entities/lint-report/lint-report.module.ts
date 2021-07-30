@@ -1,16 +1,14 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { BoatBaySharedModule } from 'app/shared/shared.module';
-import { LintReportComponent } from './lint-report.component';
-import { LintReportDetailComponent } from './lint-report-detail.component';
-import { LintReportUpdateComponent } from './lint-report-update.component';
-import { LintReportDeleteDialogComponent } from './lint-report-delete-dialog.component';
-import { lintReportRoute } from './lint-report.route';
+import { SharedModule } from 'app/shared/shared.module';
+import { LintReportComponent } from './list/lint-report.component';
+import { LintReportDetailComponent } from './detail/lint-report-detail.component';
+import { LintReportUpdateComponent } from './update/lint-report-update.component';
+import { LintReportDeleteDialogComponent } from './delete/lint-report-delete-dialog.component';
+import { LintReportRoutingModule } from './route/lint-report-routing.module';
 
 @NgModule({
-  imports: [BoatBaySharedModule, RouterModule.forChild(lintReportRoute)],
+  imports: [SharedModule, LintReportRoutingModule],
   declarations: [LintReportComponent, LintReportDetailComponent, LintReportUpdateComponent, LintReportDeleteDialogComponent],
   entryComponents: [LintReportDeleteDialogComponent],
 })
-export class BoatBayLintReportModule {}
+export class LintReportModule {}

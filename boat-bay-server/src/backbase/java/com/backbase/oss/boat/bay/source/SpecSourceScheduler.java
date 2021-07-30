@@ -77,7 +77,7 @@ public class SpecSourceScheduler {
     @Async
     public void runOnStartup() {
         log.info("Executing scanners on startup");
-        scanners.stream().filter(scanner -> scanner.getSource().isRunOnStartup())
+        scanners.stream().filter(scanner -> scanner.getSource().getRunOnStartup())
             .forEach(scanner -> {
                 EntityTransaction transaction = entityManagerFactory.createEntityManager().getTransaction();
                 log.info("Executing Scanner: {} in transaction: {}", scanner.getSourceType(), transaction);

@@ -4,9 +4,7 @@
     {
       "fieldName": "name",
       "fieldType": "String",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "title",
@@ -37,7 +35,6 @@
       "ownerSide": true
     }
   ],
-  "changelogDate": "20201230133235",
   "entityTableName": "dashboard",
   "dto": "no",
   "pagination": "no",
@@ -46,6 +43,6 @@
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "clientRootFolder": "",
-  "applications": "*"
+  "applications": "*",
+  "changelogDate": "20210729083034"
 }

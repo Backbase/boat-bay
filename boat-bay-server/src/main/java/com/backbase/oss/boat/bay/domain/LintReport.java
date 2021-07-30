@@ -1,14 +1,13 @@
 package com.backbase.oss.boat.bay.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A LintReport.
@@ -36,12 +35,29 @@ public class LintReport implements Serializable {
     @Column(name = "linted_on")
     private ZonedDateTime lintedOn;
 
+    @JsonIgnoreProperties(
+        value = {
+            "previousSpec",
+            "portal",
+            "capability",
+            "product",
+            "source",
+            "specType",
+            "tags",
+            "lintReport",
+            "successor",
+            "serviceDefinition",
+            "productReleases",
+        },
+        allowSetters = true
+    )
     @OneToOne
     @JoinColumn(unique = true)
     private Spec spec;
 
     @OneToMany(mappedBy = "lintReport")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "lintRule", "lintReport" }, allowSetters = true)
     private Set<LintRuleViolation> violations = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -53,8 +69,13 @@ public class LintReport implements Serializable {
         this.id = id;
     }
 
+    public LintReport id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public LintReport name(String name) {
@@ -67,7 +88,7 @@ public class LintReport implements Serializable {
     }
 
     public String getGrade() {
-        return grade;
+        return this.grade;
     }
 
     public LintReport grade(String grade) {
@@ -79,8 +100,8 @@ public class LintReport implements Serializable {
         this.grade = grade;
     }
 
-    public Boolean isPassed() {
-        return passed;
+    public Boolean getPassed() {
+        return this.passed;
     }
 
     public LintReport passed(Boolean passed) {
@@ -93,7 +114,7 @@ public class LintReport implements Serializable {
     }
 
     public ZonedDateTime getLintedOn() {
-        return lintedOn;
+        return this.lintedOn;
     }
 
     public LintReport lintedOn(ZonedDateTime lintedOn) {
@@ -106,11 +127,11 @@ public class LintReport implements Serializable {
     }
 
     public Spec getSpec() {
-        return spec;
+        return this.spec;
     }
 
     public LintReport spec(Spec spec) {
-        this.spec = spec;
+        this.setSpec(spec);
         return this;
     }
 
@@ -119,11 +140,11 @@ public class LintReport implements Serializable {
     }
 
     public Set<LintRuleViolation> getViolations() {
-        return violations;
+        return this.violations;
     }
 
     public LintReport violations(Set<LintRuleViolation> lintRuleViolations) {
-        this.violations = lintRuleViolations;
+        this.setViolations(lintRuleViolations);
         return this;
     }
 
@@ -140,8 +161,15 @@ public class LintReport implements Serializable {
     }
 
     public void setViolations(Set<LintRuleViolation> lintRuleViolations) {
+        if (this.violations != null) {
+            this.violations.forEach(i -> i.setLintReport(null));
+        }
+        if (lintRuleViolations != null) {
+            lintRuleViolations.forEach(i -> i.setLintReport(this));
+        }
         this.violations = lintRuleViolations;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -157,7 +185,8 @@ public class LintReport implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
     // prettier-ignore
@@ -167,7 +196,7 @@ public class LintReport implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", grade='" + getGrade() + "'" +
-            ", passed='" + isPassed() + "'" +
+            ", passed='" + getPassed() + "'" +
             ", lintedOn='" + getLintedOn() + "'" +
             "}";
     }

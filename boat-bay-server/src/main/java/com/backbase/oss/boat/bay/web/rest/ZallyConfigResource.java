@@ -3,21 +3,21 @@ package com.backbase.oss.boat.bay.web.rest;
 import com.backbase.oss.boat.bay.domain.ZallyConfig;
 import com.backbase.oss.boat.bay.repository.ZallyConfigRepository;
 import com.backbase.oss.boat.bay.web.rest.errors.BadRequestAlertException;
-
-import io.github.jhipster.web.util.HeaderUtil;
-import io.github.jhipster.web.util.ResponseUtil;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
+import tech.jhipster.web.util.HeaderUtil;
+import tech.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing {@link com.backbase.oss.boat.bay.domain.ZallyConfig}.
@@ -54,30 +54,94 @@ public class ZallyConfigResource {
             throw new BadRequestAlertException("A new zallyConfig cannot already have an ID", ENTITY_NAME, "idexists");
         }
         ZallyConfig result = zallyConfigRepository.save(zallyConfig);
-        return ResponseEntity.created(new URI("/api/zally-configs/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, false, ENTITY_NAME, result.getId().toString()))
+        return ResponseEntity
+            .created(new URI("/api/zally-configs/" + result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
     /**
-     * {@code PUT  /zally-configs} : Updates an existing zallyConfig.
+     * {@code PUT  /zally-configs/:id} : Updates an existing zallyConfig.
      *
+     * @param id the id of the zallyConfig to save.
      * @param zallyConfig the zallyConfig to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated zallyConfig,
      * or with status {@code 400 (Bad Request)} if the zallyConfig is not valid,
      * or with status {@code 500 (Internal Server Error)} if the zallyConfig couldn't be updated.
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
-    @PutMapping("/zally-configs")
-    public ResponseEntity<ZallyConfig> updateZallyConfig(@Valid @RequestBody ZallyConfig zallyConfig) throws URISyntaxException {
-        log.debug("REST request to update ZallyConfig : {}", zallyConfig);
+    @PutMapping("/zally-configs/{id}")
+    public ResponseEntity<ZallyConfig> updateZallyConfig(
+        @PathVariable(value = "id", required = false) final Long id,
+        @Valid @RequestBody ZallyConfig zallyConfig
+    ) throws URISyntaxException {
+        log.debug("REST request to update ZallyConfig : {}, {}", id, zallyConfig);
         if (zallyConfig.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
+        if (!Objects.equals(id, zallyConfig.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!zallyConfigRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
         ZallyConfig result = zallyConfigRepository.save(zallyConfig);
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, false, ENTITY_NAME, zallyConfig.getId().toString()))
+        return ResponseEntity
+            .ok()
+            .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, zallyConfig.getId().toString()))
             .body(result);
+    }
+
+    /**
+     * {@code PATCH  /zally-configs/:id} : Partial updates given fields of an existing zallyConfig, field will ignore if it is null
+     *
+     * @param id the id of the zallyConfig to save.
+     * @param zallyConfig the zallyConfig to update.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated zallyConfig,
+     * or with status {@code 400 (Bad Request)} if the zallyConfig is not valid,
+     * or with status {@code 404 (Not Found)} if the zallyConfig is not found,
+     * or with status {@code 500 (Internal Server Error)} if the zallyConfig couldn't be updated.
+     * @throws URISyntaxException if the Location URI syntax is incorrect.
+     */
+    @PatchMapping(value = "/zally-configs/{id}", consumes = "application/merge-patch+json")
+    public ResponseEntity<ZallyConfig> partialUpdateZallyConfig(
+        @PathVariable(value = "id", required = false) final Long id,
+        @NotNull @RequestBody ZallyConfig zallyConfig
+    ) throws URISyntaxException {
+        log.debug("REST request to partial update ZallyConfig partially : {}, {}", id, zallyConfig);
+        if (zallyConfig.getId() == null) {
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
+        }
+        if (!Objects.equals(id, zallyConfig.getId())) {
+            throw new BadRequestAlertException("Invalid ID", ENTITY_NAME, "idinvalid");
+        }
+
+        if (!zallyConfigRepository.existsById(id)) {
+            throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
+        }
+
+        Optional<ZallyConfig> result = zallyConfigRepository
+            .findById(zallyConfig.getId())
+            .map(
+                existingZallyConfig -> {
+                    if (zallyConfig.getName() != null) {
+                        existingZallyConfig.setName(zallyConfig.getName());
+                    }
+                    if (zallyConfig.getContents() != null) {
+                        existingZallyConfig.setContents(zallyConfig.getContents());
+                    }
+
+                    return existingZallyConfig;
+                }
+            )
+            .map(zallyConfigRepository::save);
+
+        return ResponseUtil.wrapOrNotFound(
+            result,
+            HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, zallyConfig.getId().toString())
+        );
     }
 
     /**
@@ -114,6 +178,9 @@ public class ZallyConfigResource {
     public ResponseEntity<Void> deleteZallyConfig(@PathVariable Long id) {
         log.debug("REST request to delete ZallyConfig : {}", id);
         zallyConfigRepository.deleteById(id);
-        return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, false, ENTITY_NAME, id.toString())).build();
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .build();
     }
 }

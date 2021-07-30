@@ -4,17 +4,12 @@
     {
       "fieldName": "key",
       "fieldType": "String",
-      "fieldValidateRules": [
-        "required",
-        "unique"
-      ]
+      "fieldValidateRules": ["required", "unique"]
     },
     {
       "fieldName": "name",
       "fieldType": "String",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "subTitle",
@@ -68,10 +63,10 @@
       "otherEntityName": "zallyConfig",
       "otherEntityRelationshipName": "portal",
       "relationshipName": "zallyConfig",
+      "otherEntityField": "name",
       "ownerSide": false
     }
   ],
-  "changelogDate": "20201223102315",
   "entityTableName": "portal",
   "dto": "no",
   "pagination": "no",
@@ -80,6 +75,6 @@
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "clientRootFolder": "",
-  "applications": "*"
+  "applications": "*",
+  "changelogDate": "20210729083035"
 }

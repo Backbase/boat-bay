@@ -1,16 +1,14 @@
 package com.backbase.oss.boat.bay.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.*;
+import javax.validation.constraints.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A ServiceDefinition.
@@ -61,11 +59,27 @@ public class ServiceDefinition implements Serializable {
 
     @OneToMany(mappedBy = "serviceDefinition")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(
+        value = {
+            "previousSpec",
+            "portal",
+            "capability",
+            "product",
+            "source",
+            "specType",
+            "tags",
+            "lintReport",
+            "successor",
+            "serviceDefinition",
+            "productReleases",
+        },
+        allowSetters = true
+    )
     private Set<Spec> specs = new HashSet<>();
 
     @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties(value = "serviceDefinitions", allowSetters = true)
+    @JsonIgnoreProperties(value = { "serviceDefinitions", "product" }, allowSetters = true)
     private Capability capability;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -77,8 +91,13 @@ public class ServiceDefinition implements Serializable {
         this.id = id;
     }
 
+    public ServiceDefinition id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public String getKey() {
-        return key;
+        return this.key;
     }
 
     public ServiceDefinition key(String key) {
@@ -91,7 +110,7 @@ public class ServiceDefinition implements Serializable {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public ServiceDefinition name(String name) {
@@ -104,7 +123,7 @@ public class ServiceDefinition implements Serializable {
     }
 
     public Integer getOrder() {
-        return order;
+        return this.order;
     }
 
     public ServiceDefinition order(Integer order) {
@@ -117,7 +136,7 @@ public class ServiceDefinition implements Serializable {
     }
 
     public String getSubTitle() {
-        return subTitle;
+        return this.subTitle;
     }
 
     public ServiceDefinition subTitle(String subTitle) {
@@ -130,7 +149,7 @@ public class ServiceDefinition implements Serializable {
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     public ServiceDefinition description(String description) {
@@ -143,7 +162,7 @@ public class ServiceDefinition implements Serializable {
     }
 
     public String getIcon() {
-        return icon;
+        return this.icon;
     }
 
     public ServiceDefinition icon(String icon) {
@@ -156,7 +175,7 @@ public class ServiceDefinition implements Serializable {
     }
 
     public String getColor() {
-        return color;
+        return this.color;
     }
 
     public ServiceDefinition color(String color) {
@@ -169,7 +188,7 @@ public class ServiceDefinition implements Serializable {
     }
 
     public ZonedDateTime getCreatedOn() {
-        return createdOn;
+        return this.createdOn;
     }
 
     public ServiceDefinition createdOn(ZonedDateTime createdOn) {
@@ -182,7 +201,7 @@ public class ServiceDefinition implements Serializable {
     }
 
     public String getCreatedBy() {
-        return createdBy;
+        return this.createdBy;
     }
 
     public ServiceDefinition createdBy(String createdBy) {
@@ -194,8 +213,8 @@ public class ServiceDefinition implements Serializable {
         this.createdBy = createdBy;
     }
 
-    public Boolean isHide() {
-        return hide;
+    public Boolean getHide() {
+        return this.hide;
     }
 
     public ServiceDefinition hide(Boolean hide) {
@@ -208,11 +227,11 @@ public class ServiceDefinition implements Serializable {
     }
 
     public Set<Spec> getSpecs() {
-        return specs;
+        return this.specs;
     }
 
     public ServiceDefinition specs(Set<Spec> specs) {
-        this.specs = specs;
+        this.setSpecs(specs);
         return this;
     }
 
@@ -229,21 +248,28 @@ public class ServiceDefinition implements Serializable {
     }
 
     public void setSpecs(Set<Spec> specs) {
+        if (this.specs != null) {
+            this.specs.forEach(i -> i.setServiceDefinition(null));
+        }
+        if (specs != null) {
+            specs.forEach(i -> i.setServiceDefinition(this));
+        }
         this.specs = specs;
     }
 
     public Capability getCapability() {
-        return capability;
+        return this.capability;
     }
 
     public ServiceDefinition capability(Capability capability) {
-        this.capability = capability;
+        this.setCapability(capability);
         return this;
     }
 
     public void setCapability(Capability capability) {
         this.capability = capability;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -259,7 +285,8 @@ public class ServiceDefinition implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
     // prettier-ignore
@@ -276,7 +303,7 @@ public class ServiceDefinition implements Serializable {
             ", color='" + getColor() + "'" +
             ", createdOn='" + getCreatedOn() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
-            ", hide='" + isHide() + "'" +
+            ", hide='" + getHide() + "'" +
             "}";
     }
 }

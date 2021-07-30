@@ -1,16 +1,14 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { BoatBaySharedModule } from 'app/shared/shared.module';
-import { DashboardComponent } from './dashboard.component';
-import { DashboardDetailComponent } from './dashboard-detail.component';
-import { DashboardUpdateComponent } from './dashboard-update.component';
-import { DashboardDeleteDialogComponent } from './dashboard-delete-dialog.component';
-import { dashboardRoute } from './dashboard.route';
+import { SharedModule } from 'app/shared/shared.module';
+import { DashboardComponent } from './list/dashboard.component';
+import { DashboardDetailComponent } from './detail/dashboard-detail.component';
+import { DashboardUpdateComponent } from './update/dashboard-update.component';
+import { DashboardDeleteDialogComponent } from './delete/dashboard-delete-dialog.component';
+import { DashboardRoutingModule } from './route/dashboard-routing.module';
 
 @NgModule({
-  imports: [BoatBaySharedModule, RouterModule.forChild(dashboardRoute)],
+  imports: [SharedModule, DashboardRoutingModule],
   declarations: [DashboardComponent, DashboardDetailComponent, DashboardUpdateComponent, DashboardDeleteDialogComponent],
   entryComponents: [DashboardDeleteDialogComponent],
 })
-export class BoatBayDashboardModule {}
+export class DashboardModule {}

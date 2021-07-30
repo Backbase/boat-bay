@@ -53,7 +53,7 @@ public class MockServerController {
 
 
             productRelease.getSpecs().stream()
-                .filter(spec -> spec.isValid() == Boolean.TRUE)
+                .filter(spec -> spec.getValid() == Boolean.TRUE)
                 .filter(spec -> spec.getName().contains("client-api"))
                 .forEach(spec -> {
 

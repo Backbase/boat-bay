@@ -4,10 +4,7 @@
     {
       "fieldName": "name",
       "fieldType": "String",
-      "fieldValidateRules": [
-        "required",
-        "unique"
-      ]
+      "fieldValidateRules": ["required", "unique"]
     },
     {
       "fieldName": "description",
@@ -29,11 +26,9 @@
       "otherEntityName": "spec",
       "otherEntityRelationshipName": "tag",
       "relationshipName": "spec",
-      "otherEntityField": "id",
       "ownerSide": false
     }
   ],
-  "changelogDate": "20210106114822",
   "entityTableName": "tag",
   "dto": "no",
   "pagination": "no",
@@ -42,6 +37,6 @@
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "clientRootFolder": "",
-  "applications": "*"
+  "applications": "*",
+  "changelogDate": "20210729083041"
 }

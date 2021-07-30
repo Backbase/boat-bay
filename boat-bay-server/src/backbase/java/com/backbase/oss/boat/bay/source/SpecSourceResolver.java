@@ -103,11 +103,11 @@ public class SpecSourceResolver {
         }
         Optional<Spec> existingSpec = boatSpecRepository.findByChecksumAndSource(md5, source);
 
-        if (existingSpec.isPresent() && !source.isOverwriteChanges()) {
+        if (existingSpec.isPresent() && !source.getOverwriteChanges()) {
             log.info("Spec: {}  already exists for source: {}", existingSpec.get().getName(), source.getName());
             spec.setId(existingSpec.get().getId());
             return;
-        } else if (existingSpec.isPresent() && source.isOverwriteChanges()) {
+        } else if (existingSpec.isPresent() && source.getOverwriteChanges()) {
             log.debug("Updating spec: {}", spec.getName());
             spec.setId(existingSpec.get().getId());
         } else {
@@ -203,7 +203,7 @@ public class SpecSourceResolver {
     }
 
     private void setServiceDefinition(Spec spec, Source source) {
-        if (spec.getServiceDefinition() == null || source.isOverwriteChanges()) {
+        if (spec.getServiceDefinition() == null || source.getOverwriteChanges()) {
             String key = SpringExpressionUtils.parseName(source.getServiceNameSpEL(), spec, spec.getFilename().substring(0, spec.getFilename().lastIndexOf(".")));
             ServiceDefinition serviceDefinition = boatServiceRepository.findByCapabilityAndKey(spec.getCapability(), key)
                 .orElseGet(() -> createServiceDefinition(spec, key));
@@ -213,7 +213,7 @@ public class SpecSourceResolver {
     }
 
     private void setCapability(Spec spec, Source source, SourceScannerOptions scannerOptions) {
-        if (spec.getCapability() == null || source.isOverwriteChanges()) {
+        if (spec.getCapability() == null || source.getOverwriteChanges()) {
             String key = getCapabilityKey(spec, source, scannerOptions);
 
             Capability capability = capabilityRepository.findByProductAndKey(spec.getProduct(), key)
