@@ -9,7 +9,7 @@
     <artifactId>boatbay</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>Boatbay NEW NEW</name>
+    <name>Boat Bay :: Server</name>
 
     <repositories>
         <!-- jhipster-needle-maven-repository -->
