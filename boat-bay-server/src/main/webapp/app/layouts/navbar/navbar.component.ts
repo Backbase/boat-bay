@@ -1,50 +1,60 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { SessionStorageService } from 'ngx-webstorage';
 
 import { VERSION } from 'app/app.constants';
+import { LANGUAGES } from 'app/config/language.constants';
+import { Account } from 'app/core/auth/account.model';
 import { AccountService } from 'app/core/auth/account.service';
-import { LoginModalService } from 'app/core/login/login-modal.service';
-import { LoginService } from 'app/core/login/login.service';
+import { LoginService } from 'app/login/login.service';
 import { ProfileService } from 'app/layouts/profiles/profile.service';
 
 @Component({
   selector: 'jhi-navbar',
   templateUrl: './navbar.component.html',
-  styleUrls: ['navbar.scss'],
+  styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent implements OnInit {
   inProduction?: boolean;
   isNavbarCollapsed = true;
-  swaggerEnabled?: boolean;
-  version: string;
+  languages = LANGUAGES;
+  openAPIEnabled?: boolean;
+  version = '';
+  account: Account | null = null;
 
   constructor(
     private loginService: LoginService,
+    private translateService: TranslateService,
+    private sessionStorageService: SessionStorageService,
     private accountService: AccountService,
-    private loginModalService: LoginModalService,
     private profileService: ProfileService,
     private router: Router
   ) {
-    this.version = VERSION ? (VERSION.toLowerCase().startsWith('v') ? VERSION : 'v' + VERSION) : '';
+    if (VERSION) {
+      this.version = VERSION.toLowerCase().startsWith('v') ? VERSION : 'v' + VERSION;
+    }
   }
 
   ngOnInit(): void {
     this.profileService.getProfileInfo().subscribe(profileInfo => {
       this.inProduction = profileInfo.inProduction;
-      this.swaggerEnabled = profileInfo.swaggerEnabled;
+      this.openAPIEnabled = profileInfo.openAPIEnabled;
     });
+    this.accountService.getAuthenticationState().subscribe(account => (this.account = account));
+  }
+
+  changeLanguage(languageKey: string): void {
+    this.sessionStorageService.store('locale', languageKey);
+    this.translateService.use(languageKey);
   }
 
   collapseNavbar(): void {
     this.isNavbarCollapsed = true;
   }
 
-  isAuthenticated(): boolean {
-    return this.accountService.isAuthenticated();
-  }
-
   login(): void {
-    this.loginModalService.open();
+    this.router.navigate(['/login']);
   }
 
   logout(): void {
@@ -55,9 +65,5 @@ export class NavbarComponent implements OnInit {
 
   toggleNavbar(): void {
     this.isNavbarCollapsed = !this.isNavbarCollapsed;
-  }
-
-  getImageUrl(): string {
-    return this.isAuthenticated() ? this.accountService.getImageUrl() : '';
   }
 }

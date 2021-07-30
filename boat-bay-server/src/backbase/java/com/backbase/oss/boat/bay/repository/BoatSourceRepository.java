@@ -6,12 +6,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.EntityGraph;
 
 public interface BoatSourceRepository extends SourceRepository {
-
     List<Source> findAllByCronExpressionIsNotNullAndActiveIsTrue();
 
     List<Source> findAllByActiveIsTrueAndRunOnStartupIsTrue();
-
-
-
-
 }

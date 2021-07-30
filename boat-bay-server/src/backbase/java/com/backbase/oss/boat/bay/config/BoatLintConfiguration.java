@@ -19,8 +19,7 @@ public class BoatLintConfiguration {
 
     @Bean
     public Config config() {
-        Config config = defaultReference(this.getClass().getClassLoader(), ruleSetFile)
-            .withFallback(ConfigFactory.defaultReference());
+        Config config = defaultReference(this.getClass().getClassLoader(), ruleSetFile).withFallback(ConfigFactory.defaultReference());
         return config;
     }
 
@@ -29,19 +28,17 @@ public class BoatLintConfiguration {
         return RulesManager.Companion.fromClassLoader(config);
     }
 
-
-
-
     public static Config defaultReference(final ClassLoader loader, String file) {
-        return ConfigImpl.computeCachedConfig(loader, "boatReference", () -> {
-            Config unresolvedResources = Parseable
-                .newResources(file,
-                    ConfigParseOptions.defaults().setClassLoader(loader))
-                .parse().toConfig();
-            return ConfigImpl.systemPropertiesAsConfig()
-                .withFallback(unresolvedResources)
-                .resolve();
-        });
+        return ConfigImpl.computeCachedConfig(
+            loader,
+            "boatReference",
+            () -> {
+                Config unresolvedResources = Parseable
+                    .newResources(file, ConfigParseOptions.defaults().setClassLoader(loader))
+                    .parse()
+                    .toConfig();
+                return ConfigImpl.systemPropertiesAsConfig().withFallback(unresolvedResources).resolve();
+            }
+        );
     }
-
 }

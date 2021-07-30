@@ -1,12 +1,10 @@
 package com.backbase.oss.boat.bay.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.Serializable;
+import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-
-import java.io.Serializable;
 
 /**
  * A SourcePath.
@@ -26,7 +24,7 @@ public class SourcePath implements Serializable {
     private String name;
 
     @ManyToOne
-    @JsonIgnoreProperties(value = "sourcePaths", allowSetters = true)
+    @JsonIgnoreProperties(value = { "sourcePaths", "portal", "product", "capability", "serviceDefinition" }, allowSetters = true)
     private Source source;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -38,8 +36,13 @@ public class SourcePath implements Serializable {
         this.id = id;
     }
 
+    public SourcePath id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public SourcePath name(String name) {
@@ -52,17 +55,18 @@ public class SourcePath implements Serializable {
     }
 
     public Source getSource() {
-        return source;
+        return this.source;
     }
 
     public SourcePath source(Source source) {
-        this.source = source;
+        this.setSource(source);
         return this;
     }
 
     public void setSource(Source source) {
         this.source = source;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -78,7 +82,8 @@ public class SourcePath implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
     // prettier-ignore

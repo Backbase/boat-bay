@@ -1,0 +1,10 @@
+{
+  "boatbayApp": {
+    "SourceType": {
+      "null": "",
+      "JFROG": "JFROG",
+      "BOAT_MAVEN_PLUGIN": "BOAT_MAVEN_PLUGIN",
+      "MAVEN": "MAVEN"
+    }
+  }
+}

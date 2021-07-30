@@ -13,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface BoatSpecRepository extends SpecRepository, JpaSpecificationExecutor<Spec> {
-
     Optional<Spec> findByChecksumAndSource(String checkSum, Source source);
 
     List<Spec> findAllByLintReportIsNull();
@@ -24,20 +23,17 @@ public interface BoatSpecRepository extends SpecRepository, JpaSpecificationExec
 
     Page<Spec> findAllByCapabilityProduct(Product product, Pageable pageable);
 
-
     Page<Spec> findAllByCapability(Capability capability, Pageable pageable);
 
     Page<Spec> findAllByServiceDefinition(ServiceDefinition serviceDefinition, Pageable pageable);
 
     Page<Spec> findAllByCapabilityAndServiceDefinition(Capability capability, ServiceDefinition serviceDefinition, Pageable pageable);
 
-
     List<Spec> findAllByChangesIsNull();
 
     List<Spec> findAllByNameAndServiceDefinitionAndVersionIsNotNull(String name, ServiceDefinition serviceDefinition);
 
     List<Spec> findAllByKeyAndServiceDefinitionAndVersionIsNotNull(String key, ServiceDefinition serviceDefinition);
-
 
     List<Spec> findByPortalKeyAndProductKeyAndCapabilityKeyAndServiceDefinitionKeyAndKey(
         String portalKey,
@@ -47,13 +43,12 @@ public interface BoatSpecRepository extends SpecRepository, JpaSpecificationExec
         String specKey
     );
 
-
     Optional<Spec> findByPortalKeyAndProductKeyAndCapabilityKeyAndServiceDefinitionKeyAndKeyAndVersion(
         String portalKey,
         String productKey,
         String capabilityKey,
         String serviceDefinitionKey,
         String specKey,
-        String version);
-
+        String version
+    );
 }

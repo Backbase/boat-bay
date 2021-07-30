@@ -1,15 +1,13 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { BoatBaySharedModule } from 'app/shared/shared.module';
-import { LintRuleViolationComponent } from './lint-rule-violation.component';
-import { LintRuleViolationDetailComponent } from './lint-rule-violation-detail.component';
-import { LintRuleViolationUpdateComponent } from './lint-rule-violation-update.component';
-import { LintRuleViolationDeleteDialogComponent } from './lint-rule-violation-delete-dialog.component';
-import { lintRuleViolationRoute } from './lint-rule-violation.route';
+import { SharedModule } from 'app/shared/shared.module';
+import { LintRuleViolationComponent } from './list/lint-rule-violation.component';
+import { LintRuleViolationDetailComponent } from './detail/lint-rule-violation-detail.component';
+import { LintRuleViolationUpdateComponent } from './update/lint-rule-violation-update.component';
+import { LintRuleViolationDeleteDialogComponent } from './delete/lint-rule-violation-delete-dialog.component';
+import { LintRuleViolationRoutingModule } from './route/lint-rule-violation-routing.module';
 
 @NgModule({
-  imports: [BoatBaySharedModule, RouterModule.forChild(lintRuleViolationRoute)],
+  imports: [SharedModule, LintRuleViolationRoutingModule],
   declarations: [
     LintRuleViolationComponent,
     LintRuleViolationDetailComponent,
@@ -18,4 +16,4 @@ import { lintRuleViolationRoute } from './lint-rule-violation.route';
   ],
   entryComponents: [LintRuleViolationDeleteDialogComponent],
 })
-export class BoatBayLintRuleViolationModule {}
+export class LintRuleViolationModule {}

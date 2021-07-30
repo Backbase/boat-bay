@@ -4,31 +4,23 @@
     {
       "fieldName": "name",
       "fieldType": "String",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "key",
       "fieldType": "String",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "type",
       "fieldType": "SourceType",
-      "fieldValues": "GIT,JFROG,HTTP,FILE_SYSTEM,BOAT_MAVEN_PLUGIN,MAVEN",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValues": "JFROG,BOAT_MAVEN_PLUGIN,MAVEN",
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "baseUrl",
       "fieldType": "String",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "active",
@@ -150,7 +142,6 @@
       "otherEntityField": "name"
     }
   ],
-  "changelogDate": "20201223122159",
   "entityTableName": "source",
   "dto": "no",
   "pagination": "no",
@@ -159,6 +150,6 @@
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "clientRootFolder": "",
-  "applications": "*"
+  "applications": "*",
+  "changelogDate": "20210730113938"
 }

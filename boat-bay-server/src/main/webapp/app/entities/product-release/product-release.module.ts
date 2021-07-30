@@ -1,15 +1,13 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
-
-import { BoatBaySharedModule } from 'app/shared/shared.module';
-import { ProductReleaseComponent } from './product-release.component';
-import { ProductReleaseDetailComponent } from './product-release-detail.component';
-import { ProductReleaseUpdateComponent } from './product-release-update.component';
-import { ProductReleaseDeleteDialogComponent } from './product-release-delete-dialog.component';
-import { productReleaseRoute } from './product-release.route';
+import { SharedModule } from 'app/shared/shared.module';
+import { ProductReleaseComponent } from './list/product-release.component';
+import { ProductReleaseDetailComponent } from './detail/product-release-detail.component';
+import { ProductReleaseUpdateComponent } from './update/product-release-update.component';
+import { ProductReleaseDeleteDialogComponent } from './delete/product-release-delete-dialog.component';
+import { ProductReleaseRoutingModule } from './route/product-release-routing.module';
 
 @NgModule({
-  imports: [BoatBaySharedModule, RouterModule.forChild(productReleaseRoute)],
+  imports: [SharedModule, ProductReleaseRoutingModule],
   declarations: [
     ProductReleaseComponent,
     ProductReleaseDetailComponent,
@@ -18,4 +16,4 @@ import { productReleaseRoute } from './product-release.route';
   ],
   entryComponents: [ProductReleaseDeleteDialogComponent],
 })
-export class BoatBayProductReleaseModule {}
+export class ProductReleaseModule {}

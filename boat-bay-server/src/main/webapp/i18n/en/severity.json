@@ -1,0 +1,11 @@
+{
+  "boatbayApp": {
+    "Severity": {
+      "null": "",
+      "MUST": "MUST",
+      "SHOULD": "SHOULD",
+      "MAY": "MAY",
+      "HINT": "HINT"
+    }
+  }
+}

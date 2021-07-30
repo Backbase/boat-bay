@@ -9,7 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface BoatCapabilityRepository extends CapabilityRepository {
-
     Optional<Capability> findByProductAndKey(Product product, String key);
 
     Page<Capability> findByProduct(Product product, Pageable pageable);

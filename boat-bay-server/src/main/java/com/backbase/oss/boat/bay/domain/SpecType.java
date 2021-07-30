@@ -1,12 +1,10 @@
 package com.backbase.oss.boat.bay.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
+import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.*;
-
-import java.io.Serializable;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A SpecType.
@@ -45,8 +43,13 @@ public class SpecType implements Serializable {
         this.id = id;
     }
 
+    public SpecType id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public SpecType name(String name) {
@@ -59,7 +62,7 @@ public class SpecType implements Serializable {
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     public SpecType description(String description) {
@@ -72,7 +75,7 @@ public class SpecType implements Serializable {
     }
 
     public String getMatchSpEL() {
-        return matchSpEL;
+        return this.matchSpEL;
     }
 
     public SpecType matchSpEL(String matchSpEL) {
@@ -85,7 +88,7 @@ public class SpecType implements Serializable {
     }
 
     public String getIcon() {
-        return icon;
+        return this.icon;
     }
 
     public SpecType icon(String icon) {
@@ -96,6 +99,7 @@ public class SpecType implements Serializable {
     public void setIcon(String icon) {
         this.icon = icon;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -111,7 +115,8 @@ public class SpecType implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
     // prettier-ignore

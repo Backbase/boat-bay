@@ -4,9 +4,7 @@
     {
       "fieldName": "name",
       "fieldType": "String",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "contents",
@@ -24,7 +22,6 @@
       "ownerSide": true
     }
   ],
-  "changelogDate": "20210318170843",
   "entityTableName": "zally_config",
   "dto": "no",
   "pagination": "no",
@@ -33,6 +30,6 @@
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "clientRootFolder": "",
-  "applications": "*"
+  "applications": "*",
+  "changelogDate": "20210730113943"
 }

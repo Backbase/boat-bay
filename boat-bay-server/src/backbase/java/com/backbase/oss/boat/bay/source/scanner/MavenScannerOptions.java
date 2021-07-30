@@ -7,5 +7,4 @@ public class MavenScannerOptions {
 
     private String localRepoPath;
     private String mavenArtifactCoords;
-
 }

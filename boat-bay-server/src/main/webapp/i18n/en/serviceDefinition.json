@@ -1,0 +1,35 @@
+{
+  "boatbayApp": {
+    "serviceDefinition": {
+      "home": {
+        "title": "Service Definitions",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Service Definition",
+        "createOrEditLabel": "Create or edit a Service Definition",
+        "notFound": "No Service Definitions found"
+      },
+      "created": "A new Service Definition is created with identifier {{ param }}",
+      "updated": "A Service Definition is updated with identifier {{ param }}",
+      "deleted": "A Service Definition is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Service Definition {{ id }}?"
+      },
+      "detail": {
+        "title": "Service Definition"
+      },
+      "id": "ID",
+      "key": "Key",
+      "name": "Name",
+      "order": "Order",
+      "subTitle": "Sub Title",
+      "description": "Description",
+      "icon": "Icon",
+      "color": "Color",
+      "createdOn": "Created On",
+      "createdBy": "Created By",
+      "hide": "Hide",
+      "spec": "Spec",
+      "capability": "Capability"
+    }
+  }
+}

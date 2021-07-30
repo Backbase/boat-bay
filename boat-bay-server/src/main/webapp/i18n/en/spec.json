@@ -1,0 +1,64 @@
+{
+  "boatbayApp": {
+    "spec": {
+      "home": {
+        "title": "Specs",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Spec",
+        "createOrEditLabel": "Create or edit a Spec",
+        "notFound": "No Specs found"
+      },
+      "created": "A new Spec is created with identifier {{ param }}",
+      "updated": "A Spec is updated with identifier {{ param }}",
+      "deleted": "A Spec is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Spec {{ id }}?"
+      },
+      "detail": {
+        "title": "Spec"
+      },
+      "id": "ID",
+      "key": "Key",
+      "name": "Name",
+      "version": "Version",
+      "title": "Title",
+      "icon": "Icon",
+      "openApi": "Open Api",
+      "description": "Description",
+      "createdOn": "Created On",
+      "createdBy": "Created By",
+      "checksum": "Checksum",
+      "filename": "Filename",
+      "valid": "Valid",
+      "order": "Order",
+      "parseError": "Parse Error",
+      "externalDocs": "External Docs",
+      "hide": "Hide",
+      "grade": "Grade",
+      "changes": "Changes",
+      "sourcePath": "Source Path",
+      "sourceName": "Source Name",
+      "sourceUrl": "Source Url",
+      "sourceCreatedBy": "Source Created By",
+      "sourceCreatedOn": "Source Created On",
+      "sourceLastModifiedOn": "Source Last Modified On",
+      "sourceLastModifiedBy": "Source Last Modified By",
+      "mvnGroupId": "Mvn Group Id",
+      "mvnArtifactId": "Mvn Artifact Id",
+      "mvnVersion": "Mvn Version",
+      "mvnClassifier": "Mvn Classifier",
+      "mvnExtension": "Mvn Extension",
+      "previousSpec": "Previous Spec",
+      "portal": "Portal",
+      "capability": "Capability",
+      "product": "Product",
+      "source": "Source",
+      "specType": "Spec Type",
+      "tag": "Tag",
+      "lintReport": "Lint Report",
+      "successor": "Successor",
+      "serviceDefinition": "Service Definition",
+      "productRelease": "Product Release"
+    }
+  }
+}

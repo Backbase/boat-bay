@@ -12,6 +12,12 @@ import com.backbase.oss.boat.loader.OpenAPILoader;
 import com.backbase.oss.boat.loader.OpenAPILoaderException;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import java.nio.charset.StandardCharsets;
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -22,18 +28,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 
-import java.nio.charset.StandardCharsets;
-import java.time.ZonedDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class SpecSourceResolver {
-
 
     public static final String LATEST = "latest";
     private final SpecRepository specRepository;
@@ -56,7 +54,9 @@ public class SpecSourceResolver {
             processProductRelease(scan, source, pr);
         }
 
-        List<Spec> processedSpecs = scan.getProductReleases().stream()
+        List<Spec> processedSpecs = scan
+            .getProductReleases()
+            .stream()
             .flatMap(pr -> pr.getSpecs().stream())
             .filter(spec -> spec.getId() != null)
             .collect(Collectors.toList());
@@ -65,14 +65,14 @@ public class SpecSourceResolver {
         log.info("Processing Scan Result: {}", scan);
     }
 
-
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void processProductRelease(ScanResult scan, Source source, ProductRelease pr) {
         for (Spec spec : pr.getSpecs()) {
             processSpec(spec, scan.getScannerOptions());
         }
 
-        productReleaseRepository.findByProductAndKey(source.getProduct(), pr.getKey())
+        productReleaseRepository
+            .findByProductAndKey(source.getProduct(), pr.getKey())
             .orElseGet(() -> productReleaseRepository.saveAndFlush(pr));
     }
 
@@ -103,11 +103,11 @@ public class SpecSourceResolver {
         }
         Optional<Spec> existingSpec = boatSpecRepository.findByChecksumAndSource(md5, source);
 
-        if (existingSpec.isPresent() && !source.isOverwriteChanges()) {
+        if (existingSpec.isPresent() && !source.getOverwriteChanges()) {
             log.info("Spec: {}  already exists for source: {}", existingSpec.get().getName(), source.getName());
             spec.setId(existingSpec.get().getId());
             return;
-        } else if (existingSpec.isPresent() && source.isOverwriteChanges()) {
+        } else if (existingSpec.isPresent() && source.getOverwriteChanges()) {
             log.debug("Updating spec: {}", spec.getName());
             spec.setId(existingSpec.get().getId());
         } else {
@@ -148,7 +148,6 @@ public class SpecSourceResolver {
     }
 
     private void setInformationFromSpec(Spec spec, OpenAPI openAPI, Source source) throws InvalidSpecException {
-
         Info info = openAPI.getInfo();
         if (info == null) {
             throw new InvalidSpecException("Missing INFO block");
@@ -159,9 +158,7 @@ public class SpecSourceResolver {
         spec.setDescription(info.getDescription());
         spec.setValid(true);
         if (openAPI.getTags() != null) {
-            Set<Tag> tags = openAPI.getTags().stream()
-                .map(this::getOrCreateTag)
-                .collect(Collectors.toSet());
+            Set<Tag> tags = openAPI.getTags().stream().map(this::getOrCreateTag).collect(Collectors.toSet());
             spec.setTags(tags);
         }
 
@@ -170,17 +167,19 @@ public class SpecSourceResolver {
         }
 
         spec.setKey(SpringExpressionUtils.parseName(source.getSpecKeySpEL(), spec, spec.getKey()));
-
     }
 
     @NotNull
     private Tag getOrCreateTag(io.swagger.v3.oas.models.tags.Tag tag) {
-        return boatTagRepository.findByName(tag.getName())
+        return boatTagRepository
+            .findByName(tag.getName())
             .orElseGet(() -> boatTagRepository.saveAndFlush(new Tag().name(tag.getName()).description(tag.getDescription()).hide(false)));
     }
 
     private void setSpecType(Spec spec) {
-        SpecType specType = specTypeRepository.findAll().stream()
+        SpecType specType = specTypeRepository
+            .findAll()
+            .stream()
             .filter(st -> SpringExpressionUtils.match(st.getMatchSpEL(), spec))
             .findFirst()
             .orElseGet(this::genericSpecType);
@@ -192,9 +191,7 @@ public class SpecSourceResolver {
         SpecType specType = new SpecType();
         specType.setName("generic");
         specType.setIcon("api");
-        return specTypeRepository.findOne(Example.of(specType))
-            .orElseGet(() -> createSpecType(specType));
-
+        return specTypeRepository.findOne(Example.of(specType)).orElseGet(() -> createSpecType(specType));
     }
 
     @NotNull
@@ -203,9 +200,14 @@ public class SpecSourceResolver {
     }
 
     private void setServiceDefinition(Spec spec, Source source) {
-        if (spec.getServiceDefinition() == null || source.isOverwriteChanges()) {
-            String key = SpringExpressionUtils.parseName(source.getServiceNameSpEL(), spec, spec.getFilename().substring(0, spec.getFilename().lastIndexOf(".")));
-            ServiceDefinition serviceDefinition = boatServiceRepository.findByCapabilityAndKey(spec.getCapability(), key)
+        if (spec.getServiceDefinition() == null || source.getOverwriteChanges()) {
+            String key = SpringExpressionUtils.parseName(
+                source.getServiceNameSpEL(),
+                spec,
+                spec.getFilename().substring(0, spec.getFilename().lastIndexOf("."))
+            );
+            ServiceDefinition serviceDefinition = boatServiceRepository
+                .findByCapabilityAndKey(spec.getCapability(), key)
                 .orElseGet(() -> createServiceDefinition(spec, key));
             log.debug("Assigning service: {} to spec: {}", serviceDefinition.getName(), spec.getName());
             spec.setServiceDefinition(serviceDefinition);
@@ -213,10 +215,11 @@ public class SpecSourceResolver {
     }
 
     private void setCapability(Spec spec, Source source, SourceScannerOptions scannerOptions) {
-        if (spec.getCapability() == null || source.isOverwriteChanges()) {
+        if (spec.getCapability() == null || source.getOverwriteChanges()) {
             String key = getCapabilityKey(spec, source, scannerOptions);
 
-            Capability capability = capabilityRepository.findByProductAndKey(spec.getProduct(), key)
+            Capability capability = capabilityRepository
+                .findByProductAndKey(spec.getProduct(), key)
                 .orElseGet(() -> createCapabilityForSpecWithKey(spec, key));
             log.debug("Assigning capability: {} to spec: {}", capability.getName(), spec.getName());
             spec.setCapability(capability);
@@ -243,7 +246,11 @@ public class SpecSourceResolver {
         serviceDefinition.setKey(key);
         serviceDefinition.setCreatedBy(spec.getCreatedBy());
         serviceDefinition.setCreatedOn(ZonedDateTime.now());
-        serviceDefinition.setName(StringUtils.capitalize(serviceNameSpEL.map(exp -> SpringExpressionUtils.parseName(exp, spec, key)).orElse(key)).replaceAll("-", " "));
+        serviceDefinition.setName(
+            StringUtils
+                .capitalize(serviceNameSpEL.map(exp -> SpringExpressionUtils.parseName(exp, spec, key)).orElse(key))
+                .replaceAll("-", " ")
+        );
         serviceDefinition.setDescription(spec.getDescription());
         return boatServiceRepository.saveAndFlush(serviceDefinition);
     }
@@ -256,9 +263,11 @@ public class SpecSourceResolver {
         capability.setKey(key);
         capability.setCreatedBy(spec.getSource().getName());
         capability.setCreatedOn(ZonedDateTime.now());
-        capability.setName(StringUtils.capitalize(capabilityNameSpEL.map(exp -> SpringExpressionUtils.parseName(exp, spec, key)).orElse(key).replaceAll("-", " ")));
+        capability.setName(
+            StringUtils.capitalize(
+                capabilityNameSpEL.map(exp -> SpringExpressionUtils.parseName(exp, spec, key)).orElse(key).replaceAll("-", " ")
+            )
+        );
         return capabilityRepository.saveAndFlush(capability);
     }
-
-
 }

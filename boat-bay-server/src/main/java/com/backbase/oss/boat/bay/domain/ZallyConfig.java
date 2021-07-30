@@ -1,12 +1,11 @@
 package com.backbase.oss.boat.bay.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.*;
-
-import java.io.Serializable;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A ZallyConfig.
@@ -30,6 +29,7 @@ public class ZallyConfig implements Serializable {
     @Column(name = "contents")
     private String contents;
 
+    @JsonIgnoreProperties(value = { "products", "lintRules", "zallyConfig" }, allowSetters = true)
     @OneToOne
     @JoinColumn(unique = true)
     private Portal portal;
@@ -43,8 +43,13 @@ public class ZallyConfig implements Serializable {
         this.id = id;
     }
 
+    public ZallyConfig id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public ZallyConfig name(String name) {
@@ -57,7 +62,7 @@ public class ZallyConfig implements Serializable {
     }
 
     public String getContents() {
-        return contents;
+        return this.contents;
     }
 
     public ZallyConfig contents(String contents) {
@@ -70,17 +75,18 @@ public class ZallyConfig implements Serializable {
     }
 
     public Portal getPortal() {
-        return portal;
+        return this.portal;
     }
 
     public ZallyConfig portal(Portal portal) {
-        this.portal = portal;
+        this.setPortal(portal);
         return this;
     }
 
     public void setPortal(Portal portal) {
         this.portal = portal;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -96,7 +102,8 @@ public class ZallyConfig implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
     // prettier-ignore

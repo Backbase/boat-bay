@@ -1,12 +1,12 @@
 package com.backbase.oss.boat.bay.web.rest.vm;
 
-import com.backbase.oss.boat.bay.service.dto.UserDTO;
+import com.backbase.oss.boat.bay.service.dto.AdminUserDTO;
 import javax.validation.constraints.Size;
 
 /**
- * View Model extending the UserDTO, which is meant to be used in the user management UI.
+ * View Model extending the AdminUserDTO, which is meant to be used in the user management UI.
  */
-public class ManagedUserVM extends UserDTO {
+public class ManagedUserVM extends AdminUserDTO {
 
     public static final int PASSWORD_MIN_LENGTH = 4;
 
