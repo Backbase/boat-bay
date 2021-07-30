@@ -11,6 +11,8 @@
 
 
     <properties>
+
+
         <!-- Build properties -->
         <maven.version>3.3.9</maven.version>
         <java.version>15</java.version>
@@ -92,6 +94,11 @@
         <swagger-core.v3.version>2.1.5</swagger-core.v3.version>
         <swagger-parser.v3.version>2.0.23</swagger-parser.v3.version>
         <swagger-annotations.version>1.6.2</swagger-annotations.version>
+
+        <!-- Sonar Configuration -->
+        <sonar.projectKey>Backbase_boat-bay</sonar.projectKey>
+        <sonar.organization>backbase-technology-prototyping</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
 
     <dependencyManagement>
