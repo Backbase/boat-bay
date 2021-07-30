@@ -1,40 +1,40 @@
 package com.backbase.oss.boat.bay.web.rest;
 
-import com.backbase.oss.boat.bay.BoatBayApp;
-import com.backbase.oss.boat.bay.domain.ServiceDefinition;
-import com.backbase.oss.boat.bay.domain.Capability;
-import com.backbase.oss.boat.bay.repository.ServiceDefinitionRepository;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Base64Utils;
-import javax.persistence.EntityManager;
-import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.time.ZoneOffset;
-import java.time.ZoneId;
-import java.util.List;
-
 import static com.backbase.oss.boat.bay.web.rest.TestUtil.sameInstant;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.backbase.oss.boat.bay.IntegrationTest;
+import com.backbase.oss.boat.bay.domain.Capability;
+import com.backbase.oss.boat.bay.domain.ServiceDefinition;
+import com.backbase.oss.boat.bay.repository.ServiceDefinitionRepository;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Base64Utils;
+
 /**
  * Integration tests for the {@link ServiceDefinitionResource} REST controller.
  */
-@SpringBootTest(classes = BoatBayApp.class)
+@IntegrationTest
 @AutoConfigureMockMvc
 @WithMockUser
-public class ServiceDefinitionResourceIT {
+class ServiceDefinitionResourceIT {
 
     private static final String DEFAULT_KEY = "AAAAAAAAAA";
     private static final String UPDATED_KEY = "BBBBBBBBBB";
@@ -65,6 +65,12 @@ public class ServiceDefinitionResourceIT {
 
     private static final Boolean DEFAULT_HIDE = false;
     private static final Boolean UPDATED_HIDE = true;
+
+    private static final String ENTITY_API_URL = "/api/service-definitions";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     @Autowired
     private ServiceDefinitionRepository serviceDefinitionRepository;
@@ -107,6 +113,7 @@ public class ServiceDefinitionResourceIT {
         serviceDefinition.setCapability(capability);
         return serviceDefinition;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -145,12 +152,13 @@ public class ServiceDefinitionResourceIT {
 
     @Test
     @Transactional
-    public void createServiceDefinition() throws Exception {
+    void createServiceDefinition() throws Exception {
         int databaseSizeBeforeCreate = serviceDefinitionRepository.findAll().size();
         // Create the ServiceDefinition
-        restServiceDefinitionMockMvc.perform(post("/api/service-definitions")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(serviceDefinition)))
+        restServiceDefinitionMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(serviceDefinition))
+            )
             .andExpect(status().isCreated());
 
         // Validate the ServiceDefinition in the database
@@ -166,21 +174,22 @@ public class ServiceDefinitionResourceIT {
         assertThat(testServiceDefinition.getColor()).isEqualTo(DEFAULT_COLOR);
         assertThat(testServiceDefinition.getCreatedOn()).isEqualTo(DEFAULT_CREATED_ON);
         assertThat(testServiceDefinition.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
-        assertThat(testServiceDefinition.isHide()).isEqualTo(DEFAULT_HIDE);
+        assertThat(testServiceDefinition.getHide()).isEqualTo(DEFAULT_HIDE);
     }
 
     @Test
     @Transactional
-    public void createServiceDefinitionWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = serviceDefinitionRepository.findAll().size();
-
+    void createServiceDefinitionWithExistingId() throws Exception {
         // Create the ServiceDefinition with an existing ID
         serviceDefinition.setId(1L);
 
+        int databaseSizeBeforeCreate = serviceDefinitionRepository.findAll().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
-        restServiceDefinitionMockMvc.perform(post("/api/service-definitions")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(serviceDefinition)))
+        restServiceDefinitionMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(serviceDefinition))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the ServiceDefinition in the database
@@ -188,20 +197,19 @@ public class ServiceDefinitionResourceIT {
         assertThat(serviceDefinitionList).hasSize(databaseSizeBeforeCreate);
     }
 
-
     @Test
     @Transactional
-    public void checkKeyIsRequired() throws Exception {
+    void checkKeyIsRequired() throws Exception {
         int databaseSizeBeforeTest = serviceDefinitionRepository.findAll().size();
         // set the field null
         serviceDefinition.setKey(null);
 
         // Create the ServiceDefinition, which fails.
 
-
-        restServiceDefinitionMockMvc.perform(post("/api/service-definitions")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(serviceDefinition)))
+        restServiceDefinitionMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(serviceDefinition))
+            )
             .andExpect(status().isBadRequest());
 
         List<ServiceDefinition> serviceDefinitionList = serviceDefinitionRepository.findAll();
@@ -210,17 +218,17 @@ public class ServiceDefinitionResourceIT {
 
     @Test
     @Transactional
-    public void checkNameIsRequired() throws Exception {
+    void checkNameIsRequired() throws Exception {
         int databaseSizeBeforeTest = serviceDefinitionRepository.findAll().size();
         // set the field null
         serviceDefinition.setName(null);
 
         // Create the ServiceDefinition, which fails.
 
-
-        restServiceDefinitionMockMvc.perform(post("/api/service-definitions")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(serviceDefinition)))
+        restServiceDefinitionMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(serviceDefinition))
+            )
             .andExpect(status().isBadRequest());
 
         List<ServiceDefinition> serviceDefinitionList = serviceDefinitionRepository.findAll();
@@ -229,12 +237,13 @@ public class ServiceDefinitionResourceIT {
 
     @Test
     @Transactional
-    public void getAllServiceDefinitions() throws Exception {
+    void getAllServiceDefinitions() throws Exception {
         // Initialize the database
         serviceDefinitionRepository.saveAndFlush(serviceDefinition);
 
         // Get all the serviceDefinitionList
-        restServiceDefinitionMockMvc.perform(get("/api/service-definitions?sort=id,desc"))
+        restServiceDefinitionMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(serviceDefinition.getId().intValue())))
@@ -249,15 +258,16 @@ public class ServiceDefinitionResourceIT {
             .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
             .andExpect(jsonPath("$.[*].hide").value(hasItem(DEFAULT_HIDE.booleanValue())));
     }
-    
+
     @Test
     @Transactional
-    public void getServiceDefinition() throws Exception {
+    void getServiceDefinition() throws Exception {
         // Initialize the database
         serviceDefinitionRepository.saveAndFlush(serviceDefinition);
 
         // Get the serviceDefinition
-        restServiceDefinitionMockMvc.perform(get("/api/service-definitions/{id}", serviceDefinition.getId()))
+        restServiceDefinitionMockMvc
+            .perform(get(ENTITY_API_URL_ID, serviceDefinition.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(serviceDefinition.getId().intValue()))
@@ -272,17 +282,17 @@ public class ServiceDefinitionResourceIT {
             .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
             .andExpect(jsonPath("$.hide").value(DEFAULT_HIDE.booleanValue()));
     }
+
     @Test
     @Transactional
-    public void getNonExistingServiceDefinition() throws Exception {
+    void getNonExistingServiceDefinition() throws Exception {
         // Get the serviceDefinition
-        restServiceDefinitionMockMvc.perform(get("/api/service-definitions/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restServiceDefinitionMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updateServiceDefinition() throws Exception {
+    void putNewServiceDefinition() throws Exception {
         // Initialize the database
         serviceDefinitionRepository.saveAndFlush(serviceDefinition);
 
@@ -304,9 +314,12 @@ public class ServiceDefinitionResourceIT {
             .createdBy(UPDATED_CREATED_BY)
             .hide(UPDATED_HIDE);
 
-        restServiceDefinitionMockMvc.perform(put("/api/service-definitions")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedServiceDefinition)))
+        restServiceDefinitionMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, updatedServiceDefinition.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedServiceDefinition))
+            )
             .andExpect(status().isOk());
 
         // Validate the ServiceDefinition in the database
@@ -322,18 +335,22 @@ public class ServiceDefinitionResourceIT {
         assertThat(testServiceDefinition.getColor()).isEqualTo(UPDATED_COLOR);
         assertThat(testServiceDefinition.getCreatedOn()).isEqualTo(UPDATED_CREATED_ON);
         assertThat(testServiceDefinition.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
-        assertThat(testServiceDefinition.isHide()).isEqualTo(UPDATED_HIDE);
+        assertThat(testServiceDefinition.getHide()).isEqualTo(UPDATED_HIDE);
     }
 
     @Test
     @Transactional
-    public void updateNonExistingServiceDefinition() throws Exception {
+    void putNonExistingServiceDefinition() throws Exception {
         int databaseSizeBeforeUpdate = serviceDefinitionRepository.findAll().size();
+        serviceDefinition.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restServiceDefinitionMockMvc.perform(put("/api/service-definitions")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(serviceDefinition)))
+        restServiceDefinitionMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, serviceDefinition.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(serviceDefinition))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the ServiceDefinition in the database
@@ -343,15 +360,205 @@ public class ServiceDefinitionResourceIT {
 
     @Test
     @Transactional
-    public void deleteServiceDefinition() throws Exception {
+    void putWithIdMismatchServiceDefinition() throws Exception {
+        int databaseSizeBeforeUpdate = serviceDefinitionRepository.findAll().size();
+        serviceDefinition.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restServiceDefinitionMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(serviceDefinition))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the ServiceDefinition in the database
+        List<ServiceDefinition> serviceDefinitionList = serviceDefinitionRepository.findAll();
+        assertThat(serviceDefinitionList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void putWithMissingIdPathParamServiceDefinition() throws Exception {
+        int databaseSizeBeforeUpdate = serviceDefinitionRepository.findAll().size();
+        serviceDefinition.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restServiceDefinitionMockMvc
+            .perform(
+                put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(serviceDefinition))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the ServiceDefinition in the database
+        List<ServiceDefinition> serviceDefinitionList = serviceDefinitionRepository.findAll();
+        assertThat(serviceDefinitionList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdateServiceDefinitionWithPatch() throws Exception {
+        // Initialize the database
+        serviceDefinitionRepository.saveAndFlush(serviceDefinition);
+
+        int databaseSizeBeforeUpdate = serviceDefinitionRepository.findAll().size();
+
+        // Update the serviceDefinition using partial update
+        ServiceDefinition partialUpdatedServiceDefinition = new ServiceDefinition();
+        partialUpdatedServiceDefinition.setId(serviceDefinition.getId());
+
+        partialUpdatedServiceDefinition
+            .order(UPDATED_ORDER)
+            .description(UPDATED_DESCRIPTION)
+            .icon(UPDATED_ICON)
+            .createdOn(UPDATED_CREATED_ON)
+            .createdBy(UPDATED_CREATED_BY)
+            .hide(UPDATED_HIDE);
+
+        restServiceDefinitionMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedServiceDefinition.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedServiceDefinition))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the ServiceDefinition in the database
+        List<ServiceDefinition> serviceDefinitionList = serviceDefinitionRepository.findAll();
+        assertThat(serviceDefinitionList).hasSize(databaseSizeBeforeUpdate);
+        ServiceDefinition testServiceDefinition = serviceDefinitionList.get(serviceDefinitionList.size() - 1);
+        assertThat(testServiceDefinition.getKey()).isEqualTo(DEFAULT_KEY);
+        assertThat(testServiceDefinition.getName()).isEqualTo(DEFAULT_NAME);
+        assertThat(testServiceDefinition.getOrder()).isEqualTo(UPDATED_ORDER);
+        assertThat(testServiceDefinition.getSubTitle()).isEqualTo(DEFAULT_SUB_TITLE);
+        assertThat(testServiceDefinition.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+        assertThat(testServiceDefinition.getIcon()).isEqualTo(UPDATED_ICON);
+        assertThat(testServiceDefinition.getColor()).isEqualTo(DEFAULT_COLOR);
+        assertThat(testServiceDefinition.getCreatedOn()).isEqualTo(UPDATED_CREATED_ON);
+        assertThat(testServiceDefinition.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testServiceDefinition.getHide()).isEqualTo(UPDATED_HIDE);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdateServiceDefinitionWithPatch() throws Exception {
+        // Initialize the database
+        serviceDefinitionRepository.saveAndFlush(serviceDefinition);
+
+        int databaseSizeBeforeUpdate = serviceDefinitionRepository.findAll().size();
+
+        // Update the serviceDefinition using partial update
+        ServiceDefinition partialUpdatedServiceDefinition = new ServiceDefinition();
+        partialUpdatedServiceDefinition.setId(serviceDefinition.getId());
+
+        partialUpdatedServiceDefinition
+            .key(UPDATED_KEY)
+            .name(UPDATED_NAME)
+            .order(UPDATED_ORDER)
+            .subTitle(UPDATED_SUB_TITLE)
+            .description(UPDATED_DESCRIPTION)
+            .icon(UPDATED_ICON)
+            .color(UPDATED_COLOR)
+            .createdOn(UPDATED_CREATED_ON)
+            .createdBy(UPDATED_CREATED_BY)
+            .hide(UPDATED_HIDE);
+
+        restServiceDefinitionMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedServiceDefinition.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedServiceDefinition))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the ServiceDefinition in the database
+        List<ServiceDefinition> serviceDefinitionList = serviceDefinitionRepository.findAll();
+        assertThat(serviceDefinitionList).hasSize(databaseSizeBeforeUpdate);
+        ServiceDefinition testServiceDefinition = serviceDefinitionList.get(serviceDefinitionList.size() - 1);
+        assertThat(testServiceDefinition.getKey()).isEqualTo(UPDATED_KEY);
+        assertThat(testServiceDefinition.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testServiceDefinition.getOrder()).isEqualTo(UPDATED_ORDER);
+        assertThat(testServiceDefinition.getSubTitle()).isEqualTo(UPDATED_SUB_TITLE);
+        assertThat(testServiceDefinition.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+        assertThat(testServiceDefinition.getIcon()).isEqualTo(UPDATED_ICON);
+        assertThat(testServiceDefinition.getColor()).isEqualTo(UPDATED_COLOR);
+        assertThat(testServiceDefinition.getCreatedOn()).isEqualTo(UPDATED_CREATED_ON);
+        assertThat(testServiceDefinition.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testServiceDefinition.getHide()).isEqualTo(UPDATED_HIDE);
+    }
+
+    @Test
+    @Transactional
+    void patchNonExistingServiceDefinition() throws Exception {
+        int databaseSizeBeforeUpdate = serviceDefinitionRepository.findAll().size();
+        serviceDefinition.setId(count.incrementAndGet());
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restServiceDefinitionMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, serviceDefinition.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(serviceDefinition))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the ServiceDefinition in the database
+        List<ServiceDefinition> serviceDefinitionList = serviceDefinitionRepository.findAll();
+        assertThat(serviceDefinitionList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithIdMismatchServiceDefinition() throws Exception {
+        int databaseSizeBeforeUpdate = serviceDefinitionRepository.findAll().size();
+        serviceDefinition.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restServiceDefinitionMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(serviceDefinition))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the ServiceDefinition in the database
+        List<ServiceDefinition> serviceDefinitionList = serviceDefinitionRepository.findAll();
+        assertThat(serviceDefinitionList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithMissingIdPathParamServiceDefinition() throws Exception {
+        int databaseSizeBeforeUpdate = serviceDefinitionRepository.findAll().size();
+        serviceDefinition.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restServiceDefinitionMockMvc
+            .perform(
+                patch(ENTITY_API_URL)
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(serviceDefinition))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the ServiceDefinition in the database
+        List<ServiceDefinition> serviceDefinitionList = serviceDefinitionRepository.findAll();
+        assertThat(serviceDefinitionList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void deleteServiceDefinition() throws Exception {
         // Initialize the database
         serviceDefinitionRepository.saveAndFlush(serviceDefinition);
 
         int databaseSizeBeforeDelete = serviceDefinitionRepository.findAll().size();
 
         // Delete the serviceDefinition
-        restServiceDefinitionMockMvc.perform(delete("/api/service-definitions/{id}", serviceDefinition.getId())
-            .accept(MediaType.APPLICATION_JSON))
+        restServiceDefinitionMockMvc
+            .perform(delete(ENTITY_API_URL_ID, serviceDefinition.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

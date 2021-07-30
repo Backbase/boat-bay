@@ -9,12 +9,9 @@ import java.util.stream.Collectors;
 import org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCustomizer;
 
 public class BoatMeterRegistryCustomizer implements MeterRegistryCustomizer {
+
     @Override
     public void customize(MeterRegistry registry) {
-
         List<String> tags = new ArrayList<>(Arrays.stream(Severity.values()).map(Severity::name).collect(Collectors.toList()));
-
-
-
     }
 }

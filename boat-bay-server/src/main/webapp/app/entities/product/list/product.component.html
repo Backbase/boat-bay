@@ -1,0 +1,98 @@
+<div>
+  <h2 id="page-heading" data-cy="ProductHeading">
+    <span jhiTranslate="boatbayApp.product.home.title">Products</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="loadAll()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span jhiTranslate="boatbayApp.product.home.refreshListLabel">Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-product"
+        [routerLink]="['/product/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span jhiTranslate="boatbayApp.product.home.createLabel"> Create a new Product </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="products?.length === 0">
+    <span jhiTranslate="boatbayApp.product.home.notFound">No products found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="products && products.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr>
+          <th scope="col"><span jhiTranslate="global.field.id">ID</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.product.key">Key</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.product.name">Name</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.product.order">Order</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.product.content">Content</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.product.createdOn">Created On</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.product.createdBy">Created By</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.product.hide">Hide</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.product.jiraProjectId">Jira Project Id</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.product.portal">Portal</span></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let product of products; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/product', product.id, 'view']">{{ product.id }}</a>
+          </td>
+          <td>{{ product.key }}</td>
+          <td>{{ product.name }}</td>
+          <td>{{ product.order }}</td>
+          <td>{{ product.content }}</td>
+          <td>{{ product.createdOn | formatMediumDatetime }}</td>
+          <td>{{ product.createdBy }}</td>
+          <td>{{ product.hide }}</td>
+          <td>{{ product.jiraProjectId }}</td>
+          <td>
+            <div *ngIf="product.portal">
+              <a [routerLink]="['/portal', product.portal?.id, 'view']">{{ product.portal?.name }}</a>
+            </div>
+          </td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/product', product.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/product', product.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(product)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

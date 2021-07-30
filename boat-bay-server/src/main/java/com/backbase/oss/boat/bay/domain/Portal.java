@@ -1,16 +1,14 @@
 package com.backbase.oss.boat.bay.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.*;
+import javax.validation.constraints.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Portal.
@@ -61,14 +59,16 @@ public class Portal implements Serializable {
 
     @OneToMany(mappedBy = "portal")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "productReleases", "capabilities", "portal" }, allowSetters = true)
     private Set<Product> products = new HashSet<>();
 
     @OneToMany(mappedBy = "portal")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "portal" }, allowSetters = true)
     private Set<LintRule> lintRules = new HashSet<>();
 
+    @JsonIgnoreProperties(value = { "portal" }, allowSetters = true)
     @OneToOne(mappedBy = "portal")
-    @JsonIgnore
     private ZallyConfig zallyConfig;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -80,8 +80,13 @@ public class Portal implements Serializable {
         this.id = id;
     }
 
+    public Portal id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public String getKey() {
-        return key;
+        return this.key;
     }
 
     public Portal key(String key) {
@@ -94,7 +99,7 @@ public class Portal implements Serializable {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public Portal name(String name) {
@@ -107,7 +112,7 @@ public class Portal implements Serializable {
     }
 
     public String getSubTitle() {
-        return subTitle;
+        return this.subTitle;
     }
 
     public Portal subTitle(String subTitle) {
@@ -120,7 +125,7 @@ public class Portal implements Serializable {
     }
 
     public String getLogoUrl() {
-        return logoUrl;
+        return this.logoUrl;
     }
 
     public Portal logoUrl(String logoUrl) {
@@ -133,7 +138,7 @@ public class Portal implements Serializable {
     }
 
     public String getLogoLink() {
-        return logoLink;
+        return this.logoLink;
     }
 
     public Portal logoLink(String logoLink) {
@@ -146,7 +151,7 @@ public class Portal implements Serializable {
     }
 
     public String getContent() {
-        return content;
+        return this.content;
     }
 
     public Portal content(String content) {
@@ -159,7 +164,7 @@ public class Portal implements Serializable {
     }
 
     public ZonedDateTime getCreatedOn() {
-        return createdOn;
+        return this.createdOn;
     }
 
     public Portal createdOn(ZonedDateTime createdOn) {
@@ -172,7 +177,7 @@ public class Portal implements Serializable {
     }
 
     public String getCreatedBy() {
-        return createdBy;
+        return this.createdBy;
     }
 
     public Portal createdBy(String createdBy) {
@@ -184,8 +189,8 @@ public class Portal implements Serializable {
         this.createdBy = createdBy;
     }
 
-    public Boolean isHide() {
-        return hide;
+    public Boolean getHide() {
+        return this.hide;
     }
 
     public Portal hide(Boolean hide) {
@@ -197,8 +202,8 @@ public class Portal implements Serializable {
         this.hide = hide;
     }
 
-    public Boolean isLinted() {
-        return linted;
+    public Boolean getLinted() {
+        return this.linted;
     }
 
     public Portal linted(Boolean linted) {
@@ -211,11 +216,11 @@ public class Portal implements Serializable {
     }
 
     public Set<Product> getProducts() {
-        return products;
+        return this.products;
     }
 
     public Portal products(Set<Product> products) {
-        this.products = products;
+        this.setProducts(products);
         return this;
     }
 
@@ -232,15 +237,21 @@ public class Portal implements Serializable {
     }
 
     public void setProducts(Set<Product> products) {
+        if (this.products != null) {
+            this.products.forEach(i -> i.setPortal(null));
+        }
+        if (products != null) {
+            products.forEach(i -> i.setPortal(this));
+        }
         this.products = products;
     }
 
     public Set<LintRule> getLintRules() {
-        return lintRules;
+        return this.lintRules;
     }
 
     public Portal lintRules(Set<LintRule> lintRules) {
-        this.lintRules = lintRules;
+        this.setLintRules(lintRules);
         return this;
     }
 
@@ -257,21 +268,34 @@ public class Portal implements Serializable {
     }
 
     public void setLintRules(Set<LintRule> lintRules) {
+        if (this.lintRules != null) {
+            this.lintRules.forEach(i -> i.setPortal(null));
+        }
+        if (lintRules != null) {
+            lintRules.forEach(i -> i.setPortal(this));
+        }
         this.lintRules = lintRules;
     }
 
     public ZallyConfig getZallyConfig() {
-        return zallyConfig;
+        return this.zallyConfig;
     }
 
     public Portal zallyConfig(ZallyConfig zallyConfig) {
-        this.zallyConfig = zallyConfig;
+        this.setZallyConfig(zallyConfig);
         return this;
     }
 
     public void setZallyConfig(ZallyConfig zallyConfig) {
+        if (this.zallyConfig != null) {
+            this.zallyConfig.setPortal(null);
+        }
+        if (zallyConfig != null) {
+            zallyConfig.setPortal(this);
+        }
         this.zallyConfig = zallyConfig;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -287,7 +311,8 @@ public class Portal implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
     // prettier-ignore
@@ -303,8 +328,8 @@ public class Portal implements Serializable {
             ", content='" + getContent() + "'" +
             ", createdOn='" + getCreatedOn() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
-            ", hide='" + isHide() + "'" +
-            ", linted='" + isLinted() + "'" +
+            ", hide='" + getHide() + "'" +
+            ", linted='" + getLinted() + "'" +
             "}";
     }
 }

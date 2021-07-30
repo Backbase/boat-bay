@@ -4,23 +4,17 @@
     {
       "fieldName": "key",
       "fieldType": "String",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "name",
       "fieldType": "String",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "version",
       "fieldType": "String",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "title",
@@ -34,9 +28,7 @@
       "fieldName": "openApi",
       "fieldType": "byte[]",
       "fieldTypeBlobContent": "text",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "description",
@@ -46,37 +38,27 @@
     {
       "fieldName": "createdOn",
       "fieldType": "ZonedDateTime",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "createdBy",
       "fieldType": "String",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "checksum",
       "fieldType": "String",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "filename",
       "fieldType": "String",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "valid",
       "fieldType": "Boolean",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "order",
@@ -174,7 +156,6 @@
       "relationshipType": "many-to-one",
       "otherEntityName": "capability",
       "otherEntityRelationshipName": "spec",
-      "relationshipValidateRules": "required",
       "relationshipName": "capability",
       "otherEntityField": "name"
     },
@@ -197,7 +178,6 @@
       "relationshipType": "many-to-one",
       "otherEntityName": "specType",
       "otherEntityRelationshipName": "spec",
-      "relationshipValidateRules": "required",
       "relationshipName": "specType",
       "otherEntityField": "name"
     },
@@ -206,7 +186,6 @@
       "otherEntityName": "tag",
       "otherEntityRelationshipName": "spec",
       "relationshipName": "tag",
-      "otherEntityField": "id",
       "ownerSide": true
     },
     {
@@ -221,6 +200,7 @@
       "otherEntityName": "spec",
       "otherEntityRelationshipName": "previousSpec",
       "relationshipName": "successor",
+      "otherEntityField": "version",
       "ownerSide": false
     },
     {
@@ -236,11 +216,9 @@
       "otherEntityName": "productRelease",
       "otherEntityRelationshipName": "spec",
       "relationshipName": "productRelease",
-      "otherEntityField": "id",
       "ownerSide": false
     }
   ],
-  "changelogDate": "20201223102615",
   "entityTableName": "spec",
   "dto": "no",
   "pagination": "pagination",
@@ -249,6 +227,6 @@
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "clientRootFolder": "",
-  "applications": "*"
+  "applications": "*",
+  "changelogDate": "20210730113935"
 }

@@ -1,13 +1,14 @@
 package com.backbase.oss.boat.bay.domain;
 
-import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
-import com.backbase.oss.boat.bay.web.rest.TestUtil;
 
-public class ProductReleaseTest {
+import com.backbase.oss.boat.bay.web.rest.TestUtil;
+import org.junit.jupiter.api.Test;
+
+class ProductReleaseTest {
 
     @Test
-    public void equalsVerifier() throws Exception {
+    void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(ProductRelease.class);
         ProductRelease productRelease1 = new ProductRelease();
         productRelease1.setId(1L);

@@ -38,10 +38,8 @@ import org.jfrog.artifactory.client.Searches;
 import org.jfrog.artifactory.client.model.File;
 import org.jfrog.artifactory.client.model.RepoPath;
 
-
 @Slf4j
 public class JFrogSpecSourceScanner implements SpecSourceScanner {
-
 
     private Source source;
 
@@ -74,18 +72,15 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
     }
 
     public ScanResult scan() {
-
         ScanResult scanResult = new ScanResult(source, scannerOptions);
 
         log.info("Scanning Artifactory Source: {}", source.getName());
-        Searches searchQuery = getArtifactory().searches()
-            .repositories(repository);
+        Searches searchQuery = getArtifactory().searches().repositories(repository);
         if (source.getFilterArtifactsName() != null) {
             searchQuery = searchQuery.artifactsByName(source.getFilterArtifactsName());
         }
 
-        List<RepoPath> repoPaths = searchQuery
-            .doSearch();
+        List<RepoPath> repoPaths = searchQuery.doSearch();
 
         log.info("Found: {} items from artifactory", repoPaths.size());
 
@@ -99,7 +94,7 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
             .collect(Collectors.toList());
 
         if (source.getItemLimit() != null && !items.isEmpty()) {
-            items = items.subList(0, Math.min(source.getItemLimit(), items.size()-1));
+            items = items.subList(0, Math.min(source.getItemLimit(), items.size() - 1));
         }
         log.info("Processing  items: {}", items.size());
 
@@ -119,11 +114,13 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
     private Artifactory getArtifactory() {
         if (artifactory == null) {
             log.info("Setting up artifactory client with url: {} and username: {}", baseUrl, source.getUsername());
-            artifactory = ArtifactoryClientBuilder.create()
-                .setUrl(baseUrl)
-                .setUsername(source.getUsername())
-                .setPassword(source.getPassword())
-                .build();
+            artifactory =
+                ArtifactoryClientBuilder
+                    .create()
+                    .setUrl(baseUrl)
+                    .setUsername(source.getUsername())
+                    .setPassword(source.getPassword())
+                    .build();
         }
         return artifactory;
     }
@@ -140,23 +137,29 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
             log.debug("Include item in scan: {}", path);
             return true;
         } else {
-            log.debug("Exclude item in scan: {} as it's not in the source paths: [{}] ", path, paths.stream().map(SourcePath::getName).collect(Collectors.joining(",")));
+            log.debug(
+                "Exclude item in scan: {} as it's not in the source paths: [{}] ",
+                path,
+                paths.stream().map(SourcePath::getName).collect(Collectors.joining(","))
+            );
             return false;
         }
     }
 
     private ItemHandle getItem(RepoPath repoPath) {
-        return getArtifactory().repository(repository)
-            .file(repoPath.getItemPath());
+        return getArtifactory().repository(repository).file(repoPath.getItemPath());
     }
 
     private void findSpecInZip(ItemHandle item, ScanResult scanResult) {
         try {
             if (item.info().getName().endsWith(".yaml")) {
-
                 Spec spec = getSpec(item);
                 if (source.getSpecFilterSpEL() != null && SpringExpressionUtils.match(source.getSpecFilterSpEL(), spec)) {
-                    log.info("Spec: {} is ignored because it matches the spec filter expression: {}", item.info().getPath(), source.getSpecFilterSpEL());
+                    log.info(
+                        "Spec: {} is ignored because it matches the spec filter expression: {}",
+                        item.info().getPath(),
+                        source.getSpecFilterSpEL()
+                    );
                     return;
                 }
                 log.info("Downloading OpenAPI for spec: {}", spec.getName());
@@ -190,8 +193,6 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
                     log.info("Adding {} to release named: {}", specsInZip.size(), productRelease.getName());
                     scanResult.addProductRelease(productRelease);
                 }
-
-
             } else {
                 log.error("Item: {} not supported", item.info().getPath());
             }
@@ -233,7 +234,6 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
             log.debug("Ignoring {}", zipEntry.getName());
         }
         return Optional.empty();
-
     }
 
     private String getOpenApiFromZipStream(ZipInputStream stream) throws IOException {
@@ -291,6 +291,4 @@ public class JFrogSpecSourceScanner implements SpecSourceScanner {
     public SourceType getSourceType() {
         return SourceType.JFROG;
     }
-
-
 }

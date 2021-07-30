@@ -24,7 +24,6 @@
       "otherEntityName": "spec",
       "otherEntityRelationshipName": "lintReport",
       "relationshipName": "spec",
-      "otherEntityField": "id",
       "ownerSide": true
     },
     {
@@ -34,7 +33,6 @@
       "relationshipName": "violations"
     }
   ],
-  "changelogDate": "20201223103015",
   "entityTableName": "lint_report",
   "dto": "no",
   "pagination": "no",
@@ -43,6 +41,6 @@
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "clientRootFolder": "",
-  "applications": "*"
+  "applications": "*",
+  "changelogDate": "20210730113941"
 }

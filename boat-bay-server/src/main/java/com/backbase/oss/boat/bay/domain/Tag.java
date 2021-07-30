@@ -1,15 +1,13 @@
 package com.backbase.oss.boat.bay.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.*;
+import javax.validation.constraints.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Tag.
@@ -41,7 +39,22 @@ public class Tag implements Serializable {
 
     @ManyToMany(mappedBy = "tags")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnore
+    @JsonIgnoreProperties(
+        value = {
+            "previousSpec",
+            "portal",
+            "capability",
+            "product",
+            "source",
+            "specType",
+            "tags",
+            "lintReport",
+            "successor",
+            "serviceDefinition",
+            "productReleases",
+        },
+        allowSetters = true
+    )
     private Set<Spec> specs = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -53,8 +66,13 @@ public class Tag implements Serializable {
         this.id = id;
     }
 
+    public Tag id(Long id) {
+        this.id = id;
+        return this;
+    }
+
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public Tag name(String name) {
@@ -67,7 +85,7 @@ public class Tag implements Serializable {
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     public Tag description(String description) {
@@ -79,8 +97,8 @@ public class Tag implements Serializable {
         this.description = description;
     }
 
-    public Boolean isHide() {
-        return hide;
+    public Boolean getHide() {
+        return this.hide;
     }
 
     public Tag hide(Boolean hide) {
@@ -93,7 +111,7 @@ public class Tag implements Serializable {
     }
 
     public String getColor() {
-        return color;
+        return this.color;
     }
 
     public Tag color(String color) {
@@ -106,11 +124,11 @@ public class Tag implements Serializable {
     }
 
     public Set<Spec> getSpecs() {
-        return specs;
+        return this.specs;
     }
 
     public Tag specs(Set<Spec> specs) {
-        this.specs = specs;
+        this.setSpecs(specs);
         return this;
     }
 
@@ -127,8 +145,15 @@ public class Tag implements Serializable {
     }
 
     public void setSpecs(Set<Spec> specs) {
+        if (this.specs != null) {
+            this.specs.forEach(i -> i.removeTag(this));
+        }
+        if (specs != null) {
+            specs.forEach(i -> i.addTag(this));
+        }
         this.specs = specs;
     }
+
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
     @Override
@@ -144,7 +169,8 @@ public class Tag implements Serializable {
 
     @Override
     public int hashCode() {
-        return 31;
+        // see https://vladmihalcea.com/how-to-implement-equals-and-hashcode-using-the-jpa-entity-identifier/
+        return getClass().hashCode();
     }
 
     // prettier-ignore
@@ -154,7 +180,7 @@ public class Tag implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
-            ", hide='" + isHide() + "'" +
+            ", hide='" + getHide() + "'" +
             ", color='" + getColor() + "'" +
             "}";
     }

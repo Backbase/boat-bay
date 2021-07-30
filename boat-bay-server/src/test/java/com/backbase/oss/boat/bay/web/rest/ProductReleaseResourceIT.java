@@ -1,32 +1,5 @@
 package com.backbase.oss.boat.bay.web.rest;
 
-import com.backbase.oss.boat.bay.BoatBayApp;
-import com.backbase.oss.boat.bay.domain.ProductRelease;
-import com.backbase.oss.boat.bay.domain.Product;
-import com.backbase.oss.boat.bay.repository.ProductReleaseRepository;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
-import javax.persistence.EntityManager;
-import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.time.ZoneOffset;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-
 import static com.backbase.oss.boat.bay.web.rest.TestUtil.sameInstant;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
@@ -34,14 +7,41 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.backbase.oss.boat.bay.IntegrationTest;
+import com.backbase.oss.boat.bay.domain.Product;
+import com.backbase.oss.boat.bay.domain.ProductRelease;
+import com.backbase.oss.boat.bay.repository.ProductReleaseRepository;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+
 /**
  * Integration tests for the {@link ProductReleaseResource} REST controller.
  */
-@SpringBootTest(classes = BoatBayApp.class)
+@IntegrationTest
 @ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
-public class ProductReleaseResourceIT {
+class ProductReleaseResourceIT {
 
     private static final String DEFAULT_KEY = "AAAAAAAAAA";
     private static final String UPDATED_KEY = "BBBBBBBBBB";
@@ -57,6 +57,12 @@ public class ProductReleaseResourceIT {
 
     private static final Boolean DEFAULT_HIDE = false;
     private static final Boolean UPDATED_HIDE = true;
+
+    private static final String ENTITY_API_URL = "/api/product-releases";
+    private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
+
+    private static Random random = new Random();
+    private static AtomicLong count = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     @Autowired
     private ProductReleaseRepository productReleaseRepository;
@@ -97,6 +103,7 @@ public class ProductReleaseResourceIT {
         productRelease.setProduct(product);
         return productRelease;
     }
+
     /**
      * Create an updated entity for this test.
      *
@@ -130,12 +137,13 @@ public class ProductReleaseResourceIT {
 
     @Test
     @Transactional
-    public void createProductRelease() throws Exception {
+    void createProductRelease() throws Exception {
         int databaseSizeBeforeCreate = productReleaseRepository.findAll().size();
         // Create the ProductRelease
-        restProductReleaseMockMvc.perform(post("/api/product-releases")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(productRelease)))
+        restProductReleaseMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(productRelease))
+            )
             .andExpect(status().isCreated());
 
         // Validate the ProductRelease in the database
@@ -146,21 +154,22 @@ public class ProductReleaseResourceIT {
         assertThat(testProductRelease.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testProductRelease.getVersion()).isEqualTo(DEFAULT_VERSION);
         assertThat(testProductRelease.getReleaseDate()).isEqualTo(DEFAULT_RELEASE_DATE);
-        assertThat(testProductRelease.isHide()).isEqualTo(DEFAULT_HIDE);
+        assertThat(testProductRelease.getHide()).isEqualTo(DEFAULT_HIDE);
     }
 
     @Test
     @Transactional
-    public void createProductReleaseWithExistingId() throws Exception {
-        int databaseSizeBeforeCreate = productReleaseRepository.findAll().size();
-
+    void createProductReleaseWithExistingId() throws Exception {
         // Create the ProductRelease with an existing ID
         productRelease.setId(1L);
 
+        int databaseSizeBeforeCreate = productReleaseRepository.findAll().size();
+
         // An entity with an existing ID cannot be created, so this API call must fail
-        restProductReleaseMockMvc.perform(post("/api/product-releases")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(productRelease)))
+        restProductReleaseMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(productRelease))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the ProductRelease in the database
@@ -168,20 +177,19 @@ public class ProductReleaseResourceIT {
         assertThat(productReleaseList).hasSize(databaseSizeBeforeCreate);
     }
 
-
     @Test
     @Transactional
-    public void checkKeyIsRequired() throws Exception {
+    void checkKeyIsRequired() throws Exception {
         int databaseSizeBeforeTest = productReleaseRepository.findAll().size();
         // set the field null
         productRelease.setKey(null);
 
         // Create the ProductRelease, which fails.
 
-
-        restProductReleaseMockMvc.perform(post("/api/product-releases")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(productRelease)))
+        restProductReleaseMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(productRelease))
+            )
             .andExpect(status().isBadRequest());
 
         List<ProductRelease> productReleaseList = productReleaseRepository.findAll();
@@ -190,17 +198,17 @@ public class ProductReleaseResourceIT {
 
     @Test
     @Transactional
-    public void checkNameIsRequired() throws Exception {
+    void checkNameIsRequired() throws Exception {
         int databaseSizeBeforeTest = productReleaseRepository.findAll().size();
         // set the field null
         productRelease.setName(null);
 
         // Create the ProductRelease, which fails.
 
-
-        restProductReleaseMockMvc.perform(post("/api/product-releases")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(productRelease)))
+        restProductReleaseMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(productRelease))
+            )
             .andExpect(status().isBadRequest());
 
         List<ProductRelease> productReleaseList = productReleaseRepository.findAll();
@@ -209,17 +217,17 @@ public class ProductReleaseResourceIT {
 
     @Test
     @Transactional
-    public void checkVersionIsRequired() throws Exception {
+    void checkVersionIsRequired() throws Exception {
         int databaseSizeBeforeTest = productReleaseRepository.findAll().size();
         // set the field null
         productRelease.setVersion(null);
 
         // Create the ProductRelease, which fails.
 
-
-        restProductReleaseMockMvc.perform(post("/api/product-releases")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(productRelease)))
+        restProductReleaseMockMvc
+            .perform(
+                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(productRelease))
+            )
             .andExpect(status().isBadRequest());
 
         List<ProductRelease> productReleaseList = productReleaseRepository.findAll();
@@ -228,12 +236,13 @@ public class ProductReleaseResourceIT {
 
     @Test
     @Transactional
-    public void getAllProductReleases() throws Exception {
+    void getAllProductReleases() throws Exception {
         // Initialize the database
         productReleaseRepository.saveAndFlush(productRelease);
 
         // Get all the productReleaseList
-        restProductReleaseMockMvc.perform(get("/api/product-releases?sort=id,desc"))
+        restProductReleaseMockMvc
+            .perform(get(ENTITY_API_URL + "?sort=id,desc"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(productRelease.getId().intValue())))
@@ -243,35 +252,34 @@ public class ProductReleaseResourceIT {
             .andExpect(jsonPath("$.[*].releaseDate").value(hasItem(sameInstant(DEFAULT_RELEASE_DATE))))
             .andExpect(jsonPath("$.[*].hide").value(hasItem(DEFAULT_HIDE.booleanValue())));
     }
-    
-    @SuppressWarnings({"unchecked"})
-    public void getAllProductReleasesWithEagerRelationshipsIsEnabled() throws Exception {
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllProductReleasesWithEagerRelationshipsIsEnabled() throws Exception {
         when(productReleaseRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
 
-        restProductReleaseMockMvc.perform(get("/api/product-releases?eagerload=true"))
-            .andExpect(status().isOk());
+        restProductReleaseMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
 
         verify(productReleaseRepositoryMock, times(1)).findAllWithEagerRelationships(any());
     }
 
-    @SuppressWarnings({"unchecked"})
-    public void getAllProductReleasesWithEagerRelationshipsIsNotEnabled() throws Exception {
+    @SuppressWarnings({ "unchecked" })
+    void getAllProductReleasesWithEagerRelationshipsIsNotEnabled() throws Exception {
         when(productReleaseRepositoryMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
 
-        restProductReleaseMockMvc.perform(get("/api/product-releases?eagerload=true"))
-            .andExpect(status().isOk());
+        restProductReleaseMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
 
         verify(productReleaseRepositoryMock, times(1)).findAllWithEagerRelationships(any());
     }
 
     @Test
     @Transactional
-    public void getProductRelease() throws Exception {
+    void getProductRelease() throws Exception {
         // Initialize the database
         productReleaseRepository.saveAndFlush(productRelease);
 
         // Get the productRelease
-        restProductReleaseMockMvc.perform(get("/api/product-releases/{id}", productRelease.getId()))
+        restProductReleaseMockMvc
+            .perform(get(ENTITY_API_URL_ID, productRelease.getId()))
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(productRelease.getId().intValue()))
@@ -281,17 +289,17 @@ public class ProductReleaseResourceIT {
             .andExpect(jsonPath("$.releaseDate").value(sameInstant(DEFAULT_RELEASE_DATE)))
             .andExpect(jsonPath("$.hide").value(DEFAULT_HIDE.booleanValue()));
     }
+
     @Test
     @Transactional
-    public void getNonExistingProductRelease() throws Exception {
+    void getNonExistingProductRelease() throws Exception {
         // Get the productRelease
-        restProductReleaseMockMvc.perform(get("/api/product-releases/{id}", Long.MAX_VALUE))
-            .andExpect(status().isNotFound());
+        restProductReleaseMockMvc.perform(get(ENTITY_API_URL_ID, Long.MAX_VALUE)).andExpect(status().isNotFound());
     }
 
     @Test
     @Transactional
-    public void updateProductRelease() throws Exception {
+    void putNewProductRelease() throws Exception {
         // Initialize the database
         productReleaseRepository.saveAndFlush(productRelease);
 
@@ -308,9 +316,12 @@ public class ProductReleaseResourceIT {
             .releaseDate(UPDATED_RELEASE_DATE)
             .hide(UPDATED_HIDE);
 
-        restProductReleaseMockMvc.perform(put("/api/product-releases")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(updatedProductRelease)))
+        restProductReleaseMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, updatedProductRelease.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(updatedProductRelease))
+            )
             .andExpect(status().isOk());
 
         // Validate the ProductRelease in the database
@@ -321,18 +332,22 @@ public class ProductReleaseResourceIT {
         assertThat(testProductRelease.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testProductRelease.getVersion()).isEqualTo(UPDATED_VERSION);
         assertThat(testProductRelease.getReleaseDate()).isEqualTo(UPDATED_RELEASE_DATE);
-        assertThat(testProductRelease.isHide()).isEqualTo(UPDATED_HIDE);
+        assertThat(testProductRelease.getHide()).isEqualTo(UPDATED_HIDE);
     }
 
     @Test
     @Transactional
-    public void updateNonExistingProductRelease() throws Exception {
+    void putNonExistingProductRelease() throws Exception {
         int databaseSizeBeforeUpdate = productReleaseRepository.findAll().size();
+        productRelease.setId(count.incrementAndGet());
 
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
-        restProductReleaseMockMvc.perform(put("/api/product-releases")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtil.convertObjectToJsonBytes(productRelease)))
+        restProductReleaseMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, productRelease.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(productRelease))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the ProductRelease in the database
@@ -342,15 +357,180 @@ public class ProductReleaseResourceIT {
 
     @Test
     @Transactional
-    public void deleteProductRelease() throws Exception {
+    void putWithIdMismatchProductRelease() throws Exception {
+        int databaseSizeBeforeUpdate = productReleaseRepository.findAll().size();
+        productRelease.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restProductReleaseMockMvc
+            .perform(
+                put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(productRelease))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the ProductRelease in the database
+        List<ProductRelease> productReleaseList = productReleaseRepository.findAll();
+        assertThat(productReleaseList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void putWithMissingIdPathParamProductRelease() throws Exception {
+        int databaseSizeBeforeUpdate = productReleaseRepository.findAll().size();
+        productRelease.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restProductReleaseMockMvc
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(productRelease)))
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the ProductRelease in the database
+        List<ProductRelease> productReleaseList = productReleaseRepository.findAll();
+        assertThat(productReleaseList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void partialUpdateProductReleaseWithPatch() throws Exception {
+        // Initialize the database
+        productReleaseRepository.saveAndFlush(productRelease);
+
+        int databaseSizeBeforeUpdate = productReleaseRepository.findAll().size();
+
+        // Update the productRelease using partial update
+        ProductRelease partialUpdatedProductRelease = new ProductRelease();
+        partialUpdatedProductRelease.setId(productRelease.getId());
+
+        partialUpdatedProductRelease.name(UPDATED_NAME).version(UPDATED_VERSION).hide(UPDATED_HIDE);
+
+        restProductReleaseMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedProductRelease.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedProductRelease))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the ProductRelease in the database
+        List<ProductRelease> productReleaseList = productReleaseRepository.findAll();
+        assertThat(productReleaseList).hasSize(databaseSizeBeforeUpdate);
+        ProductRelease testProductRelease = productReleaseList.get(productReleaseList.size() - 1);
+        assertThat(testProductRelease.getKey()).isEqualTo(DEFAULT_KEY);
+        assertThat(testProductRelease.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testProductRelease.getVersion()).isEqualTo(UPDATED_VERSION);
+        assertThat(testProductRelease.getReleaseDate()).isEqualTo(DEFAULT_RELEASE_DATE);
+        assertThat(testProductRelease.getHide()).isEqualTo(UPDATED_HIDE);
+    }
+
+    @Test
+    @Transactional
+    void fullUpdateProductReleaseWithPatch() throws Exception {
+        // Initialize the database
+        productReleaseRepository.saveAndFlush(productRelease);
+
+        int databaseSizeBeforeUpdate = productReleaseRepository.findAll().size();
+
+        // Update the productRelease using partial update
+        ProductRelease partialUpdatedProductRelease = new ProductRelease();
+        partialUpdatedProductRelease.setId(productRelease.getId());
+
+        partialUpdatedProductRelease
+            .key(UPDATED_KEY)
+            .name(UPDATED_NAME)
+            .version(UPDATED_VERSION)
+            .releaseDate(UPDATED_RELEASE_DATE)
+            .hide(UPDATED_HIDE);
+
+        restProductReleaseMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, partialUpdatedProductRelease.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedProductRelease))
+            )
+            .andExpect(status().isOk());
+
+        // Validate the ProductRelease in the database
+        List<ProductRelease> productReleaseList = productReleaseRepository.findAll();
+        assertThat(productReleaseList).hasSize(databaseSizeBeforeUpdate);
+        ProductRelease testProductRelease = productReleaseList.get(productReleaseList.size() - 1);
+        assertThat(testProductRelease.getKey()).isEqualTo(UPDATED_KEY);
+        assertThat(testProductRelease.getName()).isEqualTo(UPDATED_NAME);
+        assertThat(testProductRelease.getVersion()).isEqualTo(UPDATED_VERSION);
+        assertThat(testProductRelease.getReleaseDate()).isEqualTo(UPDATED_RELEASE_DATE);
+        assertThat(testProductRelease.getHide()).isEqualTo(UPDATED_HIDE);
+    }
+
+    @Test
+    @Transactional
+    void patchNonExistingProductRelease() throws Exception {
+        int databaseSizeBeforeUpdate = productReleaseRepository.findAll().size();
+        productRelease.setId(count.incrementAndGet());
+
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
+        restProductReleaseMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, productRelease.getId())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(productRelease))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the ProductRelease in the database
+        List<ProductRelease> productReleaseList = productReleaseRepository.findAll();
+        assertThat(productReleaseList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithIdMismatchProductRelease() throws Exception {
+        int databaseSizeBeforeUpdate = productReleaseRepository.findAll().size();
+        productRelease.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restProductReleaseMockMvc
+            .perform(
+                patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(productRelease))
+            )
+            .andExpect(status().isBadRequest());
+
+        // Validate the ProductRelease in the database
+        List<ProductRelease> productReleaseList = productReleaseRepository.findAll();
+        assertThat(productReleaseList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void patchWithMissingIdPathParamProductRelease() throws Exception {
+        int databaseSizeBeforeUpdate = productReleaseRepository.findAll().size();
+        productRelease.setId(count.incrementAndGet());
+
+        // If url ID doesn't match entity ID, it will throw BadRequestAlertException
+        restProductReleaseMockMvc
+            .perform(
+                patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(productRelease))
+            )
+            .andExpect(status().isMethodNotAllowed());
+
+        // Validate the ProductRelease in the database
+        List<ProductRelease> productReleaseList = productReleaseRepository.findAll();
+        assertThat(productReleaseList).hasSize(databaseSizeBeforeUpdate);
+    }
+
+    @Test
+    @Transactional
+    void deleteProductRelease() throws Exception {
         // Initialize the database
         productReleaseRepository.saveAndFlush(productRelease);
 
         int databaseSizeBeforeDelete = productReleaseRepository.findAll().size();
 
         // Delete the productRelease
-        restProductReleaseMockMvc.perform(delete("/api/product-releases/{id}", productRelease.getId())
-            .accept(MediaType.APPLICATION_JSON))
+        restProductReleaseMockMvc
+            .perform(delete(ENTITY_API_URL_ID, productRelease.getId()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

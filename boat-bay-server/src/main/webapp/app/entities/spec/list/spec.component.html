@@ -1,0 +1,244 @@
+<div>
+  <h2 id="page-heading" data-cy="SpecHeading">
+    <span jhiTranslate="boatbayApp.spec.home.title">Specs</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info mr-2" (click)="loadPage()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span jhiTranslate="boatbayApp.spec.home.refreshListLabel">Refresh List</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-spec"
+        [routerLink]="['/spec/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span jhiTranslate="boatbayApp.spec.home.createLabel"> Create a new Spec </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="specs?.length === 0">
+    <span jhiTranslate="boatbayApp.spec.home.notFound">No specs found</span>
+  </div>
+
+  <div class="table-responsive" id="entities" *ngIf="specs && specs.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="loadPage.bind(this)">
+          <th scope="col" jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="key"><span jhiTranslate="boatbayApp.spec.key">Key</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="name"><span jhiTranslate="boatbayApp.spec.name">Name</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="version">
+            <span jhiTranslate="boatbayApp.spec.version">Version</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="title"><span jhiTranslate="boatbayApp.spec.title">Title</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="icon"><span jhiTranslate="boatbayApp.spec.icon">Icon</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="openApi">
+            <span jhiTranslate="boatbayApp.spec.openApi">Open Api</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="description">
+            <span jhiTranslate="boatbayApp.spec.description">Description</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="createdOn">
+            <span jhiTranslate="boatbayApp.spec.createdOn">Created On</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="createdBy">
+            <span jhiTranslate="boatbayApp.spec.createdBy">Created By</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="checksum">
+            <span jhiTranslate="boatbayApp.spec.checksum">Checksum</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="filename">
+            <span jhiTranslate="boatbayApp.spec.filename">Filename</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="valid"><span jhiTranslate="boatbayApp.spec.valid">Valid</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="order"><span jhiTranslate="boatbayApp.spec.order">Order</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="parseError">
+            <span jhiTranslate="boatbayApp.spec.parseError">Parse Error</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="externalDocs">
+            <span jhiTranslate="boatbayApp.spec.externalDocs">External Docs</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="hide"><span jhiTranslate="boatbayApp.spec.hide">Hide</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="grade"><span jhiTranslate="boatbayApp.spec.grade">Grade</span> <fa-icon icon="sort"></fa-icon></th>
+          <th scope="col" jhiSortBy="changes">
+            <span jhiTranslate="boatbayApp.spec.changes">Changes</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="sourcePath">
+            <span jhiTranslate="boatbayApp.spec.sourcePath">Source Path</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="sourceName">
+            <span jhiTranslate="boatbayApp.spec.sourceName">Source Name</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="sourceUrl">
+            <span jhiTranslate="boatbayApp.spec.sourceUrl">Source Url</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="sourceCreatedBy">
+            <span jhiTranslate="boatbayApp.spec.sourceCreatedBy">Source Created By</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="sourceCreatedOn">
+            <span jhiTranslate="boatbayApp.spec.sourceCreatedOn">Source Created On</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="sourceLastModifiedOn">
+            <span jhiTranslate="boatbayApp.spec.sourceLastModifiedOn">Source Last Modified On</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="sourceLastModifiedBy">
+            <span jhiTranslate="boatbayApp.spec.sourceLastModifiedBy">Source Last Modified By</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="mvnGroupId">
+            <span jhiTranslate="boatbayApp.spec.mvnGroupId">Mvn Group Id</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="mvnArtifactId">
+            <span jhiTranslate="boatbayApp.spec.mvnArtifactId">Mvn Artifact Id</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="mvnVersion">
+            <span jhiTranslate="boatbayApp.spec.mvnVersion">Mvn Version</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="mvnClassifier">
+            <span jhiTranslate="boatbayApp.spec.mvnClassifier">Mvn Classifier</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="mvnExtension">
+            <span jhiTranslate="boatbayApp.spec.mvnExtension">Mvn Extension</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="previousSpec.version">
+            <span jhiTranslate="boatbayApp.spec.previousSpec">Previous Spec</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="portal.name">
+            <span jhiTranslate="boatbayApp.spec.portal">Portal</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="capability.name">
+            <span jhiTranslate="boatbayApp.spec.capability">Capability</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="product.name">
+            <span jhiTranslate="boatbayApp.spec.product">Product</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="source.name">
+            <span jhiTranslate="boatbayApp.spec.source">Source</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="specType.name">
+            <span jhiTranslate="boatbayApp.spec.specType">Spec Type</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col" jhiSortBy="serviceDefinition.name">
+            <span jhiTranslate="boatbayApp.spec.serviceDefinition">Service Definition</span> <fa-icon icon="sort"></fa-icon>
+          </th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let spec of specs; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/spec', spec.id, 'view']">{{ spec.id }}</a>
+          </td>
+          <td>{{ spec.key }}</td>
+          <td>{{ spec.name }}</td>
+          <td>{{ spec.version }}</td>
+          <td>{{ spec.title }}</td>
+          <td>{{ spec.icon }}</td>
+          <td>{{ spec.openApi }}</td>
+          <td>{{ spec.description }}</td>
+          <td>{{ spec.createdOn | formatMediumDatetime }}</td>
+          <td>{{ spec.createdBy }}</td>
+          <td>{{ spec.checksum }}</td>
+          <td>{{ spec.filename }}</td>
+          <td>{{ spec.valid }}</td>
+          <td>{{ spec.order }}</td>
+          <td>{{ spec.parseError }}</td>
+          <td>{{ spec.externalDocs }}</td>
+          <td>{{ spec.hide }}</td>
+          <td>{{ spec.grade }}</td>
+          <td jhiTranslate="{{ 'boatbayApp.Changes.' + spec.changes }}">{{ spec.changes }}</td>
+          <td>{{ spec.sourcePath }}</td>
+          <td>{{ spec.sourceName }}</td>
+          <td>{{ spec.sourceUrl }}</td>
+          <td>{{ spec.sourceCreatedBy }}</td>
+          <td>{{ spec.sourceCreatedOn | formatMediumDatetime }}</td>
+          <td>{{ spec.sourceLastModifiedOn | formatMediumDatetime }}</td>
+          <td>{{ spec.sourceLastModifiedBy }}</td>
+          <td>{{ spec.mvnGroupId }}</td>
+          <td>{{ spec.mvnArtifactId }}</td>
+          <td>{{ spec.mvnVersion }}</td>
+          <td>{{ spec.mvnClassifier }}</td>
+          <td>{{ spec.mvnExtension }}</td>
+          <td>
+            <div *ngIf="spec.previousSpec">
+              <a [routerLink]="['/spec', spec.previousSpec?.id, 'view']">{{ spec.previousSpec?.version }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="spec.portal">
+              <a [routerLink]="['/portal', spec.portal?.id, 'view']">{{ spec.portal?.name }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="spec.capability">
+              <a [routerLink]="['/capability', spec.capability?.id, 'view']">{{ spec.capability?.name }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="spec.product">
+              <a [routerLink]="['/product', spec.product?.id, 'view']">{{ spec.product?.name }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="spec.source">
+              <a [routerLink]="['/source', spec.source?.id, 'view']">{{ spec.source?.name }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="spec.specType">
+              <a [routerLink]="['/spec-type', spec.specType?.id, 'view']">{{ spec.specType?.name }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="spec.serviceDefinition">
+              <a [routerLink]="['/service-definition', spec.serviceDefinition?.id, 'view']">{{ spec.serviceDefinition?.name }}</a>
+            </div>
+          </td>
+          <td class="text-right">
+            <div class="btn-group">
+              <button type="submit" [routerLink]="['/spec', spec.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+              </button>
+
+              <button type="submit" [routerLink]="['/spec', spec.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+              </button>
+
+              <button type="submit" (click)="delete(spec)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="specs && specs.length > 0">
+    <div class="row justify-content-center">
+      <jhi-item-count [params]="{ page: page, totalItems: totalItems, itemsPerPage: itemsPerPage }"></jhi-item-count>
+    </div>
+
+    <div class="row justify-content-center">
+      <ngb-pagination
+        [collectionSize]="totalItems"
+        [(page)]="ngbPaginationPage"
+        [pageSize]="itemsPerPage"
+        [maxSize]="5"
+        [rotate]="true"
+        [boundaryLinks]="true"
+        (pageChange)="loadPage($event)"
+      ></ngb-pagination>
+    </div>
+  </div>
+</div>

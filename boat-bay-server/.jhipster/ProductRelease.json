@@ -4,23 +4,17 @@
     {
       "fieldName": "key",
       "fieldType": "String",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "name",
       "fieldType": "String",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "version",
       "fieldType": "String",
-      "fieldValidateRules": [
-        "required"
-      ]
+      "fieldValidateRules": ["required"]
     },
     {
       "fieldName": "releaseDate",
@@ -37,7 +31,6 @@
       "otherEntityName": "spec",
       "otherEntityRelationshipName": "productRelease",
       "relationshipName": "spec",
-      "otherEntityField": "id",
       "ownerSide": true
     },
     {
@@ -49,7 +42,6 @@
       "otherEntityField": "name"
     }
   ],
-  "changelogDate": "20210105091636",
   "entityTableName": "product_release",
   "dto": "no",
   "pagination": "no",
@@ -58,6 +50,6 @@
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
-  "clientRootFolder": "",
-  "applications": "*"
+  "applications": "*",
+  "changelogDate": "20210730113931"
 }

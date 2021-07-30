@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BoatProductRepository extends ProductRepository {
-
     List<Product> findAllByPortal(Portal portal);
 
     Optional<Product> findByKeyAndPortalKey(String productKey, String portalKey);
