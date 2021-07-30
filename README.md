@@ -157,6 +157,7 @@ Define the `portals` used in the sources where indicated in the example.
 ### Building
 
 Run `mvn clean install` in project root.
+It is likely that some heap space issues will arise, in this case increase memory size.
 
 ### Running locally
 
