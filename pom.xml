@@ -18,6 +18,7 @@
         <java.version>15</java.version>
         <node.version>v14.17.1</node.version>
         <npm.version>7.18.1</npm.version>
+        <lombok.version>1.18.20</lombok.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -67,6 +68,9 @@
         <maven-war-plugin.version>3.3.1</maven-war-plugin.version>
         <maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
         <checkstyle.version>8.43</checkstyle.version>
+        <problem-spring.version>0.25.2</problem-spring.version>
+        <problem-spring-web.version>${problem-spring.version}</problem-spring-web.version>
+        <problem-spring-webflux.version>${problem-spring.version}</problem-spring-webflux.version>
         <nohttp-checkstyle.version>0.0.8</nohttp-checkstyle.version>
         <frontend-maven-plugin.version>1.12.0</frontend-maven-plugin.version>
         <checksum-maven-plugin.version>1.10</checksum-maven-plugin.version>
@@ -91,8 +95,8 @@
         <jackson.version>2.11.3</jackson.version>
         <guava-version>30.0-jre</guava-version>
 
-        <swagger-core.v3.version>2.1.5</swagger-core.v3.version>
-        <swagger-parser.v3.version>2.0.23</swagger-parser.v3.version>
+        <swagger-core.v3.version>2.1.10</swagger-core.v3.version>
+        <swagger-parser.v3.version>2.0.27</swagger-parser.v3.version>
         <swagger-annotations.version>1.6.2</swagger-annotations.version>
 
         <!-- Sonar Configuration -->
