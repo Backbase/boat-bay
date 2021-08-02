@@ -41,13 +41,27 @@ jobs:
           key: ${{ runner.os }}-m2
           restore-keys: |
             ${{ runner.os }}-m2
-      - name: Set up JDK 11
+      - name: Set up JDK 15
         uses: actions/setup-java@v1
         with:
           java-version: 15
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      - name: Cache Maven packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
       - name: Build & Verify
-        run: mvn -Pprod verify
-
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: mvn -Pprod verify sonar:sonar -B
       - name: Prepare variables
         id: vars
         run: |
@@ -55,7 +69,6 @@ jobs:
           DOCKER_TAG=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout |  cut -d- -f1)
           echo ::set-output name=image::${DOCKER_IMAGE}
           echo ::set-output name=tag::${DOCKER_TAG}
-
       - name: Release Image
         run: |
           cd boat-bay-server
