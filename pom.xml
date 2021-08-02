@@ -9,7 +9,6 @@
     <packaging>pom</packaging>
     <name>Boat Bay ::  Parent</name>
 
-
     <properties>
         <!-- Run sonar run -->
 
@@ -100,7 +99,7 @@
         <swagger-annotations.version>1.6.2</swagger-annotations.version>
 
         <!-- Sonar Configuration -->
-        <sonar.projectKey>Backbase_boat-bay</sonar.projectKey>
+<!--        <sonar.projectKey>Backbase_boat-bay</sonar.projectKey>-->
         <sonar.organization>backbase-technology-prototyping</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
