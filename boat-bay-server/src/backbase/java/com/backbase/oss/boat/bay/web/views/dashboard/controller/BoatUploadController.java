@@ -1,14 +1,14 @@
 package com.backbase.oss.boat.bay.web.views.dashboard.controller;
 
+import com.backbase.oss.boat.bay.api.BoatMavenPluginApi;
 import com.backbase.oss.boat.bay.domain.Capability;
 import com.backbase.oss.boat.bay.domain.ServiceDefinition;
 import com.backbase.oss.boat.bay.domain.Source;
 import com.backbase.oss.boat.bay.domain.Spec;
+import com.backbase.oss.boat.bay.model.BoatLintReport;
+import com.backbase.oss.boat.bay.model.UploadRequestBody;
+import com.backbase.oss.boat.bay.model.UploadSpec;
 import com.backbase.oss.boat.bay.repository.*;
-import com.backbase.oss.boat.bay.service.api.ApiBoatBayUpload;
-import com.backbase.oss.boat.bay.service.model.BoatLintReport;
-import com.backbase.oss.boat.bay.service.model.UploadRequestBody;
-import com.backbase.oss.boat.bay.service.model.UploadSpec;
 import com.backbase.oss.boat.bay.source.SpecSourceResolver;
 import com.backbase.oss.boat.bay.source.scanner.ScanResult;
 import com.backbase.oss.boat.bay.source.scanner.SourceScannerOptions;
@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 @Transactional
 @RequiredArgsConstructor
 @Slf4j
-public class BoatUploadController implements ApiBoatBayUpload {
+public class BoatUploadController implements BoatMavenPluginApi {
 
     private final BoatSourceRepository boatSourceRepository;
     private final SpecSourceResolver specSourceResolver;
@@ -53,7 +53,8 @@ public class BoatUploadController implements ApiBoatBayUpload {
     private static final String ENTITY_NAME = "SPEC";
     private static final String SPEC_CREATOR = "MavenPluginUpload";
 
-    public ResponseEntity<List<BoatLintReport>> uploadSpec(@PathVariable String sourceKey, @Valid @RequestBody UploadRequestBody requestBody)  {
+    @Override
+    public ResponseEntity<List<BoatLintReport>> uploadSpec(String sourceKey, UploadRequestBody requestBody) {
 
         Source source = boatSourceRepository.findOne(Example.of(new Source().key(sourceKey)))
             .orElseThrow(() -> new BadRequestAlertException("Invalid source, source Key does not exist", "SOURCE", "sourceIdInvalid"));
@@ -162,7 +163,6 @@ public class BoatUploadController implements ApiBoatBayUpload {
         Spec spec = new Spec();
         spec.setOpenApi(uploadSpec.getOpenApi());
         spec.setName(uploadSpec.getName());
-        spec.setVersion(uploadSpec.getVersion());
         spec.setFilename(uploadSpec.getFileName());
         return spec;
     }
@@ -186,6 +186,7 @@ public class BoatUploadController implements ApiBoatBayUpload {
             spec.getFilename());
         return spec;
     }
+
 
 
 }

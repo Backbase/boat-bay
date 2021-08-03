@@ -1,10 +1,11 @@
 package com.backbase.oss.boat.bay.util;
 
 import com.backbase.oss.boat.bay.domain.Spec;
-import com.backbase.oss.boat.bay.service.model.UploadRequestBody;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+
+import com.backbase.oss.boat.bay.model.UploadRequestBody;
 import lombok.extern.slf4j.Slf4j;
 import org.jfrog.artifactory.client.ItemHandle;
 import org.springframework.expression.EvaluationException;

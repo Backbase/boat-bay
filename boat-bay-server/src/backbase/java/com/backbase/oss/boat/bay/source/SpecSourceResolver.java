@@ -76,7 +76,7 @@ public class SpecSourceResolver {
             .orElseGet(() -> productReleaseRepository.saveAndFlush(pr));
     }
 
-    public void checkSpecs(List<Spec> processedSpecs) {
+    private void checkSpecs(List<Spec> processedSpecs) {
         log.info("Checking Specs");
         for (Spec processedSpec : processedSpecs) {
             if (processedSpec.getLintReport() == null) {
@@ -90,8 +90,7 @@ public class SpecSourceResolver {
     }
 
     @SuppressWarnings("java:S5411")
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void processSpec(Spec spec, SourceScannerOptions scannerOptions) {
+    private void processSpec(Spec spec, SourceScannerOptions scannerOptions) {
         log.info("Processing spec: {}", spec.getName());
 
         Source source = spec.getSource();

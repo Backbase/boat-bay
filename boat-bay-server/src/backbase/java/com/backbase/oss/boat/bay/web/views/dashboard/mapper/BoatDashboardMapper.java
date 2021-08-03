@@ -10,18 +10,7 @@ import com.backbase.oss.boat.bay.domain.ProductRelease;
 import com.backbase.oss.boat.bay.domain.ServiceDefinition;
 import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.domain.Tag;
-import com.backbase.oss.boat.bay.service.model.BoatCapability;
-import com.backbase.oss.boat.bay.service.model.BoatLintReport;
-import com.backbase.oss.boat.bay.service.model.BoatLintRule;
-import com.backbase.oss.boat.bay.service.model.BoatProduct;
-import com.backbase.oss.boat.bay.service.model.BoatProductRelease;
-import com.backbase.oss.boat.bay.service.model.BoatService;
-import com.backbase.oss.boat.bay.service.model.BoatSpec;
-import com.backbase.oss.boat.bay.service.model.BoatViolation;
-import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatPortal;
-import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatPortalDashboard;
-
-import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatTag;
+import com.backbase.oss.boat.bay.model.*;
 
 import com.fasterxml.jackson.core.JsonPointer;
 import java.net.URI;
@@ -107,6 +96,7 @@ public interface BoatDashboardMapper {
     @Mapping(target = "statistics", ignore = true)
     BoatService mapBoatService(ServiceDefinition serviceDefinition);
 
+    @Mapping(target = "backwardsCompatible", ignore = true)
     @Mapping(target = "statistics", ignore = true)
     @Mapping(target = "openApi", ignore = true)
     BoatSpec mapBoatSpec(Spec spec);

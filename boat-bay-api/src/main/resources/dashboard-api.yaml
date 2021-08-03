@@ -1,0 +1,416 @@
+openapi: 3.0.0
+info:
+  title: Boat Bay Dashboard Server API
+  description: Endpoints for the boat bay operations
+  license:
+    name: Backbase
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/
+tags:
+  - name: dashboard
+paths:
+  /api/boat/portals:
+    get:
+      tags:
+        - dashboard
+      summary: Get list of Portals
+      operationId: getPortals
+      responses:
+        "200":
+          description: Boat Project Portal
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: 'schemas/definitions.yaml#/components/schemas/BoatPortal'
+  /api/boat/portals/{portalKey}/products:
+    get:
+      tags:
+        - dashboard
+      summary: Get List fo Product for identified Portal
+      operationId: getPortalProducts
+      parameters:
+        - $ref: 'schemas/definitions.yaml#/components/parameters/PortalKey'
+        - $ref: 'schemas/definitions.yaml#/components/parameters/Page'
+        - $ref: 'schemas/definitions.yaml#/components/parameters/Size'
+        - $ref: 'schemas/definitions.yaml#/components/parameters/Sort'
+      responses:
+        "200":
+          description: list of Portal Products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: 'schemas/definitions.yaml#/components/schemas/BoatProduct'
+  /api/boat/portals/{portalKey}/products/{productKey}/capabilities:
+    get:
+      tags:
+        - dashboard
+      summary: get Portal Products Capabalities
+      operationId: getPortalCapabilities
+      parameters:
+        - $ref: 'schemas/definitions.yaml#/components/parameters/PortalKey'
+        - $ref: 'schemas/definitions.yaml#/components/parameters/ProductKey'
+        - $ref: 'schemas/definitions.yaml#/components/parameters/Page'
+        - $ref: 'schemas/definitions.yaml#/components/parameters/Size'
+        - $ref: 'schemas/definitions.yaml#/components/parameters/Sort'
+      responses:
+        "200":
+          description: list of capabilities for product
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: 'schemas/definitions.yaml#/components/schemas/BoatCapability'
+  /api/boat/portals/{portalKey}/products/{productKey}/services:
+    get:
+      tags:
+        - dashboard
+      summary: get Portal services for a given product
+      operationId: getPortalServices
+      parameters:
+        - $ref: 'schemas/definitions.yaml#/components/parameters/PortalKey'
+        - $ref: 'schemas/definitions.yaml#/components/parameters/ProductKey'
+        - $ref: 'schemas/definitions.yaml#/components/parameters/Page'
+        - $ref: 'schemas/definitions.yaml#/components/parameters/Size'
+        - $ref: 'schemas/definitions.yaml#/components/parameters/Sort'
+      responses:
+        "200":
+          description: list of services for product
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: 'schemas/definitions.yaml#/components/schemas/BoatService'
+  /api/boat/portals/{portalKey}/products/{productKey}/specs:
+    get:
+      tags:
+        - dashboard
+      summary: Get Portal Specs for given product
+      operationId: getPortalSpecs
+      parameters:
+        - $ref: 'schemas/definitions.yaml#/components/parameters/PortalKey'
+        - $ref: 'schemas/definitions.yaml#/components/parameters/ProductKey'
+        - $ref: 'schemas/definitions.yaml#/components/parameters/Page'
+        - $ref: 'schemas/definitions.yaml#/components/parameters/Size'
+        - $ref: 'schemas/definitions.yaml#/components/parameters/Sort'
+        - name: capabilityId
+          in: query
+          description: capablility idenifier
+
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+        - name: productReleaseId
+          in: query
+          description: product release idenifier
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: serviceId
+          in: query
+          description: service idenifier
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+        - name: grade
+          in: query
+          description: grade of spec
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: backwardsCompatible
+          in: query
+          description: backwards compatible indicator
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: boolean
+        - name: changed
+          in: query
+          description: changed indicator
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: boolean
+      responses:
+        "200":
+          headers:
+            X-Total-Count:
+              $ref: 'schemas/definitions.yaml#/components/headers/X-Total-Count'
+          description: list of specs for product
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: 'schemas/definitions.yaml#/components/schemas/BoatSpec'
+  /api/boat/portals/{portalKey}/products/{productKey}/specs/{specId}/lint-report:
+    get:
+      tags:
+        - dashboard
+      summary: get Lint Report for spec
+      operationId: getLintReportForSpec
+      parameters:
+        - $ref: 'schemas/definitions.yaml#/components/parameters/PortalKey'
+        - $ref: 'schemas/definitions.yaml#/components/parameters/ProductKey'
+        - $ref: 'schemas/definitions.yaml#/components/parameters/SpecId'
+        - name: refresh
+          in: query
+          description: refresh idicator
+          required: false
+          style: form
+          explode: true
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: lint report for spec
+          headers:
+            X-Total-Count:
+              $ref: 'schemas/definitions.yaml#/components/headers/X-Total-Count'
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas/definitions.yaml#/components/schemas/BoatLintReport'
+  /api/boat/portals/{portalKey}/lint-rules:
+    get:
+      tags:
+        - dashboard
+      summary: get list of lint rules
+      operationId: getPortalLintRules
+      parameters:
+        - $ref: 'schemas/definitions.yaml#/components/parameters/PortalKey'
+      responses:
+        "200":
+          description: list of lint rules for portal
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: 'schemas/definitions.yaml#/components/schemas/BoatLintRule'
+  /api/boat/portals/{portalKey}/products/{productKey}/releases:
+    get:
+      tags:
+        - dashboard
+      summary: get product releases
+      operationId: getProductReleases
+      parameters:
+        - $ref: 'schemas/definitions.yaml#/components/parameters/PortalKey'
+        - $ref: 'schemas/definitions.yaml#/components/parameters/ProductKey'
+      responses:
+        "200":
+          description: list of product releases for product
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: 'schemas/definitions.yaml#/components/schemas/BoatProductRelease'
+  /api/boat/portals/{portalKey}/products/{productKey}/releases/{releaseKey}/specs:
+    get:
+      tags:
+        - dashboard
+      summary: get specs for product release
+      operationId: getProductReleaseSpecs
+      parameters:
+        - $ref: 'schemas/definitions.yaml#/components/parameters/PortalKey'
+        - $ref: 'schemas/definitions.yaml#/components/parameters/ProductKey'
+        - $ref: 'schemas/definitions.yaml#/components/parameters/ReleaseKey'
+      responses:
+        "200":
+          description: list of specs for product release
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: 'schemas/definitions.yaml#/components/schemas/BoatSpec'
+  /api/boat/portals/{portalKey}/lint-rules/{lintRuleId}:
+    post:
+      tags:
+        - dashboard
+      summary: update lint rule for portal
+      operationId: updatePortalLintRule
+      parameters:
+        - name: lintRuleId
+          in: path
+          description: id of portals lint rule
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+        - $ref: 'schemas/definitions.yaml#/components/parameters/PortalKey'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: 'schemas/definitions.yaml#/components/schemas/BoatLintRule'
+      responses:
+        "200":
+          description: updated successfuly
+          content: { }
+  /api/boat/dashboard:
+    get:
+      tags:
+        - dashboard
+      summary: get list of boat portal dashboards
+      operationId: getDashboard
+      responses:
+        "200":
+          description: list of boat portal dashboards
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: 'schemas/definitions.yaml#/components/schemas/BoatPortalDashboard'
+  /api/boat/dashboard/{portalKey}/{productKey}:
+    get:
+      tags:
+        - dashboard
+      summary: get product for dashboard project
+      operationId: getProductDashboard
+      parameters:
+        - $ref: 'schemas/definitions.yaml#/components/parameters/PortalKey'
+        - $ref: 'schemas/definitions.yaml#/components/parameters/ProductKey'
+      responses:
+        "200":
+          description: product for dashboard
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas/definitions.yaml#/components/schemas/BoatProduct'
+  /api/boat/portals/{portalKey}/products/{productKey}/tags:
+    get:
+      tags:
+        - dashboard
+      summary: get tags for product
+      operationId: getProductTags
+      parameters:
+        - $ref: 'schemas/definitions.yaml#/components/parameters/PortalKey'
+        - $ref: 'schemas/definitions.yaml#/components/parameters/ProductKey'
+      responses:
+        "200":
+          description: list of product tags
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: 'schemas/definitions.yaml#/components/schemas/BoatTag'
+  /api/boat/portals/{portalKey}/products/{productKey}/capabilities/{capabilityKey}/services/{serviceKey}/specs/{specKey}/{version}/download:
+    get:
+      tags:
+        - dashboard
+      summary: get spec as openapi
+      operationId: getSpecAsOpenAPI
+      parameters:
+        - $ref: 'schemas/definitions.yaml#/components/parameters/PortalKey'
+        - $ref: 'schemas/definitions.yaml#/components/parameters/ProductKey'
+        - $ref: 'schemas/definitions.yaml#/components/parameters/CapabilityKey'
+        - $ref: 'schemas/definitions.yaml#/components/parameters/ServiceKey'
+        - $ref: 'schemas/definitions.yaml#/components/parameters/SpecKey'
+        - $ref: 'schemas/definitions.yaml#/components/parameters/Version'
+      responses:
+        "200":
+          description: openApi of spec
+          headers:
+            Content-Disposition:
+              description: name of file
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Cache-Control:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Pragma:
+              style: simple
+              explode: false
+              schema:
+                type: string
+            Expires:
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/vnd.oai.openapi:
+              schema:
+                $ref: 'schemas/definitions.yaml#/components/schemas/Resource'
+  /api/boat/portals/{portalKey}/products/{productKey}/capabilities/{capabilityKey}/services/{serviceKey}/specs/{specKey}/{version}:
+    get:
+      tags:
+        - dashboard
+      summary: Get Open API Spec
+      operationId: downloadSpec
+      parameters:
+        - $ref: 'schemas/definitions.yaml#/components/parameters/PortalKey'
+        - $ref: 'schemas/definitions.yaml#/components/parameters/ProductKey'
+        - $ref: 'schemas/definitions.yaml#/components/parameters/CapabilityKey'
+        - $ref: 'schemas/definitions.yaml#/components/parameters/ServiceKey'
+        - $ref: 'schemas/definitions.yaml#/components/parameters/SpecKey'
+        - $ref: 'schemas/definitions.yaml#/components/parameters/Version'
+      responses:
+        "200":
+          description: spec with open api
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas/definitions.yaml#/components/schemas/BoatSpec'
+  /api/boat/portals/{portalKey}/products/{productKey}/diff-report.html:
+    get:
+      tags:
+        - dashboard
+      summary: Get diff report for spec as html
+      operationId: getDiffReport
+      parameters:
+        - $ref: 'schemas/definitions.yaml#/components/parameters/PortalKey'
+        - $ref: 'schemas/definitions.yaml#/components/parameters/ProductKey'
+        - name: spec1Id
+          in: query
+          description: Identifies first comparitable api
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: string
+        - name: spec2Id
+          in: query
+          description: Identifies second comparitable api
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: changed openApi as html
+          content:
+            text/html:
+              schema:
+                type: string

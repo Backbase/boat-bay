@@ -105,7 +105,7 @@ public class SpecSourceScheduler {
         };
     }
 
-    @SuppressWarnings({ "java:S1301", "SwitchStatementWithTooFewBranches" })
+    @SuppressWarnings({ "java:S1301"})
     public SpecSourceScanner createScanner(Source source) {
         SourceScannerOptions scannerOptions = getScannerOptions(source);
 
