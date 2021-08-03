@@ -48,11 +48,11 @@ public class BoatSpecLinter {
     private final BoatCacheManager boatCacheManager;
 
     @Async
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void scheduleLintJob(Spec spec) {
         lint(spec);
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public LintReport lint(Spec spec) {
         spec = specRepository.findById(spec.getId()).orElseThrow();
 

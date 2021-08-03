@@ -5,19 +5,10 @@
                              https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <artifactId>boat-bay</artifactId>
-        <groupId>com.backbase.oss.boat.bay</groupId>
-        <version>0.0.1-SNAPSHOT</version>
-    </parent>
-
+    <groupId>com.backbase.oss.boat.bay</groupId>
     <artifactId>boat-bay-server</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
-
-    <properties>
-        <start-class>com.backbase.oss.boat.bay.BoatbayApp</start-class>
-    </properties>
-
     <name>Boat Bay :: Server</name>
 
     <repositories>
@@ -30,6 +21,83 @@
 
     <!-- jhipster-needle-distribution-management -->
 
+    <properties>
+        <!-- Build properties -->
+        <maven.version>3.3.9</maven.version>
+        <java.version>11</java.version>
+        <node.version>v14.17.1</node.version>
+        <npm.version>7.18.1</npm.version>
+        <lombok.version>1.18.20</lombok.version>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <start-class>com.backbase.oss.boat.bay.BoatbayApp</start-class>
+        <argLine>-Djava.security.egd=file:/dev/./urandom -Xmx256m</argLine>
+        <m2e.apt.activation>jdt_apt</m2e.apt.activation>
+        <run.addResources>false</run.addResources>
+        <!-- These remain empty unless the corresponding profile is active -->
+        <profile.no-liquibase />
+        <profile.api-docs />
+        <profile.tls />
+
+        <!-- Dependency versions -->
+        <jhipster-dependencies.version>7.1.0</jhipster-dependencies.version>
+        <!-- The spring-boot version should match the one managed by
+        https://mvnrepository.com/artifact/tech.jhipster/jhipster-dependencies/${jhipster-dependencies.version} -->
+        <spring-boot.version>2.4.7</spring-boot.version>
+        <!-- The hibernate version should match the one managed by
+        https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies/${spring-boot.version} -->
+        <hibernate.version>5.4.32.Final</hibernate.version>
+        <!-- The javassist version should match the one managed by
+        https://mvnrepository.com/artifact/org.hibernate/hibernate-core/${hibernate.version} -->
+        <javassist.version>3.27.0-GA</javassist.version>
+        <!-- The liquibase version should match the one managed by
+        https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies/${spring-boot.version} -->
+        <liquibase.version>4.3.5</liquibase.version>
+        <liquibase-hibernate5.version>4.3.5</liquibase-hibernate5.version>
+        <h2.version>1.4.200</h2.version>
+        <validation-api.version>2.0.1.Final</validation-api.version>
+        <jaxb-runtime.version>2.3.3</jaxb-runtime.version>
+        <archunit-junit5.version>0.19.0</archunit-junit5.version>
+        <mapstruct.version>1.4.2.Final</mapstruct.version>
+        <!-- Plugin versions -->
+        <maven-clean-plugin.version>3.1.0</maven-clean-plugin.version>
+        <maven-site-plugin.version>3.9.1</maven-site-plugin.version>
+        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <maven-javadoc-plugin.version>3.3.0</maven-javadoc-plugin.version>
+        <maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
+        <maven-enforcer-plugin.version>3.0.0-M3</maven-enforcer-plugin.version>
+        <maven-failsafe-plugin.version>3.0.0-M5</maven-failsafe-plugin.version>
+        <maven-idea-plugin.version>2.2.1</maven-idea-plugin.version>
+        <maven-resources-plugin.version>3.2.0</maven-resources-plugin.version>
+        <maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
+        <maven-war-plugin.version>3.3.1</maven-war-plugin.version>
+        <maven-checkstyle-plugin.version>3.1.2</maven-checkstyle-plugin.version>
+        <checkstyle.version>8.43</checkstyle.version>
+        <problem-spring.version>0.25.2</problem-spring.version>
+        <problem-spring-web.version>${problem-spring.version}</problem-spring-web.version>
+        <problem-spring-webflux.version>${problem-spring.version}</problem-spring-webflux.version>
+        <nohttp-checkstyle.version>0.0.8</nohttp-checkstyle.version>
+        <frontend-maven-plugin.version>1.12.0</frontend-maven-plugin.version>
+        <checksum-maven-plugin.version>1.10</checksum-maven-plugin.version>
+        <maven-antrun-plugin.version>3.0.0</maven-antrun-plugin.version>
+        <git-commit-id-plugin.version>4.0.5</git-commit-id-plugin.version>
+        <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
+        <jib-maven-plugin.version>3.1.1</jib-maven-plugin.version>
+        <lifecycle-mapping.version>1.0.0</lifecycle-mapping.version>
+        <properties-maven-plugin.version>1.0.0</properties-maven-plugin.version>
+        <sonar-maven-plugin.version>3.9.0.2155</sonar-maven-plugin.version>
+        <!-- jhipster-needle-maven-property -->
+
+
+        <swagger-core.v3.version>2.1.10</swagger-core.v3.version>
+        <swagger-parser.v3.version>2.0.27</swagger-parser.v3.version>
+        <swagger-annotations.version>1.6.2</swagger-annotations.version>
+        <boat-maven-plugin.modelPackage>com.backbase.oss.boat.bay.model</boat-maven-plugin.modelPackage>
+    </properties>
 
     <dependencyManagement>
         <dependencies>
@@ -45,23 +113,6 @@
                 <version>${jhipster-dependencies.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>io.swagger.parser.v3</groupId>
-                <artifactId>swagger-parser</artifactId>
-                <version>${swagger-parser.v3.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>javax.validation</groupId>
-                        <artifactId>validation-api</artifactId>
-                    </exclusion>
-                    <!-- com.github.dge is replaced by jackson-core-tools -->
-                    <exclusion>
-                        <groupId>com.github.fge</groupId>
-                        <artifactId>*</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
 
             <dependency>
@@ -471,19 +522,19 @@
             <plugin>
                 <groupId>com.backbase.oss</groupId>
                 <artifactId>boat-maven-plugin</artifactId>
-                <version>0.14.0</version>
+                <version>0.14.4</version>
                 <executions>
                     <execution>
-                        <id>java-server</id>
+                        <id>definitions</id>
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>${project.basedir}/../boat-bay-api/src/main/resources/upload-server-api/api.yml</inputSpec>
+                            <inputSpec>${project.basedir}/../boat-bay-api/src/main/resources/schemas/definitions.yaml</inputSpec>
                             <generatorName>spring</generatorName>
                             <generateApiTests>false</generateApiTests>
-                            <generateApis>true</generateApis>
+                            <generateApis>false</generateApis>
                             <generateModels>true</generateModels>
                             <generateSupportingFiles>false</generateSupportingFiles>
                             <configOptions>
@@ -495,10 +546,87 @@
                                 <interfaceOnly>true</interfaceOnly>
                                 <skipDefaultInterface>true</skipDefaultInterface>
                                 <useBeanValidation>false</useBeanValidation>
+                                <useTags>true</useTags>
                             </configOptions>
-                            <modelPackage>com.backbase.oss.boat.bay.service.model</modelPackage>
-                            <apiPackage>com.backbase.oss.boat.bay.service.api</apiPackage>
-                            <apiNameSuffix>BoatBayUpload</apiNameSuffix>
+                            <modelPackage>${boat-maven-plugin.modelPackage}</modelPackage>
+                            <typeMappings>
+                                <typeMapping>Double=java.math.BigDecimal</typeMapping>
+                            </typeMappings>
+                            <importMappings>
+                                <importMapping>LocalDateTime = java.time.LocalDateTime</importMapping>
+                                <importMapping>IntRange = kotlin.ranges.IntRange</importMapping>
+                                <importMapping>JsonPointer = com.fasterxml.jackson.core.JsonPointer</importMapping>
+                                <importMapping>Resource = org.springframework.core.io.Resource</importMapping>
+                                <importMapping>ChangedOpenApiObject = org.openapitools.openapidiff.core.model.ChangedOpenApi</importMapping>
+                            </importMappings>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>upload-api</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/../boat-bay-api/target/specs/boat-maven-plugin-api.yaml</inputSpec>
+                            <generatorName>spring</generatorName>
+                            <generateApiTests>false</generateApiTests>
+                            <generateApis>true</generateApis>
+                            <generateModels>false</generateModels>
+                            <generateSupportingFiles>false</generateSupportingFiles>
+                            <configOptions>
+                                <controllerThrowsExceptions>java.io.IOException,com.backbase.oss.boat.ExportException</controllerThrowsExceptions>
+                                <library>spring-boot</library>
+                                <reactive>false</reactive>
+                                <java8>true</java8>
+                                <dateLibrary>java8</dateLibrary>
+                                <interfaceOnly>true</interfaceOnly>
+                                <skipDefaultInterface>true</skipDefaultInterface>
+                                <useBeanValidation>false</useBeanValidation>
+                                <useTags>true</useTags>
+                            </configOptions>
+                            <modelPackage>${boat-maven-plugin.modelPackage}</modelPackage>
+                            <apiPackage>com.backbase.oss.boat.bay.api</apiPackage>
+                            <typeMappings>
+                                <typeMapping>Double=java.math.BigDecimal</typeMapping>
+                            </typeMappings>
+                            <importMappings>
+                                <importMapping>LocalDateTime = java.time.LocalDateTime</importMapping>
+                                <importMapping>IntRange = kotlin.ranges.IntRange</importMapping>
+                                <importMapping>JsonPointer = com.fasterxml.jackson.core.JsonPointer</importMapping>
+                                <importMapping>Resource = org.springframework.core.io.Resource</importMapping>
+                                <importMapping>ChangedOpenApiObject = org.openapitools.openapidiff.core.model.ChangedOpenApi</importMapping>
+                            </importMappings>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>dashboard-api</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/../boat-bay-api/target/specs/dashboard-api.yaml</inputSpec>
+                            <generatorName>spring</generatorName>
+                            <generateApiTests>false</generateApiTests>
+                            <generateApis>true</generateApis>
+                            <generateModels>false</generateModels>
+                            <generateSupportingFiles>false</generateSupportingFiles>
+                            <configOptions>
+                                <controllerThrowsExceptions>java.io.IOException,com.backbase.oss.boat.ExportException</controllerThrowsExceptions>
+                                <library>spring-boot</library>
+                                <reactive>false</reactive>
+                                <java8>true</java8>
+                                <dateLibrary>java8</dateLibrary>
+                                <interfaceOnly>true</interfaceOnly>
+                                <skipDefaultInterface>true</skipDefaultInterface>
+                                <useBeanValidation>false</useBeanValidation>
+                                <useTags>true</useTags>
+                                <addServletRequest>false</addServletRequest>
+                            </configOptions>
+                            <modelPackage>${boat-maven-plugin.modelPackage}</modelPackage>
+                            <apiPackage>com.backbase.oss.boat.bay.api</apiPackage>
                             <typeMappings>
                                 <typeMapping>Double=java.math.BigDecimal</typeMapping>
                             </typeMappings>
@@ -511,6 +639,7 @@
                             </importMappings>
 
                         </configuration>
+
                     </execution>
                 </executions>
             </plugin>
@@ -771,7 +900,7 @@
                     <version>${jib-maven-plugin.version}</version>
                     <configuration>
                         <from>
-                            <image>adoptopenjdk:11-jre-hotspot</image>
+                            <image>adoptopenjdk:15-jre-hotspot</image>
                         </from>
                         <to>
                             <image>boatbay:latest</image>
