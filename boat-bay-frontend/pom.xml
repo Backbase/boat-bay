@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.backbase.oss.boat.bay</groupId>
+        <artifactId>boat-bay</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>boat-bay-frontend</artifactId>
+
+    <name>Boat Bay :: Front End</name>
+
+    <properties>
+        <codegen.outputFile>target/generated-sources</codegen.outputFile>
+        <codegen.libFolder>target/lib</codegen.libFolder>
+        <codegen.npmPackage.name>@boat/boat-http-ang</codegen.npmPackage.name>
+        <codegen.buildDist>dist/libs/boat-http-ang</codegen.buildDist>
+        <codegen.npmPackage.version>2.2.0</codegen.npmPackage.version>
+        <codegen.generateMocks>false</codegen.generateMocks>
+        <codegen.apiModulePrefix>BoatDashboard</codegen.apiModulePrefix>
+        <codegen.serviceSuffix>HttpService</codegen.serviceSuffix>
+    </properties>
+
+    <packaging>pom</packaging>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.backbase.oss</groupId>
+                <artifactId>boat-maven-plugin</artifactId>
+                <version>0.14.4</version>
+                <executions>
+                    <execution>
+                        <id>angular</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+<!--                            <supportingFilesToGenerate>api.module.ts,configuration.ts,encoder.ts,public_api.ts,variables.ts,model/models.ts</supportingFilesToGenerate>-->
+                            <inputSpec>${project.basedir}/../boat-bay-api/target/specs/dashboard-api.yaml</inputSpec>
+                            <generatorName>boat-angular</generatorName>
+                            <output>${project.basedir}/src/app/services/dashboard</output>
+                            <reservedWordsMappings>delete=delete,function=function,new=new</reservedWordsMappings>
+                            <additionalProperties>npmName=${codegen.npmPackage.name},npmVersion=${codegen.npmPackage.version},withMocks=${codegen.generateMocks},buildDist=${codegen.buildDist},serviceSuffix=${codegen.serviceSuffix},apiModulePrefix=${codegen.apiModulePrefix}</additionalProperties>
+                        </configuration>
+                    </execution>
+
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+
+</project>
+
+

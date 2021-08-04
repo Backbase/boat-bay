@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { Range } from '../../components/ace-editor/ace-editor.component';
+import { IRange } from '../../components/ace-editor/ace-editor.component';
 import { BoatLintReport, BoatLintRule, BoatProduct, BoatViolation } from "../../models/";
 import { ActivatedRoute } from "@angular/router";
 import { Ace } from "ace-builds";
@@ -19,7 +19,7 @@ import Annotation = Ace.Annotation;
 export class LintReportComponent implements OnInit {
   lintReport$: Observable<BoatLintReport>;
   product$: Observable<BoatProduct>;
-  @Output() highlight = new EventEmitter<Range>();
+  @Output() highlight = new EventEmitter<IRange>();
   @Output() annotations = new EventEmitter<Annotation[]>();
 
 
@@ -49,7 +49,7 @@ export class LintReportComponent implements OnInit {
   }
 
   mark(violation: BoatViolation): void {
-    const range: Range = {
+    const range: IRange = {
       start: violation.lines.start,
       end: violation.lines.end,
     };

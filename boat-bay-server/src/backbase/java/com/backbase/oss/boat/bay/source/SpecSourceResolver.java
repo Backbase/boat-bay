@@ -6,18 +6,11 @@ import com.backbase.oss.boat.bay.repository.*;
 import com.backbase.oss.boat.bay.service.backwardscompatible.BoatBackwardsCompatibleChecker;
 import com.backbase.oss.boat.bay.service.lint.BoatSpecLinter;
 import com.backbase.oss.boat.bay.source.scanner.ScanResult;
-import com.backbase.oss.boat.bay.source.scanner.SourceScannerOptions;
 import com.backbase.oss.boat.bay.util.SpringExpressionUtils;
 import com.backbase.oss.boat.loader.OpenAPILoader;
 import com.backbase.oss.boat.loader.OpenAPILoaderException;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
-import java.nio.charset.StandardCharsets;
-import java.time.ZonedDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -27,6 +20,13 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
+
+import java.nio.charset.StandardCharsets;
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -68,7 +68,7 @@ public class SpecSourceResolver {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void processProductRelease(ScanResult scan, Source source, ProductRelease pr) {
         for (Spec spec : pr.getSpecs()) {
-            processSpec(spec, scan.getScannerOptions());
+            processSpec(spec);
         }
 
         productReleaseRepository
@@ -90,7 +90,7 @@ public class SpecSourceResolver {
     }
 
     @SuppressWarnings("java:S5411")
-    private void processSpec(Spec spec, SourceScannerOptions scannerOptions) {
+    private void processSpec(Spec spec) {
         log.info("Processing spec: {}", spec.getName());
 
         Source source = spec.getSource();
@@ -132,7 +132,7 @@ public class SpecSourceResolver {
         }
 
         setProduct(spec, source);
-        setCapability(spec, source, scannerOptions);
+        setCapability(spec, source);
         setServiceDefinition(spec, source);
         setSpecType(spec);
 
@@ -213,9 +213,9 @@ public class SpecSourceResolver {
         }
     }
 
-    private void setCapability(Spec spec, Source source, SourceScannerOptions scannerOptions) {
+    private void setCapability(Spec spec, Source source) {
         if (spec.getCapability() == null || source.getOverwriteChanges()) {
-            String key = getCapabilityKey(spec, source, scannerOptions);
+            String key = getCapabilityKey(spec, source);
 
             Capability capability = capabilityRepository
                 .findByProductAndKey(spec.getProduct(), key)
@@ -225,15 +225,8 @@ public class SpecSourceResolver {
         }
     }
 
-    private String getCapabilityKey(Spec spec, Source source, SourceScannerOptions scannerOptions) {
-        String key = SpringExpressionUtils.parseName(source.getCapabilityKeySpEL(), spec, "unknown");
-
-        if (scannerOptions != null && scannerOptions.getCapabilityMappingOverrides().containsKey(key)) {
-            String override = scannerOptions.getCapabilityMappingOverrides().get(key);
-            log.debug("Overriding capability key: {} with configuration override: {}", key, override);
-            key = override;
-        }
-        return key;
+    private String getCapabilityKey(Spec spec, Source source) {
+        return SpringExpressionUtils.parseName(source.getCapabilityKeySpEL(), spec, "unknown");
     }
 
     private ServiceDefinition createServiceDefinition(Spec spec, String key) {

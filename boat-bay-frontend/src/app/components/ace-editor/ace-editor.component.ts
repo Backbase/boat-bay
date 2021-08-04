@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { Ace, Range, config, edit, require } from "ace-builds";
 import Annotation = Ace.Annotation;
 
-export interface Range {
+export interface IRange {
   start: number;
   end: number;
 }
@@ -16,7 +16,7 @@ export interface Range {
 export class AceEditorComponent implements AfterViewInit {
   @Input() contents!: string | undefined;
 
-  @Input() highlight: Observable<Range> | null = null;
+  @Input() highlight: Observable<IRange> | null = null;
   @Input() annotations: Observable<Annotation[]> | null = null;
 
   marker: number | undefined;
@@ -41,13 +41,13 @@ export class AceEditorComponent implements AfterViewInit {
     aceEditor.setAnimatedScroll(true);
     aceEditor.setScrollSpeed(1);
     aceEditor.setTheme("ace/theme/chrome");
-    const AceRange = require('ace/range').Range;
+    // const AceRange = require('ace/range').Range;
     this.highlight?.subscribe(range => {
       // Clear previous marker
       if (this.marker != null) {
         aceEditor.getSession().removeMarker(this.marker);
       }
-      this.marker = aceEditor.getSession().addMarker(new AceRange(range.start - 1, 0, range.end, 0), 'ace_active-line', 'fullLine');
+      this.marker = aceEditor.getSession().addMarker(new Range(range.start - 1, 0, range.end, 0), 'ace_active-line', 'fullLine');
       // Set new marker
       aceEditor.scrollToLine(range.start, true, true, (): void => {});
     });

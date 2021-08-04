@@ -2,7 +2,7 @@ $baseline-grid: 8px;
 
 $spacer: $baseline-grid * 2;
 
-$spacer-xs: $baseline-grid / 2;
+$spacer-xs: $baseline-grid * 0.5;
 $spacer-sm: $baseline-grid;
 $spacer-md: $spacer;
 $spacer-lg: $baseline-grid * 3;

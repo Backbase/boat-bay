@@ -25,7 +25,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Base64Utils;
 
 /**
  * Integration tests for the {@link SourceResource} REST controller.
@@ -41,11 +40,8 @@ class SourceResourceIT {
     private static final String DEFAULT_KEY = "AAAAAAAAAA";
     private static final String UPDATED_KEY = "BBBBBBBBBB";
 
-    private static final SourceType DEFAULT_TYPE = SourceType.JFROG;
-    private static final SourceType UPDATED_TYPE = SourceType.BOAT_MAVEN_PLUGIN;
-
-    private static final String DEFAULT_BASE_URL = "AAAAAAAAAA";
-    private static final String UPDATED_BASE_URL = "BBBBBBBBBB";
+    private static final SourceType DEFAULT_TYPE = SourceType.BOAT_MAVEN_PLUGIN;
+    private static final SourceType UPDATED_TYPE = SourceType.MAVEN;
 
     private static final Boolean DEFAULT_ACTIVE = false;
     private static final Boolean UPDATED_ACTIVE = true;
@@ -55,12 +51,6 @@ class SourceResourceIT {
 
     private static final LocalDate DEFAULT_FILTER_ARTIFACTS_CREATED_SINCE = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_FILTER_ARTIFACTS_CREATED_SINCE = LocalDate.now(ZoneId.systemDefault());
-
-    private static final String DEFAULT_USERNAME = "AAAAAAAAAA";
-    private static final String UPDATED_USERNAME = "BBBBBBBBBB";
-
-    private static final String DEFAULT_PASSWORD = "AAAAAAAAAA";
-    private static final String UPDATED_PASSWORD = "BBBBBBBBBB";
 
     private static final String DEFAULT_CRON_EXPRESSION = "AAAAAAAAAA";
     private static final String UPDATED_CRON_EXPRESSION = "BBBBBBBBBB";
@@ -104,8 +94,8 @@ class SourceResourceIT {
     private static final Boolean DEFAULT_OVERWRITE_CHANGES = false;
     private static final Boolean UPDATED_OVERWRITE_CHANGES = true;
 
-    private static final String DEFAULT_OPTIONS = "AAAAAAAAAA";
-    private static final String UPDATED_OPTIONS = "BBBBBBBBBB";
+    private static final String DEFAULT_BILL_OF_MATERIALS_COORDS = "AAAAAAAAAA";
+    private static final String UPDATED_BILL_OF_MATERIALS_COORDS = "BBBBBBBBBB";
 
     private static final String ENTITY_API_URL = "/api/sources";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -135,12 +125,9 @@ class SourceResourceIT {
             .name(DEFAULT_NAME)
             .key(DEFAULT_KEY)
             .type(DEFAULT_TYPE)
-            .baseUrl(DEFAULT_BASE_URL)
             .active(DEFAULT_ACTIVE)
             .filterArtifactsName(DEFAULT_FILTER_ARTIFACTS_NAME)
             .filterArtifactsCreatedSince(DEFAULT_FILTER_ARTIFACTS_CREATED_SINCE)
-            .username(DEFAULT_USERNAME)
-            .password(DEFAULT_PASSWORD)
             .cronExpression(DEFAULT_CRON_EXPRESSION)
             .runOnStartup(DEFAULT_RUN_ON_STARTUP)
             .specFilterSpEL(DEFAULT_SPEC_FILTER_SP_EL)
@@ -155,7 +142,7 @@ class SourceResourceIT {
             .productReleaseKeySpEL(DEFAULT_PRODUCT_RELEASE_KEY_SP_EL)
             .itemLimit(DEFAULT_ITEM_LIMIT)
             .overwriteChanges(DEFAULT_OVERWRITE_CHANGES)
-            .options(DEFAULT_OPTIONS);
+            .billOfMaterialsCoords(DEFAULT_BILL_OF_MATERIALS_COORDS);
         // Add required entity
         Portal portal;
         if (TestUtil.findAll(em, Portal.class).isEmpty()) {
@@ -190,12 +177,9 @@ class SourceResourceIT {
             .name(UPDATED_NAME)
             .key(UPDATED_KEY)
             .type(UPDATED_TYPE)
-            .baseUrl(UPDATED_BASE_URL)
             .active(UPDATED_ACTIVE)
             .filterArtifactsName(UPDATED_FILTER_ARTIFACTS_NAME)
             .filterArtifactsCreatedSince(UPDATED_FILTER_ARTIFACTS_CREATED_SINCE)
-            .username(UPDATED_USERNAME)
-            .password(UPDATED_PASSWORD)
             .cronExpression(UPDATED_CRON_EXPRESSION)
             .runOnStartup(UPDATED_RUN_ON_STARTUP)
             .specFilterSpEL(UPDATED_SPEC_FILTER_SP_EL)
@@ -210,7 +194,7 @@ class SourceResourceIT {
             .productReleaseKeySpEL(UPDATED_PRODUCT_RELEASE_KEY_SP_EL)
             .itemLimit(UPDATED_ITEM_LIMIT)
             .overwriteChanges(UPDATED_OVERWRITE_CHANGES)
-            .options(UPDATED_OPTIONS);
+            .billOfMaterialsCoords(UPDATED_BILL_OF_MATERIALS_COORDS);
         // Add required entity
         Portal portal;
         if (TestUtil.findAll(em, Portal.class).isEmpty()) {
@@ -255,12 +239,9 @@ class SourceResourceIT {
         assertThat(testSource.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testSource.getKey()).isEqualTo(DEFAULT_KEY);
         assertThat(testSource.getType()).isEqualTo(DEFAULT_TYPE);
-        assertThat(testSource.getBaseUrl()).isEqualTo(DEFAULT_BASE_URL);
         assertThat(testSource.getActive()).isEqualTo(DEFAULT_ACTIVE);
         assertThat(testSource.getFilterArtifactsName()).isEqualTo(DEFAULT_FILTER_ARTIFACTS_NAME);
         assertThat(testSource.getFilterArtifactsCreatedSince()).isEqualTo(DEFAULT_FILTER_ARTIFACTS_CREATED_SINCE);
-        assertThat(testSource.getUsername()).isEqualTo(DEFAULT_USERNAME);
-        assertThat(testSource.getPassword()).isEqualTo(DEFAULT_PASSWORD);
         assertThat(testSource.getCronExpression()).isEqualTo(DEFAULT_CRON_EXPRESSION);
         assertThat(testSource.getRunOnStartup()).isEqualTo(DEFAULT_RUN_ON_STARTUP);
         assertThat(testSource.getSpecFilterSpEL()).isEqualTo(DEFAULT_SPEC_FILTER_SP_EL);
@@ -275,7 +256,7 @@ class SourceResourceIT {
         assertThat(testSource.getProductReleaseKeySpEL()).isEqualTo(DEFAULT_PRODUCT_RELEASE_KEY_SP_EL);
         assertThat(testSource.getItemLimit()).isEqualTo(DEFAULT_ITEM_LIMIT);
         assertThat(testSource.getOverwriteChanges()).isEqualTo(DEFAULT_OVERWRITE_CHANGES);
-        assertThat(testSource.getOptions()).isEqualTo(DEFAULT_OPTIONS);
+        assertThat(testSource.getBillOfMaterialsCoords()).isEqualTo(DEFAULT_BILL_OF_MATERIALS_COORDS);
     }
 
     @Test
@@ -349,23 +330,6 @@ class SourceResourceIT {
 
     @Test
     @Transactional
-    void checkBaseUrlIsRequired() throws Exception {
-        int databaseSizeBeforeTest = sourceRepository.findAll().size();
-        // set the field null
-        source.setBaseUrl(null);
-
-        // Create the Source, which fails.
-
-        restSourceMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(source)))
-            .andExpect(status().isBadRequest());
-
-        List<Source> sourceList = sourceRepository.findAll();
-        assertThat(sourceList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     void getAllSources() throws Exception {
         // Initialize the database
         sourceRepository.saveAndFlush(source);
@@ -379,12 +343,9 @@ class SourceResourceIT {
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].key").value(hasItem(DEFAULT_KEY)))
             .andExpect(jsonPath("$.[*].type").value(hasItem(DEFAULT_TYPE.toString())))
-            .andExpect(jsonPath("$.[*].baseUrl").value(hasItem(DEFAULT_BASE_URL)))
             .andExpect(jsonPath("$.[*].active").value(hasItem(DEFAULT_ACTIVE.booleanValue())))
             .andExpect(jsonPath("$.[*].filterArtifactsName").value(hasItem(DEFAULT_FILTER_ARTIFACTS_NAME)))
             .andExpect(jsonPath("$.[*].filterArtifactsCreatedSince").value(hasItem(DEFAULT_FILTER_ARTIFACTS_CREATED_SINCE.toString())))
-            .andExpect(jsonPath("$.[*].username").value(hasItem(DEFAULT_USERNAME)))
-            .andExpect(jsonPath("$.[*].password").value(hasItem(DEFAULT_PASSWORD)))
             .andExpect(jsonPath("$.[*].cronExpression").value(hasItem(DEFAULT_CRON_EXPRESSION)))
             .andExpect(jsonPath("$.[*].runOnStartup").value(hasItem(DEFAULT_RUN_ON_STARTUP.booleanValue())))
             .andExpect(jsonPath("$.[*].specFilterSpEL").value(hasItem(DEFAULT_SPEC_FILTER_SP_EL)))
@@ -399,7 +360,7 @@ class SourceResourceIT {
             .andExpect(jsonPath("$.[*].productReleaseKeySpEL").value(hasItem(DEFAULT_PRODUCT_RELEASE_KEY_SP_EL)))
             .andExpect(jsonPath("$.[*].itemLimit").value(hasItem(DEFAULT_ITEM_LIMIT)))
             .andExpect(jsonPath("$.[*].overwriteChanges").value(hasItem(DEFAULT_OVERWRITE_CHANGES.booleanValue())))
-            .andExpect(jsonPath("$.[*].options").value(hasItem(DEFAULT_OPTIONS.toString())));
+            .andExpect(jsonPath("$.[*].billOfMaterialsCoords").value(hasItem(DEFAULT_BILL_OF_MATERIALS_COORDS)));
     }
 
     @Test
@@ -417,12 +378,9 @@ class SourceResourceIT {
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.key").value(DEFAULT_KEY))
             .andExpect(jsonPath("$.type").value(DEFAULT_TYPE.toString()))
-            .andExpect(jsonPath("$.baseUrl").value(DEFAULT_BASE_URL))
             .andExpect(jsonPath("$.active").value(DEFAULT_ACTIVE.booleanValue()))
             .andExpect(jsonPath("$.filterArtifactsName").value(DEFAULT_FILTER_ARTIFACTS_NAME))
             .andExpect(jsonPath("$.filterArtifactsCreatedSince").value(DEFAULT_FILTER_ARTIFACTS_CREATED_SINCE.toString()))
-            .andExpect(jsonPath("$.username").value(DEFAULT_USERNAME))
-            .andExpect(jsonPath("$.password").value(DEFAULT_PASSWORD))
             .andExpect(jsonPath("$.cronExpression").value(DEFAULT_CRON_EXPRESSION))
             .andExpect(jsonPath("$.runOnStartup").value(DEFAULT_RUN_ON_STARTUP.booleanValue()))
             .andExpect(jsonPath("$.specFilterSpEL").value(DEFAULT_SPEC_FILTER_SP_EL))
@@ -437,7 +395,7 @@ class SourceResourceIT {
             .andExpect(jsonPath("$.productReleaseKeySpEL").value(DEFAULT_PRODUCT_RELEASE_KEY_SP_EL))
             .andExpect(jsonPath("$.itemLimit").value(DEFAULT_ITEM_LIMIT))
             .andExpect(jsonPath("$.overwriteChanges").value(DEFAULT_OVERWRITE_CHANGES.booleanValue()))
-            .andExpect(jsonPath("$.options").value(DEFAULT_OPTIONS.toString()));
+            .andExpect(jsonPath("$.billOfMaterialsCoords").value(DEFAULT_BILL_OF_MATERIALS_COORDS));
     }
 
     @Test
@@ -463,12 +421,9 @@ class SourceResourceIT {
             .name(UPDATED_NAME)
             .key(UPDATED_KEY)
             .type(UPDATED_TYPE)
-            .baseUrl(UPDATED_BASE_URL)
             .active(UPDATED_ACTIVE)
             .filterArtifactsName(UPDATED_FILTER_ARTIFACTS_NAME)
             .filterArtifactsCreatedSince(UPDATED_FILTER_ARTIFACTS_CREATED_SINCE)
-            .username(UPDATED_USERNAME)
-            .password(UPDATED_PASSWORD)
             .cronExpression(UPDATED_CRON_EXPRESSION)
             .runOnStartup(UPDATED_RUN_ON_STARTUP)
             .specFilterSpEL(UPDATED_SPEC_FILTER_SP_EL)
@@ -483,7 +438,7 @@ class SourceResourceIT {
             .productReleaseKeySpEL(UPDATED_PRODUCT_RELEASE_KEY_SP_EL)
             .itemLimit(UPDATED_ITEM_LIMIT)
             .overwriteChanges(UPDATED_OVERWRITE_CHANGES)
-            .options(UPDATED_OPTIONS);
+            .billOfMaterialsCoords(UPDATED_BILL_OF_MATERIALS_COORDS);
 
         restSourceMockMvc
             .perform(
@@ -500,12 +455,9 @@ class SourceResourceIT {
         assertThat(testSource.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testSource.getKey()).isEqualTo(UPDATED_KEY);
         assertThat(testSource.getType()).isEqualTo(UPDATED_TYPE);
-        assertThat(testSource.getBaseUrl()).isEqualTo(UPDATED_BASE_URL);
         assertThat(testSource.getActive()).isEqualTo(UPDATED_ACTIVE);
         assertThat(testSource.getFilterArtifactsName()).isEqualTo(UPDATED_FILTER_ARTIFACTS_NAME);
         assertThat(testSource.getFilterArtifactsCreatedSince()).isEqualTo(UPDATED_FILTER_ARTIFACTS_CREATED_SINCE);
-        assertThat(testSource.getUsername()).isEqualTo(UPDATED_USERNAME);
-        assertThat(testSource.getPassword()).isEqualTo(UPDATED_PASSWORD);
         assertThat(testSource.getCronExpression()).isEqualTo(UPDATED_CRON_EXPRESSION);
         assertThat(testSource.getRunOnStartup()).isEqualTo(UPDATED_RUN_ON_STARTUP);
         assertThat(testSource.getSpecFilterSpEL()).isEqualTo(UPDATED_SPEC_FILTER_SP_EL);
@@ -520,7 +472,7 @@ class SourceResourceIT {
         assertThat(testSource.getProductReleaseKeySpEL()).isEqualTo(UPDATED_PRODUCT_RELEASE_KEY_SP_EL);
         assertThat(testSource.getItemLimit()).isEqualTo(UPDATED_ITEM_LIMIT);
         assertThat(testSource.getOverwriteChanges()).isEqualTo(UPDATED_OVERWRITE_CHANGES);
-        assertThat(testSource.getOptions()).isEqualTo(UPDATED_OPTIONS);
+        assertThat(testSource.getBillOfMaterialsCoords()).isEqualTo(UPDATED_BILL_OF_MATERIALS_COORDS);
     }
 
     @Test
@@ -594,16 +546,15 @@ class SourceResourceIT {
         partialUpdatedSource
             .key(UPDATED_KEY)
             .type(UPDATED_TYPE)
-            .baseUrl(UPDATED_BASE_URL)
-            .filterArtifactsCreatedSince(UPDATED_FILTER_ARTIFACTS_CREATED_SINCE)
-            .password(UPDATED_PASSWORD)
+            .active(UPDATED_ACTIVE)
+            .cronExpression(UPDATED_CRON_EXPRESSION)
             .specFilterSpEL(UPDATED_SPEC_FILTER_SP_EL)
-            .capabilityKeySpEL(UPDATED_CAPABILITY_KEY_SP_EL)
             .serviceKeySpEL(UPDATED_SERVICE_KEY_SP_EL)
+            .serviceNameSpEL(UPDATED_SERVICE_NAME_SP_EL)
             .versionSpEL(UPDATED_VERSION_SP_EL)
-            .productReleaseNameSpEL(UPDATED_PRODUCT_RELEASE_NAME_SP_EL)
             .productReleaseKeySpEL(UPDATED_PRODUCT_RELEASE_KEY_SP_EL)
-            .options(UPDATED_OPTIONS);
+            .itemLimit(UPDATED_ITEM_LIMIT)
+            .billOfMaterialsCoords(UPDATED_BILL_OF_MATERIALS_COORDS);
 
         restSourceMockMvc
             .perform(
@@ -620,27 +571,24 @@ class SourceResourceIT {
         assertThat(testSource.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testSource.getKey()).isEqualTo(UPDATED_KEY);
         assertThat(testSource.getType()).isEqualTo(UPDATED_TYPE);
-        assertThat(testSource.getBaseUrl()).isEqualTo(UPDATED_BASE_URL);
-        assertThat(testSource.getActive()).isEqualTo(DEFAULT_ACTIVE);
+        assertThat(testSource.getActive()).isEqualTo(UPDATED_ACTIVE);
         assertThat(testSource.getFilterArtifactsName()).isEqualTo(DEFAULT_FILTER_ARTIFACTS_NAME);
-        assertThat(testSource.getFilterArtifactsCreatedSince()).isEqualTo(UPDATED_FILTER_ARTIFACTS_CREATED_SINCE);
-        assertThat(testSource.getUsername()).isEqualTo(DEFAULT_USERNAME);
-        assertThat(testSource.getPassword()).isEqualTo(UPDATED_PASSWORD);
-        assertThat(testSource.getCronExpression()).isEqualTo(DEFAULT_CRON_EXPRESSION);
+        assertThat(testSource.getFilterArtifactsCreatedSince()).isEqualTo(DEFAULT_FILTER_ARTIFACTS_CREATED_SINCE);
+        assertThat(testSource.getCronExpression()).isEqualTo(UPDATED_CRON_EXPRESSION);
         assertThat(testSource.getRunOnStartup()).isEqualTo(DEFAULT_RUN_ON_STARTUP);
         assertThat(testSource.getSpecFilterSpEL()).isEqualTo(UPDATED_SPEC_FILTER_SP_EL);
-        assertThat(testSource.getCapabilityKeySpEL()).isEqualTo(UPDATED_CAPABILITY_KEY_SP_EL);
+        assertThat(testSource.getCapabilityKeySpEL()).isEqualTo(DEFAULT_CAPABILITY_KEY_SP_EL);
         assertThat(testSource.getCapabilityNameSpEL()).isEqualTo(DEFAULT_CAPABILITY_NAME_SP_EL);
         assertThat(testSource.getServiceKeySpEL()).isEqualTo(UPDATED_SERVICE_KEY_SP_EL);
-        assertThat(testSource.getServiceNameSpEL()).isEqualTo(DEFAULT_SERVICE_NAME_SP_EL);
+        assertThat(testSource.getServiceNameSpEL()).isEqualTo(UPDATED_SERVICE_NAME_SP_EL);
         assertThat(testSource.getSpecKeySpEL()).isEqualTo(DEFAULT_SPEC_KEY_SP_EL);
         assertThat(testSource.getVersionSpEL()).isEqualTo(UPDATED_VERSION_SP_EL);
-        assertThat(testSource.getProductReleaseNameSpEL()).isEqualTo(UPDATED_PRODUCT_RELEASE_NAME_SP_EL);
+        assertThat(testSource.getProductReleaseNameSpEL()).isEqualTo(DEFAULT_PRODUCT_RELEASE_NAME_SP_EL);
         assertThat(testSource.getProductReleaseVersionSpEL()).isEqualTo(DEFAULT_PRODUCT_RELEASE_VERSION_SP_EL);
         assertThat(testSource.getProductReleaseKeySpEL()).isEqualTo(UPDATED_PRODUCT_RELEASE_KEY_SP_EL);
-        assertThat(testSource.getItemLimit()).isEqualTo(DEFAULT_ITEM_LIMIT);
+        assertThat(testSource.getItemLimit()).isEqualTo(UPDATED_ITEM_LIMIT);
         assertThat(testSource.getOverwriteChanges()).isEqualTo(DEFAULT_OVERWRITE_CHANGES);
-        assertThat(testSource.getOptions()).isEqualTo(UPDATED_OPTIONS);
+        assertThat(testSource.getBillOfMaterialsCoords()).isEqualTo(UPDATED_BILL_OF_MATERIALS_COORDS);
     }
 
     @Test
@@ -659,12 +607,9 @@ class SourceResourceIT {
             .name(UPDATED_NAME)
             .key(UPDATED_KEY)
             .type(UPDATED_TYPE)
-            .baseUrl(UPDATED_BASE_URL)
             .active(UPDATED_ACTIVE)
             .filterArtifactsName(UPDATED_FILTER_ARTIFACTS_NAME)
             .filterArtifactsCreatedSince(UPDATED_FILTER_ARTIFACTS_CREATED_SINCE)
-            .username(UPDATED_USERNAME)
-            .password(UPDATED_PASSWORD)
             .cronExpression(UPDATED_CRON_EXPRESSION)
             .runOnStartup(UPDATED_RUN_ON_STARTUP)
             .specFilterSpEL(UPDATED_SPEC_FILTER_SP_EL)
@@ -679,7 +624,7 @@ class SourceResourceIT {
             .productReleaseKeySpEL(UPDATED_PRODUCT_RELEASE_KEY_SP_EL)
             .itemLimit(UPDATED_ITEM_LIMIT)
             .overwriteChanges(UPDATED_OVERWRITE_CHANGES)
-            .options(UPDATED_OPTIONS);
+            .billOfMaterialsCoords(UPDATED_BILL_OF_MATERIALS_COORDS);
 
         restSourceMockMvc
             .perform(
@@ -696,12 +641,9 @@ class SourceResourceIT {
         assertThat(testSource.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testSource.getKey()).isEqualTo(UPDATED_KEY);
         assertThat(testSource.getType()).isEqualTo(UPDATED_TYPE);
-        assertThat(testSource.getBaseUrl()).isEqualTo(UPDATED_BASE_URL);
         assertThat(testSource.getActive()).isEqualTo(UPDATED_ACTIVE);
         assertThat(testSource.getFilterArtifactsName()).isEqualTo(UPDATED_FILTER_ARTIFACTS_NAME);
         assertThat(testSource.getFilterArtifactsCreatedSince()).isEqualTo(UPDATED_FILTER_ARTIFACTS_CREATED_SINCE);
-        assertThat(testSource.getUsername()).isEqualTo(UPDATED_USERNAME);
-        assertThat(testSource.getPassword()).isEqualTo(UPDATED_PASSWORD);
         assertThat(testSource.getCronExpression()).isEqualTo(UPDATED_CRON_EXPRESSION);
         assertThat(testSource.getRunOnStartup()).isEqualTo(UPDATED_RUN_ON_STARTUP);
         assertThat(testSource.getSpecFilterSpEL()).isEqualTo(UPDATED_SPEC_FILTER_SP_EL);
@@ -716,7 +658,7 @@ class SourceResourceIT {
         assertThat(testSource.getProductReleaseKeySpEL()).isEqualTo(UPDATED_PRODUCT_RELEASE_KEY_SP_EL);
         assertThat(testSource.getItemLimit()).isEqualTo(UPDATED_ITEM_LIMIT);
         assertThat(testSource.getOverwriteChanges()).isEqualTo(UPDATED_OVERWRITE_CHANGES);
-        assertThat(testSource.getOptions()).isEqualTo(UPDATED_OPTIONS);
+        assertThat(testSource.getBillOfMaterialsCoords()).isEqualTo(UPDATED_BILL_OF_MATERIALS_COORDS);
     }
 
     @Test

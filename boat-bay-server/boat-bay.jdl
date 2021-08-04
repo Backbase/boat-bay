@@ -96,8 +96,6 @@ entity Spec {
     mvnVersion String
     mvnClassifier String
     mvnExtension String
-
-
 }
 
 entity Tag {
@@ -118,12 +116,9 @@ entity Source {
     name String required
     key String required
     type SourceType required
-    baseUrl String required
     active Boolean
     filterArtifactsName String
     filterArtifactsCreatedSince LocalDate
-    username String
-    password String
     cronExpression String
     runOnStartup Boolean
     specFilterSpEL String
@@ -138,7 +133,7 @@ entity Source {
     productReleaseKeySpEL String
     itemLimit Integer
     overwriteChanges Boolean
-    options TextBlob
+    billOfMaterialsCoords String
 }
 
 entity SourcePath {
@@ -191,17 +186,12 @@ enum TypeSeverity {
 }
 
 enum SourceType {
-    JFROG BOAT_MAVEN_PLUGIN MAVEN
-}
-
-enum DescriptionResolveStrategy {
-    MANUAL FROM_SPEC
+    BOAT_MAVEN_PLUGIN MAVEN
 }
 
 relationship ManyToMany {
     ProductRelease to Spec
     Spec to Tag
-
 }
 
 relationship OneToMany {

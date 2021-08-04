@@ -2,8 +2,8 @@
     <div class="portal-product">
         <div *ngFor="let portal of boatPortals " class="portal-product-column">
             <mat-card class="mat-elevation-z8">
-                <mat-card-title> {{portal.portalName}}
-                    / {{portal.productName}}</mat-card-title>
+                <mat-card-title> {{portal.name}}
+                    / {{portal.name}}</mat-card-title>
                 <mat-card-subtitle *ngIf="portal.lastLintReport">Last linted
                     Spec: {{portal.lastLintReport.name}} {{portal.lastLintReport.version}}
                     on: {{portal.lastLintReport.lintedOn}}</mat-card-subtitle>
@@ -13,7 +13,7 @@
                     <div class="portal-container">
 
                         <div class="portal-container-column">
-                            <a [routerLink]="['lint-reports', portal.portalKey, portal.productKey ]">
+                            <a [routerLink]="['lint-reports', portal.key, portal.key ]">
                                 <mat-icon>grading</mat-icon>
                                 <div>Lint Reports</div>
                             </a>
@@ -21,7 +21,7 @@
 
 
                         <div class="portal-container-column">
-                            <a [routerLink]="['diff-reports' , portal.portalKey, portal.productKey] ">
+                            <a [routerLink]="['diff-reports' , portal.key, portal.key] ">
                                 <mat-icon>compare</mat-icon>
                                 <div>Diff Reports</div>
                             </a>
@@ -29,7 +29,7 @@
                         </div>
 
                         <div class="portal-container-column">
-                            <a [routerLink]="[ 'tag-cloud', portal.portalKey, portal.productKey]">
+                            <a [routerLink]="[ 'tag-cloud', portal.key, portal.key]">
                                 <mat-icon>loyalty</mat-icon>
                                 <div>Tags</div>
                             </a>

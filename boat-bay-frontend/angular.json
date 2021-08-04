@@ -94,6 +94,9 @@
           "configurations": {
             "production": {
               "browserTarget": "boat-bay-frontend:build:production"
+            },
+            "development": {
+              "browserTarget": "boat-bay-frontend:build:development"
             }
           }
         },

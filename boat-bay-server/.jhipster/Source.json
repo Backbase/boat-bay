@@ -14,12 +14,7 @@
     {
       "fieldName": "type",
       "fieldType": "SourceType",
-      "fieldValues": "JFROG,BOAT_MAVEN_PLUGIN,MAVEN",
-      "fieldValidateRules": ["required"]
-    },
-    {
-      "fieldName": "baseUrl",
-      "fieldType": "String",
+      "fieldValues": "BOAT_MAVEN_PLUGIN,MAVEN",
       "fieldValidateRules": ["required"]
     },
     {
@@ -33,14 +28,6 @@
     {
       "fieldName": "filterArtifactsCreatedSince",
       "fieldType": "LocalDate"
-    },
-    {
-      "fieldName": "username",
-      "fieldType": "String"
-    },
-    {
-      "fieldName": "password",
-      "fieldType": "String"
     },
     {
       "fieldName": "cronExpression",
@@ -99,9 +86,8 @@
       "fieldType": "Boolean"
     },
     {
-      "fieldName": "options",
-      "fieldType": "byte[]",
-      "fieldTypeBlobContent": "text"
+      "fieldName": "billOfMaterialsCoords",
+      "fieldType": "String"
     }
   ],
   "relationships": [
