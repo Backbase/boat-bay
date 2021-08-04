@@ -21,6 +21,16 @@ components:
           format: date-time
         createdBy:
           type: string
+        numberOfServices:
+          type: integer
+        numberOfCapabilities:
+          type: integer
+        productDescription:
+          type: string
+        lastLintReport:
+          $ref: '#/components/schemas/BoatLintReport'
+        statistics:
+          $ref: '#/components/schemas/BoatStatistics'
     BoatProduct:
       type: object
       properties:
@@ -183,33 +193,6 @@ components:
         releaseDate:
           type: string
           format: date-time
-    BoatPortalDashboard:
-      type: object
-      properties:
-        portalId:
-          type: string
-        portalKey:
-          type: string
-        portalName:
-          type: string
-        productId:
-          type: string
-        productKey:
-          type: string
-        productName:
-          type: string
-        numberOfServices:
-          type: integer
-          format: int64
-        numberOfCapabilities:
-          type: integer
-          format: int64
-        productDescription:
-          type: string
-        lastLintReport:
-          $ref: '#/components/schemas/BoatLintReport'
-        statistics:
-          $ref: '#/components/schemas/BoatStatistics'
     BoatTag:
       type: object
       properties:

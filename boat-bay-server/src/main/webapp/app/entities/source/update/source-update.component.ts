@@ -7,9 +7,6 @@ import { finalize, map } from 'rxjs/operators';
 
 import { ISource, Source } from '../source.model';
 import { SourceService } from '../service/source.service';
-import { AlertError } from 'app/shared/alert/alert-error.model';
-import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
-import { DataUtils, FileLoadError } from 'app/core/util/data-util.service';
 import { IPortal } from 'app/entities/portal/portal.model';
 import { PortalService } from 'app/entities/portal/service/portal.service';
 import { IProduct } from 'app/entities/product/product.model';
@@ -36,12 +33,9 @@ export class SourceUpdateComponent implements OnInit {
     name: [null, [Validators.required]],
     key: [null, [Validators.required]],
     type: [null, [Validators.required]],
-    baseUrl: [null, [Validators.required]],
     active: [],
     filterArtifactsName: [],
     filterArtifactsCreatedSince: [],
-    username: [],
-    password: [],
     cronExpression: [],
     runOnStartup: [],
     specFilterSpEL: [],
@@ -56,7 +50,7 @@ export class SourceUpdateComponent implements OnInit {
     productReleaseKeySpEL: [],
     itemLimit: [],
     overwriteChanges: [],
-    options: [],
+    billOfMaterialsCoords: [],
     portal: [null, Validators.required],
     product: [null, Validators.required],
     capability: [],
@@ -64,8 +58,6 @@ export class SourceUpdateComponent implements OnInit {
   });
 
   constructor(
-    protected dataUtils: DataUtils,
-    protected eventManager: EventManager,
     protected sourceService: SourceService,
     protected portalService: PortalService,
     protected productService: ProductService,
@@ -80,21 +72,6 @@ export class SourceUpdateComponent implements OnInit {
       this.updateForm(source);
 
       this.loadRelationshipsOptions();
-    });
-  }
-
-  byteSize(base64String: string): string {
-    return this.dataUtils.byteSize(base64String);
-  }
-
-  openFile(base64String: string, contentType: string | null | undefined): void {
-    this.dataUtils.openFile(base64String, contentType);
-  }
-
-  setFileData(event: Event, field: string, isImage: boolean): void {
-    this.dataUtils.loadFileToForm(event, this.editForm, field, isImage).subscribe({
-      error: (err: FileLoadError) =>
-        this.eventManager.broadcast(new EventWithContent<AlertError>('boatbayApp.error', { ...err, key: 'error.file.' + err.key })),
     });
   }
 
@@ -153,12 +130,9 @@ export class SourceUpdateComponent implements OnInit {
       name: source.name,
       key: source.key,
       type: source.type,
-      baseUrl: source.baseUrl,
       active: source.active,
       filterArtifactsName: source.filterArtifactsName,
       filterArtifactsCreatedSince: source.filterArtifactsCreatedSince,
-      username: source.username,
-      password: source.password,
       cronExpression: source.cronExpression,
       runOnStartup: source.runOnStartup,
       specFilterSpEL: source.specFilterSpEL,
@@ -173,7 +147,7 @@ export class SourceUpdateComponent implements OnInit {
       productReleaseKeySpEL: source.productReleaseKeySpEL,
       itemLimit: source.itemLimit,
       overwriteChanges: source.overwriteChanges,
-      options: source.options,
+      billOfMaterialsCoords: source.billOfMaterialsCoords,
       portal: source.portal,
       product: source.product,
       capability: source.capability,
@@ -238,12 +212,9 @@ export class SourceUpdateComponent implements OnInit {
       name: this.editForm.get(['name'])!.value,
       key: this.editForm.get(['key'])!.value,
       type: this.editForm.get(['type'])!.value,
-      baseUrl: this.editForm.get(['baseUrl'])!.value,
       active: this.editForm.get(['active'])!.value,
       filterArtifactsName: this.editForm.get(['filterArtifactsName'])!.value,
       filterArtifactsCreatedSince: this.editForm.get(['filterArtifactsCreatedSince'])!.value,
-      username: this.editForm.get(['username'])!.value,
-      password: this.editForm.get(['password'])!.value,
       cronExpression: this.editForm.get(['cronExpression'])!.value,
       runOnStartup: this.editForm.get(['runOnStartup'])!.value,
       specFilterSpEL: this.editForm.get(['specFilterSpEL'])!.value,
@@ -258,7 +229,7 @@ export class SourceUpdateComponent implements OnInit {
       productReleaseKeySpEL: this.editForm.get(['productReleaseKeySpEL'])!.value,
       itemLimit: this.editForm.get(['itemLimit'])!.value,
       overwriteChanges: this.editForm.get(['overwriteChanges'])!.value,
-      options: this.editForm.get(['options'])!.value,
+      billOfMaterialsCoords: this.editForm.get(['billOfMaterialsCoords'])!.value,
       portal: this.editForm.get(['portal'])!.value,
       product: this.editForm.get(['product'])!.value,
       capability: this.editForm.get(['capability'])!.value,

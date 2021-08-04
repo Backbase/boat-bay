@@ -59,7 +59,7 @@ public class BoatDashboardController implements DashboardApi {
     private final BoatStatisticsCollector boatStatisticsCollector;
     private final BoatSpecQuerySpecs boatSpecQuerySpecs;
     private final BoatSpecLinter boatSpecLinter;
-    private Map<Severity, Integer> severityOrder;
+    private static Map<Severity, Integer> severityOrder;
 
     public List<String> getAllEnabledTags() {
         return tagRepository.findAll(Example.of(new Tag().hide(false))).stream()
@@ -68,18 +68,6 @@ public class BoatDashboardController implements DashboardApi {
     }
 
     @Cacheable(BoatCacheManager.PORTAL)
-    @Deprecated
-    public ResponseEntity<List<BoatPortalDashboard>> getDashboard() {
-
-        List<BoatPortalDashboard> portals = boatPortalRepository.findAll().stream()
-            .flatMap(portal -> portal.getProducts().stream().map(this::mapPortalDashboard))
-            .collect(Collectors.toList());
-
-        return ResponseEntity.ok(portals);
-    }
-
-
-    @Cacheable(BoatCacheManager.PORTAL_PRODUCT)
     @Deprecated
     public ResponseEntity<BoatProduct> getProductDashboard(String projectKey, String productKey) {
 
@@ -95,6 +83,7 @@ public class BoatDashboardController implements DashboardApi {
             .map(this::mapPortal)
             .collect(Collectors.toList());
 
+
         return ResponseEntity.ok(portals);
     }
 
@@ -106,7 +95,7 @@ public class BoatDashboardController implements DashboardApi {
         return ResponseEntity.ok(portalLintRules);
     }
 
-    @Override
+    @Cacheable(value = BoatCacheManager.PORTAL_PRODUCT)
     public ResponseEntity<List<BoatProduct>> getPortalProducts(String portalKey, Integer page, Integer size, List<String> sort) {
         Portal portal = getPortal(portalKey);
         Page<Product> allByPortal = boatProductRepository.findAllByPortal(portal, getPageable(page, size, sort));
@@ -157,7 +146,7 @@ public class BoatDashboardController implements DashboardApi {
         return ResponseEntity.accepted().build();
     }
 
-    @Cacheable(BoatCacheManager.PRODUCT_RELEASES)
+    @Cacheable(value = BoatCacheManager.PRODUCT_RELEASES)
     public ResponseEntity<List<BoatProductRelease>> getProductReleases(String portalKey, String productKey) {
 
         Product product = getProduct(portalKey, productKey);
@@ -168,7 +157,7 @@ public class BoatDashboardController implements DashboardApi {
         return ResponseEntity.ok(boatProductReleases);
     }
 
-    @Cacheable(BoatCacheManager.PRODUCT_SPECS)
+    @Cacheable(value = BoatCacheManager.PRODUCT_SPECS)
     public ResponseEntity<List<BoatSpec>> getProductReleaseSpecs(String portalKey, String productKey, String releaseKey) {
 
         Product product = getProduct(portalKey, productKey);
@@ -180,7 +169,7 @@ public class BoatDashboardController implements DashboardApi {
         return ResponseEntity.ok(specs);
     }
 
-    @Cacheable(BoatCacheManager.PRODUCT_TAGS)
+    @Cacheable(value = BoatCacheManager.PRODUCT_TAGS)
     public ResponseEntity<List<BoatTag>> getProductTags(String portalKey, String productKey) {
 
         Product product = getProduct(portalKey, productKey);
@@ -212,6 +201,7 @@ public class BoatDashboardController implements DashboardApi {
     }
 
     @Override
+    @Cacheable(value = BoatCacheManager.PRODUCT_SPECS)
     public ResponseEntity<List<BoatSpec>> getPortalSpecs(String portalKey, String productKey, Integer page, Integer size, List<String> sort, List<String> capabilityId, String productReleaseId, List<String> serviceId, String grade, Boolean backwardsCompatible, Boolean changed) {
 
         Product product = getProduct(portalKey, productKey);
@@ -238,7 +228,7 @@ public class BoatDashboardController implements DashboardApi {
             specification = specification.and(serviceDefinitionSpecification);
         }
 
-        Page<Spec> all = boatSpecRepository.findAll(specification, getPageable(page,size,sort));
+        Page<Spec> all = boatSpecRepository.findAll(specification, getPageable(page, size, sort));
         Page<BoatSpec> boatSpecs = all.map(this::mapSpec);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), boatSpecs);
         return ResponseEntity.ok()
@@ -247,6 +237,7 @@ public class BoatDashboardController implements DashboardApi {
     }
 
 
+    @SuppressWarnings("SuspiciousMethodCalls")
     public ResponseEntity<BoatLintReport> getLintReportForSpec(String portalKey,
                                                                String productKey,
                                                                String specId,
@@ -257,13 +248,7 @@ public class BoatDashboardController implements DashboardApi {
 
         Spec spec = boatSpecRepository.findById(Long.valueOf(specId)).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        LintReport specReport;
-//        if(refresh != null && refresh) {
-        specReport = boatSpecLinter.lint(spec);
-
-//        } else {
-//            specReport = Optional.ofNullable(spec.getLintReport()).orElseGet(() -> boatSpecLinter.lint(spec));
-//        }
+        LintReport specReport = boatSpecLinter.lint(spec);
 
         Map<Severity, Integer> severityIntegerMap = getSeverityOrder();
 
@@ -337,6 +322,7 @@ public class BoatDashboardController implements DashboardApi {
 
 
     @Override
+    @Cacheable(value = BoatCacheManager.PRODUCT_CAPABILITIES)
     public ResponseEntity<List<BoatCapability>> getPortalCapabilities(String portalKey, String productKey, Integer page, Integer size, List<String> sort) {
         Product product = getProduct(portalKey, productKey);
 
@@ -356,7 +342,7 @@ public class BoatDashboardController implements DashboardApi {
 
         log.info("Creating diff reports from specs: {} and {} in {}", spec1.getName(), spec2.getName(), product.getName());
 
-        ChangedOpenApi changedOpenApi = null;
+        ChangedOpenApi changedOpenApi;
         try {
             changedOpenApi = OpenApiCompare.fromContents(spec1.getOpenApi(), spec2.getOpenApi());
         } catch (Exception e) {
@@ -376,7 +362,7 @@ public class BoatDashboardController implements DashboardApi {
         return boatSpec;
     }
 
-    private Map<Severity, Integer> getSeverityOrder() {
+    private static Map<Severity, Integer> getSeverityOrder() {
         if (severityOrder == null) {
             severityOrder = new HashMap<>();
             for (int i = 0; i < Severity.values().length; i++) {
@@ -394,20 +380,13 @@ public class BoatDashboardController implements DashboardApi {
 
     @NotNull
     private BoatPortal mapPortal(Portal portal) {
-        return dashboardMapper.mapBoatPortal(portal);
-    }
-
-    @NotNull
-    private BoatPortalDashboard mapPortalDashboard(com.backbase.oss.boat.bay.domain.Product product) {
-
-        BoatPortalDashboard portalDto = dashboardMapper.mapPortal(product.getPortal(), product);
-        boatLintReportRepository.findDistinctFirstBySpecProductOrderByLintedOn(product)
-            .ifPresent(lintReport -> portalDto.setLastLintReport(dashboardMapper.mapReportWithoutViolations(lintReport)));
-
-        portalDto.setNumberOfCapabilities(boatCapabilityRepository.countByProduct(product));
-        portalDto.setNumberOfServices(boatServiceRepository.countByCapabilityProduct(product));
-        portalDto.setStatistics(boatStatisticsCollector.collect(product));
-        return portalDto;
+        BoatPortal boatPortal = dashboardMapper.mapBoatPortal(portal);
+        boatPortal.setNumberOfCapabilities(boatCapabilityRepository.countByProductPortal(portal));
+        boatPortal.setNumberOfServices(boatServiceRepository.countByCapabilityProductPortal(portal));
+        boatLintReportRepository.findDistinctFirstBySpecProductPortalOrderByLintedOn(portal).ifPresent(
+            lintReport -> boatPortal.setLastLintReport(dashboardMapper.mapReportWithoutViolations(lintReport))
+        );
+        return boatPortal;
     }
 
     @NotNull

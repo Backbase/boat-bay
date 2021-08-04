@@ -14,9 +14,7 @@ import com.backbase.oss.boat.bay.model.*;
 
 import com.fasterxml.jackson.core.JsonPointer;
 import java.net.URI;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,19 +32,6 @@ import org.zalando.zally.rule.api.RuleSet;
 
 @Mapper(componentModel = "spring")
 public interface BoatDashboardMapper {
-
-    @Mapping(target = "numberOfServices", ignore = true)
-    @Mapping(target = "numberOfCapabilities", ignore = true)
-    @Mapping(target = "portalId", source = "portal.id")
-    @Mapping(target = "portalKey", source = "portal.key")
-    @Mapping(target = "portalName", source = "portal.name")
-    @Mapping(target = "productId", source = "product.id")
-    @Mapping(target = "productKey", source = "product.key")
-    @Mapping(target = "productName", source = "product.name")
-    @Mapping(target = "productDescription", source = "product.content")
-    @Mapping(target = "lastLintReport", ignore = true)
-    @Mapping(target = "statistics", ignore = true)
-    BoatPortalDashboard mapPortal(Portal portal, Product product);
 
     static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
         Set<Object> seen = ConcurrentHashMap.newKeySet();
@@ -147,5 +132,9 @@ public interface BoatDashboardMapper {
         } else {
             return null;
         }
+    };
+
+    default OffsetDateTime map(ZonedDateTime value) {
+        return value.toOffsetDateTime();
     };
 }

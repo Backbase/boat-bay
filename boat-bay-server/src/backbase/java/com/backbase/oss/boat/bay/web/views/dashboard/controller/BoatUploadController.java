@@ -11,7 +11,6 @@ import com.backbase.oss.boat.bay.model.UploadSpec;
 import com.backbase.oss.boat.bay.repository.*;
 import com.backbase.oss.boat.bay.source.SpecSourceResolver;
 import com.backbase.oss.boat.bay.source.scanner.ScanResult;
-import com.backbase.oss.boat.bay.source.scanner.SourceScannerOptions;
 import com.backbase.oss.boat.bay.util.SpringExpressionUtils;
 import com.backbase.oss.boat.bay.web.rest.errors.BadRequestAlertException;
 import com.backbase.oss.boat.bay.web.views.dashboard.mapper.BoatDashboardMapper;
@@ -22,12 +21,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Example;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import tech.jhipster.web.util.HeaderUtil;
 
-import javax.validation.Valid;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -115,7 +111,7 @@ public class BoatUploadController implements BoatMavenPluginApi {
 
         }
 
-        ScanResult scanResult = new ScanResult(source, new SourceScannerOptions());
+        ScanResult scanResult = new ScanResult(source);
         specs.forEach(scanResult::addSpec);
         log.info("resolving specs {}", specs);
         specSourceResolver.process(scanResult);

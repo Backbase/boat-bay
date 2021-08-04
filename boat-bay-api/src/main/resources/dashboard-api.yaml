@@ -271,21 +271,6 @@ paths:
         "200":
           description: updated successfuly
           content: { }
-  /api/boat/dashboard:
-    get:
-      tags:
-        - dashboard
-      summary: get list of boat portal dashboards
-      operationId: getDashboard
-      responses:
-        "200":
-          description: list of boat portal dashboards
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: 'schemas/definitions.yaml#/components/schemas/BoatPortalDashboard'
   /api/boat/dashboard/{portalKey}/{productKey}:
     get:
       tags:

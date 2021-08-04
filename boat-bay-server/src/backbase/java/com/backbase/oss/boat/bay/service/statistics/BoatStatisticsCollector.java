@@ -11,9 +11,8 @@ import com.backbase.oss.boat.bay.repository.ProductRepository;
 import com.backbase.oss.boat.bay.repository.ServiceDefinitionRepository;
 import com.backbase.oss.boat.bay.repository.SpecRepository;
 import com.backbase.oss.boat.bay.repository.BoatLintRuleViolationRepository;
-import static com.backbase.oss.boat.bay.config.BoatCacheManager.STATISTICS;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +20,8 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.backbase.oss.boat.bay.config.BoatCacheManager.STATISTICS;
 
 @Slf4j
 @Component
@@ -75,7 +76,7 @@ public class BoatStatisticsCollector {
     @CachePut(STATISTICS)
     public BoatStatistics performCollect(Product product) {
         BoatStatistics statistics = new BoatStatistics();
-        statistics.setUpdatedOn(LocalDateTime.now());
+        statistics.setUpdatedOn(OffsetDateTime.now());
 
         statistics.setMustViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpecProduct(Severity.MUST, product));
         statistics.setShouldViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpecProduct(Severity.SHOULD, product));
@@ -94,7 +95,7 @@ public class BoatStatisticsCollector {
     @CachePut(STATISTICS)
     public BoatStatistics performCollect(Capability capability) {
         BoatStatistics statistics = new BoatStatistics();
-        statistics.setUpdatedOn(LocalDateTime.now());
+        statistics.setUpdatedOn(OffsetDateTime.now());
 
         statistics.setMustViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpecCapability(Severity.MUST, capability));
         statistics.setShouldViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpecCapability(Severity.SHOULD, capability));
@@ -112,7 +113,7 @@ public class BoatStatisticsCollector {
     @CachePut(STATISTICS)
     public BoatStatistics performCollect(ServiceDefinition serviceDefinition) {
         BoatStatistics statistics = new BoatStatistics();
-        statistics.setUpdatedOn(LocalDateTime.now());
+        statistics.setUpdatedOn(OffsetDateTime.now());
 
         statistics.setMustViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpecServiceDefinition(Severity.MUST, serviceDefinition));
         statistics.setShouldViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpecServiceDefinition(Severity.SHOULD, serviceDefinition));
@@ -129,7 +130,7 @@ public class BoatStatisticsCollector {
     @CachePut(STATISTICS)
     public BoatStatistics performCollect(Spec spec) {
         BoatStatistics statistics = new BoatStatistics();
-        statistics.setUpdatedOn(LocalDateTime.now());
+        statistics.setUpdatedOn(OffsetDateTime.now());
 
         statistics.setMustViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpec(Severity.MUST, spec));
         statistics.setShouldViolationsCount(boatLintRuleViolationRepository.countBySeverityAndLintReportSpec(Severity.SHOULD, spec));

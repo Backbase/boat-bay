@@ -180,3 +180,45 @@ jhipster:
 # ===================================================================
 
 # application:
+boat:
+  bay:
+    bootstrap:
+      dashboard:
+        name: BOAT-BAY
+        title: BOAT-BAY
+        sub-title: It's like Sonar, but for specs!
+        nav-title: BOAT-BAY
+        default-portal:
+          key: default
+          name: BOAT-BAY
+          logo-link: backbase-logo.png
+          logo-url: https://github.com/Backbase/boat-bay
+          default-product:
+            key: default
+            name: Default
+
+
+      spec-types:
+        - name: Client API
+          matchSpEL: sourceName.contains('client-api')
+          icon: public
+        - name: Service API
+          matchSpEL: sourceName.contains('service-api')
+          icon: public_off
+        - name: Integration Inbound
+          matchSpEL: sourceName.contains('inbound')
+          icon: input
+        - name: Integration Outbound
+          matchSpEL: sourceName.contains('outbound')
+          icon: outbound
+        - name: Integration Pull
+          matchSpEL: sourceName.contains('pull')
+          icon: swap_vert
+        - name: Integration
+          matchSpEL: sourceName.contains('integration-api')
+          icon: import_export
+        - name: Persistence
+          matchSpEL: sourceName.contains('persistence') || sourceName.contains('pandp')
+          icon: storage
+
+

@@ -1,31 +1,21 @@
 package com.backbase.oss.boat.bay.source.scanner.impl;
 
+import com.backbase.oss.boat.bay.config.BoatBayConfigurationProperties;
 import com.backbase.oss.boat.bay.domain.ProductRelease;
 import com.backbase.oss.boat.bay.domain.Source;
 import com.backbase.oss.boat.bay.domain.SourcePath;
 import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.domain.enumeration.SourceType;
-import com.backbase.oss.boat.bay.source.scanner.MavenScannerOptions;
 import com.backbase.oss.boat.bay.source.scanner.ScanResult;
-import com.backbase.oss.boat.bay.source.scanner.SourceScannerOptions;
 import com.backbase.oss.boat.bay.source.scanner.SpecSourceScanner;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.repository.internal.MavenRepositorySystemUtils;
+import org.apache.maven.settings.Server;
+import org.apache.maven.settings.Settings;
+import org.apache.maven.settings.io.xpp3.SettingsXpp3Reader;
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.eclipse.aether.DefaultRepositorySystemSession;
 import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.RepositorySystemSession;
@@ -47,27 +37,36 @@ import org.eclipse.aether.transport.http.HttpTransporterFactory;
 import org.eclipse.aether.util.repository.AuthenticationBuilder;
 import org.eclipse.aether.version.Version;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+
 @Slf4j
 public class MavenSpecSourceScanner implements SpecSourceScanner {
 
     private Source source;
-    private SourceScannerOptions sourceScannerOptions;
     private RepositorySystem repositorySystem;
     private RepositorySystemSession session;
     private List<RemoteRepository> repositories;
+    private BoatBayConfigurationProperties boatBayConfigurationProperties;
     private final Set<SourcePath> paths = new LinkedHashSet<>();
 
     @Override
     public void setSource(Source source) {
         this.source = source;
-
         paths.addAll(source.getSourcePaths());
     }
 
-    @Override
-    public void setScannerOptions(SourceScannerOptions sourceScannerOptions) {
-        this.sourceScannerOptions = sourceScannerOptions;
-    }
 
     @Override
     public Source getSource() {
@@ -78,22 +77,29 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
     public ScanResult scan() {
         log.info("Running Maven Source Scanner for source: {}", source.getName());
 
-        ScanResult scanResult = new ScanResult(source, sourceScannerOptions);
+        ScanResult scanResult = new ScanResult(source);
+
+        SettingsXpp3Reader settingsXpp3Reader = new SettingsXpp3Reader();
+        Settings mavenSettings;
+        try {
+            mavenSettings = settingsXpp3Reader.read(new FileInputStream(boatBayConfigurationProperties.getMavenSettingsFile()));
+        } catch (IOException | XmlPullParserException e) {
+            throw new IllegalStateException("Cannot read maven settings file from: " + boatBayConfigurationProperties.getMavenSettingsFile());
+        }
 
         repositorySystem = newRepositorySystem();
-        session = newRepositorySystemSession(repositorySystem);
+        session = newRepositorySystemSession(mavenSettings, repositorySystem);
 
-        MavenScannerOptions mavenScannerOptions = sourceScannerOptions.getMavenScannerOptions();
-        Artifact artifact = new DefaultArtifact(mavenScannerOptions.getMavenArtifactCoords());
+        Artifact artifact = new DefaultArtifact(source.getBillOfMaterialsCoords());
 
         VersionRangeRequest rangeRequest = new VersionRangeRequest();
         rangeRequest.setArtifact(artifact);
-        repositories = newRepositories(repositorySystem, session);
+        repositories = readMavenRepositories(mavenSettings, repositorySystem, session);
         rangeRequest.setRepositories(repositories);
 
         VersionRangeResult rangeResult = null;
         try {
-            log.info("Resolving versions for artifact: {} in: {}", mavenScannerOptions.getMavenArtifactCoords(), repositories);
+            log.info("Resolving versions for artifact: {} in: {}", source.getBillOfMaterialsCoords(), repositories);
             rangeResult = repositorySystem.resolveVersionRange(session, rangeRequest);
 
             List<Version> versions = rangeResult.getVersions();
@@ -229,14 +235,14 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
                 spec.setSourcePath(zipEntry.getName());
                 spec.setSourceUrl(
                     artifact.getGroupId() +
-                    ":" +
-                    artifact.getArtifactId() +
-                    ":" +
-                    artifact.getClassifier() +
-                    ":" +
-                    artifact.getExtension() +
-                    ":" +
-                    artifact.getVersion()
+                        ":" +
+                        artifact.getArtifactId() +
+                        ":" +
+                        artifact.getClassifier() +
+                        ":" +
+                        artifact.getExtension() +
+                        ":" +
+                        artifact.getVersion()
                 );
                 spec.setSourceName(filename);
                 spec.setMvnGroupId(artifact.getGroupId());
@@ -283,11 +289,12 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
         return null;
     }
 
-    public DefaultRepositorySystemSession newRepositorySystemSession(RepositorySystem system) {
+    public DefaultRepositorySystemSession newRepositorySystemSession(Settings settings, RepositorySystem system) {
         DefaultRepositorySystemSession session = MavenRepositorySystemUtils.newSession();
 
-        LocalRepository localRepo = new LocalRepository(this.sourceScannerOptions.getMavenScannerOptions().getLocalRepoPath());
-        session.setLocalRepositoryManager(system.newLocalRepositoryManager(session, localRepo));
+        LocalRepository localRepository = new LocalRepository(settings.getLocalRepository());
+
+        session.setLocalRepositoryManager(system.newLocalRepositoryManager(session, localRepository));
         session.setChecksumPolicy(RepositoryPolicy.CHECKSUM_POLICY_IGNORE);
 
         //        session.setTransferListener( new ConsoleTransferListener() );
@@ -299,18 +306,22 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
         return session;
     }
 
-    public List<RemoteRepository> newRepositories(RepositorySystem system, RepositorySystemSession session) {
-        return Collections.singletonList(newRepository());
-    }
+    public List<RemoteRepository> readMavenRepositories(Settings settings, RepositorySystem system, RepositorySystemSession session) {
 
-    private RemoteRepository newRepository() {
-        AuthenticationBuilder authenticationBuilder = new AuthenticationBuilder();
-        authenticationBuilder.addUsername(source.getUsername());
-        authenticationBuilder.addPassword(source.getPassword());
-
-        return new RemoteRepository.Builder(source.getName(), "default", source.getBaseUrl())
-            .setAuthentication(authenticationBuilder.build())
-            .build();
+        return settings.getProfiles().stream()
+            .flatMap(profile -> profile.getRepositories().stream())
+            .map(repository -> {
+                Server server = settings.getServer(repository.getId());
+                AuthenticationBuilder authenticationBuilder = new AuthenticationBuilder();
+                if (server != null) {
+                    authenticationBuilder.addPassword(server.getPassword());
+                    authenticationBuilder.addUsername(server.getUsername());
+                }
+                return new RemoteRepository.Builder(repository.getName(), "default", repository.getUrl())
+                    .setAuthentication(authenticationBuilder.build())
+                    .build();
+            })
+            .collect(Collectors.toList());
     }
 
     public RepositorySystem newRepositorySystem() {

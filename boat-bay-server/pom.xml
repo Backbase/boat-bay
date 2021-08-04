@@ -195,16 +195,19 @@
             <artifactId>boat-engine</artifactId>
             <version>0.14.5</version>
         </dependency>
+
         <dependency>
             <groupId>com.backbase.oss</groupId>
             <artifactId>boat-quay-lint</artifactId>
             <version>0.14.5</version>
         </dependency>
+
         <dependency>
             <groupId>com.backbase.oss</groupId>
             <artifactId>boat-scaffold</artifactId>
             <version>0.14.5</version>
         </dependency>
+
         <dependency>
             <groupId>org.openapitools</groupId>
             <artifactId>jackson-databind-nullable</artifactId>
@@ -217,6 +220,7 @@
             <artifactId>openapi-diff-core</artifactId>
             <version>2.0.0-beta.10</version>
         </dependency>
+
         <dependency>
             <groupId>org.jfrog.artifactory.client</groupId>
             <artifactId>artifactory-java-client-services</artifactId>
@@ -239,6 +243,12 @@
             <groupId>org.apache.maven.resolver</groupId>
             <artifactId>maven-resolver-impl</artifactId>
             <version>1.6.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-settings</artifactId>
+            <version>3.8.1</version>
         </dependency>
 
         <dependency>
@@ -592,7 +602,6 @@
                                 <typeMapping>Double=java.math.BigDecimal</typeMapping>
                             </typeMappings>
                             <importMappings>
-                                <importMapping>LocalDateTime = java.time.LocalDateTime</importMapping>
                                 <importMapping>IntRange = kotlin.ranges.IntRange</importMapping>
                                 <importMapping>JsonPointer = com.fasterxml.jackson.core.JsonPointer</importMapping>
                                 <importMapping>Resource = org.springframework.core.io.Resource</importMapping>
@@ -631,7 +640,6 @@
                                 <typeMapping>Double=java.math.BigDecimal</typeMapping>
                             </typeMappings>
                             <importMappings>
-                                <importMapping>LocalDateTime = java.time.LocalDateTime</importMapping>
                                 <importMapping>IntRange = kotlin.ranges.IntRange</importMapping>
                                 <importMapping>JsonPointer = com.fasterxml.jackson.core.JsonPointer</importMapping>
                                 <importMapping>Resource = org.springframework.core.io.Resource</importMapping>
@@ -641,6 +649,37 @@
                         </configuration>
 
                     </execution>
+                    <execution>
+                        <id>register-api</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/../boat-bay-api/target/specs/register-api.yaml</inputSpec>
+                            <generatorName>spring</generatorName>
+                            <generateApiTests>false</generateApiTests>
+                            <generateApis>true</generateApis>
+                            <generateModels>true</generateModels>
+                            <generateSupportingFiles>false</generateSupportingFiles>
+                            <configOptions>
+                                <controllerThrowsExceptions>java.io.IOException,com.backbase.oss.boat.ExportException</controllerThrowsExceptions>
+                                <library>spring-boot</library>
+                                <reactive>false</reactive>
+                                <java8>true</java8>
+                                <dateLibrary>java8</dateLibrary>
+                                <interfaceOnly>true</interfaceOnly>
+                                <skipDefaultInterface>true</skipDefaultInterface>
+                                <useBeanValidation>false</useBeanValidation>
+                                <useTags>true</useTags>
+                                <addServletRequest>false</addServletRequest>
+                            </configOptions>
+                            <modelPackage>${boat-maven-plugin.modelPackage}</modelPackage>
+                            <apiPackage>com.backbase.oss.boat.bay.api</apiPackage>
+                        </configuration>
+
+                    </execution>
+
                 </executions>
             </plugin>
             <plugin>

@@ -11,12 +11,9 @@ export interface ISource {
   name?: string;
   key?: string;
   type?: SourceType;
-  baseUrl?: string;
   active?: boolean | null;
   filterArtifactsName?: string | null;
   filterArtifactsCreatedSince?: dayjs.Dayjs | null;
-  username?: string | null;
-  password?: string | null;
   cronExpression?: string | null;
   runOnStartup?: boolean | null;
   specFilterSpEL?: string | null;
@@ -31,7 +28,7 @@ export interface ISource {
   productReleaseKeySpEL?: string | null;
   itemLimit?: number | null;
   overwriteChanges?: boolean | null;
-  options?: string | null;
+  billOfMaterialsCoords?: string | null;
   sourcePaths?: ISourcePath[] | null;
   portal?: IPortal;
   product?: IProduct;
@@ -45,12 +42,9 @@ export class Source implements ISource {
     public name?: string,
     public key?: string,
     public type?: SourceType,
-    public baseUrl?: string,
     public active?: boolean | null,
     public filterArtifactsName?: string | null,
     public filterArtifactsCreatedSince?: dayjs.Dayjs | null,
-    public username?: string | null,
-    public password?: string | null,
     public cronExpression?: string | null,
     public runOnStartup?: boolean | null,
     public specFilterSpEL?: string | null,
@@ -65,7 +59,7 @@ export class Source implements ISource {
     public productReleaseKeySpEL?: string | null,
     public itemLimit?: number | null,
     public overwriteChanges?: boolean | null,
-    public options?: string | null,
+    public billOfMaterialsCoords?: string | null,
     public sourcePaths?: ISourcePath[] | null,
     public portal?: IPortal,
     public product?: IProduct,
