@@ -50,7 +50,7 @@ public class BoatUploadController implements BoatMavenPluginApi {
     private static final String SPEC_CREATOR = "MavenPluginUpload";
 
     @Override
-    public ResponseEntity<List<BoatLintReport>> uploadSpec(String sourceKey, UploadRequestBody requestBody) {
+    public ResponseEntity<List<BoatLintReport>> uploadSpec(String portalKey, String sourceKey, UploadRequestBody requestBody) {
 
         Source source = boatSourceRepository.findOne(Example.of(new Source().key(sourceKey)))
             .orElseThrow(() -> new BadRequestAlertException("Invalid source, source Key does not exist", "SOURCE", "sourceIdInvalid"));

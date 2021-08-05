@@ -11,13 +11,14 @@ tags:
 - name: boat-maven-plugin
   description: Endpoints used by the Boat Maven Plugin
 paths:
-  /api/boat/boat-maven-plugin/{sourceKey}/upload:
+  /api/boat/portals/{portalKey}/boat-maven-plugin/{sourceKey}/upload:
     post:
       tags:
       - boat-maven-plugin
       summary: upload and lint specs
       operationId: uploadSpec
       parameters:
+      - $ref: 'schemas/definitions.yaml#/components/parameters/PortalKey'
       - name: sourceKey
         in: path
         description: source identifier

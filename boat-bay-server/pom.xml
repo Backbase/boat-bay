@@ -672,7 +672,7 @@
                                 <skipDefaultInterface>true</skipDefaultInterface>
                                 <useBeanValidation>false</useBeanValidation>
                                 <useTags>true</useTags>
-                                <addServletRequest>false</addServletRequest>
+                                <addServletRequest>true</addServletRequest>
                             </configOptions>
                             <modelPackage>${boat-maven-plugin.modelPackage}</modelPackage>
                             <apiPackage>com.backbase.oss.boat.bay.api</apiPackage>

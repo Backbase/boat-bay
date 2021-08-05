@@ -8,6 +8,7 @@ import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.domain.enumeration.SourceType;
 import com.backbase.oss.boat.bay.source.scanner.ScanResult;
 import com.backbase.oss.boat.bay.source.scanner.SpecSourceScanner;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.StringUtils;
@@ -60,6 +61,11 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
     private List<RemoteRepository> repositories;
     private BoatBayConfigurationProperties boatBayConfigurationProperties;
     private final Set<SourcePath> paths = new LinkedHashSet<>();
+
+    @Override
+    public void setConfigurationProperties(BoatBayConfigurationProperties properties) {
+        this.boatBayConfigurationProperties = properties;
+    }
 
     @Override
     public void setSource(Source source) {
@@ -292,7 +298,9 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
     public DefaultRepositorySystemSession newRepositorySystemSession(Settings settings, RepositorySystem system) {
         DefaultRepositorySystemSession session = MavenRepositorySystemUtils.newSession();
 
-        LocalRepository localRepository = new LocalRepository(settings.getLocalRepository());
+        String localRepositoryLocation = settings.getLocalRepository() != null ? settings.getLocalRepository() : System.getenv("HOME") + "/.m2/repository";
+        log.info("Setting up maven repository location: {}", localRepositoryLocation);
+        LocalRepository localRepository = new LocalRepository(localRepositoryLocation);
 
         session.setLocalRepositoryManager(system.newLocalRepositoryManager(session, localRepository));
         session.setChecksumPolicy(RepositoryPolicy.CHECKSUM_POLICY_IGNORE);

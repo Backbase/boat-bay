@@ -17,4 +17,6 @@ public interface BoatProductRepository extends ProductRepository {
     Page<Product> findAllByPortal(Portal portal, Pageable pageable);
 
     Optional<Product> findByKeyAndPortalKey(String productKey, String portalKey);
+
+    Optional<Product> findByKeyAndPortal(String productKey, Portal portal);
 }

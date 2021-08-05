@@ -10,21 +10,28 @@ servers:
 tags:
   - name: register
 paths:
-  /api/boat/register/project:
+  /api/boat/portals/{portalKey}/register:
     post:
       tags:
         - register
       summary: Register new Project
       description: Creates a new Boat Bay Portal with convention based configuration for setting up a capability team.
       operationId: registerProject
+      parameters:
+        - $ref: 'schemas/definitions.yaml#/components/parameters/PortalKey'
       requestBody:
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/RegisterProject"
       responses:
-        201:
+        200:
           description: Returns success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisteredProject'
+
         400:
           description: "Failed to register project"
 
@@ -50,12 +57,21 @@ components:
         artifactId:
           type: string
           description: "Maven Artifact Id"
+        version:
+          type: string
+          description: "Maven Version"
         versionRange:
           type: string
           description: "Maven Version Range"
         specArtifactFilter:
           type: string
           default: "*:*:*:api:*"
-
-
-
+    RegisteredProject:
+      type: object
+      properties:
+        dashboardUrl:
+          type: string
+        uploadUrl:
+          type: string
+        numberOfApis:
+          type: integer
