@@ -184,7 +184,6 @@ boat:
   bay:
     bootstrap:
       dashboard:
-        url: http://localhost:4200/example
         name: Example Dashboard
         title: "Boat Bay :: Example Dashboard"
         sub-title: It's like Sonar, but for specs!
@@ -197,6 +196,7 @@ boat:
           default-product:
             key: example
             name: Example Product
+        base-url: http://localhost:4200
 
       spec-types:
         - name: Client API
