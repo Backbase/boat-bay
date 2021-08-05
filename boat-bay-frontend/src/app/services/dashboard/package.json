@@ -1,0 +1,39 @@
+{
+  "name": "@boat/boat-http-ang",
+  "version": "2.2.0",
+  "description": "OpenAPI client for @boat/boat-http-ang",
+  "keywords": [
+    "backbase",
+    "web",
+    "wa3",
+    "wc3",
+    "openapi-client",
+    "openapi-generator"
+  ],
+  "license": "Unlicense",
+  "scripts": {
+    "build": "ng-packagr -p package.json"
+  },
+  "ngPackage": {
+    "lib": {
+      "entryFile": "public_api.ts"
+    },
+    "dest": "dist/libs/boat-http-ang"
+  },
+  "peerDependencies": {
+    "@angular/core": "^10.0.0",
+    "rxjs": "^6.6.0"
+  },
+  "devDependencies": {
+    "@angular/common": "~10.0.0",
+    "@angular/compiler": "~10.0.0",
+    "@angular/compiler-cli": "~10.0.0",
+    "@angular/core": "~10.0.0",
+    "@angular/platform-browser": "~10.0.0",
+    "ng-packagr": "^10.0.3",
+    "reflect-metadata": "^0.1.3",
+    "rxjs": "~6.6.0",
+    "typescript": ">=3.9.2 <4.0.0",
+    "zone.js": "^0.10.2"
+  }
+}
