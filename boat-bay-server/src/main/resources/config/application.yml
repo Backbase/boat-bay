@@ -184,19 +184,19 @@ boat:
   bay:
     bootstrap:
       dashboard:
-        name: BOAT-BAY
-        title: BOAT-BAY
+        url: http://localhost:4200/example
+        name: Example Dashboard
+        title: "Boat Bay :: Example Dashboard"
         sub-title: It's like Sonar, but for specs!
-        nav-title: BOAT-BAY
+        nav-title: "Boat Bay :: Example Dashboard"
         default-portal:
-          key: default
-          name: BOAT-BAY
+          key: example
+          name: Example Project
           logo-link: backbase-logo.png
           logo-url: https://github.com/Backbase/boat-bay
           default-product:
-            key: default
-            name: Default
-
+            key: example
+            name: Example Product
 
       spec-types:
         - name: Client API

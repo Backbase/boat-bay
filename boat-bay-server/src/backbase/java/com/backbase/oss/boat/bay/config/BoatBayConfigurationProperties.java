@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull;
 @Data
 public class BoatBayConfigurationProperties {
 
-    private File mavenSettingsFile = new File("~/.m2/settings.xml");
+    private File mavenSettingsFile = new File(System.getenv("HOME") + "/.m2/settings.xml");
 
     private Bootstrap bootstrap;
 
@@ -29,6 +29,7 @@ public class BoatBayConfigurationProperties {
 
         @Data
         public static class Dashboard {
+            private String baseUrl;
             private String navTitle;
             private String name;
             private String title;

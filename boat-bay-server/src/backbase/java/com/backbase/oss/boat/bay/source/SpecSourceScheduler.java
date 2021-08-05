@@ -1,5 +1,6 @@
 package com.backbase.oss.boat.bay.source;
 
+import com.backbase.oss.boat.bay.config.BoatBayConfigurationProperties;
 import com.backbase.oss.boat.bay.domain.Source;
 import com.backbase.oss.boat.bay.domain.enumeration.SourceType;
 import com.backbase.oss.boat.bay.events.SpecSourceUpdatedEvent;
@@ -48,6 +49,8 @@ public class SpecSourceScheduler {
     private final BoatSourceRepository boatSourceRepository;
     private final SpecSourceResolver specSourceResolver;
     private final EntityManagerFactory entityManagerFactory;
+
+    private final BoatBayConfigurationProperties boatBayConfigurationProperties;
 
     final Set<SpecSourceScanner> scanners = new HashSet<>();
     final Map<Long, ScheduledFuture<?>> jobsMap = new HashMap<>();
@@ -113,6 +116,7 @@ public class SpecSourceScheduler {
         } else {
             throw new IllegalArgumentException("No Implementation available for source: " + source);
         }
+        specSourceScanner.setConfigurationProperties(boatBayConfigurationProperties);
         specSourceScanner.setSource(source);
 
         return specSourceScanner;
