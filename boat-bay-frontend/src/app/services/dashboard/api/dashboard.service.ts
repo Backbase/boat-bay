@@ -53,9 +53,9 @@ export interface GetDiffReportRequestParams {
     /** Product Identifier */
     ["productKey"]: string;
     /** Identifies first comparitable api */
-    ["spec1Id"]: string;
+    ["spec1Id"]: number;
     /** Identifies second comparitable api */
-    ["spec2Id"]: string;
+    ["spec2Id"]: number;
 }
 
 export interface GetLintReportForSpecRequestParams {
@@ -64,7 +64,7 @@ export interface GetLintReportForSpecRequestParams {
     /** Product Identifier */
     ["productKey"]: string;
     /** Unique Spec Identifier */
-    ["specId"]: string;
+    ["specId"]: number;
     /** refresh idicator */
     ["refresh"]?: boolean;
 }
@@ -74,9 +74,9 @@ export interface GetPortalCapabilitiesRequestParams {
     ["portalKey"]: string;
     /** Product Identifier */
     ["productKey"]: string;
-    ["page"]?: number;
-    ["size"]?: number;
-    ["sort"]?: Array<string>;
+    ["page"]: number;
+    ["size"]: number;
+    ["sort"]: Array<string>;
 }
 
 export interface GetPortalLintRulesRequestParams {
@@ -84,12 +84,19 @@ export interface GetPortalLintRulesRequestParams {
     ["portalKey"]: string;
 }
 
+export interface GetPortalProductRequestParams {
+    /** Portal Identifier */
+    ["portalKey"]: string;
+    /** Product Identifier */
+    ["productKey"]: string;
+}
+
 export interface GetPortalProductsRequestParams {
     /** Portal Identifier */
     ["portalKey"]: string;
-    ["page"]?: number;
-    ["size"]?: number;
-    ["sort"]?: Array<string>;
+    ["page"]: number;
+    ["size"]: number;
+    ["sort"]: Array<string>;
 }
 
 export interface GetPortalServicesRequestParams {
@@ -97,9 +104,9 @@ export interface GetPortalServicesRequestParams {
     ["portalKey"]: string;
     /** Product Identifier */
     ["productKey"]: string;
-    ["page"]?: number;
-    ["size"]?: number;
-    ["sort"]?: Array<string>;
+    ["page"]: number;
+    ["size"]: number;
+    ["sort"]: Array<string>;
 }
 
 export interface GetPortalSpecsRequestParams {
@@ -107,28 +114,21 @@ export interface GetPortalSpecsRequestParams {
     ["portalKey"]: string;
     /** Product Identifier */
     ["productKey"]: string;
-    ["page"]?: number;
-    ["size"]?: number;
-    ["sort"]?: Array<string>;
+    ["page"]: number;
+    ["size"]: number;
+    ["sort"]: Array<string>;
     /** capablility idenifier */
-    ["capabilityId"]?: Array<string>;
+    ["capabilityKeys"]?: Array<string>;
     /** product release idenifier */
-    ["productReleaseId"]?: string;
+    ["productReleaseKey"]?: string;
     /** service idenifier */
-    ["serviceId"]?: Array<string>;
+    ["serviceKeys"]?: Array<string>;
     /** grade of spec */
     ["grade"]?: string;
     /** backwards compatible indicator */
     ["backwardsCompatible"]?: boolean;
     /** changed indicator */
     ["changed"]?: boolean;
-}
-
-export interface GetProductDashboardRequestParams {
-    /** Portal Identifier */
-    ["portalKey"]: string;
-    /** Product Identifier */
-    ["productKey"]: string;
 }
 
 export interface GetProductReleaseSpecsRequestParams {
@@ -154,7 +154,7 @@ export interface GetProductTagsRequestParams {
     ["productKey"]: string;
 }
 
-export interface GetSpecAsOpenAPIRequestParams {
+export interface GetSpecRequestParams {
     /** Portal Identifier */
     ["portalKey"]: string;
     /** Product Identifier */
@@ -239,15 +239,15 @@ export class DashboardHttpService {
     }
 
     /**
-     * Get Open API Spec
+     * get spec as openapi
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public downloadSpec(requestParameters: DownloadSpecRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<BoatSpec>;
-    public downloadSpec(requestParameters: DownloadSpecRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<BoatSpec>>;
-    public downloadSpec(requestParameters: DownloadSpecRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<BoatSpec>>;
-    public downloadSpec(requestParameters: DownloadSpecRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public downloadSpec(requestParameters: DownloadSpecRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.oai.openapi'}): Observable<Array<string>>;
+    public downloadSpec(requestParameters: DownloadSpecRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.oai.openapi'}): Observable<HttpResponse<Array<string>>>;
+    public downloadSpec(requestParameters: DownloadSpecRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.oai.openapi'}): Observable<HttpEvent<Array<string>>>;
+    public downloadSpec(requestParameters: DownloadSpecRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.oai.openapi'}): Observable<any> {
         const _portalKey = requestParameters["portalKey"];
         if (_portalKey === null || _portalKey === undefined) {
             throw new Error('Required parameter portalKey was null or undefined when calling downloadSpec.');
@@ -279,7 +279,7 @@ export class DashboardHttpService {
         if (httpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
-                'application/json'
+                'application/vnd.oai.openapi'
             ];
             httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -293,7 +293,7 @@ export class DashboardHttpService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<BoatSpec>(`${this.configuration.basePath}/api/boat/portals/${encodeURIComponent(String(_portalKey))}/products/${encodeURIComponent(String(_productKey))}/capabilities/${encodeURIComponent(String(_capabilityKey))}/services/${encodeURIComponent(String(_serviceKey))}/specs/${encodeURIComponent(String(_specKey))}/${encodeURIComponent(String(_version))}`,
+        return this.httpClient.get<Array<string>>(`${this.configuration.basePath}/api/boat/portals/${encodeURIComponent(String(_portalKey))}/products/${encodeURIComponent(String(_productKey))}/capabilities/${encodeURIComponent(String(_capabilityKey))}/services/${encodeURIComponent(String(_serviceKey))}/specs/${encodeURIComponent(String(_specKey))}/${encodeURIComponent(String(_version))}/download`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -329,7 +329,7 @@ export class DashboardHttpService {
         if (_version === null || _version === undefined) {
             throw new Error('Required parameter version was null or undefined when calling downloadSpec.');
         }
-        return `${this.configuration.basePath}/api/boat/portals/${encodeURIComponent(String(_portalKey))}/products/${encodeURIComponent(String(_productKey))}/capabilities/${encodeURIComponent(String(_capabilityKey))}/services/${encodeURIComponent(String(_serviceKey))}/specs/${encodeURIComponent(String(_specKey))}/${encodeURIComponent(String(_version))}`;
+        return `${this.configuration.basePath}/api/boat/portals/${encodeURIComponent(String(_portalKey))}/products/${encodeURIComponent(String(_productKey))}/capabilities/${encodeURIComponent(String(_capabilityKey))}/services/${encodeURIComponent(String(_serviceKey))}/specs/${encodeURIComponent(String(_specKey))}/${encodeURIComponent(String(_version))}/download`;
     }
 
     /**
@@ -535,8 +535,17 @@ export class DashboardHttpService {
             throw new Error('Required parameter productKey was null or undefined when calling getPortalCapabilities.');
         }
         const _page = requestParameters["page"];
+        if (_page === null || _page === undefined) {
+            throw new Error('Required parameter page was null or undefined when calling getPortalCapabilities.');
+        }
         const _size = requestParameters["size"];
+        if (_size === null || _size === undefined) {
+            throw new Error('Required parameter size was null or undefined when calling getPortalCapabilities.');
+        }
         const _sort = requestParameters["sort"];
+        if (_sort === null || _sort === undefined) {
+            throw new Error('Required parameter sort was null or undefined when calling getPortalCapabilities.');
+        }
 
         let queryParameters = new HttpParams({encoder: this.encoder});
         if (_page !== undefined && _page !== null) {
@@ -596,8 +605,17 @@ export class DashboardHttpService {
             throw new Error('Required parameter productKey was null or undefined when calling getPortalCapabilities.');
         }
         const _page = requestParameters["page"];
+        if (_page === null || _page === undefined) {
+            throw new Error('Required parameter page was null or undefined when calling getPortalCapabilities.');
+        }
         const _size = requestParameters["size"];
+        if (_size === null || _size === undefined) {
+            throw new Error('Required parameter size was null or undefined when calling getPortalCapabilities.');
+        }
         const _sort = requestParameters["sort"];
+        if (_sort === null || _sort === undefined) {
+            throw new Error('Required parameter sort was null or undefined when calling getPortalCapabilities.');
+        }
         let queryParameters = new HttpParams({encoder: this.encoder});
         if (_page !== undefined && _page !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
@@ -672,6 +690,68 @@ export class DashboardHttpService {
     }
 
     /**
+     * Get Product for identified Portal
+     * @param requestParameters
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getPortalProduct(requestParameters: GetPortalProductRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<BoatProduct>;
+    public getPortalProduct(requestParameters: GetPortalProductRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<BoatProduct>>;
+    public getPortalProduct(requestParameters: GetPortalProductRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<BoatProduct>>;
+    public getPortalProduct(requestParameters: GetPortalProductRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        const _portalKey = requestParameters["portalKey"];
+        if (_portalKey === null || _portalKey === undefined) {
+            throw new Error('Required parameter portalKey was null or undefined when calling getPortalProduct.');
+        }
+        const _productKey = requestParameters["productKey"];
+        if (_productKey === null || _productKey === undefined) {
+            throw new Error('Required parameter productKey was null or undefined when calling getPortalProduct.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.get<BoatProduct>(`${this.configuration.basePath}/api/boat/portals/${encodeURIComponent(String(_portalKey))}/products/${encodeURIComponent(String(_productKey))}`,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    public getPortalProductUrl(requestParameters: GetPortalProductRequestParams): string {
+        const _portalKey = requestParameters["portalKey"];
+        if (_portalKey === null || _portalKey === undefined) {
+            throw new Error('Required parameter portalKey was null or undefined when calling getPortalProduct.');
+        }
+        const _productKey = requestParameters["productKey"];
+        if (_productKey === null || _productKey === undefined) {
+            throw new Error('Required parameter productKey was null or undefined when calling getPortalProduct.');
+        }
+        return `${this.configuration.basePath}/api/boat/portals/${encodeURIComponent(String(_portalKey))}/products/${encodeURIComponent(String(_productKey))}`;
+    }
+
+    /**
      * Get List fo Product for identified Portal
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
@@ -686,8 +766,17 @@ export class DashboardHttpService {
             throw new Error('Required parameter portalKey was null or undefined when calling getPortalProducts.');
         }
         const _page = requestParameters["page"];
+        if (_page === null || _page === undefined) {
+            throw new Error('Required parameter page was null or undefined when calling getPortalProducts.');
+        }
         const _size = requestParameters["size"];
+        if (_size === null || _size === undefined) {
+            throw new Error('Required parameter size was null or undefined when calling getPortalProducts.');
+        }
         const _sort = requestParameters["sort"];
+        if (_sort === null || _sort === undefined) {
+            throw new Error('Required parameter sort was null or undefined when calling getPortalProducts.');
+        }
 
         let queryParameters = new HttpParams({encoder: this.encoder});
         if (_page !== undefined && _page !== null) {
@@ -743,8 +832,17 @@ export class DashboardHttpService {
             throw new Error('Required parameter portalKey was null or undefined when calling getPortalProducts.');
         }
         const _page = requestParameters["page"];
+        if (_page === null || _page === undefined) {
+            throw new Error('Required parameter page was null or undefined when calling getPortalProducts.');
+        }
         const _size = requestParameters["size"];
+        if (_size === null || _size === undefined) {
+            throw new Error('Required parameter size was null or undefined when calling getPortalProducts.');
+        }
         const _sort = requestParameters["sort"];
+        if (_sort === null || _sort === undefined) {
+            throw new Error('Required parameter sort was null or undefined when calling getPortalProducts.');
+        }
         let queryParameters = new HttpParams({encoder: this.encoder});
         if (_page !== undefined && _page !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
@@ -783,8 +881,17 @@ export class DashboardHttpService {
             throw new Error('Required parameter productKey was null or undefined when calling getPortalServices.');
         }
         const _page = requestParameters["page"];
+        if (_page === null || _page === undefined) {
+            throw new Error('Required parameter page was null or undefined when calling getPortalServices.');
+        }
         const _size = requestParameters["size"];
+        if (_size === null || _size === undefined) {
+            throw new Error('Required parameter size was null or undefined when calling getPortalServices.');
+        }
         const _sort = requestParameters["sort"];
+        if (_sort === null || _sort === undefined) {
+            throw new Error('Required parameter sort was null or undefined when calling getPortalServices.');
+        }
 
         let queryParameters = new HttpParams({encoder: this.encoder});
         if (_page !== undefined && _page !== null) {
@@ -844,8 +951,17 @@ export class DashboardHttpService {
             throw new Error('Required parameter productKey was null or undefined when calling getPortalServices.');
         }
         const _page = requestParameters["page"];
+        if (_page === null || _page === undefined) {
+            throw new Error('Required parameter page was null or undefined when calling getPortalServices.');
+        }
         const _size = requestParameters["size"];
+        if (_size === null || _size === undefined) {
+            throw new Error('Required parameter size was null or undefined when calling getPortalServices.');
+        }
         const _sort = requestParameters["sort"];
+        if (_sort === null || _sort === undefined) {
+            throw new Error('Required parameter sort was null or undefined when calling getPortalServices.');
+        }
         let queryParameters = new HttpParams({encoder: this.encoder});
         if (_page !== undefined && _page !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
@@ -884,11 +1000,20 @@ export class DashboardHttpService {
             throw new Error('Required parameter productKey was null or undefined when calling getPortalSpecs.');
         }
         const _page = requestParameters["page"];
+        if (_page === null || _page === undefined) {
+            throw new Error('Required parameter page was null or undefined when calling getPortalSpecs.');
+        }
         const _size = requestParameters["size"];
+        if (_size === null || _size === undefined) {
+            throw new Error('Required parameter size was null or undefined when calling getPortalSpecs.');
+        }
         const _sort = requestParameters["sort"];
-        const _capabilityId = requestParameters["capabilityId"];
-        const _productReleaseId = requestParameters["productReleaseId"];
-        const _serviceId = requestParameters["serviceId"];
+        if (_sort === null || _sort === undefined) {
+            throw new Error('Required parameter sort was null or undefined when calling getPortalSpecs.');
+        }
+        const _capabilityKeys = requestParameters["capabilityKeys"];
+        const _productReleaseKey = requestParameters["productReleaseKey"];
+        const _serviceKeys = requestParameters["serviceKeys"];
         const _grade = requestParameters["grade"];
         const _backwardsCompatible = requestParameters["backwardsCompatible"];
         const _changed = requestParameters["changed"];
@@ -908,20 +1033,20 @@ export class DashboardHttpService {
                   <any>element, 'sort');
             })
         }
-        if (_capabilityId) {
-            _capabilityId.forEach((element) => {
+        if (_capabilityKeys) {
+            _capabilityKeys.forEach((element) => {
                 queryParameters = this.addToHttpParams(queryParameters,
-                  <any>element, 'capabilityId');
+                  <any>element, 'capabilityKeys');
             })
         }
-        if (_productReleaseId !== undefined && _productReleaseId !== null) {
+        if (_productReleaseKey !== undefined && _productReleaseKey !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
-            <any>_productReleaseId, 'productReleaseId');
+            <any>_productReleaseKey, 'productReleaseKey');
         }
-        if (_serviceId) {
-            _serviceId.forEach((element) => {
+        if (_serviceKeys) {
+            _serviceKeys.forEach((element) => {
                 queryParameters = this.addToHttpParams(queryParameters,
-                  <any>element, 'serviceId');
+                  <any>element, 'serviceKeys');
             })
         }
         if (_grade !== undefined && _grade !== null) {
@@ -979,11 +1104,20 @@ export class DashboardHttpService {
             throw new Error('Required parameter productKey was null or undefined when calling getPortalSpecs.');
         }
         const _page = requestParameters["page"];
+        if (_page === null || _page === undefined) {
+            throw new Error('Required parameter page was null or undefined when calling getPortalSpecs.');
+        }
         const _size = requestParameters["size"];
+        if (_size === null || _size === undefined) {
+            throw new Error('Required parameter size was null or undefined when calling getPortalSpecs.');
+        }
         const _sort = requestParameters["sort"];
-        const _capabilityId = requestParameters["capabilityId"];
-        const _productReleaseId = requestParameters["productReleaseId"];
-        const _serviceId = requestParameters["serviceId"];
+        if (_sort === null || _sort === undefined) {
+            throw new Error('Required parameter sort was null or undefined when calling getPortalSpecs.');
+        }
+        const _capabilityKeys = requestParameters["capabilityKeys"];
+        const _productReleaseKey = requestParameters["productReleaseKey"];
+        const _serviceKeys = requestParameters["serviceKeys"];
         const _grade = requestParameters["grade"];
         const _backwardsCompatible = requestParameters["backwardsCompatible"];
         const _changed = requestParameters["changed"];
@@ -1002,20 +1136,20 @@ export class DashboardHttpService {
                   <any>element, 'sort');
             })
         }
-        if (_capabilityId) {
-            _capabilityId.forEach((element) => {
+        if (_capabilityKeys) {
+            _capabilityKeys.forEach((element) => {
                 queryParameters = this.addToHttpParams(queryParameters,
-                  <any>element, 'capabilityId');
+                  <any>element, 'capabilityKeys');
             })
         }
-        if (_productReleaseId !== undefined && _productReleaseId !== null) {
+        if (_productReleaseKey !== undefined && _productReleaseKey !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
-            <any>_productReleaseId, 'productReleaseId');
+            <any>_productReleaseKey, 'productReleaseKey');
         }
-        if (_serviceId) {
-            _serviceId.forEach((element) => {
+        if (_serviceKeys) {
+            _serviceKeys.forEach((element) => {
                 queryParameters = this.addToHttpParams(queryParameters,
-                  <any>element, 'serviceId');
+                  <any>element, 'serviceKeys');
             })
         }
         if (_grade !== undefined && _grade !== null) {
@@ -1077,68 +1211,6 @@ export class DashboardHttpService {
 
     public getPortalsUrl(): string {
         return `${this.configuration.basePath}/api/boat/portals`;
-    }
-
-    /**
-     * get product for dashboard project
-     * @param requestParameters
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public getProductDashboard(requestParameters: GetProductDashboardRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<BoatProduct>;
-    public getProductDashboard(requestParameters: GetProductDashboardRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<BoatProduct>>;
-    public getProductDashboard(requestParameters: GetProductDashboardRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<BoatProduct>>;
-    public getProductDashboard(requestParameters: GetProductDashboardRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        const _portalKey = requestParameters["portalKey"];
-        if (_portalKey === null || _portalKey === undefined) {
-            throw new Error('Required parameter portalKey was null or undefined when calling getProductDashboard.');
-        }
-        const _productKey = requestParameters["productKey"];
-        if (_productKey === null || _productKey === undefined) {
-            throw new Error('Required parameter productKey was null or undefined when calling getProductDashboard.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.get<BoatProduct>(`${this.configuration.basePath}/api/boat/dashboard/${encodeURIComponent(String(_portalKey))}/${encodeURIComponent(String(_productKey))}`,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    public getProductDashboardUrl(requestParameters: GetProductDashboardRequestParams): string {
-        const _portalKey = requestParameters["portalKey"];
-        if (_portalKey === null || _portalKey === undefined) {
-            throw new Error('Required parameter portalKey was null or undefined when calling getProductDashboard.');
-        }
-        const _productKey = requestParameters["productKey"];
-        if (_productKey === null || _productKey === undefined) {
-            throw new Error('Required parameter productKey was null or undefined when calling getProductDashboard.');
-        }
-        return `${this.configuration.basePath}/api/boat/dashboard/${encodeURIComponent(String(_portalKey))}/${encodeURIComponent(String(_productKey))}`;
     }
 
     /**
@@ -1336,38 +1408,38 @@ export class DashboardHttpService {
     }
 
     /**
-     * get spec as openapi
+     * Get Open API Spec
      * @param requestParameters
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getSpecAsOpenAPI(requestParameters: GetSpecAsOpenAPIRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.oai.openapi'}): Observable<Array<string>>;
-    public getSpecAsOpenAPI(requestParameters: GetSpecAsOpenAPIRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.oai.openapi'}): Observable<HttpResponse<Array<string>>>;
-    public getSpecAsOpenAPI(requestParameters: GetSpecAsOpenAPIRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/vnd.oai.openapi'}): Observable<HttpEvent<Array<string>>>;
-    public getSpecAsOpenAPI(requestParameters: GetSpecAsOpenAPIRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/vnd.oai.openapi'}): Observable<any> {
+    public getSpec(requestParameters: GetSpecRequestParams, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<BoatSpec>;
+    public getSpec(requestParameters: GetSpecRequestParams, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<BoatSpec>>;
+    public getSpec(requestParameters: GetSpecRequestParams, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<BoatSpec>>;
+    public getSpec(requestParameters: GetSpecRequestParams, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         const _portalKey = requestParameters["portalKey"];
         if (_portalKey === null || _portalKey === undefined) {
-            throw new Error('Required parameter portalKey was null or undefined when calling getSpecAsOpenAPI.');
+            throw new Error('Required parameter portalKey was null or undefined when calling getSpec.');
         }
         const _productKey = requestParameters["productKey"];
         if (_productKey === null || _productKey === undefined) {
-            throw new Error('Required parameter productKey was null or undefined when calling getSpecAsOpenAPI.');
+            throw new Error('Required parameter productKey was null or undefined when calling getSpec.');
         }
         const _capabilityKey = requestParameters["capabilityKey"];
         if (_capabilityKey === null || _capabilityKey === undefined) {
-            throw new Error('Required parameter capabilityKey was null or undefined when calling getSpecAsOpenAPI.');
+            throw new Error('Required parameter capabilityKey was null or undefined when calling getSpec.');
         }
         const _serviceKey = requestParameters["serviceKey"];
         if (_serviceKey === null || _serviceKey === undefined) {
-            throw new Error('Required parameter serviceKey was null or undefined when calling getSpecAsOpenAPI.');
+            throw new Error('Required parameter serviceKey was null or undefined when calling getSpec.');
         }
         const _specKey = requestParameters["specKey"];
         if (_specKey === null || _specKey === undefined) {
-            throw new Error('Required parameter specKey was null or undefined when calling getSpecAsOpenAPI.');
+            throw new Error('Required parameter specKey was null or undefined when calling getSpec.');
         }
         const _version = requestParameters["version"];
         if (_version === null || _version === undefined) {
-            throw new Error('Required parameter version was null or undefined when calling getSpecAsOpenAPI.');
+            throw new Error('Required parameter version was null or undefined when calling getSpec.');
         }
 
         let headers = this.defaultHeaders;
@@ -1376,7 +1448,7 @@ export class DashboardHttpService {
         if (httpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
-                'application/vnd.oai.openapi'
+                'application/json'
             ];
             httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -1390,7 +1462,7 @@ export class DashboardHttpService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<Array<string>>(`${this.configuration.basePath}/api/boat/portals/${encodeURIComponent(String(_portalKey))}/products/${encodeURIComponent(String(_productKey))}/capabilities/${encodeURIComponent(String(_capabilityKey))}/services/${encodeURIComponent(String(_serviceKey))}/specs/${encodeURIComponent(String(_specKey))}/${encodeURIComponent(String(_version))}/download`,
+        return this.httpClient.get<BoatSpec>(`${this.configuration.basePath}/api/boat/portals/${encodeURIComponent(String(_portalKey))}/products/${encodeURIComponent(String(_productKey))}/capabilities/${encodeURIComponent(String(_capabilityKey))}/services/${encodeURIComponent(String(_serviceKey))}/specs/${encodeURIComponent(String(_specKey))}/${encodeURIComponent(String(_version))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -1401,32 +1473,32 @@ export class DashboardHttpService {
         );
     }
 
-    public getSpecAsOpenAPIUrl(requestParameters: GetSpecAsOpenAPIRequestParams): string {
+    public getSpecUrl(requestParameters: GetSpecRequestParams): string {
         const _portalKey = requestParameters["portalKey"];
         if (_portalKey === null || _portalKey === undefined) {
-            throw new Error('Required parameter portalKey was null or undefined when calling getSpecAsOpenAPI.');
+            throw new Error('Required parameter portalKey was null or undefined when calling getSpec.');
         }
         const _productKey = requestParameters["productKey"];
         if (_productKey === null || _productKey === undefined) {
-            throw new Error('Required parameter productKey was null or undefined when calling getSpecAsOpenAPI.');
+            throw new Error('Required parameter productKey was null or undefined when calling getSpec.');
         }
         const _capabilityKey = requestParameters["capabilityKey"];
         if (_capabilityKey === null || _capabilityKey === undefined) {
-            throw new Error('Required parameter capabilityKey was null or undefined when calling getSpecAsOpenAPI.');
+            throw new Error('Required parameter capabilityKey was null or undefined when calling getSpec.');
         }
         const _serviceKey = requestParameters["serviceKey"];
         if (_serviceKey === null || _serviceKey === undefined) {
-            throw new Error('Required parameter serviceKey was null or undefined when calling getSpecAsOpenAPI.');
+            throw new Error('Required parameter serviceKey was null or undefined when calling getSpec.');
         }
         const _specKey = requestParameters["specKey"];
         if (_specKey === null || _specKey === undefined) {
-            throw new Error('Required parameter specKey was null or undefined when calling getSpecAsOpenAPI.');
+            throw new Error('Required parameter specKey was null or undefined when calling getSpec.');
         }
         const _version = requestParameters["version"];
         if (_version === null || _version === undefined) {
-            throw new Error('Required parameter version was null or undefined when calling getSpecAsOpenAPI.');
+            throw new Error('Required parameter version was null or undefined when calling getSpec.');
         }
-        return `${this.configuration.basePath}/api/boat/portals/${encodeURIComponent(String(_portalKey))}/products/${encodeURIComponent(String(_productKey))}/capabilities/${encodeURIComponent(String(_capabilityKey))}/services/${encodeURIComponent(String(_serviceKey))}/specs/${encodeURIComponent(String(_specKey))}/${encodeURIComponent(String(_version))}/download`;
+        return `${this.configuration.basePath}/api/boat/portals/${encodeURIComponent(String(_portalKey))}/products/${encodeURIComponent(String(_productKey))}/capabilities/${encodeURIComponent(String(_capabilityKey))}/services/${encodeURIComponent(String(_serviceKey))}/specs/${encodeURIComponent(String(_specKey))}/${encodeURIComponent(String(_version))}`;
     }
 
     /**

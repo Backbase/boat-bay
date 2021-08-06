@@ -17,21 +17,21 @@ import { BoatStatistics } from './boatStatistics';
 
 
 export interface BoatSpec { 
-    ["id"]?: number;
-    ["key"]?: string;
-    ["name"]?: string;
+    ["id"]: number;
+    ["key"]: string;
+    ["name"]: string;
     ["title"]?: string;
     ["description"]?: string;
     ["icon"]?: string;
-    ["version"]?: string;
+    ["version"]: string;
     ["grade"]?: string;
     ["createdOn"]?: string;
     ["createdBy"]?: string;
     ["statistics"]?: BoatStatistics;
     ["backwardsCompatible"]?: boolean;
     ["changes"]?: Changes;
-    ["capability"]?: BoatCapability;
-    ["serviceDefinition"]?: BoatService;
+    ["capability"]: BoatCapability;
+    ["serviceDefinition"]: BoatService;
     ["openApi"]?: string;
 }
 

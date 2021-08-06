@@ -1,6 +1,7 @@
 import { Component, Inject, Input } from '@angular/core';
-import { BoatProduct, BoatViolation } from "../../models/";
 import { JIRA_BASE_URL } from "../../app.constants";
+import {BoatViolation} from "../../services/dashboard/model/boatViolation";
+import {BoatProduct} from "../../services/dashboard/model/boatProduct";
 
 @Component({
   selector: 'app-create-jira-issue-button',

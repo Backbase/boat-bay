@@ -1,4 +1,4 @@
-openapi: 3.0.0
+openapi: 3.0.3
 info:
   title: Boat Bay Dashboard Server API
   description: Endpoints for the boat bay operations
@@ -45,6 +45,22 @@ paths:
                 type: array
                 items:
                   $ref: 'schemas/definitions.yaml#/components/schemas/BoatProduct'
+  /api/boat/portals/{portalKey}/products/{productKey}:
+    get:
+      tags:
+        - dashboard
+      summary: Get Product for identified Portal
+      operationId: getPortalProduct
+      parameters:
+        - $ref: 'schemas/definitions.yaml#/components/parameters/PortalKey'
+        - $ref: 'schemas/definitions.yaml#/components/parameters/ProductKey'
+      responses:
+        "200":
+          description: Portal Product
+          content:
+            application/json:
+              schema:
+                $ref: 'schemas/definitions.yaml#/components/schemas/BoatProduct'
   /api/boat/portals/{portalKey}/products/{productKey}/capabilities:
     get:
       tags:
@@ -99,7 +115,7 @@ paths:
         - $ref: 'schemas/definitions.yaml#/components/parameters/Page'
         - $ref: 'schemas/definitions.yaml#/components/parameters/Size'
         - $ref: 'schemas/definitions.yaml#/components/parameters/Sort'
-        - name: capabilityId
+        - name: capabilityKeys
           in: query
           description: capablility idenifier
 
@@ -110,7 +126,7 @@ paths:
             type: array
             items:
               type: string
-        - name: productReleaseId
+        - name: productReleaseKey
           in: query
           description: product release idenifier
           required: false
@@ -118,7 +134,7 @@ paths:
           explode: true
           schema:
             type: string
-        - name: serviceId
+        - name: serviceKeys
           in: query
           description: service idenifier
           required: false
@@ -271,22 +287,6 @@ paths:
         "200":
           description: updated successfuly
           content: { }
-  /api/boat/dashboard/{portalKey}/{productKey}:
-    get:
-      tags:
-        - dashboard
-      summary: get product for dashboard project
-      operationId: getProductDashboard
-      parameters:
-        - $ref: 'schemas/definitions.yaml#/components/parameters/PortalKey'
-        - $ref: 'schemas/definitions.yaml#/components/parameters/ProductKey'
-      responses:
-        "200":
-          description: product for dashboard
-          content:
-            application/json:
-              schema:
-                $ref: 'schemas/definitions.yaml#/components/schemas/BoatProduct'
   /api/boat/portals/{portalKey}/products/{productKey}/tags:
     get:
       tags:
@@ -310,7 +310,7 @@ paths:
       tags:
         - dashboard
       summary: get spec as openapi
-      operationId: getSpecAsOpenAPI
+      operationId: downloadSpec
       parameters:
         - $ref: 'schemas/definitions.yaml#/components/parameters/PortalKey'
         - $ref: 'schemas/definitions.yaml#/components/parameters/ProductKey'
@@ -352,7 +352,7 @@ paths:
       tags:
         - dashboard
       summary: Get Open API Spec
-      operationId: downloadSpec
+      operationId: getSpec
       parameters:
         - $ref: 'schemas/definitions.yaml#/components/parameters/PortalKey'
         - $ref: 'schemas/definitions.yaml#/components/parameters/ProductKey'
@@ -362,7 +362,7 @@ paths:
         - $ref: 'schemas/definitions.yaml#/components/parameters/Version'
       responses:
         "200":
-          description: spec with open api
+          description: Spec with open api
           content:
             application/json:
               schema:
@@ -383,7 +383,7 @@ paths:
           style: form
           explode: true
           schema:
-            type: string
+            type: integer
         - name: spec2Id
           in: query
           description: Identifies second comparitable api
@@ -391,7 +391,7 @@ paths:
           style: form
           explode: true
           schema:
-            type: string
+            type: integer
       responses:
         "200":
           description: changed openApi as html

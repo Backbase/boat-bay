@@ -31,6 +31,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.zalando.zally.rule.api.Severity;
 import tech.jhipster.web.util.PaginationUtil;
 
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -67,16 +68,6 @@ public class BoatDashboardController implements DashboardApi {
             .collect(Collectors.toList());
     }
 
-    @Cacheable(BoatCacheManager.PORTAL)
-    @Deprecated
-    public ResponseEntity<BoatProduct> getProductDashboard(String projectKey, String productKey) {
-
-        Product product = getProduct(projectKey, productKey);
-        BoatProduct boatProduct = mapProduct(product);
-
-        return ResponseEntity.ok(boatProduct);
-    }
-
     public ResponseEntity<List<BoatPortal>> getPortals() {
 
         List<BoatPortal> portals = boatPortalRepository.findAll().stream()
@@ -93,6 +84,12 @@ public class BoatDashboardController implements DashboardApi {
 
         List<BoatLintRule> portalLintRules = portal.getLintRules().stream().map(dashboardMapper::mapPortalLintRule).collect(Collectors.toList());
         return ResponseEntity.ok(portalLintRules);
+    }
+
+    @Cacheable(value = BoatCacheManager.PORTAL_PRODUCT)
+    public ResponseEntity<BoatProduct> getPortalProduct(String portalKey, String productKey) {
+        Product product = getProduct(portalKey, productKey);
+        return ResponseEntity.ok(mapProduct(product));
     }
 
     @Cacheable(value = BoatCacheManager.PORTAL_PRODUCT)
@@ -196,6 +193,7 @@ public class BoatDashboardController implements DashboardApi {
         return ResponseEntity.ok(tags);
     }
 
+
     private List<Spec> getSpecsForProduct(Product product) {
         return boatSpecRepository.findAll(boatSpecQuerySpecs.hasProduct(product.getId()));
     }
@@ -240,13 +238,13 @@ public class BoatDashboardController implements DashboardApi {
     @SuppressWarnings("SuspiciousMethodCalls")
     public ResponseEntity<BoatLintReport> getLintReportForSpec(String portalKey,
                                                                String productKey,
-                                                               String specId,
+                                                               BigDecimal specId,
                                                                Boolean refresh) {
         Product product = getProduct(portalKey, productKey);
 
         log.info("Get lint report for spec: {} in product: {}", specId, product.getName());
 
-        Spec spec = boatSpecRepository.findById(Long.valueOf(specId)).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        Spec spec = boatSpecRepository.findById(specId.longValue()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         LintReport specReport = boatSpecLinter.lint(spec);
 
@@ -267,12 +265,12 @@ public class BoatDashboardController implements DashboardApi {
     }
 
 
-    public ResponseEntity<Resource> getSpecAsOpenAPI(String portalKey,
-                                                     String productKey,
-                                                     String capabilityKey,
-                                                     String serviceKey,
-                                                     String specKey,
-                                                     String version) {
+    public ResponseEntity<Resource> downloadSpec(String portalKey,
+                                                 String productKey,
+                                                 String capabilityKey,
+                                                 String serviceKey,
+                                                 String specKey,
+                                                 String version) {
 
         Spec spec = boatSpecRepository.findByPortalKeyAndProductKeyAndCapabilityKeyAndServiceDefinitionKeyAndKeyAndVersion(
             portalKey, productKey, capabilityKey, serviceKey, specKey, version).orElseThrow((() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
@@ -293,12 +291,8 @@ public class BoatDashboardController implements DashboardApi {
 
     }
 
-    public ResponseEntity<BoatSpec> downloadSpec(String portalKey,
-                                                 String productKey,
-                                                 String capabilityKey,
-                                                 String serviceKey,
-                                                 String specKey,
-                                                 String version) {
+    @Override
+    public ResponseEntity<BoatSpec> getSpec(String portalKey, String productKey, String capabilityKey, String serviceKey, String specKey, String version) {
 
         Spec spec = boatSpecRepository.findByPortalKeyAndProductKeyAndCapabilityKeyAndServiceDefinitionKeyAndKeyAndVersion(
             portalKey, productKey, capabilityKey, serviceKey, specKey, version).orElseThrow((() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
@@ -312,8 +306,8 @@ public class BoatDashboardController implements DashboardApi {
 
     public ResponseEntity<String> getDiffReport(String portalKey,
                                                 String productKey,
-                                                String spec1Id,
-                                                String spec2Id) {
+                                                Integer spec1Id,
+                                                Integer spec2Id) {
         ChangedOpenApi changedOpenApi = getChangedOpenApi(portalKey, productKey, spec1Id, spec2Id);
         DiffReportRenderer htmlRender = new DiffReportRenderer();
 
@@ -334,7 +328,7 @@ public class BoatDashboardController implements DashboardApi {
     }
 
     @NotNull
-    private ChangedOpenApi getChangedOpenApi(String portalKey, String productKey, String spec1Id, String spec2Id) {
+    private ChangedOpenApi getChangedOpenApi(String portalKey, String productKey, Integer spec1Id, Integer spec2Id) {
         Product product = getProduct(portalKey, productKey);
 
         Spec spec1 = boatSpecRepository.findById(Long.valueOf(spec1Id)).orElseThrow();

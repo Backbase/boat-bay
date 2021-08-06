@@ -13,7 +13,7 @@
 
 
 export interface BoatTag { 
-    ["name"]?: string;
+    ["name"]: string;
     ["description"]?: string;
     ["hide"]?: boolean;
     ["color"]?: string;

@@ -25,7 +25,7 @@ public class BoatCacheManager {
     public static final String STATISTICS = "statistics";
 
     public void clearCache() {
-        for (String s : Arrays.asList(PRODUCT_SPECS, PRODUCT_SERVICES, PRODUCT_CAPABILITIES, STATISTICS)) {
+        for (String s : Arrays.asList(PORTAL, PORTAL_PRODUCT, PRODUCT_RELEASES, PRODUCT_SPECS, PRODUCT_SERVICES, PRODUCT_CAPABILITIES, STATISTICS)) {
             Cache cache = cacheManager.getCache(s);
             if (cache != null) {
                 cache.clear();

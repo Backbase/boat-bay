@@ -2,6 +2,7 @@ package com.backbase.oss.boat.bay.web.views.dashboard.controller;
 
 import com.backbase.oss.boat.bay.api.RegisterApi;
 import com.backbase.oss.boat.bay.config.BoatBayConfigurationProperties;
+import com.backbase.oss.boat.bay.config.BoatCacheManager;
 import com.backbase.oss.boat.bay.domain.Portal;
 import com.backbase.oss.boat.bay.domain.Product;
 import com.backbase.oss.boat.bay.domain.Source;
@@ -43,6 +44,7 @@ public class RegisterController implements RegisterApi {
 
     final BoatPortalRepository portalRepository;
     final BoatProductRepository productRepository;
+    final BoatCacheManager boatCacheManager;
 
 
     @Override
@@ -75,6 +77,9 @@ public class RegisterController implements RegisterApi {
         registeredProject.setDashboardUrl(boatBayConfigurationProperties.getBootstrap().getDashboard().getBaseUrl() + "/lint-reports/" + portalKey + "/" + registerProject.getKey() );
         registeredProject.setUploadUrl(resolve.toString());
         registeredProject.setNumberOfApis(Long.valueOf(scan.getProductReleases().stream().flatMap(p -> p.getSpecs().stream()).count()).intValue());
+
+
+        boatCacheManager.clearCache();
 
         return ResponseEntity.ok(registeredProject);
     }

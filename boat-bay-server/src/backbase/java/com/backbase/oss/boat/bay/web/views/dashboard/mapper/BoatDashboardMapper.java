@@ -76,6 +76,11 @@ public interface BoatDashboardMapper {
         return LocalDateTime.ofInstant(value, ZoneId.systemDefault());
     }
 
+    @Mapping(target = "statistics", ignore = true)
+    @Mapping(target = "productDescription", ignore = true)
+    @Mapping(target = "numberOfServices", ignore = true)
+    @Mapping(target = "numberOfCapabilities", ignore = true)
+    @Mapping(target = "lastLintReport", ignore = true)
     BoatPortal mapBoatPortal(Portal portal);
 
     @Mapping(target = "statistics", ignore = true)
@@ -135,6 +140,9 @@ public interface BoatDashboardMapper {
     };
 
     default OffsetDateTime map(ZonedDateTime value) {
+        if(value == null) {
+            return null;
+        }
         return value.toOffsetDateTime();
     };
 }

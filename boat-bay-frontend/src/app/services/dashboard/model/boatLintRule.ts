@@ -14,12 +14,12 @@ import { Severity } from './severity';
 
 
 export interface BoatLintRule { 
-    ["id"]?: number;
-    ["ruleId"]?: string;
-    ["enabled"]?: boolean;
-    ["title"]?: string;
-    ["ruleSet"]?: string;
-    ["severity"]?: Severity;
-    ["url"]?: string;
+    ["id"]: number;
+    ["ruleId"]: string;
+    ["enabled"]: boolean;
+    ["title"]: string;
+    ["ruleSet"]: string;
+    ["severity"]: Severity;
+    ["url"]: string;
 }
 

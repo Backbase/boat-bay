@@ -15,14 +15,14 @@ import { BoatSpec } from './boatSpec';
 
 
 export interface BoatLintReport { 
-    ["id"]?: number;
-    ["spec"]?: BoatSpec;
-    ["name"]?: string;
-    ["passed"]?: boolean;
-    ["lintedOn"]?: string;
-    ["openApi"]?: string;
-    ["version"]?: string;
-    ["grade"]?: string;
-    ["violations"]?: Array<BoatViolation>;
+    ["id"]: number;
+    ["spec"]: BoatSpec;
+    ["name"]: string;
+    ["passed"]: boolean;
+    ["lintedOn"]: string;
+    ["openApi"]: string;
+    ["version"]: string;
+    ["grade"]: string;
+    ["violations"]: Array<BoatViolation>;
 }
 

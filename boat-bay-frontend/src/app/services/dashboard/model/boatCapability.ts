@@ -16,9 +16,9 @@ import { BoatStatistics } from './boatStatistics';
 
 
 export interface BoatCapability { 
-    ["id"]?: number;
-    ["key"]?: string;
-    ["name"]?: string;
+    ["id"]: number;
+    ["key"]: string;
+    ["name"]: string;
     ["content"]?: string;
     ["createdOn"]?: string;
     ["createdBy"]?: string;
