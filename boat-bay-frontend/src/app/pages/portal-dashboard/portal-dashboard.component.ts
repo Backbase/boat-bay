@@ -3,6 +3,7 @@ import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {DashboardHttpService} from "../../services/dashboard/api/dashboard.service";
 import {BoatPortal} from "../../services/dashboard/model/boatPortal";
+import {BoatProduct} from "../../services/dashboard/model/boatProduct";
 
 @Component({
   selector: 'bb-dashboard',

@@ -10,7 +10,7 @@ const routes: Routes = [
   },
   {
     path: 'lint-reports',
-    loadChildren: () =>  import('./pages/product-dashboard/product-dashboard.module').then(m => m.ProductDashboardModule )
+    loadChildren: () =>  import('./pages/lint-reports/lint-reports.module').then(m => m.LintReportsModule )
   },
   {
     path: 'diff-reports',

@@ -6,11 +6,11 @@ import {DashboardHttpService} from "../../services/dashboard/api/dashboard.servi
 import {BoatProduct} from "../../services/dashboard/model/boatProduct";
 
 @Component({
-  selector: 'bb-product-dashboard',
-  templateUrl: 'product-dashboard.component.html',
-  styleUrls: ['product-dashboard.component.scss'],
+  selector: 'bb-list-reports',
+  templateUrl: 'list-reports.component.html',
+  styleUrls: ['list-reports.component.scss'],
 })
-export class ProductDashboardComponent implements OnInit {
+export class ListReportsComponent implements OnInit {
   product$: Observable<BoatProduct>;
 
   constructor(protected activatedRoute: ActivatedRoute, protected boatLintReportService: DashboardHttpService) {

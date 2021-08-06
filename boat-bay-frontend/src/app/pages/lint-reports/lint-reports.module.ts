@@ -8,7 +8,7 @@ import { MatTableModule } from "@angular/material/table";
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
-import { ProductDashboardComponent } from "./product-dashboard.component";
+import { ListReportsComponent } from "./list-reports.component";
 import { SpecsTableComponent } from "../../components/specs-table/specs-table.component";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatSelectModule } from "@angular/material/select";
@@ -23,7 +23,7 @@ import { MatSnackBarModule } from "@angular/material/snack-bar";
 const routes: Routes = [
   {
     path: ':portalKey/:productKey',
-    component: ProductDashboardComponent,
+    component: ListReportsComponent,
     data: {
       pageTitle: 'Boat Bay Lint Report',
     },
@@ -48,7 +48,7 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    ProductDashboardComponent,
+    ListReportsComponent,
     SpecsTableComponent,
   ],
   imports: [
@@ -71,4 +71,4 @@ const routes: Routes = [
     MatSnackBarModule
   ]
 })
-export class ProductDashboardModule { }
+export class LintReportsModule { }

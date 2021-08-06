@@ -1,0 +1,31 @@
+.portal-product {
+  max-width: 1300px;
+  margin: auto;
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content:center;
+}
+
+.portal-product-column {
+  width: 600px;
+}
+
+mat-card {
+  height: 250px;
+}
+
+.product-container {
+  display: flex;
+}
+
+.product-container-column {
+  flex-grow: 1;
+  text-align: center;
+
+  mat-icon {
+    font-size: 75px;
+    margin-left: -42px;
+    height: 75px;
+  }
+}
