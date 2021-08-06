@@ -50,7 +50,7 @@ export class SpecsDataSource implements DataSource<BoatSpec> {
       productKey: specFilter.productKey,
       page: pageIndex,
       size: pageSize,
-      sort: [sortDirection + "," + sortDirection],
+      sort: [sortProperty + "," + sortDirection],
       capabilityKeys: specFilter.capabilities != null ? specFilter.capabilities.map(value => value.key) : undefined,
       serviceKeys: specFilter.services != null ? specFilter.services.map(value => value.key) : undefined,
       productReleaseKey: specFilter.release != null ? specFilter.release.key : undefined
