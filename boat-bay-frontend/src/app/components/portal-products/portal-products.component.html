@@ -1,0 +1,54 @@
+<div *ngFor="let product of $boatProducts | async " class="portal-product-column">
+
+    <mat-card class="mat-elevation-z8">
+        <mat-card-title> {{product.name}}
+            / {{product.name}}</mat-card-title>
+        <mat-card-subtitle *ngIf="product.lastLintReport">Last linted
+            Spec: {{product.lastLintReport.name}} {{product.lastLintReport.version}}
+            on: {{product.lastLintReport.lintedOn}}</mat-card-subtitle>
+        <mat-card-content>
+            <div class="product-container">
+
+                <div class="product-container-column">
+                    <a [routerLink]="['lint-reports', product.portalKey, product.key ]">
+                        <mat-icon>grading</mat-icon>
+                        <div>Lint Reports</div>
+                    </a>
+                </div>
+
+                <div class="product-container-column">
+                    <a [routerLink]="['diff-reports' , product.portalKey, product.key] ">
+                        <mat-icon>compare</mat-icon>
+                        <div>Diff Reports</div>
+                    </a>
+
+                </div>
+
+                <div class="product-container-column">
+                    <a [routerLink]="[ 'tag-cloud', product.portalKey, product.key]">
+                        <mat-icon>loyalty</mat-icon>
+                        <div>Tags</div>
+                    </a>
+                </div>
+
+
+                <!--                        <div class="portal-container-column">-->
+                <!--                            <a [routerLink]="[portal.portalKey, portal.productKey, 'documentation']">-->
+                <!--                                <mat-icon>help_outline</mat-icon>-->
+                <!--                                <div>Documentation</div>-->
+                <!--                            </a>-->
+                <!--                        </div>-->
+
+                <!--                        <div class="portal-container-column">-->
+                <!--                            <a [routerLink]="[portal.portalKey, portal.productKey, 'settings']">-->
+                <!--                                <mat-icon>settings</mat-icon>-->
+                <!--                                <div>Settings</div>-->
+                <!--                            </a>-->
+                <!--                        </div>-->
+
+
+            </div>
+
+        </mat-card-content>
+    </mat-card>
+</div>
