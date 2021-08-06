@@ -59,19 +59,12 @@ public class BoatUploadController implements BoatMavenPluginApi {
 
         List<Spec> specs = new ArrayList<>();
 
-        if (requestBody.getProjectId().isEmpty() || requestBody.getVersion().isEmpty()
-            || requestBody.getArtifactId().isEmpty()) {
-            throw new BadRequestAlertException("Invalid Request body missing attributes", "UPLOAD_REQUEST_BODY",
-                "attributeEmpty");
-        }
-
         log.info("Processing specs for upload from {}", sourceKey);
         for (UploadSpec uploadSpec : requestSpecs) {
-            Spec spec = mapSpec(uploadSpec);
+
+            Spec spec = setUpSpec(mapSpec(uploadSpec), source, requestBody);
 
             log.info("REST request to upload : {}", spec.getName());
-
-            spec = setUpSpec(spec,source,requestBody);
 
             if (spec.getOpenApi().isEmpty()) {
                 throw new BadRequestAlertException("Invalid spec with an empty openapi", "UPLOAD_SPEC",
@@ -139,15 +132,15 @@ public class BoatUploadController implements BoatMavenPluginApi {
         } else if (!spec.getVersion().equals(existing.getVersion())) {
             spec.setKey(existing.getKey().concat("-" + spec.getVersion()));
             log.info("Uploading new version {} of spec {}", spec.getVersion(), spec.getKey());
-        } else if(requestBody.getVersion().contains("SNAPSHOT")){
+        } else if (requestBody.getVersion().contains("SNAPSHOT")) {
             existing.setOpenApi(spec.getOpenApi());
             existing.setFilename(spec.getFilename());
             existing.setLintReport(null);
             spec = existing;
             log.info("Spec {} already uploaded, updating with changes and re-linting",
                 spec.getKey());
-        }else {
-            throw new BadRequestAlertException("This spec,"+ spec.getKey()+", has already been uploaded, this upload is not from a"
+        } else {
+            throw new BadRequestAlertException("This spec," + spec.getKey() + ", has already been uploaded, this upload is not from a"
                 + " project under development and so will be rejected", "SPEC",
                 "duplicateSpec");
         }
@@ -163,7 +156,7 @@ public class BoatUploadController implements BoatMavenPluginApi {
         return spec;
     }
 
-    private Spec setUpSpec(Spec spec, Source source, UploadRequestBody requestBody)  {
+    private Spec setUpSpec(Spec spec, Source source, UploadRequestBody requestBody) {
         spec.setPortal(source.getPortal());
         spec.setProduct(source.getProduct());
         spec.setSource(source);
@@ -171,18 +164,9 @@ public class BoatUploadController implements BoatMavenPluginApi {
         spec.setCreatedBy("MavenPluginUpload");
         spec.setCreatedOn(ZonedDateTime.now());
         spec.setKey(SpringExpressionUtils.parseName(source.getSpecKeySpEL(), spec, spec.getKey()));
-        if (spec.getKey().equals(null)){
-            log.info("Filename of spec doesn't fit format specified in SpecKeySpEL set in source, you may later "
-                + "encounter some issues");
-        }
-        spec.setSourcePath("/" +
-            requestBody.getProjectId().substring(
-                requestBody.getProjectId().lastIndexOf(".") + 1)
-            + "/" +
-            spec.getFilename());
+        spec.setSourcePath(spec.getFilename());
         return spec;
     }
-
 
 
 }

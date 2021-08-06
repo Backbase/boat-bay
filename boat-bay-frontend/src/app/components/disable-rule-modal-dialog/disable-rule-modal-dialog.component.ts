@@ -1,8 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { BoatLintReport, BoatLintRule, BoatProduct } from "../../models";
-import { BoatDashboardService } from "../../services/boat-dashboard.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import {DashboardHttpService} from "../../services/dashboard/api/dashboard.service";
+import {BoatLintReport} from "../../services/dashboard/model/boatLintReport";
+import {BoatLintRule} from "../../services/dashboard/model/boatLintRule";
+import {BoatProduct} from "../../services/dashboard/model/boatProduct";
 
 @Component({
   selector: 'app-disable-rule-modal-dialog',
@@ -17,7 +19,7 @@ export class DisableRuleModalDialogComponent implements OnInit {
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any,
               protected dialogRef: MatDialogRef<DisableRuleModalDialogComponent>,
-              protected dashboardService: BoatDashboardService,
+              protected dashboardService: DashboardHttpService,
               private _snackBar: MatSnackBar
   ) {
 
@@ -31,7 +33,12 @@ export class DisableRuleModalDialogComponent implements OnInit {
 
   disableRule(): void {
     this.rule.enabled = false;
-    this.dashboardService.postPortalLintRule(this.product.portalKey, this.rule)
+    this.dashboardService.updatePortalLintRule (
+      {
+        lintRuleId: this.rule.ruleId,
+        portalKey: this.product.portalKey,
+        boatLintRule: this.rule
+      }, "response")
       .subscribe(result => {
         if (result.ok) {
           this.dialogRef.close({

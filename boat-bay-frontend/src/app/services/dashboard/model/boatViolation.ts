@@ -16,10 +16,10 @@ import { BoatLintRule } from './boatLintRule';
 
 
 export interface BoatViolation { 
-    ["rule"]?: BoatLintRule;
-    ["description"]?: string;
-    ["severity"]?: Severity;
-    ["lines"]?: IntRange;
-    ["pointer"]?: string;
+    ["rule"]: BoatLintRule;
+    ["description"]: string;
+    ["severity"]: Severity;
+    ["lines"]: IntRange;
+    ["pointer"]: string;
 }
 

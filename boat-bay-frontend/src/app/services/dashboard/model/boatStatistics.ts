@@ -13,10 +13,10 @@
 
 
 export interface BoatStatistics { 
-    ["updatedOn"]?: string;
-    ["mustViolationsCount"]?: number;
-    ["shouldViolationsCount"]?: number;
-    ["mayViolationsCount"]?: number;
-    ["hintViolationsCount"]?: number;
+    ["updatedOn"]: string;
+    ["mustViolationsCount"]: number;
+    ["shouldViolationsCount"]: number;
+    ["mayViolationsCount"]: number;
+    ["hintViolationsCount"]: number;
 }
 

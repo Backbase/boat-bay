@@ -10,17 +10,20 @@
  * Do not edit the class manually.
  */
 
+import { BoatCapability } from './boatCapability';
 import { BoatStatistics } from './boatStatistics';
 
 
 export interface BoatService { 
-    ["key"]?: string;
-    ["name"]?: string;
+    ["id"]: number;
+    ["key"]: string;
+    ["name"]: string;
     ["description"]?: string;
     ["icon"]?: string;
     ["color"]?: string;
     ["createdOn"]?: string;
     ["createdBy"]?: string;
     ["statistics"]?: BoatStatistics;
+    ["capability"]: BoatCapability;
 }
 

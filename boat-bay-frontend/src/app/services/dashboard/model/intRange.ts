@@ -13,7 +13,7 @@
 
 
 export interface IntRange { 
-    ["start"]?: number;
-    ["endInclusive"]?: number;
+    ["start"]: number;
+    ["endInclusive"]: number;
 }
 

@@ -31,6 +31,10 @@ components:
           $ref: '#/components/schemas/BoatLintReport'
         statistics:
           $ref: '#/components/schemas/BoatStatistics'
+      required:
+        - id
+        - key
+        - name
     BoatProduct:
       type: object
       properties:
@@ -57,6 +61,12 @@ components:
           $ref: '#/components/schemas/BoatStatistics'
         jiraProjectId:
           type: string
+      required:
+        - portalKey
+        - portalName
+        - id
+        - key
+        - name
     BoatCapability:
       type: object
       properties:
@@ -81,9 +91,15 @@ components:
           $ref: '#/components/schemas/BoatLintReport'
         statistics:
           $ref: '#/components/schemas/BoatStatistics'
+      required:
+        - id
+        - key
+        - name
     BoatService:
       type: object
       properties:
+        id:
+          type: number
         key:
           type: string
         name:
@@ -101,6 +117,13 @@ components:
           type: string
         statistics:
           $ref: '#/components/schemas/BoatStatistics'
+        capability:
+          $ref: '#/components/schemas/BoatCapability'
+      required:
+        - id
+        - key
+        - name
+        - capability
     BoatSpec:
       type: object
       properties:
@@ -137,6 +160,13 @@ components:
           $ref: '#/components/schemas/BoatService'
         openApi:
           type: string
+      required:
+        - id
+        - key
+        - name
+        - version
+        - capability
+        - serviceDefinition
     BoatLintReport:
       type: object
       properties:
@@ -161,6 +191,17 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/BoatViolation'
+      required:
+        - id
+        - sec
+        - name
+        - passed
+        - lintedOn
+        - openApi
+        - version
+        - grade
+        - spec
+        - violations
     BoatLintRule:
       type: object
       properties:
@@ -179,6 +220,14 @@ components:
         url:
           type: string
           format: uri
+      required:
+        - id
+        - ruleId
+        - enabled
+        - title
+        - ruleSet
+        - severity
+        - url
     BoatProductRelease:
       type: object
       properties:
@@ -193,6 +242,12 @@ components:
         releaseDate:
           type: string
           format: date-time
+      required:
+        - id
+        - key
+        - name
+        - version
+        - releaseDate
     BoatTag:
       type: object
       properties:
@@ -206,6 +261,8 @@ components:
           type: string
         numberOfOccurrences:
           type: integer
+      required:
+        - name
     Resource:
       type: array
       items:
@@ -229,6 +286,12 @@ components:
         hintViolationsCount:
           type: integer
           format: int64
+      required:
+        - updatedOn
+        - mustViolationsCount
+        - shouldViolationsCount
+        - mayViolationsCount
+        - hintViolationsCount
     Changes:
       type: string
       enum:
@@ -251,6 +314,12 @@ components:
           $ref: '#/components/schemas/IntRange'
         pointer:
           type: string
+      required:
+        - rule
+        - description
+        - lines
+        - pointer
+        - severity
     Severity:
       type: string
       enum:
@@ -265,18 +334,17 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/UploadSpec'
-        projectId:
+        groupId:
           type: string
-          nullable: false
-          minLength: 1
         artifactId:
           type: string
-          nullable: false
-          minLength: 1
         version:
           type: string
-          nullable: false
-          minLength: 1
+      required:
+        - specs
+        - artifactId
+        - groupId
+        - version
     UploadSpec:
       type: object
       properties:
@@ -288,6 +356,10 @@ components:
           type: string
         name:
           type: string
+      required:
+        - fileName
+        - openApi
+        - name
     IntRange:
       type: object
       properties:
@@ -295,14 +367,15 @@ components:
           type: integer
         endInclusive:
           type: integer
+      required:
+        - start
+        - endInclusive
   parameters:
     PortalKey:
       name: portalKey
       in: path
       description: Portal Identifier
       required: true
-      style: simple
-      explode: false
       schema:
         type: string
     ProductKey:
@@ -310,8 +383,6 @@ components:
       in: path
       description: Product Identifier
       required: true
-      style: simple
-      explode: false
       schema:
         type: string
     CapabilityKey:
@@ -319,8 +390,6 @@ components:
       in: path
       description: Capability Identifier
       required: true
-      style: simple
-      explode: false
       schema:
         type: string
     ServiceKey:
@@ -328,8 +397,6 @@ components:
       in: path
       description: Service Identifier
       required: true
-      style: simple
-      explode: false
       schema:
         type: string
     SpecKey:
@@ -337,8 +404,6 @@ components:
       in: path
       description: Spec Identifier
       required: true
-      style: simple
-      explode: false
       schema:
         type: string
     ReleaseKey:
@@ -346,8 +411,6 @@ components:
       in: path
       description: Product Release Identifier
       required: true
-      style: simple
-      explode: false
       schema:
         type: string
     SpecId:
@@ -355,36 +418,31 @@ components:
       in: path
       description: Unique Spec Identifier
       required: true
-      style: simple
-      explode: false
       schema:
-        type: string
+        type: number
     Version:
       name: version
       in: path
       description: Spec Version
       required: true
-      style: simple
-      explode: false
       schema:
         type: string
-
     Page:
       name: page
       in: query
-      required: false
+      required: true
       schema:
         type: integer
     Size:
       name: size
       in: query
-      required: false
+      required: true
       schema:
         type: integer
     Sort:
       name: sort
       in: query
-      required: false
+      required: true
       schema:
         type: array
         items:

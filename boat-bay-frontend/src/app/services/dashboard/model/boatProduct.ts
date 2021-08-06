@@ -15,11 +15,11 @@ import { BoatStatistics } from './boatStatistics';
 
 
 export interface BoatProduct { 
-    ["portalKey"]?: string;
-    ["portalName"]?: string;
-    ["id"]?: number;
-    ["key"]?: string;
-    ["name"]?: string;
+    ["portalKey"]: string;
+    ["portalName"]: string;
+    ["id"]: number;
+    ["key"]: string;
+    ["name"]: string;
     ["content"]?: string;
     ["createdOn"]?: string;
     ["createdBy"]?: string;
