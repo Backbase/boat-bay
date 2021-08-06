@@ -7,12 +7,17 @@ import com.typesafe.config.ConfigParseOptions;
 import com.typesafe.config.impl.ConfigImpl;
 import com.typesafe.config.impl.Parseable;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.propertyeditors.StringArrayPropertyEditor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.zalando.zally.core.RulesManager;
 
 @Configuration
 public class BoatLintConfiguration {
+
+
 
     @Value("${boat.lint.ruleset.file:boat-bay-default.conf}")
     private String ruleSetFile;
