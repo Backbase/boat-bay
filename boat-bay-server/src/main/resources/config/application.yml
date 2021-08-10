@@ -20,7 +20,7 @@ management:
       base-path: /management
       exposure:
         include:
-          ['configprops', 'env', 'health', 'info', 'jhimetrics', 'logfile', 'loggers', 'prometheus', 'threaddump', 'caches', 'liquibase']
+          [ 'configprops', 'env', 'health', 'info', 'jhimetrics', 'logfile', 'loggers', 'prometheus', 'threaddump', 'caches', 'liquibase' ]
   endpoint:
     health:
       show-details: when_authorized
@@ -196,6 +196,19 @@ boat:
           default-product:
             key: example
             name: Example Product
+          lint-rules:
+            - 150
+            - B001
+            - B002
+            - B003
+            - B004
+            - B005
+            - B006
+            - B007
+            - B008
+            - B009
+            - B010
+            - M0012
         base-url: http://localhost:4200
 
       spec-types:

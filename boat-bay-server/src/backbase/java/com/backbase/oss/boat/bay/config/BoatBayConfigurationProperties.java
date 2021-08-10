@@ -46,6 +46,7 @@ public class BoatBayConfigurationProperties {
                 private String logoUrl;
                 private String logoLink;
                 private Product defaultProduct;
+                private List<String> lintRules;
 
                 @Data
                 public static class Product {
