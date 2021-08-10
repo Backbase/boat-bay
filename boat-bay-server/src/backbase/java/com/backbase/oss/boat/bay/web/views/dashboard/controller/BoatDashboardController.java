@@ -422,9 +422,9 @@ public class BoatDashboardController implements DashboardApi {
     }
 
     private Sort parseSort(List<String> sortParameters) {
-
         List<Sort.Order> orders = sortParameters.stream()
             .map(this::parseSortParameter)
+            .filter(order -> !order.getProperty().equals("undefined"))
             .collect(Collectors.toList());
 
         return orders.isEmpty() ? Sort.unsorted() : Sort.by(orders);
