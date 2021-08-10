@@ -14,6 +14,7 @@ import io.swagger.v3.oas.models.info.Info;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
+import org.joda.time.Seconds;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -22,7 +23,9 @@ import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -48,12 +51,12 @@ public class SpecSourceResolver {
     private final BoatBackwardsCompatibleChecker boatBackwardsCompatibleChecker;
 
     public void process(ScanResult scan) {
-        log.info("Processing Scan Result: {}", scan);
+        log.info("Processing Scan Result from {} with {} specs", scan.getSource().getName(), scan.specCount());
+        Instant start = Instant.now();
         Source source = scan.getSource();
         for (ProductRelease pr : scan.getProductReleases()) {
             processProductRelease(scan, source, pr);
         }
-
         List<Spec> processedSpecs = scan
             .getProductReleases()
             .stream()
@@ -62,7 +65,8 @@ public class SpecSourceResolver {
             .collect(Collectors.toList());
 
         checkSpecs(processedSpecs);
-        log.info("Processing Scan Result: {}", scan);
+        Instant end = Instant.now();
+        log.info("Finished processing Scan Result from {} with {} specs in: {}s", scan.getSource().getName(), scan.specCount(), ChronoUnit.SECONDS.between(start,end));
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -102,11 +106,12 @@ public class SpecSourceResolver {
         }
         Optional<Spec> existingSpec = boatSpecRepository.findByChecksumAndSource(md5, source);
 
-        if (existingSpec.isPresent() && !source.getOverwriteChanges()) {
+        boolean overwriteChanges = Boolean.TRUE.equals(source.getOverwriteChanges());
+        if (existingSpec.isPresent() && !overwriteChanges) {
             log.info("Spec: {}  already exists for source: {}", existingSpec.get().getName(), source.getName());
             spec.setId(existingSpec.get().getId());
             return;
-        } else if (existingSpec.isPresent() && source.getOverwriteChanges()) {
+        } else if (existingSpec.isPresent()) {
             log.debug("Updating spec: {}", spec.getName());
             spec.setId(existingSpec.get().getId());
         } else {

@@ -116,7 +116,7 @@ public class RegisterController implements RegisterApi {
 
         boatSourceRepository.save(mavenSource);
 
-        if(mavenSource.getSourcePaths().isEmpty()) {
+        if (mavenSource.getSourcePaths().isEmpty()) {
             SourcePath sourcePath = new SourcePath().name("*:*:*:api:*").source(mavenSource);
             sourcePathRepository.save(sourcePath);
         }
