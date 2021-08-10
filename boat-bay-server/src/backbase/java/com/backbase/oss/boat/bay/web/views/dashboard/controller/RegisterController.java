@@ -12,6 +12,7 @@ import com.backbase.oss.boat.bay.model.RegisterProject;
 import com.backbase.oss.boat.bay.model.RegisteredProject;
 import com.backbase.oss.boat.bay.repository.BoatPortalRepository;
 import com.backbase.oss.boat.bay.repository.BoatProductRepository;
+import com.backbase.oss.boat.bay.repository.BoatSourcePathRepository;
 import com.backbase.oss.boat.bay.repository.BoatSourceRepository;
 import com.backbase.oss.boat.bay.source.SpecSourceResolver;
 import com.backbase.oss.boat.bay.source.scanner.ScanResult;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.net.URI;
 
 
@@ -40,6 +42,7 @@ public class RegisterController implements RegisterApi {
     private final BoatPortalRepository boatPortalRepository;
     private final BoatSourceRepository boatSourceRepository;
     private final SpecSourceResolver specSourceResolver;
+    private final BoatSourcePathRepository sourcePathRepository;
     final BoatBayConfigurationProperties boatBayConfigurationProperties;
 
     final BoatPortalRepository portalRepository;
@@ -48,7 +51,7 @@ public class RegisterController implements RegisterApi {
 
 
     @Override
-    public ResponseEntity<RegisteredProject> registerProject(String portalKey, RegisterProject registerProject, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<RegisteredProject> registerProject(String portalKey, @Valid RegisterProject registerProject, HttpServletRequest httpServletRequest) {
         Portal portal = portalRepository.findByKey(portalKey).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         Product product = productRepository.findByKeyAndPortal(registerProject.getKey(), portal)
@@ -58,10 +61,11 @@ public class RegisterController implements RegisterApi {
                 .name(registerProject.getName())));
 
         Source mavenSource = boatSourceRepository.findByKeyAndPortal(registerProject.getKey() + MAVEN, portal)
-            .orElseGet(() -> setupNewMavenSource(registerProject, portal, product));
+            .map(existingSource -> saveMavenSource(existingSource, registerProject, portal, product))
+            .orElseGet(() -> saveMavenSource(new Source(), registerProject, portal, product));
 
         Source uploadSource = boatSourceRepository.findByKeyAndPortal(registerProject.getKey(), portal)
-                .orElseGet(() -> setupNewUploadSource(registerProject, portal, product));
+            .orElseGet(() -> setupNewUploadSource(registerProject, portal, product));
 
 
         MavenSpecSourceScanner scanner = new MavenSpecSourceScanner();
@@ -74,7 +78,7 @@ public class RegisterController implements RegisterApi {
         URI url = URI.create(httpServletRequest.getRequestURL().toString());
         URI resolve = url.resolve("/api/boat/portals/" + portalKey + "/boat-maven-plugin/" + uploadSource.getKey() + "/upload");
         RegisteredProject registeredProject = new RegisteredProject();
-        registeredProject.setDashboardUrl(boatBayConfigurationProperties.getBootstrap().getDashboard().getBaseUrl() + "/lint-reports/" + portalKey + "/" + registerProject.getKey() );
+        registeredProject.setDashboardUrl(boatBayConfigurationProperties.getBootstrap().getDashboard().getBaseUrl() + "/lint-reports/" + portalKey + "/" + registerProject.getKey());
         registeredProject.setUploadUrl(resolve.toString());
         registeredProject.setNumberOfApis(Long.valueOf(scan.getProductReleases().stream().flatMap(p -> p.getSpecs().stream()).count()).intValue());
 
@@ -94,13 +98,11 @@ public class RegisterController implements RegisterApi {
         return boatSourceRepository.save(uploadSource);
     }
 
-    @NotNull
-    private Source setupNewMavenSource(RegisterProject registerProject, Portal portal, Product product) {
-        Source mavenSource = new Source();
+    private Source saveMavenSource(Source mavenSource, RegisterProject registerProject, Portal portal, Product product) {
         mavenSource.setKey(registerProject.getKey() + MAVEN);
         mavenSource.setName(registerProject.getName());
         mavenSource.setType(SourceType.MAVEN);
-        mavenSource.getSourcePaths().add(new SourcePath().name("*:*:*:api:*").source(mavenSource));
+        ;
         mavenSource.setBillOfMaterialsCoords(registerProject.getBom().getGroupId() + ":" + registerProject.getBom().getArtifactId() + ":pom:" + getVersion(registerProject) + "");
         mavenSource.setCapabilityKeySpEL("mvnGroupId.subString(mvnGroupId.lastIndexOf('.')");
         mavenSource.setCapabilityNameSpEL("mvnGroupId.subString(mvnGroupId.lastIndexOf('.')");
@@ -112,13 +114,24 @@ public class RegisterController implements RegisterApi {
         mavenSource.setCronExpression("0 */2 * * *");
         mavenSource.setRunOnStartup(true);
 
+        boatSourceRepository.save(mavenSource);
+
+        if(mavenSource.getSourcePaths().isEmpty()) {
+            SourcePath sourcePath = new SourcePath().name("*:*:*:api:*").source(mavenSource);
+            sourcePathRepository.save(sourcePath);
+        }
+        return mavenSource;
 
 
-        return boatSourceRepository.save(mavenSource);
     }
 
     private String getVersion(RegisterProject registerProject) {
-        return registerProject.getBom().getVersion();
+        if (registerProject.getBom().getVersion() == null && registerProject.getBom().getVersionRange() != null) {
+            return registerProject.getBom().getVersionRange();
+        } else if (registerProject.getBom().getVersion() != null && registerProject.getBom().getVersionRange() == null) {
+            return registerProject.getBom().getVersion();
+        }
+        return "0.0.1";
     }
 
 
