@@ -138,7 +138,7 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
 
             ArtifactDescriptorResult descriptorResult = repositorySystem.readArtifactDescriptor(session, descriptorRequest);
 
-            DependencyFilter dependencyFilter = new ExtendedPatternDependencyFilter(
+            ExtendedPatternDependencyFilter dependencyFilter = new ExtendedPatternDependencyFilter(
                 paths.stream().map(SourcePath::getName).collect(Collectors.toList())
             );
 
