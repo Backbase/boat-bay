@@ -45,4 +45,9 @@ public class ScanResult {
         }
         productReleases.get(0).addSpec(spec);
     }
+
+
+    public long specCount() {
+        return productReleases.stream().mapToLong(pr -> pr.getSpecs().size()).sum();
+    }
 }
