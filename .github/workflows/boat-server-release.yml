@@ -75,6 +75,7 @@ jobs:
           mvn -Pprod jib:build -Dskip.unit.tests=true -Dskip.integration.tests=true -Djib.to.image=${{steps.vars.outputs.image}}:${{steps.vars.outputs.tag}} -Djib.to.auth.username=${{ github.repository }} -Djib.to.auth.password=${{ secrets.GITHUB_TOKEN }}
       - name: Update to next Development version
         run: |
+          cd boat-bay-server
           git config --global user.name 'boatbay-releaser'
           git config --global user.email 'releaser@boat.noreply.github.com'
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}

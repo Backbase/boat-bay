@@ -54,7 +54,6 @@ jobs:
         id: vars
         run: |
           cd boat-bay-frontend
-          npm version minor
           DOCKER_IMAGE=ghcr.io/backbase/boat-bay-ui
           DOCKER_TAG=$(node -pe "require('./package.json').version")
           echo ::set-output name=image::${DOCKER_IMAGE}
@@ -71,10 +70,12 @@ jobs:
           docker build . --file Dockerfile --tag ${{steps.vars.outputs.image}}:${{steps.vars.outputs.tag}}
           docker push ${{steps.vars.outputs.image}}:${{steps.vars.outputs.tag}}
 
-      - name: Push tag to GitHub
+      - name: Update to next Development version
         run: |
+          cd boat-bay-frontend
           git config --global user.name 'boatbay-releaser'
           git config --global user.email 'releaser@boatbay.noreply.github.com'
           git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-          git commit -am "Release v${{steps.vars.outputs.tag}}"
+          npm version patch
+          git add . && git commit -m "Next development version"
           git push
