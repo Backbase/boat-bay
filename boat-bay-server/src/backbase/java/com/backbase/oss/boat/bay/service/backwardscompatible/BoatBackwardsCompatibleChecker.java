@@ -23,7 +23,7 @@ public class BoatBackwardsCompatibleChecker {
     private final BoatSpecRepository specRepository;
 
     public void checkBackwardsCompatibility(Spec input) {
-        Spec spec = specRepository.findById(input.getId()).get();
+        Spec spec = specRepository.findById(input.getId()).orElseThrow();
 
         log.info("Checking Changes for Spec: {}", spec.getName());
         List<Spec> specs = specRepository.findAllByKeyAndServiceDefinitionAndVersionIsNotNull(spec.getKey(), spec.getServiceDefinition());

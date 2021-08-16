@@ -1,15 +1,20 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTable } from '@angular/material/table';
-import { SpecsDataSource } from './specs-data-source';
-import { map, switchMap, tap } from "rxjs/operators";
-import { BoatDashboardService } from "../../services/boat-dashboard.service";
-import { BoatCapability, BoatProduct, BoatService, BoatSpec, Changes } from "../../models/";
-import { combineLatest, merge, Observable } from "rxjs";
-import { BoatProductRelease } from "../../models/boat-product-release";
-import { ActivatedRoute, Params, Router } from "@angular/router";
-import { FormControl } from "@angular/forms";
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
+import {MatTable} from '@angular/material/table';
+import {SpecsDataSource} from './specs-data-source';
+import {map, switchMap, tap} from "rxjs/operators";
+import {combineLatest, merge, Observable} from "rxjs";
+import {ActivatedRoute, Params, Router} from "@angular/router";
+import {FormControl} from "@angular/forms";
+import {BoatCapability} from "../../services/dashboard/model/boatCapability";
+import {BoatProductRelease} from "../../services/dashboard/model/boatProductRelease";
+import {BoatService} from "../../services/dashboard/model/boatService";
+import {Changes} from "../../services/dashboard/model/changes";
+import {BoatSpec} from "../../services/dashboard/model/boatSpec";
+import {BoatProduct} from "../../services/dashboard/model/boatProduct";
+import {DashboardHttpService, GetPortalCapabilitiesRequestParams} from "../../services/dashboard/api/dashboard.service";
+import {throwNoPortalAttachedError} from "@angular/cdk/portal/portal-errors";
 
 export interface SpecFilter {
   portalKey: string,
@@ -48,21 +53,43 @@ export class SpecsTableComponent implements AfterViewInit, OnInit {
   selectedRelease = new FormControl();
 
 
-
-  constructor(private boatDashboardService: BoatDashboardService,
+  constructor(private boatDashboardService: DashboardHttpService,
               public activatedRoute: ActivatedRoute,
               public routerService: Router) {
 
     this.product$ = activatedRoute.data.pipe(
       map(({product}) => product));
     this.capabilities$ = this.product$.pipe(
-      switchMap(product => this.boatDashboardService.getBoatCapabilities(product.portalKey, product.key, 0, 100, 'name', 'asc').pipe(
-        map(response => response.body ? response.body : []))));
+      switchMap(product => {
+        return this.boatDashboardService.getPortalCapabilities(
+          {
+            portalKey: product.portalKey,
+            productKey: product.key,
+            size: 100,
+            page: 0,
+            sort: [
+              "name,asc"
+            ]
+          }, 'response').pipe(
+          map(response => response.body ? response.body : []));
+      }));
     this.services$ = this.product$.pipe(
-      switchMap(product => this.boatDashboardService.getBoatServices(product.portalKey, product.key, 0, 100, 'name', 'asc').pipe(
+      switchMap(product => this.boatDashboardService.getPortalServices(
+        {
+          portalKey: product.portalKey,
+          productKey: product.key,
+          size: 100,
+          page: 0,
+          sort: [
+            "name,asc"
+          ]
+        }, 'response').pipe(
         map(response => response.body ? response.body : []))));
     this.releases$ = this.product$.pipe(
-      switchMap(product => this.boatDashboardService.getProductReleases(product.portalKey, product.key).pipe(
+      switchMap(product => this.boatDashboardService.getProductReleases({
+        portalKey: product.portalKey,
+        productKey: product.key
+      }, 'response').pipe(
         map(response => response.body ? response.body : []))));
     this.product$.subscribe(product => {
       this._specFilter = {
@@ -127,12 +154,12 @@ export class SpecsTableComponent implements AfterViewInit, OnInit {
     this.selectedRelease.valueChanges.subscribe(source => this.updateRouter());
   }
 
-  updateRouter():void {
+  updateRouter(): void {
     console.log("Update Router");
     this.routerService.navigate([], {
       queryParams: {
-        capability: this.selectedCapabilities.value?.map((item:BoatCapability) => item.key),
-        service: this.selectedServices.value?.map((item:BoatService) => item.key),
+        capability: this.selectedCapabilities.value?.map((item: BoatCapability) => item.key),
+        service: this.selectedServices.value?.map((item: BoatService) => item.key),
         release: this.selectedRelease.value?.key
       },
       queryParamsHandling: "merge"

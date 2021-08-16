@@ -20,6 +20,7 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { RouterModule } from "@angular/router";
 import { PortalDashboardComponent } from "./pages/portal-dashboard/portal-dashboard.component";
+import { PortalProductsComponent } from './components/portal-products/portal-products.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { PortalDashboardComponent } from "./pages/portal-dashboard/portal-dashbo
     NavbarComponent,
     LoginModalComponent,
     PortalDashboardComponent,
+    PortalProductsComponent,
   ],
   imports: [
     RouterModule,

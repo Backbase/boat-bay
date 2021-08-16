@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.backbase.oss.boat.bay</groupId>
         <artifactId>boat-bay</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.2-SNAPSHOT</version>
     </parent>
 
     <artifactId>boat-bay-api</artifactId>
@@ -14,6 +14,43 @@
     <name>Boat Bay :: API</name>
 
     <packaging>pom</packaging>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.backbase.oss</groupId>
+                <artifactId>boat-maven-plugin</artifactId>
+                <version>0.14.4</version>
+                <executions>
+                    <execution>
+                        <id>validate-specs</id>
+                        <!-- Other plugins down the line want to reference the bundled specs using a hard coded filename-->
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>validate</goal>
+                        </goals>
+                        <configuration>
+                            <input>${project.basedir}/src/main/resources</input>
+                            <failOnWarning>true</failOnWarning>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>bundle-specs</id>
+                        <!-- Other plugins down the line want to reference the bundled specs using a hard coded filename-->
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>bundle</goal>
+                        </goals>
+                        <configuration>
+                            <input>${project.basedir}/src/main/resources</input>
+                            <output>${project.build.directory}/specs</output>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
 
 
 </project>

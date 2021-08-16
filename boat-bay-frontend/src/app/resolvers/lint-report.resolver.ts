@@ -1,14 +1,14 @@
-import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
-import { EMPTY, Observable, of } from 'rxjs';
-import { BoatDashboardService } from "../services/boat-dashboard.service";
-import { BoatLintReport } from "../models";
-import { flatMap } from "rxjs/operators";
-import { HttpResponse } from "@angular/common/http";
+import {Injectable} from '@angular/core';
+import {ActivatedRouteSnapshot, Resolve, Router} from '@angular/router';
+import {EMPTY, Observable, of} from 'rxjs';
+import {flatMap} from "rxjs/operators";
+import {HttpResponse} from "@angular/common/http";
+import {DashboardHttpService} from "../services/dashboard/api/dashboard.service";
+import {BoatLintReport} from "../services/dashboard/model/boatLintReport";
 
 @Injectable({providedIn: 'root'})
 export class LintReportResolver implements Resolve<BoatLintReport> {
-  constructor(protected boatLintReportService: BoatDashboardService, private router: Router) {
+  constructor(protected boatLintReportService: DashboardHttpService, private router: Router) {
   }
 
   resolve(route: ActivatedRouteSnapshot): Observable<BoatLintReport> | Promise<BoatLintReport> | BoatLintReport {
@@ -16,7 +16,11 @@ export class LintReportResolver implements Resolve<BoatLintReport> {
     const productKey = route.params['productKey'];
     const specId = route.params['specId']
     if (specId && portalKey && productKey) {
-      return this.boatLintReportService.getLintReport(portalKey, productKey, specId).pipe(
+      return this.boatLintReportService.getLintReportForSpec({
+        portalKey: portalKey,
+        productKey: productKey,
+        specId: specId
+      }, "response").pipe(
         flatMap((response: HttpResponse<BoatLintReport>) => {
           if (response.body) {
             return of(response.body);

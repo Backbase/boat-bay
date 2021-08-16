@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ActivatedRoute } from '@angular/router';
-import { BoatProduct } from "../../models/";
-import { BoatDashboardService } from "../../services/boat-dashboard.service";
+import {DashboardHttpService} from "../../services/dashboard/api/dashboard.service";
+import {BoatProduct} from "../../services/dashboard/model/boatProduct";
 
 @Component({
   selector: 'app-tag-cloud-dashboard',
@@ -13,7 +13,7 @@ import { BoatDashboardService } from "../../services/boat-dashboard.service";
 export class TagCloudDashboardComponent implements OnInit {
   product$: Observable<BoatProduct> | null;
 
-  constructor(protected activatedRoute: ActivatedRoute, protected dashboardService: BoatDashboardService) {
+  constructor(protected activatedRoute: ActivatedRoute, protected dashboardService: DashboardHttpService) {
     this.product$ = activatedRoute.data.pipe(map(({product}) => product));
   }
 

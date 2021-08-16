@@ -5,7 +5,6 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ISource } from '../source.model';
 import { SourceService } from '../service/source.service';
 import { SourceDeleteDialogComponent } from '../delete/source-delete-dialog.component';
-import { DataUtils } from 'app/core/util/data-util.service';
 
 @Component({
   selector: 'jhi-source',
@@ -15,7 +14,7 @@ export class SourceComponent implements OnInit {
   sources?: ISource[];
   isLoading = false;
 
-  constructor(protected sourceService: SourceService, protected dataUtils: DataUtils, protected modalService: NgbModal) {}
+  constructor(protected sourceService: SourceService, protected modalService: NgbModal) {}
 
   loadAll(): void {
     this.isLoading = true;
@@ -37,14 +36,6 @@ export class SourceComponent implements OnInit {
 
   trackId(index: number, item: ISource): number {
     return item.id!;
-  }
-
-  byteSize(base64String: string): string {
-    return this.dataUtils.byteSize(base64String);
-  }
-
-  openFile(base64String: string, contentType: string | null | undefined): void {
-    return this.dataUtils.openFile(base64String, contentType);
   }
 
   delete(source: ISource): void {

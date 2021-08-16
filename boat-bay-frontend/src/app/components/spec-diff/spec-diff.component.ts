@@ -1,12 +1,12 @@
-import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
-import { ReleaseSpec } from "../../pages/diff-dashboard/diff-dashboard.component";
-import { Ace, Range, config, edit, require } from "ace-builds";
+import {AfterViewInit, Component, ElementRef, Input, ViewChild} from '@angular/core';
+import {ReleaseSpec} from "../../pages/diff-dashboard/diff-dashboard.component";
+import {config} from "ace-builds";
 
-import { BoatDashboardService } from "../../services/boat-dashboard.service";
-import { Observable, zip } from "rxjs";
-import { BoatProduct, BoatSpec } from "../../models";
-import { map } from "rxjs/operators";
+import {Observable, zip} from "rxjs";
 import * as AceDiff from "ace-diff";
+import {DashboardHttpService} from "../../services/dashboard/api/dashboard.service";
+import {BoatSpec} from "../../services/dashboard/model/boatSpec";
+import {BoatProduct} from "../../services/dashboard/model/boatProduct";
 
 
 @Component({
@@ -24,7 +24,7 @@ export class SpecDiffComponent implements AfterViewInit {
   diffIndex = 0;
 
 
-  constructor(public dashboard: BoatDashboardService) {
+  constructor(public dashboard: DashboardHttpService) {
   }
 
 
@@ -36,11 +36,27 @@ export class SpecDiffComponent implements AfterViewInit {
       // This should be fixed by resolving the required packages from node_modules...
       config.set('basePath', 'https://unpkg.com/ace-builds@1.4.12/src-noconflict');
 
-      const spec1$: Observable<BoatSpec> = this.dashboard.getSpecBySpec(this.product, this.specRelease.spec1).pipe(
-        map(({body}) => this.mapBody(body)));
+      const spec1$: Observable<BoatSpec> = this.dashboard.getSpec(
+        {
+          portalKey: this.product.portalKey,
+          productKey: this.product.key,
+          capabilityKey: this.specRelease.spec1.capability.key,
+          serviceKey: this.specRelease.spec1.serviceDefinition.key,
+          specKey: this.specRelease.spec1.key,
+          version: this.specRelease.spec1.version
+        }
+      );
 
-      const spec2$ = this.dashboard.getSpecBySpec(this.product, this.specRelease.spec2).pipe(
-        map(({body}) => this.mapBody(body)));
+      const spec2$ = this.dashboard.getSpec({
+        portalKey: this.product.portalKey,
+        productKey: this.product.key,
+        capabilityKey: this.specRelease.spec2.capability.key,
+        serviceKey: this.specRelease.spec2.serviceDefinition.key,
+        specKey: this.specRelease.spec2.key,
+        version: this.specRelease.spec2.version
+        }
+      );
+
 
       zip(spec1$, spec2$).subscribe(specs => {
         const spec1 = specs[0];

@@ -20,7 +20,7 @@ management:
       base-path: /management
       exposure:
         include:
-          ['configprops', 'env', 'health', 'info', 'jhimetrics', 'logfile', 'loggers', 'prometheus', 'threaddump', 'caches', 'liquibase']
+          [ 'configprops', 'env', 'health', 'info', 'jhimetrics', 'logfile', 'loggers', 'prometheus', 'threaddump', 'caches', 'liquibase' ]
   endpoint:
     health:
       show-details: when_authorized
@@ -180,3 +180,58 @@ jhipster:
 # ===================================================================
 
 # application:
+boat:
+  bay:
+    bootstrap:
+      dashboard:
+        name: Example Dashboard
+        title: "Boat Bay :: Example Dashboard"
+        sub-title: It's like Sonar, but for specs!
+        nav-title: "Boat Bay :: Example Dashboard"
+        default-portal:
+          key: example
+          name: Example Project
+          logo-link: backbase-logo.png
+          logo-url: https://github.com/Backbase/boat-bay
+          default-product:
+            key: example
+            name: Example Product
+          lint-rules:
+            - 150
+            - B001
+            - B002
+            - B003
+            - B004
+            - B005
+            - B006
+            - B007
+            - B008
+            - B009
+            - B010
+            - M0012
+        base-url: http://localhost:4200
+
+      spec-types:
+        - name: Client API
+          matchSpEL: sourceName.contains('client-api')
+          icon: public
+        - name: Service API
+          matchSpEL: sourceName.contains('service-api')
+          icon: public_off
+        - name: Integration Inbound
+          matchSpEL: sourceName.contains('inbound')
+          icon: input
+        - name: Integration Outbound
+          matchSpEL: sourceName.contains('outbound')
+          icon: outbound
+        - name: Integration Pull
+          matchSpEL: sourceName.contains('pull')
+          icon: swap_vert
+        - name: Integration
+          matchSpEL: sourceName.contains('integration-api')
+          icon: import_export
+        - name: Persistence
+          matchSpEL: sourceName.contains('persistence') || sourceName.contains('pandp')
+          icon: storage
+
+

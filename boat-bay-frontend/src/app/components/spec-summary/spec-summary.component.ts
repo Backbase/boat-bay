@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { BoatProduct, BoatSpec } from "../../models";
+import {BoatSpec} from "../../services/dashboard/model/boatSpec";
+import {BoatProduct} from "../../services/dashboard/model/boatProduct";
 
 @Component({
   selector: 'app-spec-summary',

@@ -29,13 +29,10 @@ describe('Service Tests', () => {
         id: 0,
         name: 'AAAAAAA',
         key: 'AAAAAAA',
-        type: SourceType.JFROG,
-        baseUrl: 'AAAAAAA',
+        type: SourceType.BOAT_MAVEN_PLUGIN,
         active: false,
         filterArtifactsName: 'AAAAAAA',
         filterArtifactsCreatedSince: currentDate,
-        username: 'AAAAAAA',
-        password: 'AAAAAAA',
         cronExpression: 'AAAAAAA',
         runOnStartup: false,
         specFilterSpEL: 'AAAAAAA',
@@ -50,7 +47,7 @@ describe('Service Tests', () => {
         productReleaseKeySpEL: 'AAAAAAA',
         itemLimit: 0,
         overwriteChanges: false,
-        options: 'AAAAAAA',
+        billOfMaterialsCoords: 'AAAAAAA',
       };
     });
 
@@ -100,12 +97,9 @@ describe('Service Tests', () => {
             name: 'BBBBBB',
             key: 'BBBBBB',
             type: 'BBBBBB',
-            baseUrl: 'BBBBBB',
             active: true,
             filterArtifactsName: 'BBBBBB',
             filterArtifactsCreatedSince: currentDate.format(DATE_FORMAT),
-            username: 'BBBBBB',
-            password: 'BBBBBB',
             cronExpression: 'BBBBBB',
             runOnStartup: true,
             specFilterSpEL: 'BBBBBB',
@@ -120,7 +114,7 @@ describe('Service Tests', () => {
             productReleaseKeySpEL: 'BBBBBB',
             itemLimit: 1,
             overwriteChanges: true,
-            options: 'BBBBBB',
+            billOfMaterialsCoords: 'BBBBBB',
           },
           elemDefault
         );
@@ -143,19 +137,16 @@ describe('Service Tests', () => {
         const patchObject = Object.assign(
           {
             type: 'BBBBBB',
-            baseUrl: 'BBBBBB',
-            filterArtifactsName: 'BBBBBB',
+            active: true,
             filterArtifactsCreatedSince: currentDate.format(DATE_FORMAT),
             cronExpression: 'BBBBBB',
-            specFilterSpEL: 'BBBBBB',
             capabilityKeySpEL: 'BBBBBB',
             serviceKeySpEL: 'BBBBBB',
-            specKeySpEL: 'BBBBBB',
+            serviceNameSpEL: 'BBBBBB',
+            versionSpEL: 'BBBBBB',
             productReleaseVersionSpEL: 'BBBBBB',
-            productReleaseKeySpEL: 'BBBBBB',
-            itemLimit: 1,
             overwriteChanges: true,
-            options: 'BBBBBB',
+            billOfMaterialsCoords: 'BBBBBB',
           },
           new Source()
         );
@@ -183,12 +174,9 @@ describe('Service Tests', () => {
             name: 'BBBBBB',
             key: 'BBBBBB',
             type: 'BBBBBB',
-            baseUrl: 'BBBBBB',
             active: true,
             filterArtifactsName: 'BBBBBB',
             filterArtifactsCreatedSince: currentDate.format(DATE_FORMAT),
-            username: 'BBBBBB',
-            password: 'BBBBBB',
             cronExpression: 'BBBBBB',
             runOnStartup: true,
             specFilterSpEL: 'BBBBBB',
@@ -203,7 +191,7 @@ describe('Service Tests', () => {
             productReleaseKeySpEL: 'BBBBBB',
             itemLimit: 1,
             overwriteChanges: true,
-            options: 'BBBBBB',
+            billOfMaterialsCoords: 'BBBBBB',
           },
           elemDefault
         );
@@ -260,7 +248,7 @@ describe('Service Tests', () => {
         });
 
         it('should add only unique Source to an array', () => {
-          const sourceArray: ISource[] = [{ id: 123 }, { id: 456 }, { id: 88605 }];
+          const sourceArray: ISource[] = [{ id: 123 }, { id: 456 }, { id: 82779 }];
           const sourceCollection: ISource[] = [{ id: 123 }];
           expectedResult = service.addSourceToCollectionIfMissing(sourceCollection, ...sourceArray);
           expect(expectedResult).toHaveLength(3);

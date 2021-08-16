@@ -1,7 +1,9 @@
+@use "sass:math";
 @import 'settings/spacing';
 @import 'settings/theme';
 @import 'settings/typography';
 @import 'settings/colors';
+
 
 
 mat-toolbar {
@@ -26,7 +28,7 @@ header {
   width: 100%;
   height: $spacer-xxl * 2;
   align-items: center;
-  margin: 0px $spacer-xs * 15 0px $spacer-xs * 15/2;
+  margin: 0 $spacer-xs * 15 0px math.div($spacer-xs * 15, 2);
 }
 
 .header-row {

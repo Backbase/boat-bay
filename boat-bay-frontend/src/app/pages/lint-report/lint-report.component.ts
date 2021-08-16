@@ -1,15 +1,18 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { Range } from '../../components/ace-editor/ace-editor.component';
-import { BoatLintReport, BoatLintRule, BoatProduct, BoatViolation } from "../../models/";
+import { IRange } from '../../components/ace-editor/ace-editor.component';
 import { ActivatedRoute } from "@angular/router";
 import { Ace } from "ace-builds";
 import { MatDialog } from "@angular/material/dialog";
 import { DisableRuleModalDialogComponent } from "../../components/disable-rule-modal-dialog/disable-rule-modal-dialog.component";
-import { BoatDashboardService } from "../../services/boat-dashboard.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import Annotation = Ace.Annotation;
+import {BoatLintReport} from "../../services/dashboard/model/boatLintReport";
+import {BoatProduct} from "../../services/dashboard/model/boatProduct";
+import {DashboardHttpService} from "../../services/dashboard/api/dashboard.service";
+import {BoatViolation} from "../../services/dashboard/model/boatViolation";
+import {BoatLintRule} from "../../services/dashboard/model/boatLintRule";
 
 @Component({
   selector: 'lint-report',
@@ -19,13 +22,13 @@ import Annotation = Ace.Annotation;
 export class LintReportComponent implements OnInit {
   lintReport$: Observable<BoatLintReport>;
   product$: Observable<BoatProduct>;
-  @Output() highlight = new EventEmitter<Range>();
+  @Output() highlight = new EventEmitter<IRange>();
   @Output() annotations = new EventEmitter<Annotation[]>();
 
 
   constructor(protected activatedRoute: ActivatedRoute,
               public dialog: MatDialog,
-              protected boatLintReportService: BoatDashboardService,
+              protected boatLintReportService: DashboardHttpService,
               private _snackBar: MatSnackBar) {
     this.lintReport$ = activatedRoute.data.pipe(map(({lintReport}) => lintReport));
     this.product$ = activatedRoute.data.pipe(map(({product}) => product), tap(product => console.log("p", product)));
@@ -49,9 +52,9 @@ export class LintReportComponent implements OnInit {
   }
 
   mark(violation: BoatViolation): void {
-    const range: Range = {
+    const range: IRange = {
       start: violation.lines.start,
-      end: violation.lines.end,
+      end: violation.lines.endInclusive,
     };
     this.highlight.emit(range);
   }
@@ -69,7 +72,13 @@ export class LintReportComponent implements OnInit {
         const lintReport: BoatLintReport = result.data.lintReport;
         const product: BoatProduct = result.data.product;
         this._snackBar.open(`Relinting spec ${lintReport.spec.title} with updated rules. Reloading when done....`);
-        this.boatLintReportService.getLintReport(product.portalKey, product.key, lintReport.spec.id, true).pipe(map(({body}) => body))
+        this.boatLintReportService.getLintReportForSpec(
+          {
+            portalKey: product.portalKey,
+            productKey: product.key,
+            specId: lintReport.spec.id,
+            refresh: true
+          }, "response").pipe(map(({body}) => body))
           .subscribe(updatedReport => {
             window.location.reload();
           });

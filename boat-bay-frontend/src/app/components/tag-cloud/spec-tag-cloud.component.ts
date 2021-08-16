@@ -1,7 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { BoatDashboardService } from "../../services/boat-dashboard.service";
-import { BoatProduct, BoatTag } from "../../models";
-import { CloudData, CloudOptions } from 'angular-tag-cloud-module';
+import {Component, Input, OnInit} from '@angular/core';
+import {CloudData, CloudOptions} from 'angular-tag-cloud-module';
+import {BoatProduct} from "../../services/dashboard/model/boatProduct";
+import {DashboardHttpService} from "../../services/dashboard/api/dashboard.service";
+import {BoatTag} from "../../services/dashboard/model/boatTag";
 
 @Component({
   selector: 'app-spec-tag-cloud',
@@ -29,11 +30,14 @@ export class SpecTagCloudComponent implements OnInit {
   }
 
 
-  constructor(private dashboardService: BoatDashboardService) {
+  constructor(private dashboardService: DashboardHttpService) {
   }
 
   ngOnInit(): void {
-    this.dashboardService.getTags(this._product.portalKey, this._product.key)
+    this.dashboardService.getProductTags({
+      portalKey: this._product.portalKey,
+      productKey: this._product.key
+    }, "response")
       .subscribe(({body}) =>
         this.data = !body ? [] : body.map((tag) => {
           return this.map(tag);

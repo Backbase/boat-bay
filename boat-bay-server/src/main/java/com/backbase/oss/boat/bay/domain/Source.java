@@ -38,10 +38,6 @@ public class Source implements Serializable {
     @Column(name = "type", nullable = false)
     private SourceType type;
 
-    @NotNull
-    @Column(name = "base_url", nullable = false)
-    private String baseUrl;
-
     @Column(name = "active")
     private Boolean active;
 
@@ -50,12 +46,6 @@ public class Source implements Serializable {
 
     @Column(name = "filter_artifacts_created_since")
     private LocalDate filterArtifactsCreatedSince;
-
-    @Column(name = "username")
-    private String username;
-
-    @Column(name = "password")
-    private String password;
 
     @Column(name = "cron_expression")
     private String cronExpression;
@@ -99,9 +89,8 @@ public class Source implements Serializable {
     @Column(name = "overwrite_changes")
     private Boolean overwriteChanges;
 
-    @Lob
-    @Column(name = "options")
-    private String options;
+    @Column(name = "bill_of_materials_coords")
+    private String billOfMaterialsCoords;
 
     @OneToMany(mappedBy = "source")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -179,19 +168,6 @@ public class Source implements Serializable {
         this.type = type;
     }
 
-    public String getBaseUrl() {
-        return this.baseUrl;
-    }
-
-    public Source baseUrl(String baseUrl) {
-        this.baseUrl = baseUrl;
-        return this;
-    }
-
-    public void setBaseUrl(String baseUrl) {
-        this.baseUrl = baseUrl;
-    }
-
     public Boolean getActive() {
         return this.active;
     }
@@ -229,32 +205,6 @@ public class Source implements Serializable {
 
     public void setFilterArtifactsCreatedSince(LocalDate filterArtifactsCreatedSince) {
         this.filterArtifactsCreatedSince = filterArtifactsCreatedSince;
-    }
-
-    public String getUsername() {
-        return this.username;
-    }
-
-    public Source username(String username) {
-        this.username = username;
-        return this;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return this.password;
-    }
-
-    public Source password(String password) {
-        this.password = password;
-        return this;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getCronExpression() {
@@ -439,17 +389,17 @@ public class Source implements Serializable {
         this.overwriteChanges = overwriteChanges;
     }
 
-    public String getOptions() {
-        return this.options;
+    public String getBillOfMaterialsCoords() {
+        return this.billOfMaterialsCoords;
     }
 
-    public Source options(String options) {
-        this.options = options;
+    public Source billOfMaterialsCoords(String billOfMaterialsCoords) {
+        this.billOfMaterialsCoords = billOfMaterialsCoords;
         return this;
     }
 
-    public void setOptions(String options) {
-        this.options = options;
+    public void setBillOfMaterialsCoords(String billOfMaterialsCoords) {
+        this.billOfMaterialsCoords = billOfMaterialsCoords;
     }
 
     public Set<SourcePath> getSourcePaths() {
@@ -562,12 +512,9 @@ public class Source implements Serializable {
             ", name='" + getName() + "'" +
             ", key='" + getKey() + "'" +
             ", type='" + getType() + "'" +
-            ", baseUrl='" + getBaseUrl() + "'" +
             ", active='" + getActive() + "'" +
             ", filterArtifactsName='" + getFilterArtifactsName() + "'" +
             ", filterArtifactsCreatedSince='" + getFilterArtifactsCreatedSince() + "'" +
-            ", username='" + getUsername() + "'" +
-            ", password='" + getPassword() + "'" +
             ", cronExpression='" + getCronExpression() + "'" +
             ", runOnStartup='" + getRunOnStartup() + "'" +
             ", specFilterSpEL='" + getSpecFilterSpEL() + "'" +
@@ -582,7 +529,7 @@ public class Source implements Serializable {
             ", productReleaseKeySpEL='" + getProductReleaseKeySpEL() + "'" +
             ", itemLimit=" + getItemLimit() +
             ", overwriteChanges='" + getOverwriteChanges() + "'" +
-            ", options='" + getOptions() + "'" +
+            ", billOfMaterialsCoords='" + getBillOfMaterialsCoords() + "'" +
             "}";
     }
 }

@@ -23,9 +23,6 @@
             <column name="type" type="varchar(255)">
                 <constraints nullable="false" />
             </column>
-            <column name="base_url" type="varchar(255)">
-                <constraints nullable="false" />
-            </column>
             <column name="active" type="boolean">
                 <constraints nullable="true" />
             </column>
@@ -33,12 +30,6 @@
                 <constraints nullable="true" />
             </column>
             <column name="filter_artifacts_created_since" type="date">
-                <constraints nullable="true" />
-            </column>
-            <column name="username" type="varchar(255)">
-                <constraints nullable="true" />
-            </column>
-            <column name="password" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
             <column name="cron_expression" type="varchar(255)">
@@ -83,7 +74,7 @@
             <column name="overwrite_changes" type="boolean">
                 <constraints nullable="true" />
             </column>
-            <column name="options" type="${clobType}">
+            <column name="bill_of_materials_coords" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
             <column name="portal_id" type="bigint">
@@ -121,12 +112,9 @@
             <column name="name" type="string"/>
             <column name="jhi_key" type="string"/>
             <column name="type" type="string"/>
-            <column name="base_url" type="string"/>
             <column name="active" type="boolean"/>
             <column name="filter_artifacts_name" type="string"/>
             <column name="filter_artifacts_created_since" type="date"/>
-            <column name="username" type="string"/>
-            <column name="password" type="string"/>
             <column name="cron_expression" type="string"/>
             <column name="run_on_startup" type="boolean"/>
             <column name="spec_filter_sp_el" type="string"/>
@@ -141,7 +129,7 @@
             <column name="product_release_key_sp_el" type="string"/>
             <column name="item_limit" type="numeric"/>
             <column name="overwrite_changes" type="boolean"/>
-            <column name="options" type="clob"/>
+            <column name="bill_of_materials_coords" type="string"/>
             <column name="portal_id" type="numeric"/>
             <column name="product_id" type="numeric"/>
             <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->

@@ -4,9 +4,10 @@ import { MatSort } from '@angular/material/sort';
 import { MatTable } from '@angular/material/table';
 import { ServiceDefinitionDatasource } from './service-definition-datasource';
 import { tap } from "rxjs/operators";
-import { BoatCapability, BoatProduct } from "../../models/";
-import { BoatDashboardService } from "../../services/boat-dashboard.service";
 import { merge } from "rxjs";
+import {BoatProduct} from "../../services/dashboard/model/boatProduct";
+import {BoatCapability} from "../../services/dashboard/model/boatCapability";
+import {DashboardHttpService} from "../../services/dashboard/api/dashboard.service";
 
 @Component({
   selector: 'service-definition-table',
@@ -30,7 +31,7 @@ export class ServiceDefinitionTableComponent implements AfterViewInit, OnInit {
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
   displayedColumns = ['name', 'createdOn', 'createdBy', 'violationsMust', 'violationsShould', 'violationsMay', 'violationsHint'];
 
-  constructor(private boatDashboardService: BoatDashboardService) {
+  constructor(private boatDashboardService: DashboardHttpService) {
   }
 
   ngOnInit() {

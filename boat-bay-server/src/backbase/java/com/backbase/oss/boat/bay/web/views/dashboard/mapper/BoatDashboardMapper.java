@@ -10,24 +10,11 @@ import com.backbase.oss.boat.bay.domain.ProductRelease;
 import com.backbase.oss.boat.bay.domain.ServiceDefinition;
 import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.domain.Tag;
-import com.backbase.oss.boat.bay.service.model.BoatCapability;
-import com.backbase.oss.boat.bay.service.model.BoatLintReport;
-import com.backbase.oss.boat.bay.service.model.BoatLintRule;
-import com.backbase.oss.boat.bay.service.model.BoatProduct;
-import com.backbase.oss.boat.bay.service.model.BoatProductRelease;
-import com.backbase.oss.boat.bay.service.model.BoatService;
-import com.backbase.oss.boat.bay.service.model.BoatSpec;
-import com.backbase.oss.boat.bay.service.model.BoatViolation;
-import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatPortal;
-import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatPortalDashboard;
-
-import com.backbase.oss.boat.bay.web.views.dashboard.models.BoatTag;
+import com.backbase.oss.boat.bay.model.*;
 
 import com.fasterxml.jackson.core.JsonPointer;
 import java.net.URI;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,19 +32,6 @@ import org.zalando.zally.rule.api.RuleSet;
 
 @Mapper(componentModel = "spring")
 public interface BoatDashboardMapper {
-
-    @Mapping(target = "numberOfServices", ignore = true)
-    @Mapping(target = "numberOfCapabilities", ignore = true)
-    @Mapping(target = "portalId", source = "portal.id")
-    @Mapping(target = "portalKey", source = "portal.key")
-    @Mapping(target = "portalName", source = "portal.name")
-    @Mapping(target = "productId", source = "product.id")
-    @Mapping(target = "productKey", source = "product.key")
-    @Mapping(target = "productName", source = "product.name")
-    @Mapping(target = "productDescription", source = "product.content")
-    @Mapping(target = "lastLintReport", ignore = true)
-    @Mapping(target = "statistics", ignore = true)
-    BoatPortalDashboard mapPortal(Portal portal, Product product);
 
     static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
         Set<Object> seen = ConcurrentHashMap.newKeySet();
@@ -102,11 +76,17 @@ public interface BoatDashboardMapper {
         return LocalDateTime.ofInstant(value, ZoneId.systemDefault());
     }
 
+    @Mapping(target = "statistics", ignore = true)
+    @Mapping(target = "productDescription", ignore = true)
+    @Mapping(target = "numberOfServices", ignore = true)
+    @Mapping(target = "numberOfCapabilities", ignore = true)
+    @Mapping(target = "lastLintReport", ignore = true)
     BoatPortal mapBoatPortal(Portal portal);
 
     @Mapping(target = "statistics", ignore = true)
     BoatService mapBoatService(ServiceDefinition serviceDefinition);
 
+    @Mapping(target = "backwardsCompatible", ignore = true)
     @Mapping(target = "statistics", ignore = true)
     @Mapping(target = "openApi", ignore = true)
     BoatSpec mapBoatSpec(Spec spec);
@@ -157,5 +137,12 @@ public interface BoatDashboardMapper {
         } else {
             return null;
         }
+    };
+
+    default OffsetDateTime map(ZonedDateTime value) {
+        if(value == null) {
+            return null;
+        }
+        return value.toOffsetDateTime();
     };
 }

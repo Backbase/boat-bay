@@ -1,13 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject, combineLatest, Observable, of, ReplaySubject, zip } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
-import { ActivatedRoute, Params, Router } from '@angular/router';
-import { BoatCapability, BoatProduct, BoatSpec } from "../../models/";
-import { BoatDashboardService } from "../../services/boat-dashboard.service";
-import { BoatProductRelease } from "../../models/boat-product-release";
-import { FormControl } from "@angular/forms";
-import { MatDialog } from "@angular/material/dialog";
-import { SpecDiffDialogComponent } from "../../components/spec-diff-dialog/spec-diff-dialog.component";
+import {Component, OnInit} from '@angular/core';
+import {BehaviorSubject, combineLatest, Observable, of, ReplaySubject, zip} from 'rxjs';
+import {map, switchMap} from 'rxjs/operators';
+import {ActivatedRoute, Params, Router} from '@angular/router';
+import {FormControl} from "@angular/forms";
+import {MatDialog} from "@angular/material/dialog";
+import {SpecDiffDialogComponent} from "../../components/spec-diff-dialog/spec-diff-dialog.component";
+import {DashboardHttpService} from "../../services/dashboard/api/dashboard.service";
+import {BoatProductRelease} from "../../services/dashboard/model/boatProductRelease";
+import {BoatProduct} from "../../services/dashboard/model/boatProduct";
+import {BoatSpec} from "../../services/dashboard/model/boatSpec";
+import {BoatCapability} from "../../services/dashboard/model/boatCapability";
 
 export enum ChangeState {
   NEW = 'NEW', DELETED = 'DELETED', CHANGED = 'CHANGED', UNCHANGED = 'UNCHANGED'
@@ -94,22 +96,30 @@ export class DiffDashboardComponent implements OnInit {
   expandAll: boolean = false;
 
   constructor(protected activatedRoute: ActivatedRoute,
-              protected dashboardService: BoatDashboardService,
+              protected dashboardService: DashboardHttpService,
               public matDialog: MatDialog,
               public router: Router) {
     this.product$ = activatedRoute.data.pipe(
       map(({product}) => product));
 
     this.releases$ = this.product$.pipe(
-      switchMap((product) => this.dashboardService.getProductReleases(product.portalKey, product.key)),
+      switchMap((product) => this.dashboardService.getProductReleases(
+        {
+          portalKey: product.portalKey,
+          productKey: product.key
+        }, "response")),
       map((response) => response.body ? response.body : []));
 
     this.changeLogReport = this.releaseSpec$.pipe(
       switchMap((releaseSpec) => {
         if (releaseSpec && releaseSpec.spec1 && releaseSpec.spec2) {
-          return this.dashboardService.getSpecDiffReportAsHtml(
-            releaseSpec.product.portalKey,
-            releaseSpec.product.key, releaseSpec.spec1.id, releaseSpec.spec2.id)
+          return this.dashboardService.getDiffReport(
+            {
+              portalKey:  releaseSpec.product.portalKey,
+              productKey: releaseSpec.product.key,
+              spec1Id: releaseSpec.spec1?.id,
+              spec2Id: releaseSpec.spec2?.id
+            })
         } else {
           return of('');
         }
@@ -155,14 +165,13 @@ export class DiffDashboardComponent implements OnInit {
           if (release2Param) {
             let value1 = releases.find(release => release.key === release2Param);
             this.release2Control.setValue(value1);
+          } else if (!release1Param && !release2Param) {
+            this.release1Control.setValue(releases[releases.length == 1 ? 0 : releases.length - 2])
+            this.release2Control.setValue(releases[releases.length - 1])
           }
-          else if (!release1Param && !release2Param) {
-            this.release1Control.setValue(releases[releases.length == 1 ? 0 : releases.length-2])
-            this.release2Control.setValue(releases[releases.length-1])
+          if (this.release2Control.value && this.release1Control.value) {
+            this.loadSpecs(product, this.release1Control.value, this.release2Control.value);
           }
-        if (this.release2Control.value && this.release1Control.value) {
-          this.loadSpecs(product, this.release1Control.value, this.release2Control.value);
-        }
 
 
         }
@@ -205,11 +214,16 @@ export class DiffDashboardComponent implements OnInit {
 
       this.capabilities = [];
 
-      const specs1$: Observable<BoatSpec[]> = this.dashboardService.getProductReleaseSpecs(product.portalKey, product.key, release1.key)
-        .pipe(map(({body}) => body ? body : []));
-      const specs2$: Observable<BoatSpec[]> = this.dashboardService.getProductReleaseSpecs(product.portalKey, product.key, release2.key)
-        .pipe(map(({body}) => body ? body : []));
-
+      const specs1$: Observable<BoatSpec[]> = this.dashboardService.getProductReleaseSpecs({
+        productKey: product.key,
+        portalKey: product.portalKey,
+        releaseKey: release1.key
+      });
+      const specs2$: Observable<BoatSpec[]> = this.dashboardService.getProductReleaseSpecs({
+        productKey: product.key,
+        portalKey: product.portalKey,
+        releaseKey: release2.key
+      });
 
       zip(specs1$, specs2$).subscribe(specsResults => {
         const specs1 = specsResults[0];
