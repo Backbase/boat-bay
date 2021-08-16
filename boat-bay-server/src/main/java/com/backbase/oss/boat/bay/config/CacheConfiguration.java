@@ -15,6 +15,8 @@ import org.springframework.context.annotation.*;
 import tech.jhipster.config.JHipsterProperties;
 import tech.jhipster.config.cache.PrefixedKeyGenerator;
 
+import static com.backbase.oss.boat.bay.config.BoatCacheManager.*;
+
 @Configuration
 @EnableCaching
 public class CacheConfiguration {
@@ -76,6 +78,17 @@ public class CacheConfiguration {
             createCache(cm, com.backbase.oss.boat.bay.domain.LintRuleViolation.class.getName());
             createCache(cm, com.backbase.oss.boat.bay.domain.ZallyConfig.class.getName());
             // jhipster-needle-ehcache-add-entry
+
+            createCache(cm, PORTAL);
+            createCache(cm, PORTAL_PRODUCT);
+            createCache(cm, PRODUCT_RELEASES);
+            createCache(cm, PRODUCT_TAGS);
+            createCache(cm, PRODUCT_SPECS);
+            createCache(cm, PRODUCT_SERVICES);
+            createCache(cm, PRODUCT_CAPABILITIES);
+            createCache(cm, SPEC_LINT_REPORT);
+            createCache(cm, STATISTICS);
+
         };
     }
 

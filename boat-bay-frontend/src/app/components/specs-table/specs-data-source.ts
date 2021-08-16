@@ -1,9 +1,9 @@
-import { CollectionViewer, DataSource } from '@angular/cdk/collections';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from "rxjs/operators";
-import { BoatDashboardService } from "../../services/boat-dashboard.service";
-import { BoatSpec } from "../../models/";
-import { SpecFilter } from "./specs-table.component";
+import {CollectionViewer, DataSource} from '@angular/cdk/collections';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {map} from "rxjs/operators";
+import {SpecFilter} from "./specs-table.component";
+import {BoatSpec} from "../../services/dashboard/model/boatSpec";
+import {DashboardHttpService, GetPortalSpecsRequestParams} from "../../services/dashboard/api/dashboard.service";
 
 
 /**
@@ -20,7 +20,7 @@ export class SpecsDataSource implements DataSource<BoatSpec> {
   public loading$ = this.loadingSubject.asObservable();
   public length = this.countSubject.asObservable();
 
-    constructor(private boatService: BoatDashboardService) {
+  constructor(private boatService: DashboardHttpService) {
   }
 
   /**
@@ -44,9 +44,21 @@ export class SpecsDataSource implements DataSource<BoatSpec> {
 
   loadSpecs(specFilter: SpecFilter, sortProperty: string, sortDirection: string, pageIndex = 0, pageSize = 3): void {
     this.loadingSubject.next(true);
-    this.boatService.getBoatSpecs(specFilter, pageIndex, pageSize, sortProperty, sortDirection).pipe(
+
+    let requestParmas: GetPortalSpecsRequestParams = {
+      portalKey: specFilter.portalKey,
+      productKey: specFilter.productKey,
+      page: pageIndex,
+      size: pageSize,
+      sort: [sortProperty + "," + sortDirection],
+      capabilityKeys: specFilter.capabilities != null ? specFilter.capabilities.map(value => value.key) : undefined,
+      serviceKeys: specFilter.services != null ? specFilter.services.map(value => value.key) : undefined,
+      productReleaseKey: specFilter.release != null ? specFilter.release.key : undefined
+    }
+
+    this.boatService.getPortalSpecs(requestParmas, "response").pipe(
       map(response => {
-        if(response.body) {
+        if (response.body) {
           this.countSubject.next(Number(response.headers.get('X-Total-Count')))
           this.servicesSubject.next(response.body)
           this.loadingSubject.next(false)

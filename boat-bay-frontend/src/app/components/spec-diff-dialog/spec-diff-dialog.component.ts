@@ -3,7 +3,7 @@ import { Component, Inject, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ReleaseSpec } from "../../pages/diff-dashboard/diff-dashboard.component";
 import { MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { BoatProduct } from "../../models";
+import {BoatProduct} from "../../services/dashboard/model/boatProduct";
 
 export interface Range {
   start: number;

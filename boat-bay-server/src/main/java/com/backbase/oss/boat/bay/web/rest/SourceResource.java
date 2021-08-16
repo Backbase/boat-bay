@@ -135,9 +135,6 @@ public class SourceResource {
                     if (source.getType() != null) {
                         existingSource.setType(source.getType());
                     }
-                    if (source.getBaseUrl() != null) {
-                        existingSource.setBaseUrl(source.getBaseUrl());
-                    }
                     if (source.getActive() != null) {
                         existingSource.setActive(source.getActive());
                     }
@@ -146,12 +143,6 @@ public class SourceResource {
                     }
                     if (source.getFilterArtifactsCreatedSince() != null) {
                         existingSource.setFilterArtifactsCreatedSince(source.getFilterArtifactsCreatedSince());
-                    }
-                    if (source.getUsername() != null) {
-                        existingSource.setUsername(source.getUsername());
-                    }
-                    if (source.getPassword() != null) {
-                        existingSource.setPassword(source.getPassword());
                     }
                     if (source.getCronExpression() != null) {
                         existingSource.setCronExpression(source.getCronExpression());
@@ -195,8 +186,8 @@ public class SourceResource {
                     if (source.getOverwriteChanges() != null) {
                         existingSource.setOverwriteChanges(source.getOverwriteChanges());
                     }
-                    if (source.getOptions() != null) {
-                        existingSource.setOptions(source.getOptions());
+                    if (source.getBillOfMaterialsCoords() != null) {
+                        existingSource.setBillOfMaterialsCoords(source.getBillOfMaterialsCoords());
                     }
 
                     return existingSource;

@@ -14,4 +14,6 @@ public interface BoatCapabilityRepository extends CapabilityRepository {
     Page<Capability> findByProduct(Product product, Pageable pageable);
 
     long countByProduct(Product product);
+
+    int countByProductPortal(Portal portal);
 }

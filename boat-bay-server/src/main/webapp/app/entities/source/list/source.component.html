@@ -36,12 +36,9 @@
           <th scope="col"><span jhiTranslate="boatbayApp.source.name">Name</span></th>
           <th scope="col"><span jhiTranslate="boatbayApp.source.key">Key</span></th>
           <th scope="col"><span jhiTranslate="boatbayApp.source.type">Type</span></th>
-          <th scope="col"><span jhiTranslate="boatbayApp.source.baseUrl">Base Url</span></th>
           <th scope="col"><span jhiTranslate="boatbayApp.source.active">Active</span></th>
           <th scope="col"><span jhiTranslate="boatbayApp.source.filterArtifactsName">Filter Artifacts Name</span></th>
           <th scope="col"><span jhiTranslate="boatbayApp.source.filterArtifactsCreatedSince">Filter Artifacts Created Since</span></th>
-          <th scope="col"><span jhiTranslate="boatbayApp.source.username">Username</span></th>
-          <th scope="col"><span jhiTranslate="boatbayApp.source.password">Password</span></th>
           <th scope="col"><span jhiTranslate="boatbayApp.source.cronExpression">Cron Expression</span></th>
           <th scope="col"><span jhiTranslate="boatbayApp.source.runOnStartup">Run On Startup</span></th>
           <th scope="col"><span jhiTranslate="boatbayApp.source.specFilterSpEL">Spec Filter Sp EL</span></th>
@@ -56,7 +53,7 @@
           <th scope="col"><span jhiTranslate="boatbayApp.source.productReleaseKeySpEL">Product Release Key Sp EL</span></th>
           <th scope="col"><span jhiTranslate="boatbayApp.source.itemLimit">Item Limit</span></th>
           <th scope="col"><span jhiTranslate="boatbayApp.source.overwriteChanges">Overwrite Changes</span></th>
-          <th scope="col"><span jhiTranslate="boatbayApp.source.options">Options</span></th>
+          <th scope="col"><span jhiTranslate="boatbayApp.source.billOfMaterialsCoords">Bill Of Materials Coords</span></th>
           <th scope="col"><span jhiTranslate="boatbayApp.source.portal">Portal</span></th>
           <th scope="col"><span jhiTranslate="boatbayApp.source.product">Product</span></th>
           <th scope="col"><span jhiTranslate="boatbayApp.source.capability">Capability</span></th>
@@ -72,12 +69,9 @@
           <td>{{ source.name }}</td>
           <td>{{ source.key }}</td>
           <td jhiTranslate="{{ 'boatbayApp.SourceType.' + source.type }}">{{ source.type }}</td>
-          <td>{{ source.baseUrl }}</td>
           <td>{{ source.active }}</td>
           <td>{{ source.filterArtifactsName }}</td>
           <td>{{ source.filterArtifactsCreatedSince | formatMediumDate }}</td>
-          <td>{{ source.username }}</td>
-          <td>{{ source.password }}</td>
           <td>{{ source.cronExpression }}</td>
           <td>{{ source.runOnStartup }}</td>
           <td>{{ source.specFilterSpEL }}</td>
@@ -92,7 +86,7 @@
           <td>{{ source.productReleaseKeySpEL }}</td>
           <td>{{ source.itemLimit }}</td>
           <td>{{ source.overwriteChanges }}</td>
-          <td>{{ source.options }}</td>
+          <td>{{ source.billOfMaterialsCoords }}</td>
           <td>
             <div *ngIf="source.portal">
               <a [routerLink]="['/portal', source.portal?.id, 'view']">{{ source.portal?.name }}</a>

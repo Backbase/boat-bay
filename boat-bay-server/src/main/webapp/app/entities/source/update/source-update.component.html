@@ -37,26 +37,11 @@
           <label class="form-control-label" jhiTranslate="boatbayApp.source.type" for="field_type">Type</label>
           <select class="form-control" name="type" formControlName="type" id="field_type" data-cy="type">
             <option [ngValue]="null">{{ 'boatbayApp.SourceType.null' | translate }}</option>
-            <option value="JFROG">{{ 'boatbayApp.SourceType.JFROG' | translate }}</option>
             <option value="BOAT_MAVEN_PLUGIN">{{ 'boatbayApp.SourceType.BOAT_MAVEN_PLUGIN' | translate }}</option>
             <option value="MAVEN">{{ 'boatbayApp.SourceType.MAVEN' | translate }}</option>
           </select>
           <div *ngIf="editForm.get('type')!.invalid && (editForm.get('type')!.dirty || editForm.get('type')!.touched)">
             <small class="form-text text-danger" *ngIf="editForm.get('type')?.errors?.required" jhiTranslate="entity.validation.required">
-              This field is required.
-            </small>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-control-label" jhiTranslate="boatbayApp.source.baseUrl" for="field_baseUrl">Base Url</label>
-          <input type="text" class="form-control" name="baseUrl" id="field_baseUrl" data-cy="baseUrl" formControlName="baseUrl" />
-          <div *ngIf="editForm.get('baseUrl')!.invalid && (editForm.get('baseUrl')!.dirty || editForm.get('baseUrl')!.touched)">
-            <small
-              class="form-text text-danger"
-              *ngIf="editForm.get('baseUrl')?.errors?.required"
-              jhiTranslate="entity.validation.required"
-            >
               This field is required.
             </small>
           </div>
@@ -105,16 +90,6 @@
               </button>
             </span>
           </div>
-        </div>
-
-        <div class="form-group">
-          <label class="form-control-label" jhiTranslate="boatbayApp.source.username" for="field_username">Username</label>
-          <input type="text" class="form-control" name="username" id="field_username" data-cy="username" formControlName="username" />
-        </div>
-
-        <div class="form-group">
-          <label class="form-control-label" jhiTranslate="boatbayApp.source.password" for="field_password">Password</label>
-          <input type="text" class="form-control" name="password" id="field_password" data-cy="password" formControlName="password" />
         </div>
 
         <div class="form-group">
@@ -299,8 +274,17 @@
         </div>
 
         <div class="form-group">
-          <label class="form-control-label" jhiTranslate="boatbayApp.source.options" for="field_options">Options</label>
-          <textarea class="form-control" name="options" id="field_options" data-cy="options" formControlName="options"></textarea>
+          <label class="form-control-label" jhiTranslate="boatbayApp.source.billOfMaterialsCoords" for="field_billOfMaterialsCoords"
+            >Bill Of Materials Coords</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="billOfMaterialsCoords"
+            id="field_billOfMaterialsCoords"
+            data-cy="billOfMaterialsCoords"
+            formControlName="billOfMaterialsCoords"
+          />
         </div>
 
         <div class="form-group">

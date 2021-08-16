@@ -1,8 +1,8 @@
-import { CollectionViewer, DataSource } from '@angular/cdk/collections';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from "rxjs/operators";
-import { BoatService } from "../../models";
-import { BoatDashboardService } from "../../services/boat-dashboard.service";
+import {CollectionViewer, DataSource} from '@angular/cdk/collections';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {map} from "rxjs/operators";
+import {BoatService} from "../../services/dashboard/model/boatService";
+import {DashboardHttpService} from "../../services/dashboard/api/dashboard.service";
 
 
 /**
@@ -19,7 +19,7 @@ export class ServiceDefinitionDatasource implements DataSource<BoatService> {
   public loading$ = this.loadingSubject.asObservable();
   public length = this.countSubject.asObservable();
 
-  constructor(private boatService: BoatDashboardService) {
+  constructor(private boatService: DashboardHttpService) {
   }
 
   /**
@@ -43,9 +43,17 @@ export class ServiceDefinitionDatasource implements DataSource<BoatService> {
 
   loadServicesForProduct(portalKey: string, productKey: string, sortProperty: string, sortDirection: string, pageIndex = 0, pageSize = 3): void {
     this.loadingSubject.next(true);
-    this.boatService.getBoatServices(portalKey, productKey, pageIndex, pageSize, sortProperty, sortDirection).pipe(
+    this.boatService.getPortalServices({
+      portalKey: portalKey,
+      productKey: productKey,
+      size: pageSize,
+      page: pageIndex,
+      sort: [
+        sortProperty + "," + sortDirection
+      ]
+    }, "response").pipe(
       map(response => {
-        if(response.body) {
+        if (response.body) {
           this.countSubject.next(Number(response.headers.get('X-Total-Count')))
           this.servicesSubject.next(response.body)
           this.loadingSubject.next(false)
