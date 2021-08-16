@@ -69,3 +69,13 @@ jobs:
           npm run build-prod
           docker build . --file Dockerfile --tag ${{steps.vars.outputs.image}}:${{steps.vars.outputs.tag}}
           docker push ${{steps.vars.outputs.image}}:${{steps.vars.outputs.tag}}
+
+      - name: Update to next Development version
+        run: |
+          cd boat-bay-frontend
+          git config --global user.name 'boatbay-releaser'
+          git config --global user.email 'releaser@boatbay.noreply.github.com'
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          npm version patch
+          git add . && git commit -m "Next development version"
+          git push
