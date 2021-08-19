@@ -13,8 +13,8 @@
         <!-- Run sonar run -->
 
         <!-- Build properties -->
-        <maven.version>3.3.9</maven.version>
-        <java.version>15</java.version>
+        <maven.version>3.6.3</maven.version>
+        <java.version>11</java.version>
         <node.version>v14.17.1</node.version>
         <npm.version>7.18.1</npm.version>
         <lombok.version>1.18.20</lombok.version>
