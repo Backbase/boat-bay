@@ -5,7 +5,7 @@
 
     <groupId>com.backbase.oss.boat.bay</groupId>
     <artifactId>boat-bay</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.4-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Boat Bay ::  Parent</name>
 
