@@ -11,6 +11,14 @@ import com.backbase.oss.boat.loader.OpenAPILoader;
 import com.backbase.oss.boat.loader.OpenAPILoaderException;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -21,15 +29,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
-
-import java.nio.charset.StandardCharsets;
-import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -66,7 +65,12 @@ public class SpecSourceResolver {
 
         checkSpecs(processedSpecs);
         Instant end = Instant.now();
-        log.info("Finished processing Scan Result from {} with {} specs in: {}s", scan.getSource().getName(), scan.specCount(), ChronoUnit.SECONDS.between(start,end));
+        log.info(
+            "Finished processing Scan Result from {} with {} specs in: {}s",
+            scan.getSource().getName(),
+            scan.specCount(),
+            ChronoUnit.SECONDS.between(start, end)
+        );
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -226,6 +230,9 @@ public class SpecSourceResolver {
                 .findByProductAndKey(spec.getProduct(), key)
                 .orElseGet(() -> createCapabilityForSpecWithKey(spec, key));
             log.debug("Assigning capability: {} to spec: {}", capability.getName(), spec.getName());
+            if (source.getCapability() == null) {
+                source.setCapability(capability);
+            }
             spec.setCapability(capability);
         }
     }
