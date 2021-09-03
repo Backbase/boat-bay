@@ -1,16 +1,15 @@
 package com.backbase.oss.boat.bay.source.scanner;
 
+import static com.backbase.oss.boat.bay.source.SpecSourceResolver.LATEST;
+
 import com.backbase.oss.boat.bay.domain.ProductRelease;
 import com.backbase.oss.boat.bay.domain.Source;
 import com.backbase.oss.boat.bay.domain.Spec;
-import lombok.Data;
-
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import static com.backbase.oss.boat.bay.source.SpecSourceResolver.LATEST;
+import lombok.Data;
 
 @Data
 public class ScanResult {
@@ -36,16 +35,15 @@ public class ScanResult {
     public void addSpec(Spec spec) {
         if (productReleases.isEmpty()) {
             ProductRelease newProductRelease = new ProductRelease();
-            newProductRelease.setKey(LATEST.toLowerCase(Locale.ROOT));
-            newProductRelease.setName(LATEST);
-            newProductRelease.setVersion(LATEST);
+            newProductRelease.setKey(spec.getMvnVersion());
+            newProductRelease.setName(spec.getMvnVersion());
+            newProductRelease.setVersion(spec.getMvnVersion());
             newProductRelease.setReleaseDate(ZonedDateTime.now());
             newProductRelease.setProduct(source.getProduct());
             productReleases.add(newProductRelease);
         }
         productReleases.get(0).addSpec(spec);
     }
-
 
     public long specCount() {
         return productReleases.stream().mapToLong(pr -> pr.getSpecs().size()).sum();
