@@ -132,7 +132,7 @@ public class RegisterController implements RegisterApi {
         mavenSource.setProduct(product);
         mavenSource.setPortal(portal);
         mavenSource.setActive(true);
-        mavenSource.setCronExpression("0 */2 * * *");
+        mavenSource.setCronExpression("0 */2 * * * *");
         mavenSource.setRunOnStartup(true);
         boatSourceRepository.save(mavenSource);
 
