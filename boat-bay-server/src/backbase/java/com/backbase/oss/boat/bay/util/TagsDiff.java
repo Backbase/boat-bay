@@ -38,7 +38,7 @@ public class TagsDiff {
                 (String url) -> {
                     PathItem oldPathWithAllOperations = oldPaths.get(url);
 
-                    // Normalizing because if spec 1 is /bar/{mypath}/foo  and spec 2 is /bar/{mynewpath}/foo is same
+                    // Normalizing because if spec 1 is /bar/{mypath}/foo and spec 2 is /bar/{mynewpath}/foo, both are same.
                     String normalizeUrl = normalizePath(url);
 
                     //Find the equivalent url in the newPaths
