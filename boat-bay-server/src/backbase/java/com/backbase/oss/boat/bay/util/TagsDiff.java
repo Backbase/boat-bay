@@ -54,6 +54,7 @@ public class TagsDiff {
 
                         // Extract all operations from both urls and process common
                         // NOTE - Goal is to find only missing tags from old specs. Other difference are already calculated
+                        // and in ChangedOpenApi object which will be redeered seperately.
                         Map<PathItem.HttpMethod, Operation> oldOperationMap = oldPathWithAllOperations.readOperationsMap();
                         Map<PathItem.HttpMethod, Operation> newOperationMap = newPathWithAllOperations.readOperationsMap();
                         MapKeyDiff<PathItem.HttpMethod, Operation> operationsDiff = MapKeyDiff.diff(oldOperationMap, newOperationMap);
@@ -67,7 +68,7 @@ public class TagsDiff {
                                 //Remove all common tags
                                 oldTags.removeAll(newTags);
 
-                                //Tags changed in new Spec
+                                //Tags changed in new Spec. Ideally this should be empty.
                                 if (!oldTags.isEmpty()) {
                                     missingTags.put(url, Map.of(method, oldTags));
                                 }
