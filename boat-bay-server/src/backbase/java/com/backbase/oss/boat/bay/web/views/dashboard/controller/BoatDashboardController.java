@@ -328,7 +328,7 @@ public class BoatDashboardController implements DashboardApi {
         Map<String, Map<PathItem.HttpMethod, List<String>>> changedTags = TagsDiff.findMissingTags(changedOpenApi);
         DiffReportRenderer htmlRender = new DiffReportRenderer();
 
-        return ResponseEntity.ok(htmlRender.render(changedOpenApi));
+        return ResponseEntity.ok(htmlRender.render(changedOpenApi, changedTags));
     }
 
     @Override
