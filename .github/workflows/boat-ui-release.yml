@@ -20,7 +20,7 @@ jobs:
         with:
           filters: |
             frontend:
-              - 'boat-bay-frontend/**'
+              - 'boat-bay-frontend/src/**'
 
   # JOB to release frontend
   frontend:
