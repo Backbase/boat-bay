@@ -53,7 +53,7 @@ public class TagsDiff {
                         List<PathItem.HttpMethod> sharedHttpMethods = MapKeyDiff.diff(oldOperationMap, newOperationMap).getSharedKey();
 
                         for (PathItem.HttpMethod method : sharedHttpMethods) {
-                            Optional<List<String>> missingOldTags = extracted(
+                            Optional<List<String>> missingOldTags = compareOldAndNewTags(
                                 oldOperationMap.get(method).getTags(),
                                 newOperationMap.get(method).getTags()
                             );
@@ -67,7 +67,7 @@ public class TagsDiff {
         return missingTags;
     }
 
-    private static Optional<List<String>> extracted(List<String> oldTags, List<String> newTags) {
+    private static Optional<List<String>> compareOldAndNewTags(List<String> oldTags, List<String> newTags) {
         if (oldTags != null) {
             if (newTags != null) {
                 //Remove all common tags
