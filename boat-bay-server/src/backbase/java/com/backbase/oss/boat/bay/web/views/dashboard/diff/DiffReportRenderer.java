@@ -10,23 +10,10 @@ import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import j2html.tags.ContainerTag;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import org.openapitools.openapidiff.core.model.ChangedApiResponse;
-import org.openapitools.openapidiff.core.model.ChangedContent;
-import org.openapitools.openapidiff.core.model.ChangedMediaType;
-import org.openapitools.openapidiff.core.model.ChangedMetadata;
-import org.openapitools.openapidiff.core.model.ChangedOpenApi;
-import org.openapitools.openapidiff.core.model.ChangedOperation;
-import org.openapitools.openapidiff.core.model.ChangedParameter;
-import org.openapitools.openapidiff.core.model.ChangedParameters;
-import org.openapitools.openapidiff.core.model.ChangedResponse;
-import org.openapitools.openapidiff.core.model.ChangedSchema;
-import org.openapitools.openapidiff.core.model.DiffContext;
-import org.openapitools.openapidiff.core.model.DiffResult;
-import org.openapitools.openapidiff.core.model.Endpoint;
+import org.openapitools.openapidiff.core.model.*;
 import org.openapitools.openapidiff.core.output.Render;
 import org.openapitools.openapidiff.core.utils.RefPointer;
 import org.openapitools.openapidiff.core.utils.RefType;
@@ -163,29 +150,21 @@ public class DiffReportRenderer implements Render {
 
     private ContainerTag ol_tags(Map<String, Map<PathItem.HttpMethod, List<String>>> changedTags) {
         ContainerTag ol = ol();
-        changedTags
-            .keySet()
-            .forEach(
-                pathUrl -> {
-                    ContainerTag ul_detail = ul().withClass("detail");
-
-                    changedTags
-                        .get(pathUrl)
-                        .keySet()
-                        .forEach(
-                            method -> {
-                                ul_detail.with(
-                                    ul().with(li().withClass("missing").with(span(changedTags.get(pathUrl).get(method).toString())))
-                                );
-                                ol.with(
-                                    li().with(span(method.toString()).withClass(method.toString())).withText(pathUrl + " ").with(ul_detail)
-                                );
-                            }
-                        );
-                }
-            );
-
+        for (var eachPath : changedTags.entrySet()) {
+            String pathUrl = eachPath.getKey();
+            for (var eachHttpMethod : eachPath.getValue().entrySet()) {
+                PathItem.HttpMethod httpMethod = eachHttpMethod.getKey();
+                ol.with(li_missingTags(pathUrl, httpMethod.toString(), changedTags.get(pathUrl).get(httpMethod)));
+            }
+        }
         return ol;
+    }
+
+    private ContainerTag li_missingTags(String pathUrl, String methodName, List<String> missingTags) {
+        return li()
+            .with(span(methodName).withClass(methodName))
+            .withText(pathUrl)
+            .with(ul().withClass("detail").with(li().with(span(missingTags.toString()))));
     }
 
     private ContainerTag ul_response(ChangedApiResponse changedApiResponse) {
