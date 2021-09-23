@@ -48,39 +48,33 @@ public class DiffReportRenderer implements Render {
         this.diff = diff;
 
         List<Endpoint> newEndpoints = diff.getNewEndpoints();
-        ContainerTag ol_newEndpoint = ol_newEndpoint(newEndpoints);
+        ContainerTag olNewEndpoint = ol_newEndpoint(newEndpoints);
 
         List<Endpoint> missingEndpoints = diff.getMissingEndpoints();
-        ContainerTag ol_missingEndpoint = ol_missingEndpoint(missingEndpoints);
+        ContainerTag olMissingEndpoint = ol_missingEndpoint(missingEndpoints);
 
         List<Endpoint> deprecatedEndpoints = diff.getDeprecatedEndpoints();
-        ContainerTag ol_deprecatedEndpoint = ol_deprecatedEndpoint(deprecatedEndpoints);
+        ContainerTag olDeprecatedEndpoint = ol_deprecatedEndpoint(deprecatedEndpoints);
 
         List<ChangedOperation> changedOperations = diff.getChangedOperations();
-        ContainerTag ol_changed = ol_changed(changedOperations);
+        ContainerTag olChanged = ol_changed(changedOperations);
 
-        ContainerTag ol_tags = ol_tags(changedTags);
+        ContainerTag olTags = olTags(changedTags);
 
-        return renderHtml(ol_newEndpoint, ol_missingEndpoint, ol_deprecatedEndpoint, ol_changed, ol_tags);
+        return renderHtml(olNewEndpoint, olMissingEndpoint, olDeprecatedEndpoint, olChanged, olTags);
     }
 
-    public String renderHtml(
-        ContainerTag ol_new,
-        ContainerTag ol_miss,
-        ContainerTag ol_deprec,
-        ContainerTag ol_changed,
-        ContainerTag ol_tags
-    ) {
+    public String renderHtml(ContainerTag olNew, ContainerTag olMiss, ContainerTag olDeprec, ContainerTag olChanged, ContainerTag olTags) {
         ContainerTag html = div()
             .withClass("article")
             .with(
-                div().with(h5("What's New"), hr(), ol_new),
-                div().with(h5("What's Deleted"), hr(), ol_miss),
-                div().with(h5("What's Deprecated"), hr(), ol_deprec),
-                div().with(h5("What's Changed"), hr(), ol_changed)
+                div().with(h5("What's New"), hr(), olNew),
+                div().with(h5("What's Deleted"), hr(), olMiss),
+                div().with(h5("What's Deprecated"), hr(), olDeprec),
+                div().with(h5("What's Changed"), hr(), olChanged)
             );
-        if (ol_tags != null) {
-            html.with(div().with(h5("Missing Tags"), hr(), ol_tags));
+        if (olTags != null) {
+            html.with(div().with(h5("Missing Tags"), hr(), olTags));
         }
 
         return html.render();
@@ -148,19 +142,19 @@ public class DiffReportRenderer implements Render {
         return ol;
     }
 
-    private ContainerTag ol_tags(Map<String, Map<PathItem.HttpMethod, List<String>>> changedTags) {
+    private ContainerTag olTags(Map<String, Map<PathItem.HttpMethod, List<String>>> changedTags) {
         ContainerTag ol = ol();
         for (var eachPath : changedTags.entrySet()) {
             String pathUrl = eachPath.getKey();
             for (var eachHttpMethod : eachPath.getValue().entrySet()) {
                 PathItem.HttpMethod httpMethod = eachHttpMethod.getKey();
-                ol.with(li_missingTags(pathUrl, httpMethod.toString(), changedTags.get(pathUrl).get(httpMethod)));
+                ol.with(liMissingTags(pathUrl, httpMethod.toString(), changedTags.get(pathUrl).get(httpMethod)));
             }
         }
         return ol;
     }
 
-    private ContainerTag li_missingTags(String pathUrl, String methodName, List<String> missingTags) {
+    private ContainerTag liMissingTags(String pathUrl, String methodName, List<String> missingTags) {
         return li()
             .with(span(methodName).withClass(methodName))
             .withText(pathUrl)

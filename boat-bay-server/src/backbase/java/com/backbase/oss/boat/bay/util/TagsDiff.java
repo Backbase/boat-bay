@@ -14,6 +14,8 @@ import org.openapitools.openapidiff.core.model.ChangedOpenApi;
 
 public class TagsDiff {
 
+    private TagsDiff() {}
+
     private static final String REGEX_PATH = "\\{([^/]+)\\}";
 
     private static String normalizePath(String path) {
@@ -84,11 +86,6 @@ public class TagsDiff {
         String normalizeUrl = normalizePath(oldPath);
 
         //Find the equivalent url in the newPaths
-        Optional<Map.Entry<String, PathItem>> result = newPaths
-            .entrySet()
-            .stream()
-            .filter(item -> normalizePath(item.getKey()).equals(normalizeUrl))
-            .findAny();
-        return result;
+        return newPaths.entrySet().stream().filter(item -> normalizePath(item.getKey()).equals(normalizeUrl)).findAny();
     }
 }
