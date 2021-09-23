@@ -24,7 +24,7 @@ class TagsDiffTest {
 
         Map<String, Map<PathItem.HttpMethod, List<String>>> result = TagsDiff.findMissingTags(diff);
         log.info("test_when_no_changes_to_tag_were_made result {}", result.toString());
-        assertThat(result).hasSize(0);
+        assertThat(result).isEmpty();
     }
 
     @Test
