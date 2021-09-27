@@ -3,8 +3,11 @@ package com.backbase.oss.boat.bay.service.backwardscompatible;
 import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.domain.enumeration.Changes;
 import com.backbase.oss.boat.bay.repository.BoatSpecRepository;
+import com.backbase.oss.boat.bay.util.TagsDiff;
 import com.github.zafarkhaja.semver.Version;
+import io.swagger.v3.oas.models.PathItem;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -64,11 +67,12 @@ public class BoatBackwardsCompatibleChecker {
                     ChangedOpenApi diff = null;
                     try {
                         diff = OpenApiCompare.fromContents(previousOpenAPI, currentOpenAPI);
-                        if (diff.isUnchanged()) {
+                        Map<String, Map<PathItem.HttpMethod, List<String>>> changedTags = TagsDiff.findMissingTags(diff);
+                        if (diff.isUnchanged() && changedTags.isEmpty()) {
                             spec.setChanges(Changes.UNCHANGED);
-                        } else if (diff.isCompatible()) {
+                        } else if (diff.isCompatible() && changedTags.isEmpty()) {
                             spec.setChanges(Changes.COMPATIBLE);
-                        } else if (diff.isIncompatible()) {
+                        } else if (diff.isIncompatible() || !changedTags.isEmpty()) {
                             spec.setChanges(Changes.BREAKING);
                         }
                     } catch (Exception e) {

@@ -3,6 +3,7 @@ package com.backbase.oss.boat.bay.web.views.dashboard.diff;
 import static j2html.TagCreator.*;
 import static org.openapitools.openapidiff.core.model.Changed.result;
 
+import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.media.ArraySchema;
 import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.Schema;
@@ -12,19 +13,7 @@ import j2html.tags.ContainerTag;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import org.openapitools.openapidiff.core.model.ChangedApiResponse;
-import org.openapitools.openapidiff.core.model.ChangedContent;
-import org.openapitools.openapidiff.core.model.ChangedMediaType;
-import org.openapitools.openapidiff.core.model.ChangedMetadata;
-import org.openapitools.openapidiff.core.model.ChangedOpenApi;
-import org.openapitools.openapidiff.core.model.ChangedOperation;
-import org.openapitools.openapidiff.core.model.ChangedParameter;
-import org.openapitools.openapidiff.core.model.ChangedParameters;
-import org.openapitools.openapidiff.core.model.ChangedResponse;
-import org.openapitools.openapidiff.core.model.ChangedSchema;
-import org.openapitools.openapidiff.core.model.DiffContext;
-import org.openapitools.openapidiff.core.model.DiffResult;
-import org.openapitools.openapidiff.core.model.Endpoint;
+import org.openapitools.openapidiff.core.model.*;
 import org.openapitools.openapidiff.core.output.Render;
 import org.openapitools.openapidiff.core.utils.RefPointer;
 import org.openapitools.openapidiff.core.utils.RefType;
@@ -52,18 +41,41 @@ public class DiffReportRenderer implements Render {
         List<ChangedOperation> changedOperations = diff.getChangedOperations();
         ContainerTag ol_changed = ol_changed(changedOperations);
 
-        return renderHtml(ol_newEndpoint, ol_missingEndpoint, ol_deprecatedEndpoint, ol_changed);
+        return renderHtml(ol_newEndpoint, ol_missingEndpoint, ol_deprecatedEndpoint, ol_changed, null);
     }
 
-    public String renderHtml(ContainerTag ol_new, ContainerTag ol_miss, ContainerTag ol_deprec, ContainerTag ol_changed) {
+    public String render(ChangedOpenApi diff, Map<String, Map<PathItem.HttpMethod, List<String>>> changedTags) {
+        this.diff = diff;
+
+        List<Endpoint> newEndpoints = diff.getNewEndpoints();
+        ContainerTag olNewEndpoint = ol_newEndpoint(newEndpoints);
+
+        List<Endpoint> missingEndpoints = diff.getMissingEndpoints();
+        ContainerTag olMissingEndpoint = ol_missingEndpoint(missingEndpoints);
+
+        List<Endpoint> deprecatedEndpoints = diff.getDeprecatedEndpoints();
+        ContainerTag olDeprecatedEndpoint = ol_deprecatedEndpoint(deprecatedEndpoints);
+
+        List<ChangedOperation> changedOperations = diff.getChangedOperations();
+        ContainerTag olChanged = ol_changed(changedOperations);
+
+        ContainerTag olTags = olTags(changedTags);
+
+        return renderHtml(olNewEndpoint, olMissingEndpoint, olDeprecatedEndpoint, olChanged, olTags);
+    }
+
+    public String renderHtml(ContainerTag olNew, ContainerTag olMiss, ContainerTag olDeprec, ContainerTag olChanged, ContainerTag olTags) {
         ContainerTag html = div()
             .withClass("article")
             .with(
-                div().with(h5("What's New"), hr(), ol_new),
-                div().with(h5("What's Deleted"), hr(), ol_miss),
-                div().with(h5("What's Deprecated"), hr(), ol_deprec),
-                div().with(h5("What's Changed"), hr(), ol_changed)
+                div().with(h5("What's New"), hr(), olNew),
+                div().with(h5("What's Deleted"), hr(), olMiss),
+                div().with(h5("What's Deprecated"), hr(), olDeprec),
+                div().with(h5("What's Changed"), hr(), olChanged)
             );
+        if (olTags != null) {
+            html.with(div().with(h5("Missing Tags"), hr(), olTags));
+        }
 
         return html.render();
     }
@@ -128,6 +140,25 @@ public class DiffReportRenderer implements Render {
             ol.with(li().with(span(method).withClass(method)).withText(pathUrl + " ").with(span(desc)).with(ul_detail));
         }
         return ol;
+    }
+
+    private ContainerTag olTags(Map<String, Map<PathItem.HttpMethod, List<String>>> changedTags) {
+        ContainerTag ol = ol();
+        for (var eachPath : changedTags.entrySet()) {
+            String pathUrl = eachPath.getKey();
+            for (var eachHttpMethod : eachPath.getValue().entrySet()) {
+                PathItem.HttpMethod httpMethod = eachHttpMethod.getKey();
+                ol.with(liMissingTags(pathUrl, httpMethod.toString(), changedTags.get(pathUrl).get(httpMethod)));
+            }
+        }
+        return ol;
+    }
+
+    private ContainerTag liMissingTags(String pathUrl, String methodName, List<String> missingTags) {
+        return li()
+            .with(span(methodName).withClass(methodName))
+            .withText(pathUrl)
+            .with(ul().withClass("detail").with(li().with(span(missingTags.toString()))));
     }
 
     private ContainerTag ul_response(ChangedApiResponse changedApiResponse) {
