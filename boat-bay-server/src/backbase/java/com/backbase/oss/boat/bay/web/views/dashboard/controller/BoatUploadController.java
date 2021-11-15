@@ -149,7 +149,7 @@ public class BoatUploadController implements BoatMavenPluginApi {
         if (!existing.getSource().equals(source)) {
             spec.setKey(existing.getKey().concat("-" + spec.getProduct().getKey()));
             log.info("Uploading new spec {}", spec.getKey());
-        } else if (!spec.getVersion().equals(existing.getVersion())) {
+        } else if (spec.getVersion() != null && !spec.getVersion().equals(existing.getVersion())) {
             spec.setKey(existing.getKey().concat("-" + spec.getVersion()));
             log.info("Uploading new version {} of spec {}", spec.getVersion(), spec.getKey());
         } else if (requestBody.getVersion().contains("SNAPSHOT")) {
