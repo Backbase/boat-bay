@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from "@angular/router";
 import { TagCloudDashboardComponent } from "./tag-cloud-dashboard.component";
 import { TagCloudModule } from 'angular-tag-cloud-module';
@@ -25,7 +26,8 @@ const routes: Routes = [
   ],
   imports: [
     RouterModule.forChild(routes),
-    TagCloudModule
+    TagCloudModule,
+    CommonModule
   ]
 })
 export class TagDashboardModule {
