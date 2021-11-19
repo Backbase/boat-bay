@@ -1,7 +1,7 @@
 <div *ngFor="let product of $boatProducts | async " class="portal-product-column">
 
     <mat-card class="mat-elevation-z8">
-        <mat-card-title> {{product.name}}
+        <mat-card-title> {{product.key}}
             / {{product.name}}</mat-card-title>
         <mat-card-subtitle *ngIf="product.lastLintReport">Last linted
             Spec: {{product.lastLintReport.name}} {{product.lastLintReport.version}}
