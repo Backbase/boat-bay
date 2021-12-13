@@ -159,14 +159,7 @@ public class BoatUploadController implements BoatMavenPluginApi {
             spec = existing;
             log.info("Spec {} already uploaded, updating with changes and re-linting", spec.getKey());
         } else {
-            throw new BadRequestAlertException(
-                "This spec," +
-                spec.getKey() +
-                ", has already been uploaded, this upload is not from a" +
-                " project under development and so will be rejected",
-                "SPEC",
-                "duplicateSpec"
-            );
+            log.info("Spec {} already uploaded, adding a new product release version {} ", spec.getKey(), requestBody.getVersion());
         }
         return spec;
     }
