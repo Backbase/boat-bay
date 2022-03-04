@@ -173,7 +173,6 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
                     }
                 }
             );
-            //List<ArtifactResult> artifactResults = repositorySystem.resolveArtifacts(session, artifactRequests);
             Set<Spec> specsInBom = new HashSet<>();
             artifactResults.forEach(
                 artifactResult -> {
