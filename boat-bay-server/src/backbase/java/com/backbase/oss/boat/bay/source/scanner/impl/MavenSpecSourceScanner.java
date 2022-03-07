@@ -8,6 +8,19 @@ import com.backbase.oss.boat.bay.domain.Spec;
 import com.backbase.oss.boat.bay.domain.enumeration.SourceType;
 import com.backbase.oss.boat.bay.source.scanner.ScanResult;
 import com.backbase.oss.boat.bay.source.scanner.SpecSourceScanner;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.NotImplementedException;
@@ -38,20 +51,6 @@ import org.eclipse.aether.transport.http.HttpTransporterFactory;
 import org.eclipse.aether.util.repository.AuthenticationBuilder;
 import org.eclipse.aether.version.Version;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-
 @Slf4j
 public class MavenSpecSourceScanner implements SpecSourceScanner {
 
@@ -73,7 +72,6 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
         paths.addAll(source.getSourcePaths());
     }
 
-
     @Override
     public Source getSource() {
         return source;
@@ -90,7 +88,9 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
         try {
             mavenSettings = settingsXpp3Reader.read(new FileInputStream(boatBayConfigurationProperties.getMavenSettingsFile()));
         } catch (IOException | XmlPullParserException e) {
-            throw new IllegalStateException("Cannot read maven settings file from: " + boatBayConfigurationProperties.getMavenSettingsFile());
+            throw new IllegalStateException(
+                "Cannot read maven settings file from: " + boatBayConfigurationProperties.getMavenSettingsFile()
+            );
         }
 
         repositorySystem = newRepositorySystem();
@@ -108,7 +108,7 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
             log.info("Resolving versions for artifact: {} in: {}", source.getBillOfMaterialsCoords(), repositories);
             rangeResult = repositorySystem.resolveVersionRange(session, rangeRequest);
 
-            List<Version> versions = rangeResult.getVersions();
+            List<Version> versions = filterOutCandidateRelease(rangeResult.getVersions());
             log.info("Available versions: {}", StringUtils.join(versions, ","));
             Map<String, Spec> resolvedSpecs = new HashMap<>();
             versions.forEach(v -> processVersion(scanResult, artifact, v, resolvedSpecs));
@@ -117,6 +117,19 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
         }
 
         return scanResult;
+    }
+
+    private List<Version> filterOutCandidateRelease(List<Version> versions) {
+        List<Version> result = new ArrayList<>();
+        versions.forEach(
+            version -> {
+                // Filter out rc,cr,b1,snapshot and likewise release except for LTS
+                if (!version.toString().matches(".*[a-zA-Z]+.*") || version.toString().endsWith("LTS")) {
+                    result.add(version);
+                }
+            }
+        );
+        return result;
     }
 
     private void processVersion(ScanResult scanResult, Artifact artifact, Version version, Map<String, Spec> resolvedSpecs) {
@@ -137,7 +150,6 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
             descriptorRequest.setRepositories(repositories);
 
             ArtifactDescriptorResult descriptorResult = repositorySystem.readArtifactDescriptor(session, descriptorRequest);
-
             ExtendedPatternDependencyFilter dependencyFilter = new ExtendedPatternDependencyFilter(
                 paths.stream().map(SourcePath::getName).collect(Collectors.toList())
             );
@@ -151,8 +163,16 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
                 .collect(Collectors.toList());
 
             log.info("Found {} specs in BOM: {} ", artifactRequests.size(), searchArtifact.getVersion());
-
-            List<ArtifactResult> artifactResults = repositorySystem.resolveArtifacts(session, artifactRequests);
+            List<ArtifactResult> artifactResults = new ArrayList<>();
+            artifactRequests.forEach(
+                artifactRequest -> {
+                    try {
+                        artifactResults.add(repositorySystem.resolveArtifact(session, artifactRequest));
+                    } catch (ArtifactResolutionException e) {
+                        log.warn("Spec {} not found ", artifactRequest.toString());
+                    }
+                }
+            );
             Set<Spec> specsInBom = new HashSet<>();
             artifactResults.forEach(
                 artifactResult -> {
@@ -209,7 +229,7 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
                 log.info("Adding {} to release named: {}", specsInBom.size(), productRelease.getName());
                 scanResult.addProductRelease(productRelease);
             }
-        } catch (ArtifactDescriptorException | ArtifactResolutionException e) {
+        } catch (ArtifactDescriptorException e) {
             e.printStackTrace();
         }
     }
@@ -241,14 +261,14 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
                 spec.setSourcePath(zipEntry.getName());
                 spec.setSourceUrl(
                     artifact.getGroupId() +
-                        ":" +
-                        artifact.getArtifactId() +
-                        ":" +
-                        artifact.getClassifier() +
-                        ":" +
-                        artifact.getExtension() +
-                        ":" +
-                        artifact.getVersion()
+                    ":" +
+                    artifact.getArtifactId() +
+                    ":" +
+                    artifact.getClassifier() +
+                    ":" +
+                    artifact.getExtension() +
+                    ":" +
+                    artifact.getVersion()
                 );
                 spec.setSourceName(filename);
                 spec.setMvnGroupId(artifact.getGroupId());
@@ -298,7 +318,9 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
     public DefaultRepositorySystemSession newRepositorySystemSession(Settings settings, RepositorySystem system) {
         DefaultRepositorySystemSession session = MavenRepositorySystemUtils.newSession();
 
-        String localRepositoryLocation = settings.getLocalRepository() != null ? settings.getLocalRepository() : System.getenv("HOME") + "/.m2/repository";
+        String localRepositoryLocation = settings.getLocalRepository() != null
+            ? settings.getLocalRepository()
+            : System.getenv("HOME") + "/.m2/repository";
         log.info("Setting up maven repository location: {}", localRepositoryLocation);
         LocalRepository localRepository = new LocalRepository(localRepositoryLocation);
 
@@ -315,20 +337,23 @@ public class MavenSpecSourceScanner implements SpecSourceScanner {
     }
 
     public List<RemoteRepository> readMavenRepositories(Settings settings, RepositorySystem system, RepositorySystemSession session) {
-
-        return settings.getProfiles().stream()
+        return settings
+            .getProfiles()
+            .stream()
             .flatMap(profile -> profile.getRepositories().stream())
-            .map(repository -> {
-                Server server = settings.getServer(repository.getId());
-                AuthenticationBuilder authenticationBuilder = new AuthenticationBuilder();
-                if (server != null) {
-                    authenticationBuilder.addPassword(server.getPassword());
-                    authenticationBuilder.addUsername(server.getUsername());
+            .map(
+                repository -> {
+                    Server server = settings.getServer(repository.getId());
+                    AuthenticationBuilder authenticationBuilder = new AuthenticationBuilder();
+                    if (server != null) {
+                        authenticationBuilder.addPassword(server.getPassword());
+                        authenticationBuilder.addUsername(server.getUsername());
+                    }
+                    return new RemoteRepository.Builder(repository.getName(), "default", repository.getUrl())
+                        .setAuthentication(authenticationBuilder.build())
+                        .build();
                 }
-                return new RemoteRepository.Builder(repository.getName(), "default", repository.getUrl())
-                    .setAuthentication(authenticationBuilder.build())
-                    .build();
-            })
+            )
             .collect(Collectors.toList());
     }
 
