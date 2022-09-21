@@ -230,9 +230,6 @@ public class SpecSourceResolver {
                 .findByProductAndKey(spec.getProduct(), key)
                 .orElseGet(() -> createCapabilityForSpecWithKey(spec, key));
             log.debug("Assigning capability: {} to spec: {}", capability.getName(), spec.getName());
-            if (source.getCapability() == null) {
-                source.setCapability(capability);
-            }
             spec.setCapability(capability);
         }
     }
