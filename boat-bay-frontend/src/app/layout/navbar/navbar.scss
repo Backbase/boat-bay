@@ -78,7 +78,8 @@ a {
 }
 
 .bb-brand-logo-full {
-  height: $spacer-md - 1px;
+  height: $spacer-md;
+  vertical-align: baseline;
 }
 
 .bb-brand-spacer {
@@ -88,7 +89,7 @@ a {
 }
 
 .bb-brand-text {
-  font-size: $spacer-md + 3px;
+  font-size: $spacer-md;
   font-weight: 300;
 }
 
