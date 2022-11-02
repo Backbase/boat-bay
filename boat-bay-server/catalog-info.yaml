@@ -5,6 +5,9 @@ metadata:
     name: boat-bay-server
     description: Backend for Boat bay which lints, compare openapi specs
     annotations:
+        jira/maint-component: Service SDK
+        jira/maint-subcomponent: Service SDK Libraries / Starters
+        jira/project-key: BEFOUND
         slack/conversation-id: C01EQ60LXK8
     tags:
         - openapi
