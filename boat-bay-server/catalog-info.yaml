@@ -1,0 +1,23 @@
+# nonk8s
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+    name: boat-bay-server
+    description: Backend for Boat bay which lints, compare openapi specs
+    annotations:
+        slack/conversation-id: C01EQ60LXK8
+    tags:
+        - openapi
+        - java
+        - boat
+    links:
+        - url: 'https://github.com/Backbase/boat-bay/actions/workflows/boat-server-release.yml'
+          title: Backend Release
+          icon: cloud
+        - url: 'https://github.com/Backbase/boat-bay/actions/workflows/boat-server-pr.yml'
+          title: Backend PR build
+          icon: cloud
+spec:
+    type: tool
+    lifecycle: experimental
+    owner: de/backend-foundation
