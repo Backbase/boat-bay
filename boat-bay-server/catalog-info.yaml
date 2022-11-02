@@ -13,11 +13,26 @@ metadata:
     links:
         - url: 'https://github.com/Backbase/boat-bay/actions/workflows/boat-server-release.yml'
           title: Backend Release
-          icon: cloud
+          icon: dashboard
         - url: 'https://github.com/Backbase/boat-bay/actions/workflows/boat-server-pr.yml'
           title: Backend PR build
-          icon: cloud
+          icon: dashboard
+        - url: 'https://github.com/Backbase/boat-bay/pkgs/container/boat-bay'
+          title: Docker Image
+          icon: dashboard
+        - url: 'https://boatbay.staging.backbase.eu/'
+          title: Staging Deployment
+          icon: dashboard
+        - url: 'https://github.com/backbase-rnd-cloudops/rnd-gitops/tree/master/clusters/cicd-staging/boatbay'
+          title: Staging Deployment Pipeline
+          icon: dashboard
+        - url: 'https://boatbay.backbase.eu/'
+          title: Main Deployment
+          icon: dashboard
+        - url: 'https://github.com/backbase-rnd-cloudops/rnd-gitops/tree/master/clusters/cicd-services/boatbay'
+          title: Main Deployment Pipeline
+          icon: dashboard
 spec:
-    type: tool
+    type: internal
     lifecycle: experimental
     owner: de/backend-foundation
