@@ -1,0 +1,41 @@
+# nonk8s
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+    name: boat-bay-frontend
+    description: Backend for Boat bay which lints, compare openapi specs
+    annotations:
+        jira/maint-component: Service SDK
+        jira/maint-subcomponent: Service SDK Libraries / Starters
+        jira/project-key: BEFOUND
+        slack/conversation-id: C01EQ60LXK8
+    tags:
+        - openapi
+        - angular
+        - boat
+    links:
+        - url: 'https://github.com/Backbase/boat-bay/actions/workflows/boat-ui-release.yml'
+          title: Frontend Release
+          icon: cloud
+        - url: 'https://github.com/Backbase/boat-bay/actions/workflows/boat-ui-pr.yml'
+          title: Frontend PR build
+          icon: cloud
+        - url: 'https://github.com/Backbase/boat-bay/pkgs/container/boat-bay-ui'
+          title: Docker Image
+          icon: dashboard
+        - url: 'https://boatbay.staging.backbase.eu/'
+          title: Staging Deployment
+          icon: dashboard
+        - url: 'https://github.com/backbase-rnd-cloudops/rnd-gitops/tree/master/clusters/cicd-staging/boatbay'
+          title: Staging Deployment Pipeline
+          icon: dashboard
+        - url: 'https://boatbay.backbase.eu/'
+          title: Main Deployment
+          icon: dashboard
+        - url: 'https://github.com/backbase-rnd-cloudops/rnd-gitops/tree/master/clusters/cicd-services/boatbay'
+          title: Main Deployment Pipeline
+          icon: dashboard
+spec:
+    type: internal
+    lifecycle: experimental
+    owner: de/backend-foundation
