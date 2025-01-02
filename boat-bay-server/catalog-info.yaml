@@ -5,14 +5,14 @@ metadata:
     name: boat-bay-server
     description: Backend for Boat bay which lints, compare openapi specs
     annotations:
-        jira/maint-component: Service SDK
-        jira/maint-subcomponent: Service SDK Libraries / Starters
-        jira/project-key: BEFOUND
-        slack/conversation-id: C01EQ60LXK8
+        jira/maint-component: API Toolkit
+        jira/maint-subcomponent: BOAT
+        jira/project-key: DAS
+        slack/conversation-id: C02UMAFHFAB
     tags:
         - openapi
         - java
-        - boat
+        - boat-bay
     links:
         - url: 'https://github.com/Backbase/boat-bay/actions/workflows/boat-server-release.yml'
           title: Backend Release
@@ -23,12 +23,6 @@ metadata:
         - url: 'https://github.com/Backbase/boat-bay/pkgs/container/boat-bay'
           title: Docker Image
           icon: dashboard
-        - url: 'https://boatbay.staging.backbase.eu/'
-          title: Staging Deployment
-          icon: dashboard
-        - url: 'https://github.com/backbase-rnd-cloudops/rnd-gitops/tree/master/clusters/cicd-staging/boatbay'
-          title: Staging Deployment Pipeline
-          icon: dashboard
         - url: 'https://boatbay.backbase.eu/'
           title: Main Deployment
           icon: dashboard
@@ -38,4 +32,4 @@ metadata:
 spec:
     type: internal
     lifecycle: experimental
-    owner: de/backend-foundation
+    owner: DE - API Sandbox
